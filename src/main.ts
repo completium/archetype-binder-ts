@@ -3,6 +3,8 @@ import * as ts from "typescript";
 const file = ts.createSourceFile("source.ts", "", ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 
+// https://ts-ast-viewer.com/#
+
 const importExDecl = ts.factory.createImportDeclaration(
   undefined,
   undefined,
