@@ -1,0 +1,39 @@
+{
+  "name": "archetype-binder-ts",
+  "version": "0.0.1",
+  "description": "Binds Archetype contract interface to Typescript",
+  "directories": {
+    "example": "examples"
+  },
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf ./build && npx tsc --outDir build",
+    "exec": "rm -rf ./build && npx tsc --outDir build && node ./build/src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/completium/archetype-binder-ts.git"
+  },
+  "keywords": [
+    "tezos",
+    "archetype",
+    "typescript",
+    "test"
+  ],
+  "author": "Completium",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/completium/archetype-binder-ts/issues"
+  },
+  "homepage": "https://github.com/completium/archetype-binder-ts#readme",
+  "dependencies": {
+    "typescript": "^4.7.4"
+  }
+}
