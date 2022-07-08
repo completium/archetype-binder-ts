@@ -1,7 +1,7 @@
-import { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
+import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/oracle.json'
-import { archetypeTypeToTsType, ContractInterface, ContractParameter, Entrypoint, FunctionParameter, importNode, StorageElement } from "./utils";
+import { archetypeTypeToTsType, Asset, ContractInterface, ContractParameter, Entrypoint, Field, FunctionParameter, importNode, StorageElement } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -10,6 +10,51 @@ const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 const contract_interface : ContractInterface = contract_json
 
 // https://ts-ast-viewer.com/#
+
+const fieldToPropertyDecl = (f : Field) => {
+  return factory.createPropertySignature(
+    undefined,
+    factory.createIdentifier(f.name),
+    undefined,
+    archetypeTypeToTsType(f.type)
+  )
+}
+
+const assetToInterfaceDecl = (is_key : boolean, postfix: string) => (a : Asset) => {
+  return factory.createInterfaceDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.ExportKeyword)],
+    factory.createIdentifier(a.name+postfix),
+    undefined,
+    undefined,
+    a.fields.filter(x => x.is_key == is_key).map(fieldToPropertyDecl)
+  )
+}
+
+const assetKeyToInterfaceDecl = assetToInterfaceDecl(true, "_key")
+
+const assetValueToInterfaceDecl = assetToInterfaceDecl(false, "_value")
+
+const asssetContainerToTypeDecl = (a : Asset) => {
+  return factory.createTypeAliasDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.ExportKeyword)],
+    factory.createIdentifier("oracleData_container"),
+    undefined,
+    factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [factory.createTupleTypeNode([
+        factory.createTypeReferenceNode(
+          factory.createIdentifier(a.name+"_key"),
+          undefined
+        ),
+        factory.createTypeReferenceNode(
+          factory.createIdentifier(a.name+"_value"),
+          undefined
+        )
+      ])]
+    ))
+}
 
 const contractParameterToParamDecl = (fp : FunctionParameter) => {
   return factory.createParameterDeclaration(
@@ -53,7 +98,10 @@ const entryToMethod = (e : Entrypoint) => {
         factory.createTypeReferenceNode(
           factory.createIdentifier("Partial"),
           [factory.createTypeReferenceNode(
-            factory.createIdentifier("Parameters"),
+            factory.createQualifiedName(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("Parameters")
+            ),
             undefined
           )]
         ),
@@ -76,7 +124,10 @@ const entryToMethod = (e : Entrypoint) => {
         ),
         factory.createBlock(
           [factory.createExpressionStatement(factory.createAwaitExpression(factory.createCallExpression(
-            factory.createIdentifier("call"),
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("call")
+            ),
             undefined,
             [
               factory.createPropertyAccessExpression(
@@ -157,7 +208,10 @@ const get_contract_class_node = (ci : ContractInterface) => {
             factory.createTypeReferenceNode(
               factory.createIdentifier("Partial"),
               [factory.createTypeReferenceNode(
-                factory.createIdentifier("Parameters"),
+                factory.createQualifiedName(
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier("Parameters")
+                ),
                 undefined
               )]
             ),
@@ -175,7 +229,10 @@ const get_contract_class_node = (ci : ContractInterface) => {
                   undefined,
                   undefined,
                   factory.createAwaitExpression(factory.createCallExpression(
-                    factory.createIdentifier("deploy"),
+                    factory.createPropertyAccessExpression(
+                      factory.createIdentifier("ex"),
+                      factory.createIdentifier("deploy")
+                    ),
                     undefined,
                     [
                       factory.createStringLiteral("./contracts/"+ci.name+".arl"),
@@ -209,10 +266,19 @@ const get_contract_class_node = (ci : ContractInterface) => {
   )
 }
 
-const nodeArr = factory.createNodeArray([
-  importNode,
-  get_contract_class_node(contract_interface)
-]);
+const get_imports = () : Array<ts.ImportDeclaration> => {
+  return [importNode]
+}
+
+const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration)[] = [
+  ...(get_imports()),
+  ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
+  ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
+  ...(contract_interface.types.assets.map(asssetContainerToTypeDecl)),
+  ...([get_contract_class_node(contract_interface)]),
+]
+
+const nodeArr = factory.createNodeArray(nodes);
 
 const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
 console.log(result);
