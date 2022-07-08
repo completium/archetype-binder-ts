@@ -16,5 +16,8 @@ const importExDecl = ts.factory.createImportDeclaration(
   ts.factory.createStringLiteral("@completium/experiment-ts"),
   undefined
 )
-const result = printer.printNode(ts.EmitHint.Unspecified, importExDecl, file);
+
+const nodeArr = ts.factory.createNodeArray([importExDecl]);
+
+const result = printer.printList(ts.ListFormat.MultiLine, nodeArr, file);
 console.log(result);
