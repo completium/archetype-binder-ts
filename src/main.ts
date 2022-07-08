@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/oracle.json'
-import { archetypeTypeToTsType, Asset, ContractInterface, ContractParameter, Entrypoint, Field, FunctionParameter, importNode, StorageElement } from "./utils";
+import { archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Field, FunctionParameter, importNode, StorageElement } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -10,6 +10,57 @@ const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 const contract_interface : ContractInterface = contract_json
 
 // https://ts-ast-viewer.com/#
+
+const entryArgsToMich = (a : Array<FunctionParameter>) => {
+  if (a.length == 0) {
+    return factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("unit_mich")
+    )
+  } else if (a.length == 1) {
+    return entryArgToMich(a[0])
+  } else {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich")
+      ),
+      undefined,
+      [factory.createArrayLiteralExpression(
+        a.map(entryArgToMich),
+        true
+      )]
+    )
+  }
+}
+
+const entryToArgToMichDecl = (e: Entrypoint) : ts.VariableDeclarationList => {
+  return factory.createVariableDeclarationList(
+    [factory.createVariableDeclaration(
+      factory.createIdentifier(e.name+"_arg_to_mich"),
+      undefined,
+      undefined,
+      factory.createArrowFunction(
+        undefined,
+        undefined,
+        e.args.map(contractParameterToParamDecl),
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("Micheline")
+          ),
+          undefined
+        ),
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [factory.createReturnStatement(entryArgsToMich(e.args))],
+          true
+        )
+      )
+    )],
+    ts.NodeFlags.Const
+  )
+}
 
 const fieldToPropertyDecl = (f : Field) => {
   return factory.createPropertySignature(
@@ -35,7 +86,7 @@ const assetKeyToInterfaceDecl = assetToInterfaceDecl(true, "_key")
 
 const assetValueToInterfaceDecl = assetToInterfaceDecl(false, "_value")
 
-const asssetContainerToTypeDecl = (a : Asset) => {
+const assetContainerToTypeDecl = (a : Asset) => {
   return factory.createTypeAliasDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
@@ -270,11 +321,12 @@ const get_imports = () : Array<ts.ImportDeclaration> => {
   return [importNode]
 }
 
-const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration)[] = [
+const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList)[] = [
   ...(get_imports()),
   ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
-  ...(contract_interface.types.assets.map(asssetContainerToTypeDecl)),
+  ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
+  ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
   ...([get_contract_class_node(contract_interface)]),
 ]
 

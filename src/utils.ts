@@ -120,6 +120,27 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
   }
 }
 
+export const entryArgToMich = (fp: FunctionParameter) => {
+  switch (fp.type.node) {
+    case "string": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createIdentifier(fp.name)]
+    );
+    default:  return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createIdentifier(fp.name)]
+    );
+  }
+}
+
 export const importNode = factory.createImportDeclaration(
   undefined,
   undefined,
