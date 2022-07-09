@@ -136,7 +136,10 @@ export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
       [factory.createIdentifier(fp.name)]
     )
     case "tuple": return factory.createCallExpression(
-      factory.createIdentifier("pair_to_mich"),
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich")
+      ),
       undefined,
       [factory.createArrayLiteralExpression(
         fp.type.args.map((x,i) => entryArgToMich({ name:fp.name+"["+i+"]", type: fp.type.args[i] })),
@@ -225,14 +228,118 @@ export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
   }
 }
 
-export const importNode = factory.createImportDeclaration(
-  undefined,
-  undefined,
-  factory.createImportClause(
-    false,
+export const valueToMich = (v : string, mt: MichelsonType) : ts.CallExpression => {
+  switch (mt.prim) {
+    case "pair": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich")
+      ),
+      undefined,
+      [factory.createArrayLiteralExpression(
+        [ valueToMich(v, mt.args[0]), valueToMich(v, mt.args[1]) ],
+        false
+      )]
+    );
+    case "timestamp": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("date_to_mich")
+      ),
+      undefined,
+      [factory.createPropertyAccessExpression(
+        factory.createIdentifier(v),
+        factory.createIdentifier(mt.annots[0].slice(1)))
+      ]
+    );
+    case "nat": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("bigint_to_mich")
+      ),
+      undefined,
+      [factory.createPropertyAccessExpression(
+        factory.createIdentifier(v),
+        factory.createIdentifier(mt.annots[0].slice(1)))
+      ]
+    );
+    case "big_map": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("list_to_mich")
+      ),
+      undefined,
+      [
+        factory.createIdentifier("x"),
+        factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [
+              factory.createVariableStatement(
+                undefined,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(
+                    factory.createIdentifier("x_key"),
+                    undefined,
+                    undefined,
+                    factory.createElementAccessExpression(
+                      factory.createIdentifier("x"),
+                      factory.createNumericLiteral("0")
+                    )
+                  )],
+                  ts.NodeFlags.Const
+                )
+              ),
+              factory.createVariableStatement(
+                undefined,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(
+                    factory.createIdentifier("x_value"),
+                    undefined,
+                    undefined,
+                    factory.createElementAccessExpression(
+                      factory.createIdentifier("x"),
+                      factory.createNumericLiteral("1")
+                    )
+                  )],
+                  ts.NodeFlags.Const
+                )
+              ),
+              factory.createReturnStatement(factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier("elt_to_mich")
+                ),
+                undefined,
+                [
+                  valueToMich("x_key", mt.args[0]),
+                  valueToMich("x_value", mt.args[1])
+                ]
+              ))
+            ],
+            true
+          )
+        )
+      ]
+    )
+  }
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("string_to_mich")
+    ),
     undefined,
-    factory.createNamespaceImport(factory.createIdentifier("ex"))
-  ),
-  factory.createStringLiteral("@completium/experiment-ts"),
-  undefined
-)
+    [factory.createIdentifier(v)])
+}

@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/oracle.json'
-import { archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Field, FunctionParameter, importNode, StorageElement } from "./utils";
+import { archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Field, FunctionParameter, MichelsonType, StorageElement, valueToMich } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -72,14 +72,26 @@ const fieldToPropertyDecl = (f : Field) => {
 }
 
 const assetToInterfaceDecl = (is_key : boolean, postfix: string) => (a : Asset) => {
-  return factory.createInterfaceDeclaration(
-    undefined,
-    [factory.createModifier(SyntaxKind.ExportKeyword)],
-    factory.createIdentifier(a.name+postfix),
-    undefined,
-    undefined,
-    a.fields.filter(x => x.is_key == is_key).map(fieldToPropertyDecl)
-  )
+  const fields = a.fields.filter(x => x.is_key == is_key)
+  if (fields.length == 1) {
+    const field = fields[0];
+    return factory.createTypeAliasDeclaration(
+      undefined,
+      [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+      factory.createIdentifier(a.name+postfix),
+      undefined,
+      archetypeTypeToTsType(field.type)
+    )
+  } else {
+    return factory.createInterfaceDeclaration(
+      undefined,
+      [factory.createModifier(SyntaxKind.ExportKeyword)],
+      factory.createIdentifier(a.name+postfix),
+      undefined,
+      undefined,
+      fields.map(fieldToPropertyDecl)
+    )
+  }
 }
 
 const assetKeyToInterfaceDecl = assetToInterfaceDecl(true, "_key")
@@ -106,6 +118,49 @@ const assetContainerToTypeDecl = (a : Asset) => {
       ])]
     ))
 }
+
+const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType) => {
+  return factory.createVariableDeclarationList(
+    [factory.createVariableDeclaration(
+      factory.createIdentifier(aname+"_" + entity_postfix + "_to_mich"),
+      undefined,
+      undefined,
+      factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("x"),
+          undefined,
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(aname+"_" + entity_postfix),
+            undefined
+          ),
+          undefined
+        )],
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("Micheline")
+          ),
+          undefined
+        ),
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [factory.createReturnStatement(valueToMich("x", mt))],
+          true
+        )
+      )
+    )],
+    ts.NodeFlags.Const
+  )
+}
+
+const assetKeyToMichDecl = (a : Asset) => assetEntityToMichDecl("key", a.name, a.key_type_michelson)
+const assetValueToMichDecl = (a : Asset) =>  assetEntityToMichDecl("value", a.name, a.value_type_michelson)
+const assetContainerToMichDecl= (a : Asset) => assetEntityToMichDecl("container", a.name, a.container_type_michelson)
 
 const contractParameterToParamDecl = (fp : FunctionParameter) => {
   return factory.createParameterDeclaration(
@@ -268,7 +323,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
             ),
             undefined
           )
-        ]).concat(ci.storage.filter(x => !x.const).map(storageElementToParamDecl)),
+        ]),
         undefined,
         factory.createBlock(
           [
@@ -317,17 +372,58 @@ const get_contract_class_node = (ci : ContractInterface) => {
   )
 }
 
-const get_imports = () : Array<ts.ImportDeclaration> => {
-  return [importNode]
+const get_imports = () : ts.ImportDeclaration => {
+  return factory.createImportDeclaration(
+    undefined,
+    undefined,
+    factory.createImportClause(
+      false,
+      undefined,
+      factory.createNamespaceImport(factory.createIdentifier("ex"))
+    ),
+    factory.createStringLiteral("@completium/experiment-ts"),
+    undefined
+  )
 }
 
-const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList)[] = [
-  ...(get_imports()),
+const get_contract_decl = (ci : ContractInterface) => {
+  return factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier(ci.name),
+        undefined,
+        undefined,
+        factory.createNewExpression(
+          factory.createIdentifier(ci.name.charAt(0).toUpperCase() + ci.name.slice(1)),
+          undefined,
+          []
+        )
+      )],
+      ts.NodeFlags.Const
+    )
+  )
+}
+
+const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement)[] = [
+  ...([get_imports()]),
+  // asset keys
   ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
+  ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
+  // asset values
   ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
+  ...(contract_interface.types.assets.map(assetValueToMichDecl)),
+  // asset containers
   ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
+  ...(contract_interface.types.assets.map(assetContainerToMichDecl)),
+  // entrypoint argument to michelson
   ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
-  ...([get_contract_class_node(contract_interface)]),
+  ...([
+  // contract class
+    get_contract_class_node(contract_interface),
+  // contract instance
+    get_contract_decl(contract_interface)
+  ]),
 ]
 
 const nodeArr = factory.createNodeArray(nodes);
