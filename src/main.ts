@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/oracle.json'
-import { archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Field, FunctionParameter, MichelsonType, StorageElement, valueToMich } from "./utils";
+import { archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Field, FunctionParameter, MichelsonType, StorageElement, valueToMich, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -10,6 +10,31 @@ const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 const contract_interface : ContractInterface = contract_json
 
 // https://ts-ast-viewer.com/#
+
+const assetEntityToMichTypeDecl = (name : string, mt : MichelsonType) => {
+  return factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier(name),
+        undefined,
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("MichelineType")
+          ),
+          undefined
+        ),
+        valuetoMichType(mt)
+      )],
+      ts.NodeFlags.Const
+    )
+  )
+}
+
+const assetKeyToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_key_mich_type", a.key_type_michelson)
+const assetValueToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_value_mich_type", a.value_type_michelson)
+const assetContainerToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_container_mich_type", a.container_type_michelson)
 
 const entryArgsToMich = (a : Array<FunctionParameter>) => {
   if (a.length == 0) {
@@ -120,7 +145,9 @@ const assetContainerToTypeDecl = (a : Asset) => {
 }
 
 const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType) => {
-  return factory.createVariableDeclarationList(
+  return factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
       factory.createIdentifier(aname+"_" + entity_postfix + "_to_mich"),
       undefined,
@@ -155,7 +182,7 @@ const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : Mic
       )
     )],
     ts.NodeFlags.Const
-  )
+  ))
 }
 
 const assetKeyToMichDecl = (a : Asset) => assetEntityToMichDecl("key", a.name, a.key_type_michelson)
@@ -410,12 +437,15 @@ const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclarat
   // asset keys
   ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
+  ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
   // asset values
   ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetValueToMichDecl)),
+  ...(contract_interface.types.assets.map(assetValueToMichTypeDecl)),
   // asset containers
   ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
   ...(contract_interface.types.assets.map(assetContainerToMichDecl)),
+  ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),
   // entrypoint argument to michelson
   ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
   ...([

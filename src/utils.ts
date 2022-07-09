@@ -333,13 +333,63 @@ export const valueToMich = (v : string, mt: MichelsonType) : ts.CallExpression =
           )
         )
       ]
-    )
+    );
+    default: return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createIdentifier(v)])
   }
-  return factory.createCallExpression(
-    factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
-      factory.createIdentifier("string_to_mich")
-    ),
-    undefined,
-    [factory.createIdentifier(v)])
+}
+
+export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
+  switch (mt.prim) {
+    case "big_map": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich_type")
+      ),
+      undefined,
+      [ factory.createStringLiteral("big_map"), valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ]
+    )
+    case "map": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich_type")
+      ),
+      undefined,
+      [ factory.createStringLiteral("map"), valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ]
+    )
+    case "pair": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_array_to_mich_type")
+      ),
+      undefined,
+      [factory.createArrayLiteralExpression(
+        [ valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ],
+        true
+      )]
+    )
+    default: {
+      const prim = mt.prim == null ? "string" : mt.prim
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("prim_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          factory.createStringLiteral(prim),
+          factory.createArrayLiteralExpression(
+            annots,
+            false
+          )
+        ]
+      )
+    }
+  }
 }
