@@ -93,6 +93,13 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
       factory.createIdentifier("Date"),
       undefined
     )
+    case "contract":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Entrypoint")
+      ),
+      undefined
+    );
     case "string":    return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "signature": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "int":       return factory.createKeywordTypeNode(SyntaxKind.BigIntKeyword);
@@ -130,6 +137,14 @@ export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
       undefined,
       [factory.createIdentifier(fp.name)]
     );
+    case "contract": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier(fp.name),
+        factory.createIdentifier("to_mich")
+      ),
+      undefined,
+      []
+    )
     case "asset_value": return factory.createCallExpression(
       factory.createIdentifier(fp.type.args[0].name+"_value_to_mich"),
       undefined,
