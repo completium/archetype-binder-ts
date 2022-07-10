@@ -65,7 +65,11 @@ export type StorageElement = {
   "const": boolean
 }
 
-export type Record = {} /* TODO */
+export type Record = {
+  "name": string
+  "fields": Array<Omit<Field,"is_key">>
+  "type_michelson": MichelsonType
+}
 
 export type Getter = {} /* TODO */
 
@@ -119,6 +123,11 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
         archetypeTypeToTsType(at.args[1])
       ])]
     );
+    case "record": if (at.name != null) {
+      return factory.createTypeReferenceNode(
+        factory.createIdentifier(at.name),
+        undefined)
+    };
     case "tuple": return factory.createTupleTypeNode([
       archetypeTypeToTsType(at.args[0]),
       archetypeTypeToTsType(at.args[1])
@@ -262,30 +271,38 @@ export const valueToMich = (v : string, mt: MichelsonType) : ts.CallExpression =
         factory.createIdentifier("date_to_mich")
       ),
       undefined,
-      [factory.createPropertyAccessExpression(
-        factory.createIdentifier(v),
-        factory.createIdentifier(mt.annots[0].slice(1)))
+      [mt.annots.length > 0 ?
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(v),
+          factory.createIdentifier(mt.annots[0].slice(1))) :
+        factory.createIdentifier(v)
       ]
     );
-    case "nat": return factory.createCallExpression(
+    case "nat": case "int": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("bigint_to_mich")
       ),
       undefined,
-      [factory.createPropertyAccessExpression(
-        factory.createIdentifier(v),
-        factory.createIdentifier(mt.annots[0].slice(1)))
+      [mt.annots.length > 0 ?
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(v),
+          factory.createIdentifier(mt.annots[0].slice(1))) :
+        factory.createIdentifier(v)
       ]
     );
-    case "big_map": return factory.createCallExpression(
+    case "big_map": case "map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("list_to_mich")
       ),
       undefined,
       [
-        factory.createIdentifier("x"),
+        mt.annots.length > 0 ?
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(v),
+          factory.createIdentifier(mt.annots[0].slice(1))) :
+        factory.createIdentifier(v),
         factory.createArrowFunction(
           undefined,
           undefined,

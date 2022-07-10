@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import contract_json from '../examples/oracle.json'
-import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Enum, Field, FunctionParameter, MichelsonType, StorageElement, valueToMich, valuetoMichType } from "./utils";
+import contract_json from '../examples/normalizer.json'
+import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Enum, Field, FunctionParameter, MichelsonType, Record, StorageElement, valueToMich, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -11,30 +11,69 @@ const contract_interface : ContractInterface = contract_json
 const fieldTypeToFunc = (atype : ArchetypeType) : string => {
   switch (atype.node) {
     case "date": return "mich_to_date"
-    case "nat": return "mich_to_bigint"
-    case "int": return "mich_to_bigint"
+    case "nat": case "int": return "mich_to_bigint"
     default: return "mich_to_string"
   }
 }
 
-const mich_to_fieldDecl = (f : Field, idx : number) => {
-  return factory.createPropertyAssignment(
-    factory.createIdentifier(f.name),
-    factory.createCallExpression(
+const mich_to_fieldDecl = (atype : ArchetypeType, arg : string) : ts.CallExpression => {
+  switch (atype.node) {
+    case "map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
-        factory.createIdentifier(fieldTypeToFunc(f.type))
+        factory.createIdentifier("mich_to_map")
       ),
       undefined,
-      [factory.createElementAccessExpression(
-        factory.createIdentifier("fields"),
-        factory.createNumericLiteral(idx)
-      )]
+      [
+        factory.createIdentifier(arg),
+        factory.createArrowFunction(
+          undefined,
+          undefined,
+          [
+            factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("x"),
+              undefined,
+              undefined,
+              undefined
+            ),
+            factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("y"),
+              undefined,
+              undefined,
+              undefined
+            )
+          ],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createArrayLiteralExpression(
+            [
+              mich_to_fieldDecl(atype.args[0], "x"),
+              mich_to_fieldDecl(atype.args[1], "y")
+            ],
+            false
+          )
+        )
+      ]
     )
-  )
+    case "date" : case "nat" : case "int" : default :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier(fieldTypeToFunc(atype))
+        ),
+        undefined,
+        [factory.createIdentifier(arg)]
+      )
+  }
 }
 
-const michToAssetEntityDecl = (name : string, fields : Array<Field>) => {
+const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -85,7 +124,12 @@ const michToAssetEntityDecl = (name : string, fields : Array<Field>) => {
               ts.NodeFlags.Const
             )
           ),
-          factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => mich_to_fieldDecl(x, i))))] :
+          factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
+            return factory.createPropertyAssignment(
+              factory.createIdentifier(x.name),
+              mich_to_fieldDecl(x.type, "fields["+i+"]")
+            )
+          })))] :
           [factory.createReturnStatement(factory.createTrue())], /* TODO */
           true
         )
@@ -95,11 +139,12 @@ const michToAssetEntityDecl = (name : string, fields : Array<Field>) => {
   ))
 }
 
-const michToAssetValueDecl = (a : Asset) => michToAssetEntityDecl(a.name + "_value", a.fields.filter(x => !x.is_key))
+const michToAssetValueDecl = (a : Asset) => michToentityDecl(a.name + "_value", a.fields.filter(x => !x.is_key))
+const michToRecordDecl = (r : Record) => michToentityDecl(r.name, r.fields)
 
 // https://ts-ast-viewer.com/#
 
-const fieldToCmpExpr = (f: Field) => {
+const fieldToCmpExpr = (f: Omit<Field,"is_key">) => {
   switch (f.type.node) {
     case "date": return factory.createBinaryExpression(
       factory.createCallExpression(
@@ -140,7 +185,7 @@ const fieldToCmpExpr = (f: Field) => {
   }
 }
 
-const fieldsToCmpDecl = (name : string, fields : Array<Field>) => {
+const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -198,8 +243,9 @@ const fieldsToCmpDecl = (name : string, fields : Array<Field>) => {
 }
 
 const assetToCmpDecl = (a : Asset) => fieldsToCmpDecl(a.name+"_value", a.fields.filter(x => !x.is_key))
+const recordToCmpDecl = (r : Record) => fieldsToCmpDecl(r.name, r.fields)
 
-const assetEntityToMichTypeDecl = (name : string, mt : MichelsonType) => {
+const entityToMichTypeDecl = (name : string, mt : MichelsonType) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -220,9 +266,10 @@ const assetEntityToMichTypeDecl = (name : string, mt : MichelsonType) => {
   )
 }
 
-const assetKeyToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_key_mich_type", a.key_type_michelson)
-const assetValueToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_value_mich_type", a.value_type_michelson)
-const assetContainerToMichTypeDecl = (a : Asset) => assetEntityToMichTypeDecl(a.name + "_container_mich_type", a.container_type_michelson)
+const assetKeyToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_key_mich_type", a.key_type_michelson)
+const assetValueToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_value_mich_type", a.value_type_michelson)
+const assetContainerToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_container_mich_type", a.container_type_michelson)
+const recordToMichTypeDecl = (r : Record) => entityToMichTypeDecl(r.name + "_mich_type", r.type_michelson)
 
 const entryArgsToMich = (a : Array<FunctionParameter>) => {
   if (a.length == 0) {
@@ -275,7 +322,7 @@ const entryToArgToMichDecl = (e: Entrypoint) : ts.VariableDeclarationList => {
   )
 }
 
-const fieldToPropertyDecl = (f : Field) => {
+const fieldToPropertyDecl = (f : Omit<Field, "is_key">) => {
   return factory.createPropertySignature(
     undefined,
     factory.createIdentifier(f.name),
@@ -284,14 +331,13 @@ const fieldToPropertyDecl = (f : Field) => {
   )
 }
 
-const assetToInterfaceDecl = (is_key : boolean, postfix: string) => (a : Asset) => {
-  const fields = a.fields.filter(x => x.is_key == is_key)
+const entityToInterfaceDecl = (name : string, fields : Array<Omit<Field,"is_key">>) => {
   if (fields.length == 1) {
     const field = fields[0];
     return factory.createTypeAliasDeclaration(
       undefined,
       [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(a.name+postfix),
+      factory.createIdentifier(name),
       undefined,
       archetypeTypeToTsType(field.type)
     )
@@ -299,7 +345,7 @@ const assetToInterfaceDecl = (is_key : boolean, postfix: string) => (a : Asset) 
     return factory.createInterfaceDeclaration(
       undefined,
       [factory.createModifier(SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(a.name+postfix),
+      factory.createIdentifier(name),
       undefined,
       undefined,
       fields.map(fieldToPropertyDecl)
@@ -307,15 +353,15 @@ const assetToInterfaceDecl = (is_key : boolean, postfix: string) => (a : Asset) 
   }
 }
 
-const assetKeyToInterfaceDecl = assetToInterfaceDecl(true, "_key")
-
-const assetValueToInterfaceDecl = assetToInterfaceDecl(false, "_value")
+const assetKeyToInterfaceDecl = (a : Asset) => entityToInterfaceDecl(a.name + "_key", a.fields.filter(x => x.is_key))
+const assetValueToInterfaceDecl = (a : Asset) => entityToInterfaceDecl(a.name + "_value", a.fields.filter(x => !x.is_key))
+const recordToInterfaceDecl = (r : Record) => entityToInterfaceDecl(r.name, r.fields)
 
 const assetContainerToTypeDecl = (a : Asset) => {
   return factory.createTypeAliasDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
-    factory.createIdentifier("oracleData_container"),
+    factory.createIdentifier(a.name+"_container"),
     undefined,
     factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
@@ -332,12 +378,12 @@ const assetContainerToTypeDecl = (a : Asset) => {
     ))
 }
 
-const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType) => {
+const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
-      factory.createIdentifier(aname+"_" + entity_postfix + "_to_mich"),
+      factory.createIdentifier(aname + entity_postfix + "_to_mich"),
       undefined,
       undefined,
       factory.createArrowFunction(
@@ -350,7 +396,7 @@ const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : Mic
           factory.createIdentifier("x"),
           undefined,
           factory.createTypeReferenceNode(
-            factory.createIdentifier(aname+"_" + entity_postfix),
+            factory.createIdentifier(aname + entity_postfix),
             undefined
           ),
           undefined
@@ -373,9 +419,10 @@ const assetEntityToMichDecl = (entity_postfix : string, aname : string, mt : Mic
   ))
 }
 
-const assetKeyToMichDecl = (a : Asset) => assetEntityToMichDecl("key", a.name, a.key_type_michelson)
-const assetValueToMichDecl = (a : Asset) =>  assetEntityToMichDecl("value", a.name, a.value_type_michelson)
-const assetContainerToMichDecl= (a : Asset) => assetEntityToMichDecl("container", a.name, a.container_type_michelson)
+const assetKeyToMichDecl = (a : Asset) => entityToMichDecl("_key", a.name, a.key_type_michelson)
+const assetValueToMichDecl = (a : Asset) =>  entityToMichDecl("_value", a.name, a.value_type_michelson)
+const assetContainerToMichDecl = (a : Asset) => entityToMichDecl("_container", a.name, a.container_type_michelson)
+const recordToMichDecl = (r : Record) => entityToMichDecl("", r.name, r.type_michelson)
 
 const contractParameterToParamDecl = (fp : FunctionParameter) => {
   return factory.createParameterDeclaration(
@@ -915,6 +962,12 @@ const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclarat
   ...([get_imports()]),
   // enums
   ...(contract_interface.types.enums.map(enumToDecl)),
+  // records
+  ...(contract_interface.types.records.map(recordToInterfaceDecl)),
+  ...(contract_interface.types.records.map(recordToMichDecl)),
+  ...(contract_interface.types.records.map(recordToMichTypeDecl)),
+  ...(contract_interface.types.records.map(michToRecordDecl)),
+  ...(contract_interface.types.records.map(recordToCmpDecl)),
   // asset keys
   ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
