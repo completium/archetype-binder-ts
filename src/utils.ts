@@ -116,13 +116,17 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
       factory.createIdentifier(at.args[0].name+"_value"),
       undefined
     );
-    case "map":    return factory.createTypeReferenceNode(
+    case "map": case "big_map" : return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [factory.createTupleTypeNode([
         archetypeTypeToTsType(at.args[0]),
         archetypeTypeToTsType(at.args[1])
       ])]
     );
+    case "list":   return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [archetypeTypeToTsType(at.args[0])]
+    )
     case "record": if (at.name != null) {
       return factory.createTypeReferenceNode(
         factory.createIdentifier(at.name),
@@ -170,7 +174,14 @@ export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
         false
       )]
     )
-    case "map": return factory.createCallExpression(
+    case "record" : {
+      const arg = [factory.createIdentifier(fp.name)]
+      return factory.createCallExpression(
+        factory.createIdentifier(fp.type.name+"_to_mich"),
+        undefined,
+        arg)
+    }
+    case "map": case "big_map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("list_to_mich")
@@ -254,17 +265,19 @@ export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
 
 export const valueToMich = (v : string, mt: MichelsonType) : ts.CallExpression => {
   switch (mt.prim) {
-    case "pair": return factory.createCallExpression(
+    case "pair": {
+      const id = mt.annots.length > 0 ? v + "." + mt.annots[0].slice(1) : v
+      return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("pair_to_mich")
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        [ valueToMich(v, mt.args[0]), valueToMich(v, mt.args[1]) ],
+        [ valueToMich(id, mt.args[0]), valueToMich(id, mt.args[1]) ],
         false
       )]
-    );
+    )};
     case "timestamp": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),

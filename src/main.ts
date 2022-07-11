@@ -16,7 +16,7 @@ const fieldTypeToFunc = (atype : ArchetypeType) : string => {
   }
 }
 
-const mich_to_fieldDecl = (atype : ArchetypeType, arg : string) : ts.CallExpression => {
+const mich_to_fieldDecl = (atype : ArchetypeType, arg : string, idx : number, len : number) : ts.CallExpression => {
   switch (atype.node) {
     case "map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -53,14 +53,43 @@ const mich_to_fieldDecl = (atype : ArchetypeType, arg : string) : ts.CallExpress
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createArrayLiteralExpression(
             [
-              mich_to_fieldDecl(atype.args[0], "x"),
-              mich_to_fieldDecl(atype.args[1], "y")
+              mich_to_fieldDecl(atype.args[0], "x", 0, 0),
+              mich_to_fieldDecl(atype.args[1], "y", 0, 0)
             ],
             false
           )
         )
       ]
     )
+    case "record": {
+      const larg = idx + 1 == len ? factory.createCallExpression(
+        factory.createIdentifier("mich_to_"+ atype.name),
+        undefined,
+        [factory.createObjectLiteralExpression(
+        [
+          factory.createPropertyAssignment(
+            factory.createIdentifier("prim"),
+            factory.createStringLiteral("Pair")
+          ),
+          factory.createPropertyAssignment(
+            factory.createIdentifier("args"),
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("fields"),
+                factory.createIdentifier("slice")
+              ),
+              undefined,
+              [factory.createNumericLiteral(idx)]
+            )
+          )
+        ],
+        false
+      )]) : factory.createCallExpression(
+        factory.createIdentifier("mich_to_" + atype.name),
+        undefined,
+        [factory.createIdentifier(arg)])
+      return larg
+    }
     case "date" : case "nat" : case "int" : default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -127,7 +156,7 @@ const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) 
           factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
             return factory.createPropertyAssignment(
               factory.createIdentifier(x.name),
-              mich_to_fieldDecl(x.type, "fields["+i+"]")
+              mich_to_fieldDecl(x.type, "fields["+i+"]", i, fields.length)
             )
           })))] :
           [factory.createReturnStatement(factory.createTrue())], /* TODO */
@@ -287,7 +316,7 @@ const entryArgsToMich = (a : Array<FunctionParameter>) => {
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        a.map(entryArgToMich),
+        a.map((x, i) => entryArgToMich(x)),
         true
       )]
     )
@@ -749,13 +778,12 @@ const get_contract_class_node = (ci : ContractInterface) => {
                     undefined,
                     [
                       factory.createStringLiteral("./contracts/"+ci.name+".arl"),
-                      factory.createObjectLiteralExpression(
-                        [factory.createPropertyAssignment(
-                          factory.createIdentifier("publickey"),
-                          factory.createIdentifier("publickey")
-                        )],
-                        true
-                      ),
+                      factory.createObjectLiteralExpression(ci.parameters.filter(x => !x.const).map(x =>
+                        factory.createPropertyAssignment(
+                          factory.createIdentifier(x.name),
+                          factory.createIdentifier(x.name)
+                        )
+                      ), true),
                       factory.createIdentifier("params")
                     ]
                   ))
