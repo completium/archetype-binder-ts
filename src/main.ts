@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import contract_json from '../examples/normalizer.json'
-import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entryArgToMich, Entrypoint, Enum, Field, FunctionParameter, MichelsonType, Record, StorageElement, valueToMich, valuetoMichType } from "./utils";
+import contract_json from '../examples/oracle.json'
+import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -10,8 +10,9 @@ const contract_interface : ContractInterface = contract_json
 
 const fieldTypeToFunc = (atype : ArchetypeType) : string => {
   switch (atype.node) {
-    case "date": return "mich_to_date"
-    case "nat": case "int": return "mich_to_bigint"
+    case "date" : return "mich_to_date"
+    case "nat"  : return "mich_to_nat"
+    case "int"  : return "mich_to_int"
     default: return "mich_to_string"
   }
 }
@@ -200,6 +201,21 @@ const fieldToCmpExpr = (f: Omit<Field,"is_key">) => {
         []
       )
     );
+    case "int" : case "nat" : case "rational" :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("a"),
+            factory.createIdentifier(f.name)
+          ),
+          factory.createIdentifier("equals")
+        ),
+        undefined,
+        [factory.createPropertyAccessExpression(
+          factory.createIdentifier("b"),
+          factory.createIdentifier(f.name)
+        )]
+      )
     default: return factory.createBinaryExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("a"),
@@ -300,29 +316,6 @@ const assetValueToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_
 const assetContainerToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_container_mich_type", a.container_type_michelson)
 const recordToMichTypeDecl = (r : Record) => entityToMichTypeDecl(r.name + "_mich_type", r.type_michelson)
 
-const entryArgsToMich = (a : Array<FunctionParameter>) => {
-  if (a.length == 0) {
-    return factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
-      factory.createIdentifier("unit_mich")
-    )
-  } else if (a.length == 1) {
-    return entryArgToMich(a[0])
-  } else {
-    return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("pair_to_mich")
-      ),
-      undefined,
-      [factory.createArrayLiteralExpression(
-        a.map((x, i) => entryArgToMich(x)),
-        true
-      )]
-    )
-  }
-}
-
 const entryToArgToMichDecl = (e: Entrypoint) : ts.VariableDeclarationList => {
   return factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
@@ -342,7 +335,7 @@ const entryToArgToMichDecl = (e: Entrypoint) : ts.VariableDeclarationList => {
         ),
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(entryArgsToMich(e.args))],
+          [factory.createReturnStatement(function_params_to_mich(e.args))],
           true
         )
       )
@@ -407,7 +400,7 @@ const assetContainerToTypeDecl = (a : Asset) => {
     ))
 }
 
-const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType) => {
+const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType, fields : Array<Omit<Field, "is_key">>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -439,7 +432,7 @@ const entityToMichDecl = (entity_postfix : string, aname : string, mt : Michelso
         ),
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(valueToMich("x", mt))],
+          [factory.createReturnStatement(entity_to_mich("x", mt, fields))],
           true
         )
       )
@@ -448,10 +441,10 @@ const entityToMichDecl = (entity_postfix : string, aname : string, mt : Michelso
   ))
 }
 
-const assetKeyToMichDecl = (a : Asset) => entityToMichDecl("_key", a.name, a.key_type_michelson)
-const assetValueToMichDecl = (a : Asset) =>  entityToMichDecl("_value", a.name, a.value_type_michelson)
-const assetContainerToMichDecl = (a : Asset) => entityToMichDecl("_container", a.name, a.container_type_michelson)
-const recordToMichDecl = (r : Record) => entityToMichDecl("", r.name, r.type_michelson)
+const assetKeyToMichDecl = (a : Asset) => entityToMichDecl("_key", a.name, a.key_type_michelson, a.fields.filter(x => x.is_key))
+const assetValueToMichDecl = (a : Asset) =>  entityToMichDecl("_value", a.name, a.value_type_michelson, a.fields.filter(x => !x.is_key))
+const assetContainerToMichDecl = (a : Asset) => entityToMichDecl("_container", a.name, a.container_type_michelson, a.fields)
+const recordToMichDecl = (r : Record) => entityToMichDecl("", r.name, r.type_michelson, r.fields)
 
 const contractParameterToParamDecl = (fp : FunctionParameter) => {
   return factory.createParameterDeclaration(

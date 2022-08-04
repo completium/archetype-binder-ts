@@ -106,8 +106,27 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
     );
     case "string":    return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "signature": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
-    case "int":       return factory.createKeywordTypeNode(SyntaxKind.BigIntKeyword);
-    case "nat":       return factory.createKeywordTypeNode(SyntaxKind.BigIntKeyword);
+    case "int":       return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Int")
+      ),
+      undefined
+    );
+    case "nat":       return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Nat")
+      ),
+      undefined
+    );
+    case "rational":       return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Rational")
+      ),
+      undefined
+    );
     case "asset":     return factory.createTypeReferenceNode(
       factory.createIdentifier(at.name+"_container"),
       undefined
@@ -140,254 +159,245 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
   }
 }
 
-export const entryArgToMich = (fp: FunctionParameter) : ts.CallExpression => {
-  switch (fp.type.node) {
-    case "string": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("string_to_mich")
-      ),
-      undefined,
-      [factory.createIdentifier(fp.name)]
-    );
-    case "contract": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier(fp.name),
-        factory.createIdentifier("to_mich")
-      ),
-      undefined,
-      []
-    )
-    case "asset_value": return factory.createCallExpression(
-      factory.createIdentifier(fp.type.args[0].name+"_value_to_mich"),
-      undefined,
-      [factory.createIdentifier(fp.name)]
-    )
-    case "tuple": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("pair_to_mich")
-      ),
-      undefined,
-      [factory.createArrayLiteralExpression(
-        fp.type.args.map((x,i) => entryArgToMich({ name:fp.name+"["+i+"]", type: fp.type.args[i] })),
-        false
-      )]
-    )
-    case "record" : {
-      const arg = [factory.createIdentifier(fp.name)]
-      return factory.createCallExpression(
-        factory.createIdentifier(fp.type.name+"_to_mich"),
+/* To Micheline utils ------------------------------------------------------ */
+
+const class_to_mich = (x  :ts.Expression) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      x,
+      factory.createIdentifier("to_mich")
+    ),
+    undefined,
+    []
+  )
+}
+
+const string_to_mich = (x : ts.Expression) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("string_to_mich")
+    ),
+    undefined,
+    [x]
+  );
+}
+
+const date_to_mich = (x : ts.Expression) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("date_to_mich")
+    ),
+    undefined,
+    [x]
+  );
+}
+
+const asset_value_to_mich = (type_name : string | null, x : ts.Expression) => {
+  if (type_name == null) {
+    throw (new Error("asset_value_to_mich: null type name"))
+  }
+  return factory.createCallExpression(
+    factory.createIdentifier(type_name + "_value_to_mich"),
+    undefined,
+    [x]
+  )
+}
+
+const tuple_to_mich = (name : string, types : ArchetypeType[]) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("pair_to_mich")
+    ),
+    undefined,
+    [factory.createArrayLiteralExpression(
+      types.map((x,i) => function_param_to_mich({ name: name + "[" + i + "]", type: x })),
+      false
+    )]
+  )
+}
+
+const record_to_mich = (name : string, x : ts.Expression) => {
+  return factory.createCallExpression(
+    factory.createIdentifier(name + "_to_mich"),
+    undefined,
+    [x])
+}
+
+const internal_map_to_mich = (name : string, decls : ts.CallExpression[]) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("list_to_mich")
+    ),
+    undefined,
+    [
+      factory.createIdentifier(name),
+      factory.createArrowFunction(
         undefined,
-        arg)
-    }
-    case "map": case "big_map" : return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("list_to_mich")
-      ),
-      undefined,
-      [
-        factory.createIdentifier(fp.name),
-        factory.createArrowFunction(
+        undefined,
+        [factory.createParameterDeclaration(
           undefined,
           undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("x"),
-            undefined,
-            undefined,
-            undefined
-          )],
           undefined,
-          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createBlock(
-            [
-              factory.createVariableStatement(
-                undefined,
-                factory.createVariableDeclarationList(
-                  [factory.createVariableDeclaration(
-                    factory.createIdentifier("x_key"),
-                    undefined,
-                    undefined,
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("x"),
-                      factory.createNumericLiteral("0")
-                    )
-                  )],
-                  ts.NodeFlags.Const
-                )
+          factory.createIdentifier("x"),
+          undefined,
+          undefined,
+          undefined
+        )],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [factory.createVariableDeclaration(
+                  factory.createIdentifier("x_key"),
+                  undefined,
+                  undefined,
+                  factory.createElementAccessExpression(
+                    factory.createIdentifier("x"),
+                    factory.createNumericLiteral("0")
+                  )
+                )],
+                ts.NodeFlags.Const
+              )
+            ),
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [factory.createVariableDeclaration(
+                  factory.createIdentifier("x_value"),
+                  undefined,
+                  undefined,
+                  factory.createElementAccessExpression(
+                    factory.createIdentifier("x"),
+                    factory.createNumericLiteral("1")
+                  )
+                )],
+                ts.NodeFlags.Const
+              )
+            ),
+            factory.createReturnStatement(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("elt_to_mich")
               ),
-              factory.createVariableStatement(
-                undefined,
-                factory.createVariableDeclarationList(
-                  [factory.createVariableDeclaration(
-                    factory.createIdentifier("x_value"),
-                    undefined,
-                    undefined,
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("x"),
-                      factory.createNumericLiteral("1")
-                    )
-                  )],
-                  ts.NodeFlags.Const
-                )
-              ),
-              factory.createReturnStatement(factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier("ex"),
-                  factory.createIdentifier("elt_to_mich")
-                ),
-                undefined,
-                [
-                  entryArgToMich({ name: "x_key", type: fp.type.args[0] }),
-                  entryArgToMich({ name: "x_value", type: fp.type.args[1] })
-                ]
-              ))
-            ],
-            true
-          )
+              undefined,
+              decls
+            ))
+          ],
+          true
         )
-      ]
-    )
-    default:  return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("string_to_mich")
-      ),
-      undefined,
-      [factory.createIdentifier(fp.name)]
-    );
+      )
+    ]
+  )
+}
+
+const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type : ArchetypeType | null) => {
+  if (null == key_type) throw new Error("map_to_mich: null key type")
+  if (null == value_type) throw new Error("map_to_mich: null value type")
+  return internal_map_to_mich(name, [
+    function_param_to_mich({ name: "x_key", type: key_type }),
+    function_param_to_mich({ name: "x_value", type: value_type })
+  ])
+}
+
+const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
+  switch (fp.type.node) {
+    case "signature"   :
+    case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
+    case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
+    case "int"         :
+    case "nat"         :
+    case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
+    case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
+    case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
+    case "record"      : if (fp.type.name == null) {
+      throw new Error("function_param_to_mich: null record name")
+    } else return record_to_mich(fp.type.name, factory.createIdentifier(fp.name))
+    case "map"         :
+    case "big_map"     : return map_to_mich(fp.name, fp.type.args[0], fp.type.args[1])
+    default            : throw new Error("function_param_to_mich: unhandled type '" + fp.type.node + "'")
   }
 }
 
-export const valueToMich = (v : string, mt: MichelsonType) : ts.CallExpression => {
-  switch (mt.prim) {
-    case "pair": {
-      const id = mt.annots.length > 0 ? v + "." + mt.annots[0].slice(1) : v
-      return factory.createCallExpression(
+export const function_params_to_mich = (a : Array<FunctionParameter>) => {
+  if (a.length == 0) {
+    return factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("unit_mich")
+    )
+  } else if (a.length == 1) {
+    return function_param_to_mich(a[0])
+  } else {
+    return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("pair_to_mich")
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        [ valueToMich(id, mt.args[0]), valueToMich(id, mt.args[1]) ],
-        false
+        a.map((x, i) => function_param_to_mich(x)),
+        true
       )]
-    )};
-    case "timestamp": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("date_to_mich")
-      ),
-      undefined,
-      [mt.annots.length > 0 ?
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier(v),
-          factory.createIdentifier(mt.annots[0].slice(1))) :
-        factory.createIdentifier(v)
-      ]
-    );
-    case "nat": case "int": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("bigint_to_mich")
-      ),
-      undefined,
-      [mt.annots.length > 0 ?
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier(v),
-          factory.createIdentifier(mt.annots[0].slice(1))) :
-        factory.createIdentifier(v)
-      ]
-    );
-    case "big_map": case "map": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("list_to_mich")
-      ),
-      undefined,
-      [
-        mt.annots.length > 0 ?
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier(v),
-          factory.createIdentifier(mt.annots[0].slice(1))) :
-        factory.createIdentifier(v),
-        factory.createArrowFunction(
-          undefined,
-          undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("x"),
-            undefined,
-            undefined,
-            undefined
-          )],
-          undefined,
-          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createBlock(
-            [
-              factory.createVariableStatement(
-                undefined,
-                factory.createVariableDeclarationList(
-                  [factory.createVariableDeclaration(
-                    factory.createIdentifier("x_key"),
-                    undefined,
-                    undefined,
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("x"),
-                      factory.createNumericLiteral("0")
-                    )
-                  )],
-                  ts.NodeFlags.Const
-                )
-              ),
-              factory.createVariableStatement(
-                undefined,
-                factory.createVariableDeclarationList(
-                  [factory.createVariableDeclaration(
-                    factory.createIdentifier("x_value"),
-                    undefined,
-                    undefined,
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("x"),
-                      factory.createNumericLiteral("1")
-                    )
-                  )],
-                  ts.NodeFlags.Const
-                )
-              ),
-              factory.createReturnStatement(factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier("ex"),
-                  factory.createIdentifier("elt_to_mich")
-                ),
-                undefined,
-                [
-                  valueToMich("x_key", mt.args[0]),
-                  valueToMich("x_value", mt.args[1])
-                ]
-              ))
-            ],
-            true
-          )
-        )
-      ]
-    );
-    default: return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("string_to_mich")
-      ),
-      undefined,
-      [factory.createIdentifier(v)])
+    )
   }
 }
+
+const get_archetype_type_of = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+  for (var i = 0; i < fields.length; i++) {
+    const field = fields[i]
+    if (field.name == name) {
+      return field.type
+    }
+  }
+}
+
+const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
+  switch (mt.prim) {
+    case "string"    : return { node: "string", name: null, args: [] }
+    case "int"       : return { node: "int", name: null, args: [] }
+    case "timestamp" : return { node: "date", name: null, args: [] }
+    default: throw new Error("mich_type_to_archetype: cannot convert prim '" + mt.prim + "'")
+  }
+}
+
+export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omit<Field, "is_key">>) : ts.CallExpression => {
+  if (mt.annots.length > 0) {
+    const name = mt.annots[0].slice(1)
+    const atype = get_archetype_type_of(name, fields)
+    if (undefined == atype) {
+      throw new Error("entity_to_mich: type not found for '" + name + "'")
+    }
+    const fp = { name: v + "." + name, type : atype }
+    return function_param_to_mich(fp)
+  } else {
+    switch (mt.prim) {
+      case "pair" : return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("pair_to_mich")
+        ),
+        undefined,
+        [factory.createArrayLiteralExpression(
+          [ entity_to_mich(v, mt.args[0], fields), entity_to_mich(v, mt.args[1], fields) ],
+          false
+        )]
+      )
+      case "map"     :
+      case "big_map" : return internal_map_to_mich(v, [
+        entity_to_mich("x_key", mt.args[0], fields),
+        entity_to_mich("x_value", mt.args[1], fields)
+      ])
+      default: return function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) })
+    }
+  }
+}
+
 
 export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
   switch (mt.prim) {
