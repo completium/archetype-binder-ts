@@ -97,6 +97,28 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
       factory.createIdentifier("Date"),
       undefined
     )
+    case "duration":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Duration")
+      ),
+      undefined
+    );
+    case "option": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Option"),
+      ),
+      [ archetypeTypeToTsType(at.args[0]) ]
+    );
+    case "address":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Address")
+      ),
+      undefined
+    );
+    case "bool":      return factory.createKeywordTypeNode(SyntaxKind.BooleanKeyword)
     case "contract":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("ex"),
@@ -124,6 +146,13 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
       factory.createQualifiedName(
         factory.createIdentifier("ex"),
         factory.createIdentifier("Rational")
+      ),
+      undefined
+    );
+    case "currency":       return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Tez")
       ),
       undefined
     );
@@ -177,6 +206,17 @@ const string_to_mich = (x : ts.Expression) => {
     factory.createPropertyAccessExpression(
       factory.createIdentifier("ex"),
       factory.createIdentifier("string_to_mich")
+    ),
+    undefined,
+    [x]
+  );
+}
+
+const bool_to_mich = (x : ts.Expression) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("bool_to_mich")
     ),
     undefined,
     [x]
@@ -309,10 +349,17 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
   switch (fp.type.node) {
     case "signature"   :
+    case "bytes"       :
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
+    case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
     case "int"         :
     case "nat"         :
+    case "currency"    :
+    case "address"     :
+    case "duration"    :
+    case "rational"    :
+    case "option"      :
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
@@ -357,6 +404,14 @@ const get_archetype_type_of = (name : string, fields : Array<Omit<Field, "is_key
   }
 }
 
+const get_archetype_type_from_idx = (idx : number, fields : Array<Omit<Field, "is_key">>) => {
+  return fields[idx].type
+}
+
+const get_field_name_from_idx = (idx : number, fields : Array<Omit<Field, "is_key">>) => {
+  return fields[idx].name
+}
+
 const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
   switch (mt.prim) {
     case "string"    : return { node: "string", name: null, args: [] }
@@ -366,34 +421,57 @@ const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
   }
 }
 
-export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omit<Field, "is_key">>) : ts.CallExpression => {
+/**
+ * Generates To Michelson TS expression that follows its Michelson Type structure
+ * @param v value name
+ * @param mt local michelson type
+ * @param fields base of fields for type lookup
+ * @param fidx field index
+ * @returns pair of number of fields looked up so far and 'to_mich' expression
+ */
+export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omit<Field, "is_key">>, fidx : number = 0) : [number, ts.CallExpression] => {
   if (mt.annots.length > 0) {
-    const name = mt.annots[0].slice(1)
-    const atype = get_archetype_type_of(name, fields)
+    //const name = mt.annots[0].slice(1)
+    const name = get_field_name_from_idx(fidx, fields)
+
+    //const atype = get_archetype_type_of(name, fields)
+    const atype = get_archetype_type_from_idx(fidx, fields)
     if (undefined == atype) {
       throw new Error("entity_to_mich: type not found for '" + name + "'")
     }
     const fp = { name: v + "." + name, type : atype }
-    return function_param_to_mich(fp)
+    return [ fidx + 1, function_param_to_mich(fp) ]
   } else {
     switch (mt.prim) {
-      case "pair" : return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
-          factory.createIdentifier("pair_to_mich")
-        ),
-        undefined,
-        [factory.createArrayLiteralExpression(
-          [ entity_to_mich(v, mt.args[0], fields), entity_to_mich(v, mt.args[1], fields) ],
-          false
+      case "pair" : {
+        // left
+        const [fidx0, expr0] = entity_to_mich(v, mt.args[0], fields, fidx)
+        // right
+        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx0)
+        return [fidx1, factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("pair_to_mich")
+          ),
+          undefined,
+          [factory.createArrayLiteralExpression(
+            [ expr0, expr1 ],
+            false
+          )]
         )]
-      )
+      }
       case "map"     :
-      case "big_map" : return internal_map_to_mich(v, [
-        entity_to_mich("x_key", mt.args[0], fields),
-        entity_to_mich("x_value", mt.args[1], fields)
-      ])
-      default: return function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) })
+      case "big_map" : {
+        // left
+        const [ _,    expr0] = entity_to_mich(v, mt.args[0], fields, fidx)
+        // right
+        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx)
+        return [ fidx1, internal_map_to_mich(v, [
+          expr0,
+          expr1
+        ]) ]
+      }
+      default: return [ fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) }) ]
     }
   }
 }
@@ -427,6 +505,22 @@ export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
         [ valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ],
         true
       )]
+    )
+    case "option":
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("option_annot_to_mich_type")
+      ),
+      undefined,
+      [
+        valuetoMichType(mt.args[0]),
+        factory.createArrayLiteralExpression(
+          annots,
+          false
+        )
+      ]
     )
     default: {
       const prim = mt.prim == null ? "string" : mt.prim

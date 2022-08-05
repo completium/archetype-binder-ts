@@ -1,0 +1,388 @@
+{
+  "name": "test_binding",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [
+      {
+        "name": "all",
+        "fields": [
+          {
+            "name": "a",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "b",
+            "type": {
+              "node": "int",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "c",
+            "type": {
+              "node": "currency",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "d",
+            "type": {
+              "node": "rational",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "e",
+            "type": {
+              "node": "bool",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "f",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "g",
+            "type": {
+              "node": "string",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "h",
+            "type": {
+              "node": "date",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "i",
+            "type": {
+              "node": "duration",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "j",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "k",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "nat",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%f1"
+                  ],
+                  "array": []
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "int",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%f2"
+                      ],
+                      "array": []
+                    },
+                    {
+                      "prim": "mutez",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%f3"
+                      ],
+                      "array": []
+                    }
+                  ],
+                  "annots": [],
+                  "array": []
+                }
+              ],
+              "annots": [],
+              "array": []
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "int",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [],
+                          "array": []
+                        },
+                        {
+                          "prim": "nat",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [],
+                          "array": []
+                        }
+                      ],
+                      "annots": [
+                        "%f4"
+                      ],
+                      "array": []
+                    },
+                    {
+                      "prim": "bool",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%f5"
+                      ],
+                      "array": []
+                    }
+                  ],
+                  "annots": [],
+                  "array": []
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "bytes",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%f6"
+                      ],
+                      "array": []
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "string",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%f7"
+                          ],
+                          "array": []
+                        },
+                        {
+                          "prim": "pair",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "timestamp",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [
+                                "%f8"
+                              ],
+                              "array": []
+                            },
+                            {
+                              "prim": "pair",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "int",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [
+                                    "%f9"
+                                  ],
+                                  "array": []
+                                },
+                                {
+                                  "prim": "pair",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "address",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%f10"
+                                      ],
+                                      "array": []
+                                    },
+                                    {
+                                      "prim": "option",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [
+                                        {
+                                          "prim": "nat",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [],
+                                          "array": []
+                                        }
+                                      ],
+                                      "annots": [
+                                        "%f11"
+                                      ],
+                                      "array": []
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": []
+                                }
+                              ],
+                              "annots": [],
+                              "array": []
+                            }
+                          ],
+                          "annots": [],
+                          "array": []
+                        }
+                      ],
+                      "annots": [],
+                      "array": []
+                    }
+                  ],
+                  "annots": [],
+                  "array": []
+                }
+              ],
+              "annots": [],
+              "array": []
+            }
+          ],
+          "annots": [],
+          "array": []
+        }
+      }
+    ],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "s",
+      "type": {
+        "node": "int",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "myentry",
+      "args": [
+        {
+          "name": "r",
+          "type": {
+            "node": "record",
+            "name": "all",
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "errors": []
+}

@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import contract_json from '../examples/oracle.json'
+import contract_json from '../examples/test-binding.json'
 import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
@@ -432,7 +432,7 @@ const entityToMichDecl = (entity_postfix : string, aname : string, mt : Michelso
         ),
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(entity_to_mich("x", mt, fields))],
+          [factory.createReturnStatement((entity_to_mich("x", mt, fields))[1])],
           true
         )
       )
@@ -672,6 +672,87 @@ const assetValueToBigMapGetter = (a : Asset) => {
   )
 }
 
+const storage_elt_to_class = (elt_name : string, class_name : string) => {
+  return factory.createMethodDeclaration(
+    undefined,
+    [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+    undefined,
+    factory.createIdentifier("get_" + elt_name),
+    undefined,
+    undefined,
+    [],
+    factory.createTypeReferenceNode(
+      factory.createIdentifier("Promise"),
+      [factory.createTypeReferenceNode(
+        factory.createQualifiedName(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier(class_name)
+        ),
+        undefined
+      )]
+    ),
+    factory.createBlock(
+      [
+        factory.createIfStatement(
+          factory.createBinaryExpression(
+            factory.createPropertyAccessExpression(
+              factory.createThis(),
+              factory.createIdentifier("address")
+            ),
+            factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+            factory.createIdentifier("undefined")
+          ),
+          factory.createBlock(
+            [
+              factory.createVariableStatement(
+                undefined,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(
+                    factory.createIdentifier("storage"),
+                    undefined,
+                    undefined,
+                    factory.createAwaitExpression(factory.createCallExpression(
+                      factory.createPropertyAccessExpression(
+                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("get_storage")
+                      ),
+                      undefined,
+                      [factory.createPropertyAccessExpression(
+                        factory.createThis(),
+                        factory.createIdentifier("address")
+                      )]
+                    ))
+                  )],
+                  ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
+                )
+              ),
+              factory.createReturnStatement(factory.createNewExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier(class_name)
+                ),
+                undefined,
+                [factory.createPropertyAccessExpression(
+                  factory.createIdentifier("storage"),
+                  factory.createIdentifier(elt_name)
+                )]
+              ))
+            ],
+            true
+          ),
+          undefined
+        ),
+        factory.createThrowStatement(factory.createNewExpression(
+          factory.createIdentifier("Error"),
+          undefined,
+          [factory.createStringLiteral("Contract not initialised")]
+        ))
+      ],
+      true
+    )
+  )
+}
+
 const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   switch (selt.type.node) {
     case "asset": {
@@ -683,6 +764,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
         }
       }
     }
+    case "int": return storage_elt_to_class(selt.name, "Int")
   }
   return []
 }
