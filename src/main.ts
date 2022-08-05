@@ -672,7 +672,7 @@ const assetValueToBigMapGetter = (a : Asset) => {
   )
 }
 
-const storage_elt_to_class = (elt_name : string, class_name : string) => {
+const storage_elt_to_class = (elt_name : string, class_name : string, nb_elements : number) => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
@@ -732,10 +732,11 @@ const storage_elt_to_class = (elt_name : string, class_name : string) => {
                   factory.createIdentifier(class_name)
                 ),
                 undefined,
-                [factory.createPropertyAccessExpression(
+                [nb_elements > 1 ? factory.createPropertyAccessExpression(
                   factory.createIdentifier("storage"),
-                  factory.createIdentifier(elt_name)
-                )]
+                  factory.createIdentifier(elt_name)) :
+                  factory.createIdentifier("storage")
+                ]
               ))
             ],
             true
@@ -754,17 +755,18 @@ const storage_elt_to_class = (elt_name : string, class_name : string) => {
 }
 
 const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
+  const nb_storage_elements = ci.storage.length
   switch (selt.type.node) {
     case "asset": {
       const assetType = ci.types.assets.find(x => x.name == selt.name)
       if (assetType != undefined) {
         const is_big = assetType.container_kind == "big_map"
         if (is_big) {
-          return [assetValueToBigMapGetter(assetType)]
+          return [assetValueToBigMapGetter(assetType)] /* TODO pass nb_storage_elements */
         }
       }
     }
-    case "int": return storage_elt_to_class(selt.name, "Int")
+    case "int": return storage_elt_to_class(selt.name, "Int", nb_storage_elements)
   }
   return []
 }

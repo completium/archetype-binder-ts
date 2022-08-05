@@ -104,6 +104,13 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
       ),
       undefined
     );
+    case "bytes":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Bytes")
+      ),
+      undefined
+    );
     case "option": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("ex"),
@@ -349,12 +356,12 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
   switch (fp.type.node) {
     case "signature"   :
-    case "bytes"       :
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
     case "int"         :
     case "nat"         :
+    case "bytes"       :
     case "currency"    :
     case "address"     :
     case "duration"    :
