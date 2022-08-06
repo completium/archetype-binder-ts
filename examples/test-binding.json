@@ -366,6 +366,30 @@
         "args": []
       },
       "const": false
+    },
+    {
+      "name": "o",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "r",
+      "type": {
+        "node": "record",
+        "name": "all",
+        "args": []
+      },
+      "const": false
     }
   ],
   "entrypoints": [
@@ -373,7 +397,7 @@
       "name": "myentry",
       "args": [
         {
-          "name": "r",
+          "name": "arg",
           "type": {
             "node": "record",
             "name": "all",
