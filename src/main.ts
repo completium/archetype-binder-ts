@@ -52,10 +52,13 @@ const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) 
                 factory.createCallExpression(
                   factory.createPropertyAccessExpression(
                     factory.createIdentifier("ex"),
-                    factory.createIdentifier("mich_to_pairs")
+                    factory.createIdentifier("annotated_mich_to_array")
                   ),
                   undefined,
-                  [factory.createIdentifier("v")]
+                  [
+                    factory.createIdentifier("v"),
+                    factory.createIdentifier(name + "_mich_type")
+                  ]
                 )
               )],
               ts.NodeFlags.Const

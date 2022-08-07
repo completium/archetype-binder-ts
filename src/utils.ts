@@ -350,6 +350,36 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
         [factory.createIdentifier(arg)])
       return larg
     }
+    case "option" :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("mich_to_option")
+        ),
+        undefined,
+        [
+          factory.createIdentifier(arg),
+          factory.createArrowFunction(
+            undefined,
+            undefined,
+            [factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("x"),
+              undefined,
+              undefined,
+              undefined
+            )],
+            undefined,
+            factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+            factory.createBlock(
+              [factory.createReturnStatement(mich_to_field_decl(atype.args[0], "x", 0, 0))],
+              false
+            )
+          )
+        ]
+      )
     default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -364,10 +394,17 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
 
 export const archetype_type_to_mich_to_name = (atype : ArchetypeType) : string => {
   switch (atype.node) {
-    case "date" : return "mich_to_date"
-    case "nat"  : return "mich_to_nat"
-    case "int"  : return "mich_to_int"
-    default: return "mich_to_string"
+    case "date"     : return "mich_to_date"
+    case "nat"      : return "mich_to_nat"
+    case "int"      : return "mich_to_int"
+    case "currency" : return "mich_to_tez"
+    case "duration" : return "mich_to_duration"
+    case "bool"     : return "mich_to_bool"
+    case "string"   : return "mich_to_string"
+    case "rational" : return "mich_to_rational"
+    case "address"  : return "mich_to_address"
+    case "bytes"    : return "mich_to_bytes"
+    default: throw new Error("archetype_type_to_mich_to_name: unknown type '" + atype.node + "'")
   }
 }
 
