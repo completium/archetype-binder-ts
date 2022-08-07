@@ -90,7 +90,9 @@ export type ContractInterface = {
   "errors": Array<MichelsonType>
 }
 
-export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any>  => {
+/* Archetype type to Typescript type --------------------------------------- */
+
+export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
   switch (at.node) {
     case "key":       return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "date":      return factory.createTypeReferenceNode(
@@ -116,7 +118,7 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
         factory.createIdentifier("ex"),
         factory.createIdentifier("Option"),
       ),
-      [ archetypeTypeToTsType(at.args[0]) ]
+      [ archetype_type_to_ts_type(at.args[0]) ]
     );
     case "address":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -174,13 +176,13 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
     case "map": case "big_map" : return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [factory.createTupleTypeNode([
-        archetypeTypeToTsType(at.args[0]),
-        archetypeTypeToTsType(at.args[1])
+        archetype_type_to_ts_type(at.args[0]),
+        archetype_type_to_ts_type(at.args[1])
       ])]
     );
     case "list":   return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
-      [archetypeTypeToTsType(at.args[0])]
+      [archetype_type_to_ts_type(at.args[0])]
     )
     case "record": if (at.name != null) {
       return factory.createTypeReferenceNode(
@@ -188,14 +190,321 @@ export const archetypeTypeToTsType = (at: ArchetypeType) : KeywordTypeNode<any> 
         undefined)
     };
     case "tuple": return factory.createTupleTypeNode([
-      archetypeTypeToTsType(at.args[0]),
-      archetypeTypeToTsType(at.args[1])
+      archetype_type_to_ts_type(at.args[0]),
+      archetype_type_to_ts_type(at.args[1])
     ]);
     default:       return factory.createKeywordTypeNode(SyntaxKind.StringKeyword)
   }
 }
 
-/* To Micheline utils ------------------------------------------------------ */
+/* Complex data type comparison generators --------------------------------- */
+
+const rm_milliseconds_from = (x : ts.PropertyAccessExpression) : ts.BinaryExpression => {
+  return factory.createBinaryExpression(
+    factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        x,
+        factory.createIdentifier("getTime")
+      ),
+      undefined,
+      []
+    ),
+    factory.createToken(ts.SyntaxKind.MinusToken),
+    factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        x,
+        factory.createIdentifier("getMilliseconds")
+      ),
+      undefined,
+      []
+    )
+  )
+}
+
+export const field_to_cmp_body = (f: Omit<Field,"is_key">) => {
+  switch (f.type.node) {
+    case "date": return  factory.createBinaryExpression(
+      factory.createParenthesizedExpression(rm_milliseconds_from(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("a"),
+          factory.createIdentifier(f.name)
+        )
+      )),
+      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+      factory.createParenthesizedExpression(rm_milliseconds_from(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("b"),
+          factory.createIdentifier(f.name)
+        )
+      ))
+    );
+    case "int"      :
+    case "nat"      :
+    case "rational" :
+    case "bytes"    :
+    case "address"  :
+    case "option"   :
+    case "currency" :
+    case "duration" :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("a"),
+            factory.createIdentifier(f.name)
+          ),
+          factory.createIdentifier("equals")
+        ),
+        undefined,
+        [factory.createPropertyAccessExpression(
+          factory.createIdentifier("b"),
+          factory.createIdentifier(f.name)
+        )]
+      )
+    default: return factory.createBinaryExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("a"),
+        factory.createIdentifier(f.name)
+      ),
+      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("b"),
+        factory.createIdentifier(f.name)
+      )
+    )
+  }
+}
+
+/* Michelson to Typescript utils ----------------------------------------------------- */
+
+export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : number, len : number) : ts.CallExpression => {
+  switch (atype.node) {
+    case "map" : return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("mich_to_map")
+      ),
+      undefined,
+      [
+        factory.createIdentifier(arg),
+        factory.createArrowFunction(
+          undefined,
+          undefined,
+          [
+            factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("x"),
+              undefined,
+              undefined,
+              undefined
+            ),
+            factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("y"),
+              undefined,
+              undefined,
+              undefined
+            )
+          ],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createArrayLiteralExpression(
+            [
+              mich_to_field_decl(atype.args[0], "x", 0, 0),
+              mich_to_field_decl(atype.args[1], "y", 0, 0)
+            ],
+            false
+          )
+        )
+      ]
+    )
+    case "record": {
+      const larg = idx + 1 == len ? factory.createCallExpression(
+        factory.createIdentifier("mich_to_"+ atype.name),
+        undefined,
+        [factory.createObjectLiteralExpression(
+        [
+          factory.createPropertyAssignment(
+            factory.createIdentifier("prim"),
+            factory.createStringLiteral("Pair")
+          ),
+          factory.createPropertyAssignment(
+            factory.createIdentifier("args"),
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("fields"),
+                factory.createIdentifier("slice")
+              ),
+              undefined,
+              [factory.createNumericLiteral(idx)]
+            )
+          )
+        ],
+        false
+      )]) : factory.createCallExpression(
+        factory.createIdentifier("mich_to_" + atype.name),
+        undefined,
+        [factory.createIdentifier(arg)])
+      return larg
+    }
+    default :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier(archetype_type_to_mich_to_name(atype))
+        ),
+        undefined,
+        [factory.createIdentifier(arg)]
+      )
+  }
+}
+
+export const archetype_type_to_mich_to_name = (atype : ArchetypeType) : string => {
+  switch (atype.node) {
+    case "date" : return "mich_to_date"
+    case "nat"  : return "mich_to_nat"
+    case "int"  : return "mich_to_int"
+    default: return "mich_to_string"
+  }
+}
+
+/* storage element getter formulas ----------------------------------------- */
+
+const access_nth_field = (x : ts.Expression, i : number) : ts.Expression => {
+  return factory.createElementAccessExpression(
+    x,
+    factory.createElementAccessExpression(
+      factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("Object"),
+          factory.createIdentifier("keys")
+        ),
+        undefined,
+        [x]
+      ),
+      factory.createNumericLiteral(""+i)
+    )
+  )
+}
+
+const get_record_type = (name : string | null, ci : ContractInterface) : Record => {
+  if (name != null) {
+    for (let i = 0; i < ci.types.records.length; i++) {
+      if (ci.types.records[i].name == name) {
+        return ci.types.records[i]
+      }
+    }
+  }
+  throw new Error("get_record_type: record '" + name + "' not found")
+}
+
+const get_field_annot_names = (r : Record) : { [key: string] : string } => {
+  const internal_get_fan =
+  (mt : MichelsonType, idx : number, acc : { [key: string] : string }) : [ number, { [key: string] : string } ] => {
+    if (mt.annots.length > 0) {
+      const annot = mt.annots[0].slice(1)
+      acc[r.fields[idx].name] = annot
+      return [ idx + 1, acc ]
+    } else {
+      switch (mt.prim) {
+        case "pair" : {
+          // left
+          const [idx_left,   acc_left] = internal_get_fan(mt.args[0], idx, acc)
+          // right
+          const [idx_right, acc_right] = internal_get_fan(mt.args[1], idx_left, acc_left)
+          return [idx_right, acc_right]
+        }
+        default : throw new Error("internal_get_fan: found a node which is not annotated nor is a pair")
+      }
+    }
+  }
+  const [ _, res ] = internal_get_fan(r.type_michelson, 0, {})
+  return res
+}
+
+export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Expression => {
+  switch (atype.node) {
+    case "bool"     :
+    case "string"   : return elt
+    case "int"      :
+    case "nat"      :
+    case "bytes"    :
+    case "address"  :
+    case "duration" : return factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
+      ),
+      undefined,
+      [ elt ]
+    )
+    case "rational" :
+      return factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Rational")
+      ),
+      undefined,
+      [
+        access_nth_field(elt, 0),
+        access_nth_field(elt, 1)
+      ]
+    )
+    case "currency" : return factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Tez")
+      ),
+      undefined,
+      [ elt, factory.createStringLiteral("mutez") ]
+    )
+    case "date"    : return factory.createNewExpression(
+      factory.createIdentifier("Date"),
+      undefined,
+      [ elt ]
+    )
+    case "option"  : return factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Option")
+      ),
+      [ archetype_type_to_ts_type(atype.args[0]) ],
+      [factory.createConditionalExpression(
+        factory.createBinaryExpression(
+          elt,
+          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+          factory.createNull()
+        ),
+        factory.createToken(ts.SyntaxKind.QuestionToken),
+        factory.createNull(),
+        factory.createToken(ts.SyntaxKind.ColonToken),
+        get_return_body(root, elt, atype.args[0], ci)
+      )]
+    )
+    case "record" : {
+      const r = get_record_type(atype.name, ci)
+      const field_annot_names = get_field_annot_names(r)
+      return factory.createObjectLiteralExpression(
+        r.fields.map(f => {
+          const field_value = factory.createPropertyAccessExpression(
+            root,
+            factory.createIdentifier(field_annot_names[f.name])
+          )
+          return factory.createPropertyAssignment(
+            factory.createIdentifier(f.name),
+            get_return_body(root, field_value, f.type, ci)
+          )
+        })
+      )
+    }
+  }
+  throw new Error("get_return_body: type '" + atype.node + "' not found")
+}
+
+/* Typescript To Micheline utils ------------------------------------------------------ */
 
 const class_to_mich = (x  :ts.Expression) => {
   return factory.createCallExpression(

@@ -1,107 +1,14 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/test-binding.json'
-import { ArchetypeType, archetypeTypeToTsType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
+import { ArchetypeType, get_return_body, archetype_type_to_ts_type, field_to_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 
 const contract_interface : ContractInterface = contract_json
 
-const fieldTypeToFunc = (atype : ArchetypeType) : string => {
-  switch (atype.node) {
-    case "date" : return "mich_to_date"
-    case "nat"  : return "mich_to_nat"
-    case "int"  : return "mich_to_int"
-    default: return "mich_to_string"
-  }
-}
-
-const mich_to_fieldDecl = (atype : ArchetypeType, arg : string, idx : number, len : number) : ts.CallExpression => {
-  switch (atype.node) {
-    case "map" : return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("mich_to_map")
-      ),
-      undefined,
-      [
-        factory.createIdentifier(arg),
-        factory.createArrowFunction(
-          undefined,
-          undefined,
-          [
-            factory.createParameterDeclaration(
-              undefined,
-              undefined,
-              undefined,
-              factory.createIdentifier("x"),
-              undefined,
-              undefined,
-              undefined
-            ),
-            factory.createParameterDeclaration(
-              undefined,
-              undefined,
-              undefined,
-              factory.createIdentifier("y"),
-              undefined,
-              undefined,
-              undefined
-            )
-          ],
-          undefined,
-          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createArrayLiteralExpression(
-            [
-              mich_to_fieldDecl(atype.args[0], "x", 0, 0),
-              mich_to_fieldDecl(atype.args[1], "y", 0, 0)
-            ],
-            false
-          )
-        )
-      ]
-    )
-    case "record": {
-      const larg = idx + 1 == len ? factory.createCallExpression(
-        factory.createIdentifier("mich_to_"+ atype.name),
-        undefined,
-        [factory.createObjectLiteralExpression(
-        [
-          factory.createPropertyAssignment(
-            factory.createIdentifier("prim"),
-            factory.createStringLiteral("Pair")
-          ),
-          factory.createPropertyAssignment(
-            factory.createIdentifier("args"),
-            factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier("fields"),
-                factory.createIdentifier("slice")
-              ),
-              undefined,
-              [factory.createNumericLiteral(idx)]
-            )
-          )
-        ],
-        false
-      )]) : factory.createCallExpression(
-        factory.createIdentifier("mich_to_" + atype.name),
-        undefined,
-        [factory.createIdentifier(arg)])
-      return larg
-    }
-    case "date" : case "nat" : case "int" : default :
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
-          factory.createIdentifier(fieldTypeToFunc(atype))
-        ),
-        undefined,
-        [factory.createIdentifier(arg)]
-      )
-  }
-}
+// https://ts-ast-viewer.com/#
 
 const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
   return factory.createVariableStatement(
@@ -157,7 +64,7 @@ const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) 
           factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
             return factory.createPropertyAssignment(
               factory.createIdentifier(x.name),
-              mich_to_fieldDecl(x.type, "fields["+i+"]", i, fields.length)
+              mich_to_field_decl(x.type, "fields["+i+"]", i, fields.length)
             )
           })))] :
           [factory.createReturnStatement(factory.createTrue())], /* TODO */
@@ -171,83 +78,6 @@ const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) 
 
 const michToAssetValueDecl = (a : Asset) => michToentityDecl(a.name + "_value", a.fields.filter(x => !x.is_key))
 const michToRecordDecl = (r : Record) => michToentityDecl(r.name, r.fields)
-
-// https://ts-ast-viewer.com/#
-
-const rm_milliseconds_from = (x : ts.PropertyAccessExpression) : ts.BinaryExpression => {
-  return factory.createBinaryExpression(
-    factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        x,
-        factory.createIdentifier("getTime")
-      ),
-      undefined,
-      []
-    ),
-    factory.createToken(ts.SyntaxKind.MinusToken),
-    factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        x,
-        factory.createIdentifier("getMilliseconds")
-      ),
-      undefined,
-      []
-    )
-  )
-}
-
-const fieldToCmpExpr = (f: Omit<Field,"is_key">) => {
-  switch (f.type.node) {
-    case "date": return  factory.createBinaryExpression(
-      factory.createParenthesizedExpression(rm_milliseconds_from(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("a"),
-          factory.createIdentifier(f.name)
-        )
-      )),
-      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      factory.createParenthesizedExpression(rm_milliseconds_from(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("b"),
-          factory.createIdentifier(f.name)
-        )
-      ))
-    );
-    case "int"      :
-    case "nat"      :
-    case "rational" :
-    case "bytes"    :
-    case "address"  :
-    case "option"   :
-    case "currency" :
-    case "duration" :
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier("a"),
-            factory.createIdentifier(f.name)
-          ),
-          factory.createIdentifier("equals")
-        ),
-        undefined,
-        [factory.createPropertyAccessExpression(
-          factory.createIdentifier("b"),
-          factory.createIdentifier(f.name)
-        )]
-      )
-    default: return factory.createBinaryExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("a"),
-        factory.createIdentifier(f.name)
-      ),
-      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("b"),
-        factory.createIdentifier(f.name)
-      )
-    )
-  }
-}
 
 const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
   return factory.createVariableStatement(
@@ -294,9 +124,9 @@ const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) =
               return factory.createBinaryExpression(
                 acc,
                 factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
-                fieldToCmpExpr(f)
+                field_to_cmp_body(f)
               )
-            },fieldToCmpExpr(fields[0]))
+            },field_to_cmp_body(fields[0]))
           ))],
           true
         )
@@ -368,7 +198,7 @@ const fieldToPropertyDecl = (f : Omit<Field, "is_key">) => {
     undefined,
     factory.createIdentifier(f.name),
     undefined,
-    archetypeTypeToTsType(f.type)
+    archetype_type_to_ts_type(f.type)
   )
 }
 
@@ -380,7 +210,7 @@ const entityToInterfaceDecl = (name : string, fields : Array<Omit<Field,"is_key"
       [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
       factory.createIdentifier(name),
       undefined,
-      archetypeTypeToTsType(field.type)
+      archetype_type_to_ts_type(field.type)
     )
   } else {
     return factory.createInterfaceDeclaration(
@@ -472,7 +302,7 @@ const contractParameterToParamDecl = (fp : FunctionParameter) => {
     undefined,
     factory.createIdentifier(fp.name),
     undefined,
-    archetypeTypeToTsType(fp.type),
+    archetype_type_to_ts_type(fp.type),
     undefined
   )
 }
@@ -484,7 +314,7 @@ const storageElementToParamDecl = (se : StorageElement) => {
     undefined,
     factory.createIdentifier(se.name),
     factory.createToken(SyntaxKind.QuestionToken),
-    archetypeTypeToTsType(se.type),
+    archetype_type_to_ts_type(se.type),
     undefined
   )
 }
@@ -561,137 +391,7 @@ const entryToMethod = (e : Entrypoint) => {
   )
 }
 
-const assetValueToBigMapGetter = (a : Asset) => {
-  return factory.createMethodDeclaration(
-    undefined,
-    [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
-    undefined,
-    factory.createIdentifier("get_"+a.name+"_value"),
-    undefined,
-    undefined,
-    [factory.createParameterDeclaration(
-      undefined,
-      undefined,
-      undefined,
-      factory.createIdentifier("key"),
-      undefined,
-      factory.createTypeReferenceNode(
-        factory.createIdentifier(a.name+"_key"),
-        undefined
-      ),
-      undefined
-    )],
-    factory.createTypeReferenceNode(
-      factory.createIdentifier("Promise"),
-      [factory.createUnionTypeNode([
-        factory.createTypeReferenceNode(
-          factory.createIdentifier(a.name+"_value"),
-          undefined
-        ),
-        factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
-      ])]
-    ),
-    factory.createBlock(
-      [factory.createIfStatement(
-        factory.createBinaryExpression(
-          factory.createPropertyAccessExpression(
-            factory.createThis(),
-            factory.createIdentifier("address")
-          ),
-          factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-          factory.createIdentifier("undefined")
-        ),
-        factory.createBlock(
-          [
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("storage"),
-                  undefined,
-                  undefined,
-                  factory.createAwaitExpression(factory.createCallExpression(
-                    factory.createPropertyAccessExpression(
-                      factory.createIdentifier("ex"),
-                      factory.createIdentifier("get_storage")
-                    ),
-                    undefined,
-                    [factory.createPropertyAccessExpression(
-                      factory.createThis(),
-                      factory.createIdentifier("address")
-                    )]
-                  ))
-                )],
-                ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
-              )
-            ),
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("data"),
-                  undefined,
-                  undefined,
-                  factory.createAwaitExpression(factory.createCallExpression(
-                    factory.createPropertyAccessExpression(
-                      factory.createIdentifier("ex"),
-                      factory.createIdentifier("get_big_map_value")
-                    ),
-                    undefined,
-                    [
-                      factory.createCallExpression(
-                        factory.createIdentifier("BigInt"),
-                        undefined,
-                        [factory.createPropertyAccessExpression(
-                          factory.createIdentifier("storage"),
-                          factory.createIdentifier(a.name)
-                        )]
-                      ),
-                      factory.createCallExpression(
-                        factory.createIdentifier(a.name+"_key_to_mich"),
-                        undefined,
-                        [factory.createIdentifier("key")]
-                      ),
-                      factory.createIdentifier(a.name+"_key_mich_type")
-                    ]
-                  ))
-                )],
-                ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
-              )
-            ),
-            factory.createIfStatement(
-              factory.createBinaryExpression(
-                factory.createIdentifier("data"),
-                factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-                factory.createIdentifier("undefined")
-              ),
-              factory.createBlock(
-                [factory.createReturnStatement(factory.createCallExpression(
-                  factory.createIdentifier("mich_to_" + a.name + "_value"),
-                  undefined,
-                  [factory.createIdentifier("data")]
-                ))],
-                true
-              ),
-              factory.createBlock(
-                [factory.createReturnStatement(factory.createIdentifier("undefined"))],
-                true
-              )
-            )
-          ],
-          true
-        ),
-        factory.createBlock(
-          [factory.createReturnStatement(factory.createIdentifier("undefined"))],
-          true
-        )
-      )],
-      true
-    )
-  )
-}
-
-const storage_elt_to_getter_skeleton = (elt_name : string, ts_type : ts.KeywordTypeNode<any>, body : ts.Expression) => {
+const storage_elt_to_getter_skeleton = (elt_name : string, args : ts.ParameterDeclaration[], ts_type : ts.KeywordTypeNode<any>, body : ts.Statement[]) => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
@@ -699,7 +399,7 @@ const storage_elt_to_getter_skeleton = (elt_name : string, ts_type : ts.KeywordT
     factory.createIdentifier("get_" + elt_name),
     undefined,
     undefined,
-    [],
+    args,
     factory.createTypeReferenceNode(
       factory.createIdentifier("Promise"),
       [ ts_type ]
@@ -716,7 +416,7 @@ const storage_elt_to_getter_skeleton = (elt_name : string, ts_type : ts.KeywordT
             factory.createIdentifier("undefined")
           ),
           factory.createBlock(
-            [
+            ([
               factory.createVariableStatement(
                 undefined,
                 factory.createVariableDeclarationList(
@@ -739,8 +439,9 @@ const storage_elt_to_getter_skeleton = (elt_name : string, ts_type : ts.KeywordT
                   ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
                 )
               ),
-              factory.createReturnStatement(body)
-            ],
+              ...(body)
+            ])
+            ,
             true
           ),
           undefined
@@ -756,137 +457,6 @@ const storage_elt_to_getter_skeleton = (elt_name : string, ts_type : ts.KeywordT
   )
 }
 
-const access_nth_field = (x : ts.Expression, i : number) : ts.Expression => {
-  return factory.createElementAccessExpression(
-    x,
-    factory.createElementAccessExpression(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("Object"),
-          factory.createIdentifier("keys")
-        ),
-        undefined,
-        [x]
-      ),
-      factory.createNumericLiteral(""+i)
-    )
-  )
-}
-
-const get_record_type = (name : string | null, ci : ContractInterface) : Record => {
-  if (name != null) {
-    for (let i = 0; i < ci.types.records.length; i++) {
-      if (ci.types.records[i].name == name) {
-        return ci.types.records[i]
-      }
-    }
-  }
-  throw new Error("get_record_type: record '" + name + "' not found")
-}
-
-const get_field_annot_names = (r : Record) : { [key: string] : string } => {
-  const internal_get_fan =
-  (mt : MichelsonType, idx : number, acc : { [key: string] : string }) : [ number, { [key: string] : string } ] => {
-    if (mt.annots.length > 0) {
-      const annot = mt.annots[0].slice(1)
-      acc[r.fields[idx].name] = annot
-      return [ idx + 1, acc ]
-    } else {
-      switch (mt.prim) {
-        case "pair" : {
-          // left
-          const [idx_left,   acc_left] = internal_get_fan(mt.args[0], idx, acc)
-          // right
-          const [idx_right, acc_right] = internal_get_fan(mt.args[1], idx_left, acc_left)
-          return [idx_right, acc_right]
-        }
-        default : throw new Error("internal_get_fan: found a node which is not annotated nor is a pair")
-      }
-    }
-  }
-  const [ _, res ] = internal_get_fan(r.type_michelson, 0, {})
-  return res
-}
-
-const get_return_body = (root : ts.Expression, elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Expression => {
-  switch (atype.node) {
-    case "bool"     :
-    case "string"   : return elt
-    case "int"      :
-    case "nat"      :
-    case "bytes"    :
-    case "address"  :
-    case "duration" : return factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
-      ),
-      undefined,
-      [ elt ]
-    )
-    case "rational" :
-      return factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("Rational")
-      ),
-      undefined,
-      [
-        access_nth_field(elt, 0),
-        access_nth_field(elt, 1)
-      ]
-    )
-    case "currency" : return factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("Tez")
-      ),
-      undefined,
-      [ elt, factory.createStringLiteral("mutez") ]
-    )
-    case "date"    : return factory.createNewExpression(
-      factory.createIdentifier("Date"),
-      undefined,
-      [ elt ]
-    )
-    case "option"  : return factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("Option")
-      ),
-      [ archetypeTypeToTsType(atype.args[0]) ],
-      [factory.createConditionalExpression(
-        factory.createBinaryExpression(
-          elt,
-          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-          factory.createNull()
-        ),
-        factory.createToken(ts.SyntaxKind.QuestionToken),
-        factory.createNull(),
-        factory.createToken(ts.SyntaxKind.ColonToken),
-        get_return_body(root, elt, atype.args[0], ci)
-      )]
-    )
-    case "record" : {
-      const r = get_record_type(atype.name, ci)
-      const field_annot_names = get_field_annot_names(r)
-      return factory.createObjectLiteralExpression(
-        r.fields.map(f => {
-          const field_value = factory.createPropertyAccessExpression(
-            root,
-            factory.createIdentifier(field_annot_names[f.name])
-          )
-          return factory.createPropertyAssignment(
-            factory.createIdentifier(f.name),
-            get_return_body(root, field_value, f.type, ci)
-          )
-        })
-      )
-    }
-  }
-  throw new Error("get_return_body: type '" + atype.node + "' not found")
-}
-
 const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
   const root = factory.createIdentifier("storage")
   const elt = ci.storage.length > 1 ?
@@ -897,22 +467,101 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     root
   return storage_elt_to_getter_skeleton(
     selt.name,
-    archetypeTypeToTsType(selt.type),
-    get_return_body(root, elt, selt.type, ci)
+    [],
+    archetype_type_to_ts_type(selt.type),
+    [factory.createReturnStatement(get_return_body(root, elt, selt.type, ci))]
   )
+}
+
+const get_big_map_value_getter_body = (name : string) : ts.Statement[] => {
+  return [
+    factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("data"),
+          undefined,
+          undefined,
+          factory.createAwaitExpression(factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("get_big_map_value")
+            ),
+            undefined,
+            [
+              factory.createCallExpression(
+                factory.createIdentifier("BigInt"),
+                undefined,
+                [factory.createPropertyAccessExpression(
+                  factory.createIdentifier("storage"),
+                  factory.createIdentifier(name)
+                )]
+              ),
+              factory.createCallExpression(
+                factory.createIdentifier(name+"_key_to_mich"),
+                undefined,
+                [factory.createIdentifier("key")]
+              ),
+              factory.createIdentifier(name+"_key_mich_type")
+            ]
+          ))
+        )],
+        ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
+      )
+    ),
+    factory.createIfStatement(
+      factory.createBinaryExpression(
+        factory.createIdentifier("data"),
+        factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+        factory.createIdentifier("undefined")
+      ),
+      factory.createBlock(
+        [factory.createReturnStatement(factory.createCallExpression(
+          factory.createIdentifier("mich_to_" + name + "_value"),
+          undefined,
+          [factory.createIdentifier("data")]
+        ))],
+        true
+      ),
+      factory.createBlock(
+        [factory.createReturnStatement(factory.createIdentifier("undefined"))],
+        true
+      )
+    )
+  ]
 }
 
 const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   switch (selt.type.node) {
-    case "asset": {
+    /* TODO same for big maps ? */
+    case "asset"   : // Special treatment for big map assets
       const assetType = ci.types.assets.find(x => x.name == selt.name)
-      if (assetType != undefined) {
-        const is_big = assetType.container_kind == "big_map"
-        if (is_big) {
-          return [assetValueToBigMapGetter(assetType)] /* TODO pass nb_storage_elements */
-        }
+      if (assetType != undefined && assetType.container_kind == "big_map") {
+        return storage_elt_to_getter_skeleton(
+          selt.name + "_value",
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("key"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createIdentifier(selt.name+"_key"),
+              undefined
+            ),
+            undefined
+          )],
+          factory.createUnionTypeNode([
+            factory.createTypeReferenceNode(
+              factory.createIdentifier(selt.name+"_value"),
+              undefined
+            ),
+            factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+          ]),
+          get_big_map_value_getter_body(selt.name)
+        )
+        //return [assetValueToBigMapGetter(assetType)]
       }
-    }
     default : return storage_elt_to_class(selt, ci)
   }
 }
