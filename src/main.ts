@@ -472,7 +472,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    [factory.createReturnStatement(get_return_body(root, elt, selt.type, ci))]
+    get_return_body(root, elt, selt.type, ci)
   )
 }
 

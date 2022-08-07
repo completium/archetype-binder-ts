@@ -383,6 +383,57 @@
       "const": false
     },
     {
+      "name": "l",
+      "type": {
+        "node": "list",
+        "name": null,
+        "args": [
+          {
+            "node": "int",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "l1",
+      "type": {
+        "node": "list",
+        "name": null,
+        "args": [
+          {
+            "node": "record",
+            "name": "all",
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "l2",
+      "type": {
+        "node": "list",
+        "name": null,
+        "args": [
+          {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "record",
+                "name": "all",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "const": false
+    },
+    {
       "name": "r",
       "type": {
         "node": "record",

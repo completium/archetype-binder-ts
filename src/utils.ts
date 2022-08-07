@@ -462,24 +462,50 @@ const get_field_annot_names = (r : Record) : { [key: string] : string } => {
   return res
 }
 
-export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Expression => {
+const get_lambda_form = (body : ts.Statement[], arg : ts.Expression) : ts.Expression => {
+  return factory.createCallExpression(
+    factory.createParenthesizedExpression(factory.createArrowFunction(
+      undefined,
+      undefined,
+      [factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("x"),
+        undefined,
+        undefined,
+        undefined
+      )],
+      undefined,
+      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+      factory.createBlock(
+        body,
+        false
+      )
+    )),
+    undefined,
+    [arg]
+  )
+}
+
+export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
   switch (atype.node) {
     case "bool"     :
-    case "string"   : return elt
+    case "string"   : return [factory.createReturnStatement(elt)]
     case "int"      :
     case "nat"      :
     case "bytes"    :
     case "address"  :
-    case "duration" : return factory.createNewExpression(
+    case "duration" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
       ),
       undefined,
       [ elt ]
-    )
+    ))]
     case "rational" :
-      return factory.createNewExpression(
+      return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("Rational")
@@ -489,21 +515,21 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         access_nth_field(elt, 0),
         access_nth_field(elt, 1)
       ]
-    )
-    case "currency" : return factory.createNewExpression(
+    ))]
+    case "currency" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("Tez")
       ),
       undefined,
       [ elt, factory.createStringLiteral("mutez") ]
-    )
-    case "date"    : return factory.createNewExpression(
+    ))]
+    case "date"    : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createIdentifier("Date"),
       undefined,
       [ elt ]
-    )
-    case "option"  : return factory.createNewExpression(
+    ))]
+    case "option"  : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("Option")
@@ -518,13 +544,77 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         factory.createToken(ts.SyntaxKind.QuestionToken),
         factory.createNull(),
         factory.createToken(ts.SyntaxKind.ColonToken),
-        get_return_body(root, elt, atype.args[0], ci)
+        get_lambda_form(get_return_body(root, factory.createIdentifier("x"), atype.args[0], ci), elt)
       )]
-    )
+    ))]
+    case "list" : {
+      return [
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("res"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createIdentifier("Array"),
+                [archetype_type_to_ts_type(atype.args[0])]
+              ),
+              factory.createArrayLiteralExpression(
+                [],
+                false
+              )
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createForStatement(
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("i"),
+              undefined,
+              undefined,
+              factory.createNumericLiteral("0")
+            )],
+            ts.NodeFlags.Let
+          ),
+          factory.createBinaryExpression(
+            factory.createIdentifier("i"),
+            factory.createToken(ts.SyntaxKind.LessThanToken),
+            factory.createPropertyAccessExpression(
+              elt,
+              factory.createIdentifier("length")
+            )
+          ),
+          factory.createPostfixUnaryExpression(
+            factory.createIdentifier("i"),
+            ts.SyntaxKind.PlusPlusToken
+          ),
+          factory.createBlock(
+            [factory.createExpressionStatement(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("res"),
+                factory.createIdentifier("push")
+              ),
+              undefined,
+              [ get_lambda_form(
+                  get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[0], ci),
+                  factory.createElementAccessExpression(
+                    elt,
+                    factory.createIdentifier("i")
+                  )
+                )
+              ]
+            ))],
+            true
+          )
+        ),
+        factory.createReturnStatement(factory.createIdentifier("res"))
+      ];
+    }
     case "record" : {
       const r = get_record_type(atype.name, ci)
       const field_annot_names = get_field_annot_names(r)
-      return factory.createObjectLiteralExpression(
+      return [factory.createReturnStatement(factory.createObjectLiteralExpression(
         r.fields.map(f => {
           const field_value = factory.createPropertyAccessExpression(
             root,
@@ -532,10 +622,10 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
           )
           return factory.createPropertyAssignment(
             factory.createIdentifier(f.name),
-            get_return_body(root, field_value, f.type, ci)
+            get_lambda_form(get_return_body(root, factory.createIdentifier("x"), f.type, ci), field_value)
           )
         })
-      )
+      ))]
     }
   }
   throw new Error("get_return_body: type '" + atype.node + "' not found")
