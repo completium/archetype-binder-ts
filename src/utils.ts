@@ -180,6 +180,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
         archetype_type_to_ts_type(at.args[1])
       ])]
     );
+    case "set" :
     case "list":   return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [archetype_type_to_ts_type(at.args[0])]
@@ -547,6 +548,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         get_lambda_form(get_return_body(root, factory.createIdentifier("x"), atype.args[0], ci), elt)
       )]
     ))]
+    case "set"  :
     case "list" : {
       return [
         factory.createVariableStatement(

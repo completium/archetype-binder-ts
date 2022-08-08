@@ -429,6 +429,21 @@
       "const": false
     },
     {
+      "name": "s1",
+      "type": {
+        "node": "set",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
       "name": "l1",
       "type": {
         "node": "list",
