@@ -555,10 +555,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
             [factory.createVariableDeclaration(
               factory.createIdentifier("res"),
               undefined,
-              factory.createTypeReferenceNode(
-                factory.createIdentifier("Array"),
-                [archetype_type_to_ts_type(atype.args[0])]
-              ),
+              archetype_type_to_ts_type(atype),
               factory.createArrayLiteralExpression(
                 [],
                 false
@@ -610,6 +607,90 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         ),
         factory.createReturnStatement(factory.createIdentifier("res"))
       ];
+    }
+    case "map" : {
+      return [
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("res"),
+              undefined,
+              archetype_type_to_ts_type(atype)
+              ,
+              factory.createArrayLiteralExpression(
+                [],
+                false
+              )
+            )],
+            ts.NodeFlags.Let
+          )
+        ),
+        factory.createForOfStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("e"),
+              undefined,
+              undefined,
+              undefined
+            )],
+            ts.NodeFlags.Let
+          ),
+          factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              elt,
+              factory.createIdentifier("entries")
+            ),
+            undefined,
+            []
+          ),
+          factory.createBlock(
+            [factory.createExpressionStatement(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("res"),
+                factory.createIdentifier("push")
+              ),
+              undefined,
+              [factory.createArrayLiteralExpression(
+                [
+                  get_lambda_form(
+                    get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[0], ci),
+                    factory.createElementAccessExpression(
+                      factory.createIdentifier("e"),
+                      factory.createIdentifier("0")
+                    )
+                  ),
+                  get_lambda_form(
+                    get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[1], ci),
+                    factory.createElementAccessExpression(
+                      factory.createIdentifier("e"),
+                      factory.createIdentifier("1")
+                    )
+                  )
+                ],
+                false
+              )]
+            ))],
+            true
+          )
+        ),
+        factory.createReturnStatement(factory.createIdentifier("res"))
+      ]
+    }
+    case "tuple" : {
+      return [ factory.createReturnStatement(factory.createArrayLiteralExpression(
+        atype.args.map((t,i) => {
+          return get_lambda_form(
+            get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), t, ci),
+            factory.createElementAccessExpression(
+              elt,
+              factory.createIdentifier(""+i)
+            )
+          )
+        }),
+        false
+      ))]
     }
     case "record" : {
       const r = get_record_type(atype.name, ci)

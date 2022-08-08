@@ -398,6 +398,37 @@
       "const": false
     },
     {
+      "name": "m",
+      "type": {
+        "node": "map",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "int",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "const": false
+    },
+    {
       "name": "l1",
       "type": {
         "node": "list",
