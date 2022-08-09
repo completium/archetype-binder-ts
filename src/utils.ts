@@ -411,7 +411,7 @@ const access_nth_field = (x : ts.Expression, i : number) : ts.Expression => {
   )
 }
 
-const get_record_type = (name : string | null, ci : ContractInterface) : Record => {
+const get_record_type = (name : string | null, ci : ContractInterface) => {
   if (name != null) {
     for (let i = 0; i < ci.types.records.length; i++) {
       if (ci.types.records[i].name == name) {
@@ -419,7 +419,18 @@ const get_record_type = (name : string | null, ci : ContractInterface) : Record 
       }
     }
   }
-  throw new Error("get_record_type: record '" + name + "' not found")
+  throw new Error("get_record_type: '" + name + "' not found")
+}
+
+const get_asset_type = (name : string | null, ci : ContractInterface) => {
+  if (name != null) {
+    for (let i = 0; i < ci.types.records.length; i++) {
+      if (ci.types.assets[i].name == name) {
+        return ci.types.assets[i]
+      }
+    }
+  }
+  throw new Error("get_asset_type: '" + name + "' not found")
 }
 
 const get_field_annot_names = (r : Record) : { [key: string] : string } => {
@@ -593,7 +604,30 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         factory.createReturnStatement(factory.createIdentifier("res"))
       ];
     }
-    case "asset" : return []
+    case "asset" : {
+      const a = get_asset_type(atype.name, ci)
+      const fields_no_key = a.fields.filter(x => !x.is_key)
+      const keys = a.fields.filter(x => x.is_key)
+      const key_type : ArchetypeType = keys.length > 1 ? {
+        node : "tuple",
+        name : null,
+        args : keys.map(x => x.type)
+      } : keys[0].type
+      if (fields_no_key.length > 1) {
+        return []
+      } else {
+        // create local equivalent type to map<key, value>
+        const map_type : ArchetypeType = {
+          node : "map",
+          name : a.name,
+          args : [
+            key_type,
+            fields_no_key[0].type
+          ]
+        }
+        return get_return_body(root, elt, map_type, ci)
+      }
+    }
     case "map" : {
       return [
         factory.createVariableStatement(
