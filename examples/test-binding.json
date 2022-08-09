@@ -72,6 +72,131 @@
           "annots": [],
           "array": []
         }
+      },
+      {
+        "name": "visitor_2",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "id2",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "nb_visits2",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          },
+          {
+            "name": "last",
+            "type": {
+              "node": "date",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": []
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%nb_visits2"
+                  ],
+                  "array": []
+                },
+                {
+                  "prim": "timestamp",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%last"
+                  ],
+                  "array": []
+                }
+              ],
+              "annots": [],
+              "array": []
+            }
+          ],
+          "annots": [],
+          "array": []
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": []
+        },
+        "value_type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%nb_visits2"
+              ],
+              "array": []
+            },
+            {
+              "prim": "timestamp",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%last"
+              ],
+              "array": []
+            }
+          ],
+          "annots": [],
+          "array": []
+        }
       }
     ],
     "enums": [],
@@ -564,6 +689,15 @@
       "type": {
         "node": "asset",
         "name": "visitor",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "visitor_2",
+      "type": {
+        "node": "asset",
+        "name": "visitor_2",
         "args": []
       },
       "const": false

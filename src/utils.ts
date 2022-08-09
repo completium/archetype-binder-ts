@@ -424,7 +424,7 @@ const get_record_type = (name : string | null, ci : ContractInterface) => {
 
 const get_asset_type = (name : string | null, ci : ContractInterface) => {
   if (name != null) {
-    for (let i = 0; i < ci.types.records.length; i++) {
+    for (let i = 0; i < ci.types.assets.length; i++) {
       if (ci.types.assets[i].name == name) {
         return ci.types.assets[i]
       }
@@ -614,7 +614,30 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         args : keys.map(x => x.type)
       } : keys[0].type
       if (fields_no_key.length > 1) {
-        return []
+        // create a record type in Contract Interface corresponding to asset value
+        const asset_value_record_type : Record = {
+          name           : a.name + "_value",
+          fields         : fields_no_key,
+          type_michelson : a.value_type_michelson
+        }
+        const augmented_ci : ContractInterface = { ...ci,
+          types : { ...ci.types,
+            records : [ ...ci.types.records, asset_value_record_type]
+          }
+        }
+        const map_type : ArchetypeType = {
+          node : "map",
+          name : a.name,
+          args : [
+            key_type,
+            {
+              node : "record",
+              name : a.name + "_value",
+              args : []
+            }
+          ]
+        }
+        return get_return_body(root, elt, map_type, augmented_ci)
       } else {
         // create local equivalent type to map<key, value>
         const map_type : ArchetypeType = {
@@ -948,11 +971,11 @@ const get_archetype_type_of = (name : string, fields : Array<Omit<Field, "is_key
   }
 }
 
-const get_archetype_type_from_idx = (idx : number, fields : Array<Omit<Field, "is_key">>) => {
+const get_archetype_type_from_idx = (idx : number, fields : Array<Partial<Field>>) => {
   return fields[idx].type
 }
 
-const get_field_name_from_idx = (idx : number, fields : Array<Omit<Field, "is_key">>) => {
+const get_field_name_from_idx = (idx : number, fields : Array<Partial<Field>>) => {
   return fields[idx].name
 }
 
@@ -976,7 +999,7 @@ const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
  * @param fidx field index
  * @returns pair of number of fields looked up so far and 'to_mich' expression
  */
-export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omit<Field, "is_key">>, fidx : number = 0) : [number, ts.CallExpression] => {
+export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Partial<Field>>, fidx : number = 0) : [number, ts.CallExpression] => {
   if (mt.annots.length > 0) {
     //const name = mt.annots[0].slice(1)
     const name = get_field_name_from_idx(fidx, fields)
@@ -1010,9 +1033,9 @@ export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omi
       case "map"     :
       case "big_map" : {
         // left
-        const [ _,    expr0] = entity_to_mich("x_key", mt.args[0], fields, fidx)
+        const [ _,    expr0] = entity_to_mich("x_key", mt.args[0], fields.filter(x => x.is_key), fidx)
         // right
-        const [fidx1, expr1] = entity_to_mich("x_value", mt.args[1], fields, fidx)
+        const [fidx1, expr1] = entity_to_mich("x_value", mt.args[1], fields.filter(x => !x.is_key), fidx)
         return [ fidx1, internal_map_to_mich(v, [
           expr0,
           expr1

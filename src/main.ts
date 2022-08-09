@@ -291,7 +291,7 @@ const assetContainerToTypeDecl = (a : Asset) => {
     ))
 }
 
-const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType, fields : Array<Omit<Field, "is_key">>) => {
+const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType, fields : Array<Partial<Field>>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
