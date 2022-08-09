@@ -1,0 +1,29 @@
+{
+  "name": "mycontract",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "s",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "exec",
+      "args": []
+    }
+  ],
+  "getters": [],
+  "errors": []
+}

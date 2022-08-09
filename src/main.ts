@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/test-binding.json'
-import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
+import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -195,7 +195,7 @@ const entity_to_mich_type_decl = (name : string, mt : MichelsonType) => {
           ),
           undefined
         ),
-        valuetoMichType(mt)
+        value_to_mich_type(mt)
       )],
       ts.NodeFlags.Const
     )
@@ -278,16 +278,22 @@ const assetContainerToTypeDecl = (a : Asset) => {
     undefined,
     factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
-      [factory.createTupleTypeNode([
+      [not_a_set(a) ?
+        factory.createTupleTypeNode([
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(a.name+"_key"),
+            undefined
+          ),
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(a.name+"_value"),
+            undefined
+          )
+        ]) :
         factory.createTypeReferenceNode(
           factory.createIdentifier(a.name+"_key"),
           undefined
-        ),
-        factory.createTypeReferenceNode(
-          factory.createIdentifier(a.name+"_value"),
-          undefined
         )
-      ])]
+      ]
     ))
 }
 
@@ -900,6 +906,10 @@ const errorsToDecl = (ci : ContractInterface) : ts.PropertyDeclaration => {
   )
 }
 
+const not_a_set = (a : Asset) => {
+  return a.container_type_michelson.prim != "set"
+}
+
 const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] = [
   ...([get_imports()]),
   // enums
@@ -915,11 +925,11 @@ const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclarat
   ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
   ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
   // asset values
-  ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
-  ...(contract_interface.types.assets.map(assetValueToMichDecl)),
-  ...(contract_interface.types.assets.map(assetValueToMichTypeDecl)),
-  ...(contract_interface.types.assets.map(mich_to_asset_value_decl)),
-  ...(contract_interface.types.assets.map(asset_to_cmp_decl)),
+  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToInterfaceDecl)),
+  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichDecl)),
+  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichTypeDecl)),
+  ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
+  ...(contract_interface.types.assets.filter(not_a_set).map(asset_to_cmp_decl)),
   // asset containers
   ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
   ...(contract_interface.types.assets.map(assetContainerToMichDecl)),

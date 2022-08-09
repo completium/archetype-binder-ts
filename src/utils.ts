@@ -638,7 +638,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
           ]
         }
         return get_return_body(root, elt, map_type, augmented_ci)
-      } else {
+      } else if (fields_no_key.length == 1) {
         // create local equivalent type to map<key, value>
         const map_type : ArchetypeType = {
           node : "map",
@@ -649,6 +649,13 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
           ]
         }
         return get_return_body(root, elt, map_type, ci)
+      } else {
+        const list_type : ArchetypeType = {
+          node : "list",
+          name : null,
+          args : [ key_type ]
+        }
+        return get_return_body(root, elt, list_type, ci)
       }
     }
     case "map" : {
@@ -833,7 +840,7 @@ const record_to_mich = (name : string, x : ts.Expression) => {
     [x])
 }
 
-const internal_map_to_mich = (name : string, decls : ts.CallExpression[]) => {
+const internal_list_to_mich = (name : string, body : ts.Statement[]) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
       factory.createIdentifier("ex"),
@@ -857,51 +864,55 @@ const internal_map_to_mich = (name : string, decls : ts.CallExpression[]) => {
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("x_key"),
-                  undefined,
-                  undefined,
-                  factory.createElementAccessExpression(
-                    factory.createIdentifier("x"),
-                    factory.createNumericLiteral("0")
-                  )
-                )],
-                ts.NodeFlags.Const
-              )
-            ),
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("x_value"),
-                  undefined,
-                  undefined,
-                  factory.createElementAccessExpression(
-                    factory.createIdentifier("x"),
-                    factory.createNumericLiteral("1")
-                  )
-                )],
-                ts.NodeFlags.Const
-              )
-            ),
-            factory.createReturnStatement(factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier("ex"),
-                factory.createIdentifier("elt_to_mich")
-              ),
-              undefined,
-              decls
-            ))
-          ],
+          body,
           true
         )
       )
     ]
   )
+}
+
+const internal_map_to_mich = (name : string, decls : ts.CallExpression[]) => {
+  return internal_list_to_mich(name, [
+    factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("x_key"),
+          undefined,
+          undefined,
+          factory.createElementAccessExpression(
+            factory.createIdentifier("x"),
+            factory.createNumericLiteral("0")
+          )
+        )],
+        ts.NodeFlags.Const
+      )
+    ),
+    factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("x_value"),
+          undefined,
+          undefined,
+          factory.createElementAccessExpression(
+            factory.createIdentifier("x"),
+            factory.createNumericLiteral("1")
+          )
+        )],
+        ts.NodeFlags.Const
+      )
+    ),
+    factory.createReturnStatement(factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("elt_to_mich")
+      ),
+      undefined,
+      decls
+    ))
+  ])
 }
 
 const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type : ArchetypeType | null) => {
@@ -981,12 +992,13 @@ const get_field_name_from_idx = (idx : number, fields : Array<Partial<Field>>) =
 
 const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
   switch (mt.prim) {
-    case "string"    : return { node: "string", name: null, args: [] }
-    case "int"       : return { node: "int", name: null, args: [] }
-    case "nat"       : return { node: "nat", name: null, args: [] }
-    case "timestamp" : return { node: "date", name: null, args: [] }
-    case "address" : return { node: "address", name: null, args: [] }
-    case "bytes" : return { node: "bytes", name: null, args: [] }
+    case "string"    : return { node: "string" , name: null, args: [] }
+    case "int"       : return { node: "int"    , name: null, args: [] }
+    case "nat"       : return { node: "nat"    , name: null, args: [] }
+    case "timestamp" : return { node: "date"   , name: null, args: [] }
+    case "address"   : return { node: "address", name: null, args: [] }
+    case "bytes"     : return { node: "bytes"  , name: null, args: [] }
+    case "unit"      : return { node: "unit"   , name :null, args: [] }
     default: throw new Error("mich_type_to_archetype: cannot convert prim '" + mt.prim + "'")
   }
 }
@@ -1041,13 +1053,20 @@ export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Par
           expr1
         ]) ]
       }
+      case "set"    : {
+        const [ _,    expr0] = entity_to_mich("x", mt.args[0], fields.filter(x => x.is_key), fidx)
+        return [ fidx, internal_list_to_mich(v, [
+            factory.createReturnStatement(expr0)
+          ])
+        ]
+      }
       default: return [ fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) }) ]
     }
   }
 }
 
 
-export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
+export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
   switch (mt.prim) {
     case "big_map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1055,7 +1074,7 @@ export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
         factory.createIdentifier("pair_to_mich_type")
       ),
       undefined,
-      [ factory.createStringLiteral("big_map"), valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ]
+      [ factory.createStringLiteral("big_map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ]
     )
     case "map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1063,7 +1082,15 @@ export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
         factory.createIdentifier("pair_to_mich_type")
       ),
       undefined,
-      [ factory.createStringLiteral("map"), valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ]
+      [ factory.createStringLiteral("map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ]
+    )
+    case "set": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("list_to_mich_type")
+      ),
+      undefined,
+      [value_to_mich_type(mt.args[0])]
     )
     case "pair": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1072,7 +1099,7 @@ export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        [ valuetoMichType(mt.args[0]), valuetoMichType(mt.args[1]) ],
+        [ value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ],
         true
       )]
     )
@@ -1085,7 +1112,7 @@ export const valuetoMichType = (mt : MichelsonType) : ts.CallExpression => {
       ),
       undefined,
       [
-        valuetoMichType(mt.args[0]),
+        value_to_mich_type(mt.args[0]),
         factory.createArrayLiteralExpression(
           annots,
           false

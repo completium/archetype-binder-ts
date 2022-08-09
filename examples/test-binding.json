@@ -4,6 +4,58 @@
   "types": {
     "assets": [
       {
+        "name": "just_a_key",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "key_id",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "set",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": []
+            }
+          ],
+          "annots": [],
+          "array": []
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": []
+        },
+        "value_type_michelson": {
+          "prim": "unit",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": []
+        }
+      },
+      {
         "name": "visitor",
         "container_kind": "map",
         "fields": [
@@ -680,6 +732,15 @@
       "type": {
         "node": "record",
         "name": "all",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "just_a_key",
+      "type": {
+        "node": "asset",
+        "name": "just_a_key",
         "args": []
       },
       "const": false
