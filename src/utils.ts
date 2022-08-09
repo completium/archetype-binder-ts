@@ -234,6 +234,25 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
       factory.createParenthesizedExpression(rm_milliseconds_from(b))
     );
+    case "list": return factory.createBinaryExpression(
+      factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("JSON"),
+          factory.createIdentifier("stringify")
+        ),
+        undefined,
+        [a]
+      ),
+      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+      factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("JSON"),
+          factory.createIdentifier("stringify")
+        ),
+        undefined,
+        [b]
+      )
+    )
     case "int"      :
     case "nat"      :
     case "rational" :
@@ -259,6 +278,38 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
 }
 
 /* Michelson to Typescript utils ----------------------------------------------------- */
+
+const contained_type_to_field_decl = (fname : string, arg : string, atype : ArchetypeType) => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier(fname)
+    ),
+    undefined,
+    [
+      factory.createIdentifier(arg),
+      factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("x"),
+          undefined,
+          undefined,
+          undefined
+        )],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [factory.createReturnStatement(mich_to_field_decl(atype, "x", 0, 0))],
+          false
+        )
+      )
+    ]
+  )
+}
 
 export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : number = 0, len : number = 0) : ts.CallExpression => {
   switch (atype.node) {
@@ -335,35 +386,9 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
       return larg
     }
     case "option" :
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
-          factory.createIdentifier("mich_to_option")
-        ),
-        undefined,
-        [
-          factory.createIdentifier(arg),
-          factory.createArrowFunction(
-            undefined,
-            undefined,
-            [factory.createParameterDeclaration(
-              undefined,
-              undefined,
-              undefined,
-              factory.createIdentifier("x"),
-              undefined,
-              undefined,
-              undefined
-            )],
-            undefined,
-            factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-            factory.createBlock(
-              [factory.createReturnStatement(mich_to_field_decl(atype.args[0], "x", 0, 0))],
-              false
-            )
-          )
-        ]
-      )
+      return contained_type_to_field_decl("mich_to_option", arg, atype.args[0])
+    case "list":
+      return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
     default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -833,6 +858,12 @@ const tuple_to_mich = (name : string, types : ArchetypeType[]) => {
   )
 }
 
+const list_to_mich = (name : string, atype : ArchetypeType) => {
+  return internal_list_to_mich(name, [
+    factory.createReturnStatement(function_param_to_mich({ name: "x", type: atype }))
+  ])
+}
+
 const record_to_mich = (name : string, x : ts.Expression) => {
   return factory.createCallExpression(
     factory.createIdentifier(name + "_to_mich"),
@@ -941,6 +972,7 @@ const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
+    case "list"        : return list_to_mich(fp.name, fp.type.args[0])
     case "record"      : if (fp.type.name == null) {
       throw new Error("function_param_to_mich: null record name")
     } else return record_to_mich(fp.type.name, factory.createIdentifier(fp.name))
@@ -1084,14 +1116,6 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       undefined,
       [ factory.createStringLiteral("map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ]
     )
-    case "set": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
-        factory.createIdentifier("list_to_mich_type")
-      ),
-      undefined,
-      [value_to_mich_type(mt.args[0])]
-    )
     case "pair": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
@@ -1103,7 +1127,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
         true
       )]
     )
-    case "option":
+    case "option": {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1117,8 +1141,25 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
           annots,
           false
         )
-      ]
-    )
+      ])
+    }
+    case "set":
+    case "list": {
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("list_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          value_to_mich_type(mt.args[0]),
+          factory.createArrayLiteralExpression(
+            annots,
+            false
+          )
+        ])
+    }
     default: {
       const prim = mt.prim == null ? "string" : mt.prim
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []

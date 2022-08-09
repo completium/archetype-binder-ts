@@ -349,6 +349,20 @@
                 }
               ]
             }
+          },
+          {
+            "name": "n",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "string",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
           }
         ],
         "type_michelson": {
@@ -553,24 +567,55 @@
                                       "array": []
                                     },
                                     {
-                                      "prim": "option",
+                                      "prim": "pair",
                                       "int": null,
                                       "bytes": null,
                                       "string": null,
                                       "args": [
                                         {
-                                          "prim": "nat",
+                                          "prim": "option",
                                           "int": null,
                                           "bytes": null,
                                           "string": null,
-                                          "args": [],
-                                          "annots": [],
+                                          "args": [
+                                            {
+                                              "prim": "nat",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [],
+                                              "annots": [],
+                                              "array": []
+                                            }
+                                          ],
+                                          "annots": [
+                                            "%f11"
+                                          ],
+                                          "array": []
+                                        },
+                                        {
+                                          "prim": "list",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [
+                                            {
+                                              "prim": "string",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [],
+                                              "annots": [],
+                                              "array": []
+                                            }
+                                          ],
+                                          "annots": [
+                                            "%f12"
+                                          ],
                                           "array": []
                                         }
                                       ],
-                                      "annots": [
-                                        "%f11"
-                                      ],
+                                      "annots": [],
                                       "array": []
                                     }
                                   ],
