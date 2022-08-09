@@ -2,7 +2,78 @@
   "name": "test_binding",
   "parameters": [],
   "types": {
-    "assets": [],
+    "assets": [
+      {
+        "name": "visitor",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "nb_visits",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": []
+            },
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": []
+            }
+          ],
+          "annots": [],
+          "array": []
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": []
+        },
+        "value_type_michelson": {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": []
+        }
+      }
+    ],
     "enums": [],
     "records": [
       {
@@ -484,6 +555,15 @@
       "type": {
         "node": "record",
         "name": "all",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "visitor",
+      "type": {
+        "node": "asset",
+        "name": "visitor",
         "args": []
       },
       "const": false

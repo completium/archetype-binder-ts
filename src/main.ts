@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/test-binding.json'
-import { ArchetypeType, get_return_body, archetype_type_to_ts_type, field_to_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
+import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, valuetoMichType } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -10,7 +10,7 @@ const contract_interface : ContractInterface = contract_json
 
 // https://ts-ast-viewer.com/#
 
-const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+const make_mich_to_entity_decl = (name : string, body : ts.Statement[]) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -41,48 +41,72 @@ const michToentityDecl = (name : string, fields : Array<Omit<Field, "is_key">>) 
           undefined
         ),
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-        factory.createBlock(fields.length > 1 ?
-          [factory.createVariableStatement(
-            undefined,
-            factory.createVariableDeclarationList(
-              [factory.createVariableDeclaration(
-                factory.createIdentifier("fields"),
-                undefined,
-                undefined,
-                factory.createCallExpression(
-                  factory.createPropertyAccessExpression(
-                    factory.createIdentifier("ex"),
-                    factory.createIdentifier("annotated_mich_to_array")
-                  ),
-                  undefined,
-                  [
-                    factory.createIdentifier("v"),
-                    factory.createIdentifier(name + "_mich_type")
-                  ]
-                )
-              )],
-              ts.NodeFlags.Const
-            )
-          ),
-          factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
-            return factory.createPropertyAssignment(
-              factory.createIdentifier(x.name),
-              mich_to_field_decl(x.type, "fields["+i+"]", i, fields.length)
-            )
-          })))] :
-          [factory.createReturnStatement(factory.createTrue())], /* TODO */
-          true
-        )
+        factory.createBlock(body, true)
       )
     )],
     ts.NodeFlags.Const
   ))
 }
 
-const michToAssetValueDecl = (a : Asset) => michToentityDecl(a.name + "_value", a.fields.filter(x => !x.is_key))
-const michToRecordDecl = (r : Record) => michToentityDecl(r.name, r.fields)
+const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+  return make_mich_to_entity_decl(name, [
+    factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("fields"),
+          undefined,
+          undefined,
+          factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("annotated_mich_to_array")
+            ),
+            undefined,
+            [
+              factory.createIdentifier("v"),
+              factory.createIdentifier(name + "_mich_type")
+            ]
+          )
+        )],
+        ts.NodeFlags.Const
+      )
+    ),
+    factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
+      return factory.createPropertyAssignment(
+        factory.createIdentifier(x.name),
+        mich_to_field_decl(x.type, "fields["+i+"]", i, fields.length)
+      )
+    })))
+  ])
+}
 
-const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+const mich_to_asset_value_decl = (a : Asset) => {
+  const fields_no_key = a.fields.filter(x => !x.is_key)
+  const name = a.name + "_value"
+  if (fields_no_key.length > 1) {
+    return fields_to_mich_to_entity_decl(a.name + "_value", a.fields.filter(x => !x.is_key))
+  } else {
+    return make_mich_to_entity_decl(name, [
+      factory.createReturnStatement(mich_to_field_decl(fields_no_key[0].type, "v"))
+    ])
+  }
+}
+const mich_to_record_decl = (r : Record) => fields_to_mich_to_entity_decl(r.name, r.fields)
+
+const field_to_cmp_body = (field : Omit<Field, "is_key">) => {
+  const a = factory.createPropertyAccessExpression(
+    factory.createIdentifier("a"),
+    factory.createIdentifier(field.name)
+  )
+  const b = factory.createPropertyAccessExpression(
+    factory.createIdentifier("b"),
+    factory.createIdentifier(field.name)
+  )
+  return make_cmp_body(a, b, field.type)
+}
+
+const make_cmp_decl = (name : string, body : ts.Expression) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -122,15 +146,7 @@ const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) =
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(factory.createParenthesizedExpression(
-            fields.slice(1).reduce((acc, f) => {
-              return factory.createBinaryExpression(
-                acc,
-                factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
-                field_to_cmp_body(f)
-              )
-            },field_to_cmp_body(fields[0]))
-          ))],
+          [factory.createReturnStatement(body)],
           true
         )
       )
@@ -139,10 +155,33 @@ const fieldsToCmpDecl = (name : string, fields : Array<Omit<Field, "is_key">>) =
   ))
 }
 
-const assetToCmpDecl = (a : Asset) => fieldsToCmpDecl(a.name+"_value", a.fields.filter(x => !x.is_key))
-const recordToCmpDecl = (r : Record) => fieldsToCmpDecl(r.name, r.fields)
+const fields_to_cmp_decl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+  return make_cmp_decl(name, factory.createParenthesizedExpression(
+    fields.slice(1).reduce((acc, f) => {
+      return factory.createBinaryExpression(
+        acc,
+        factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
+        field_to_cmp_body(f)
+      )
+    }, field_to_cmp_body(fields[0]))
+  ))
+}
 
-const entityToMichTypeDecl = (name : string, mt : MichelsonType) => {
+const asset_to_cmp_decl = (a : Asset) => {
+  const fields_no_key = a.fields.filter(x => !x.is_key)
+  const name = a.name + "_value"
+  if (fields_no_key.length > 1) {
+    return fields_to_cmp_decl(name, fields_no_key)
+  } else {
+    const arg_a = factory.createIdentifier("a")
+    const arg_b = factory.createIdentifier("b")
+    return make_cmp_decl(name, make_cmp_body(arg_a, arg_b, fields_no_key[0].type))
+  }
+}
+
+const record_to_cmp_decl = (r : Record) => fields_to_cmp_decl(r.name, r.fields)
+
+const entity_to_mich_type_decl = (name : string, mt : MichelsonType) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -163,10 +202,10 @@ const entityToMichTypeDecl = (name : string, mt : MichelsonType) => {
   )
 }
 
-const assetKeyToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_key_mich_type", a.key_type_michelson)
-const assetValueToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_value_mich_type", a.value_type_michelson)
-const assetContainerToMichTypeDecl = (a : Asset) => entityToMichTypeDecl(a.name + "_container_mich_type", a.container_type_michelson)
-const recordToMichTypeDecl = (r : Record) => entityToMichTypeDecl(r.name + "_mich_type", r.type_michelson)
+const assetKeyToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_key_mich_type", a.key_type_michelson)
+const assetValueToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_value_mich_type", a.value_type_michelson)
+const assetContainerToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_container_mich_type", a.container_type_michelson)
+const recordToMichTypeDecl = (r : Record) => entity_to_mich_type_decl(r.name + "_mich_type", r.type_michelson)
 
 const entryToArgToMichDecl = (e: Entrypoint) : ts.VariableDeclarationList => {
   return factory.createVariableDeclarationList(
@@ -869,8 +908,8 @@ const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclarat
   ...(contract_interface.types.records.map(recordToInterfaceDecl)),
   ...(contract_interface.types.records.map(recordToMichDecl)),
   ...(contract_interface.types.records.map(recordToMichTypeDecl)),
-  ...(contract_interface.types.records.map(michToRecordDecl)),
-  ...(contract_interface.types.records.map(recordToCmpDecl)),
+  ...(contract_interface.types.records.map(mich_to_record_decl)),
+  ...(contract_interface.types.records.map(record_to_cmp_decl)),
   // asset keys
   ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
@@ -879,8 +918,8 @@ const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclarat
   ...(contract_interface.types.assets.map(assetValueToInterfaceDecl)),
   ...(contract_interface.types.assets.map(assetValueToMichDecl)),
   ...(contract_interface.types.assets.map(assetValueToMichTypeDecl)),
-  ...(contract_interface.types.assets.map(michToAssetValueDecl)),
-  ...(contract_interface.types.assets.map(assetToCmpDecl)),
+  ...(contract_interface.types.assets.map(mich_to_asset_value_decl)),
+  ...(contract_interface.types.assets.map(asset_to_cmp_decl)),
   // asset containers
   ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
   ...(contract_interface.types.assets.map(assetContainerToMichDecl)),

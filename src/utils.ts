@@ -200,7 +200,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
 
 /* Complex data type comparison generators --------------------------------- */
 
-const rm_milliseconds_from = (x : ts.PropertyAccessExpression) : ts.BinaryExpression => {
+const rm_milliseconds_from = (x : ts.Expression) : ts.BinaryExpression => {
   return factory.createBinaryExpression(
     factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -222,22 +222,17 @@ const rm_milliseconds_from = (x : ts.PropertyAccessExpression) : ts.BinaryExpres
   )
 }
 
-export const field_to_cmp_body = (f: Omit<Field,"is_key">) => {
-  switch (f.type.node) {
+// factory.createPropertyAccessExpression(
+//  factory.createIdentifier("a"),
+//  factory.createIdentifier(f.name)
+//)
+
+export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: ArchetypeType) => {
+  switch (atype.node) {
     case "date": return  factory.createBinaryExpression(
-      factory.createParenthesizedExpression(rm_milliseconds_from(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("a"),
-          factory.createIdentifier(f.name)
-        )
-      )),
+      factory.createParenthesizedExpression(rm_milliseconds_from(a)),
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      factory.createParenthesizedExpression(rm_milliseconds_from(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("b"),
-          factory.createIdentifier(f.name)
-        )
-      ))
+      factory.createParenthesizedExpression(rm_milliseconds_from(b))
     );
     case "int"      :
     case "nat"      :
@@ -249,35 +244,23 @@ export const field_to_cmp_body = (f: Omit<Field,"is_key">) => {
     case "duration" :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier("a"),
-            factory.createIdentifier(f.name)
-          ),
+          a,
           factory.createIdentifier("equals")
         ),
         undefined,
-        [factory.createPropertyAccessExpression(
-          factory.createIdentifier("b"),
-          factory.createIdentifier(f.name)
-        )]
+        [b]
       )
     default: return factory.createBinaryExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("a"),
-        factory.createIdentifier(f.name)
-      ),
+      a,
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("b"),
-        factory.createIdentifier(f.name)
-      )
+      b
     )
   }
 }
 
 /* Michelson to Typescript utils ----------------------------------------------------- */
 
-export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : number, len : number) : ts.CallExpression => {
+export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : number = 0, len : number = 0) : ts.CallExpression => {
   switch (atype.node) {
     case "map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -610,6 +593,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         factory.createReturnStatement(factory.createIdentifier("res"))
       ];
     }
+    case "asset" : return []
     case "map" : {
       return [
         factory.createVariableStatement(
@@ -942,7 +926,10 @@ const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
   switch (mt.prim) {
     case "string"    : return { node: "string", name: null, args: [] }
     case "int"       : return { node: "int", name: null, args: [] }
+    case "nat"       : return { node: "nat", name: null, args: [] }
     case "timestamp" : return { node: "date", name: null, args: [] }
+    case "address" : return { node: "address", name: null, args: [] }
+    case "bytes" : return { node: "bytes", name: null, args: [] }
     default: throw new Error("mich_type_to_archetype: cannot convert prim '" + mt.prim + "'")
   }
 }
@@ -989,9 +976,9 @@ export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Omi
       case "map"     :
       case "big_map" : {
         // left
-        const [ _,    expr0] = entity_to_mich(v, mt.args[0], fields, fidx)
+        const [ _,    expr0] = entity_to_mich("x_key", mt.args[0], fields, fidx)
         // right
-        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx)
+        const [fidx1, expr1] = entity_to_mich("x_value", mt.args[1], fields, fidx)
         return [ fidx1, internal_map_to_mich(v, [
           expr0,
           expr1
