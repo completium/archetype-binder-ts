@@ -190,10 +190,9 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
         factory.createIdentifier(at.name),
         undefined)
     };
-    case "tuple": return factory.createTupleTypeNode([
-      archetype_type_to_ts_type(at.args[0]),
-      archetype_type_to_ts_type(at.args[1])
-    ]);
+    case "tuple": return factory.createTupleTypeNode(
+      at.args.map(t => archetype_type_to_ts_type(t))
+    );
     default:       return factory.createKeywordTypeNode(SyntaxKind.StringKeyword)
   }
 }
@@ -222,10 +221,61 @@ const rm_milliseconds_from = (x : ts.Expression) : ts.BinaryExpression => {
   )
 }
 
-// factory.createPropertyAccessExpression(
-//  factory.createIdentifier("a"),
-//  factory.createIdentifier(f.name)
-//)
+const make_tuple_cmp_body = (a : ts.Expression, b : ts.Expression, types: Array<ArchetypeType>) : ts.Expression => {
+  return factory.createCallExpression(
+    factory.createParenthesizedExpression(factory.createArrowFunction(
+      undefined,
+      undefined,
+      [
+        factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("x"),
+          undefined,
+          undefined,
+          undefined
+        ),
+        factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("y"),
+          undefined,
+          undefined,
+          undefined
+        )
+      ],
+      undefined,
+      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+      factory.createBlock(
+        [factory.createReturnStatement(
+          types.slice(1).reduce((acc, t, i) => {
+          return factory.createBinaryExpression(
+            acc,
+            factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
+            make_cmp_body(factory.createElementAccessExpression(
+              factory.createIdentifier("x"),
+              factory.createNumericLiteral(""+(i+1))
+            ), factory.createElementAccessExpression(
+              factory.createIdentifier("y"),
+              factory.createNumericLiteral(""+(i+1))
+            ), t)
+          )
+        }, make_cmp_body(factory.createElementAccessExpression(
+          factory.createIdentifier("x"),
+          factory.createNumericLiteral("0")
+        ), factory.createElementAccessExpression(
+          factory.createIdentifier("y"),
+          factory.createNumericLiteral("0")
+        ), types[0])))],
+        true
+      )
+    )),
+    undefined,
+    [ a, b ]
+  )
+}
 
 export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: ArchetypeType) => {
   switch (atype.node) {
@@ -234,6 +284,7 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
       factory.createParenthesizedExpression(rm_milliseconds_from(b))
     );
+    case "set" :
     case "list": return factory.createBinaryExpression(
       factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -269,6 +320,8 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
         undefined,
         [b]
       )
+    case "tuple"    :
+      return make_tuple_cmp_body(a, b, atype.args)
     default: return factory.createBinaryExpression(
       a,
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
@@ -279,7 +332,110 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
 
 /* Michelson to Typescript utils ----------------------------------------------------- */
 
-const contained_type_to_field_decl = (fname : string, arg : string, atype : ArchetypeType) => {
+const make_arg = (i : number) : ts.Expression  => {
+  const p_idx = Math.floor(i / 2)
+  const arg_idx = i % 2
+  return factory.createElementAccessExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("p" + p_idx),
+      factory.createIdentifier("args")
+    ),
+    factory.createNumericLiteral("" + arg_idx)
+  )
+}
+
+const make_pair_decl = (arg : ts.Expression, i : number) => {
+  const idx = Math.floor(i / 2)
+  if (idx == 0) {
+    return factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("p0"),
+          undefined,
+          undefined,
+          factory.createParenthesizedExpression(factory.createAsExpression(
+            arg,
+            factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("Mpair")
+              ),
+              undefined
+            )
+          ))
+        )],
+        ts.NodeFlags.Const
+      )
+    )
+  } else {
+    return factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("p" + idx),
+          undefined,
+          undefined,
+          factory.createParenthesizedExpression(factory.createAsExpression(
+            factory.createElementAccessExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("p" + (idx - 1)),
+                factory.createIdentifier("args")
+              ),
+              factory.createNumericLiteral("1")
+            ),
+            factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("Mpair")
+              ),
+              undefined
+            )
+          ))
+        )],
+        ts.NodeFlags.Const
+      )
+    )
+  }
+}
+
+const mich_to_tuple = (types : Array<ArchetypeType>, arg : ts.Expression ) => {
+  let decls : Array<ts.Statement> = []
+  let args  : Array<ts.Expression> = []
+  for (let i = 0; i < types.length; i++) {
+    if (i % 2 == 0) {
+      // create declaration
+      decls.push(make_pair_decl(factory.createIdentifier("p"), i))
+    }
+    args.push(mich_to_field_decl(types[i], make_arg(i)))
+  }
+  const body = [ ...decls, factory.createReturnStatement(factory.createArrayLiteralExpression(args))]
+  return factory.createCallExpression(
+    factory.createParenthesizedExpression(factory.createArrowFunction(
+      undefined,
+      undefined,
+      [factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("p"),
+        undefined,
+        undefined,
+        undefined
+      )],
+      undefined,
+      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+      factory.createBlock(
+        body,
+        true
+      )
+    )),
+    undefined,
+    [arg]
+  )
+}
+
+const contained_type_to_field_decl = (fname : string, arg : ts.Expression, atype : ArchetypeType) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
       factory.createIdentifier("ex"),
@@ -287,7 +443,7 @@ const contained_type_to_field_decl = (fname : string, arg : string, atype : Arch
     ),
     undefined,
     [
-      factory.createIdentifier(arg),
+      arg,
       factory.createArrowFunction(
         undefined,
         undefined,
@@ -303,7 +459,7 @@ const contained_type_to_field_decl = (fname : string, arg : string, atype : Arch
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(mich_to_field_decl(atype, "x", 0, 0))],
+          [factory.createReturnStatement(mich_to_field_decl(atype, factory.createIdentifier("x"), 0, 0))],
           false
         )
       )
@@ -311,7 +467,7 @@ const contained_type_to_field_decl = (fname : string, arg : string, atype : Arch
   )
 }
 
-export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : number = 0, len : number = 0) : ts.CallExpression => {
+export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, idx : number = 0, len : number = 0) : ts.Expression => {
   switch (atype.node) {
     case "map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -320,7 +476,7 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
       ),
       undefined,
       [
-        factory.createIdentifier(arg),
+        arg,
         factory.createArrowFunction(
           undefined,
           undefined,
@@ -348,8 +504,8 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createArrayLiteralExpression(
             [
-              mich_to_field_decl(atype.args[0], "x", 0, 0),
-              mich_to_field_decl(atype.args[1], "y", 0, 0)
+              mich_to_field_decl(atype.args[0], factory.createIdentifier("x"), 0, 0),
+              mich_to_field_decl(atype.args[1], factory.createIdentifier("y"), 0, 0)
             ],
             false
           )
@@ -382,13 +538,16 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
       )]) : factory.createCallExpression(
         factory.createIdentifier("mich_to_" + atype.name),
         undefined,
-        [factory.createIdentifier(arg)])
+        [arg])
       return larg
     }
     case "option" :
       return contained_type_to_field_decl("mich_to_option", arg, atype.args[0])
+    case "set" :
     case "list":
       return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
+    case "tuple":
+      return mich_to_tuple(atype.args, arg)
     default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -396,7 +555,7 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : string, idx : nu
           factory.createIdentifier(archetype_type_to_mich_to_name(atype))
         ),
         undefined,
-        [factory.createIdentifier(arg)]
+        [arg]
       )
   }
 }
@@ -972,6 +1131,7 @@ const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
+    case "set"         :
     case "list"        : return list_to_mich(fp.name, fp.type.args[0])
     case "record"      : if (fp.type.name == null) {
       throw new Error("function_param_to_mich: null record name")

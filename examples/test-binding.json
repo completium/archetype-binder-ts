@@ -363,6 +363,36 @@
                 }
               ]
             }
+          },
+          {
+            "name": "p",
+            "type": {
+              "node": "set",
+              "name": null,
+              "args": [
+                {
+                  "node": "tuple",
+                  "name": null,
+                  "args": [
+                    {
+                      "node": "string",
+                      "name": null,
+                      "args": []
+                    },
+                    {
+                      "node": "nat",
+                      "name": null,
+                      "args": []
+                    },
+                    {
+                      "node": "int",
+                      "name": null,
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
           }
         ],
         "type_michelson": {
@@ -594,24 +624,93 @@
                                           "array": []
                                         },
                                         {
-                                          "prim": "list",
+                                          "prim": "pair",
                                           "int": null,
                                           "bytes": null,
                                           "string": null,
                                           "args": [
                                             {
-                                              "prim": "string",
+                                              "prim": "list",
                                               "int": null,
                                               "bytes": null,
                                               "string": null,
-                                              "args": [],
-                                              "annots": [],
+                                              "args": [
+                                                {
+                                                  "prim": "string",
+                                                  "int": null,
+                                                  "bytes": null,
+                                                  "string": null,
+                                                  "args": [],
+                                                  "annots": [],
+                                                  "array": []
+                                                }
+                                              ],
+                                              "annots": [
+                                                "%f12"
+                                              ],
+                                              "array": []
+                                            },
+                                            {
+                                              "prim": "set",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [
+                                                {
+                                                  "prim": "pair",
+                                                  "int": null,
+                                                  "bytes": null,
+                                                  "string": null,
+                                                  "args": [
+                                                    {
+                                                      "prim": "string",
+                                                      "int": null,
+                                                      "bytes": null,
+                                                      "string": null,
+                                                      "args": [],
+                                                      "annots": [],
+                                                      "array": []
+                                                    },
+                                                    {
+                                                      "prim": "pair",
+                                                      "int": null,
+                                                      "bytes": null,
+                                                      "string": null,
+                                                      "args": [
+                                                        {
+                                                          "prim": "nat",
+                                                          "int": null,
+                                                          "bytes": null,
+                                                          "string": null,
+                                                          "args": [],
+                                                          "annots": [],
+                                                          "array": []
+                                                        },
+                                                        {
+                                                          "prim": "int",
+                                                          "int": null,
+                                                          "bytes": null,
+                                                          "string": null,
+                                                          "args": [],
+                                                          "annots": [],
+                                                          "array": []
+                                                        }
+                                                      ],
+                                                      "annots": [],
+                                                      "array": []
+                                                    }
+                                                  ],
+                                                  "annots": [],
+                                                  "array": []
+                                                }
+                                              ],
+                                              "annots": [
+                                                "%f13"
+                                              ],
                                               "array": []
                                             }
                                           ],
-                                          "annots": [
-                                            "%f12"
-                                          ],
+                                          "annots": [],
                                           "array": []
                                         }
                                       ],

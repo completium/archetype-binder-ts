@@ -75,7 +75,10 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
     factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
       return factory.createPropertyAssignment(
         factory.createIdentifier(x.name),
-        mich_to_field_decl(x.type, "fields["+i+"]", i, fields.length)
+        mich_to_field_decl(x.type, factory.createElementAccessExpression(
+          factory.createIdentifier("fields"),
+          factory.createIdentifier(""+i)
+        ), i, fields.length)
       )
     })))
   ])
@@ -88,7 +91,7 @@ const mich_to_asset_value_decl = (a : Asset) => {
     return fields_to_mich_to_entity_decl(a.name + "_value", a.fields.filter(x => !x.is_key))
   } else {
     return make_mich_to_entity_decl(name, [
-      factory.createReturnStatement(mich_to_field_decl(fields_no_key[0].type, "v"))
+      factory.createReturnStatement(mich_to_field_decl(fields_no_key[0].type, factory.createIdentifier("v")))
     ])
   }
 }
