@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/test-binding.json'
-import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
+import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, value_to_mich_type, make_error } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -730,7 +730,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
     .concat(ci.entrypoints.map(entryToMethod))
     .concat(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[]))
     .concat(ci.types.enums.filter(x => x.name == "state").map(getStateDecl))
-    .concat([errorsToDecl(ci)])
+    .concat([errors_to_decl(ci)])
   )
 }
 
@@ -883,7 +883,7 @@ const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
   )
 }
 
-const errorsToDecl = (ci : ContractInterface) : ts.PropertyDeclaration => {
+const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
   return factory.createPropertyDeclaration(
     undefined,
     undefined,
@@ -891,17 +891,11 @@ const errorsToDecl = (ci : ContractInterface) : ts.PropertyDeclaration => {
     undefined,
     undefined,
     factory.createObjectLiteralExpression(
-      ci.storage.filter(x => x.const).map(x => {
+      ci.errors.map(x => {
+        const [ label, expr ] = make_error(x)
         return factory.createPropertyAssignment(
-          factory.createIdentifier(x.name),
-          factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
-              factory.createIdentifier("string_to_mich")
-            ),
-            undefined,
-            [factory.createStringLiteral("bad sig")]
-          )
+          factory.createIdentifier(label),
+          expr
         )
       }),
       true

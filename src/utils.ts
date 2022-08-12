@@ -1340,3 +1340,40 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
     }
   }
 }
+
+/* Errors ------------------------------------------------------------------ */
+
+export const make_error = (error : MichelsonType) : [ string, ts.Expression ] => {
+  if (error.string != null) {
+    return [ error.string, factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createStringLiteral(error.string)]
+    ) ]
+  } else if (error.prim == "Pair") {
+    const args = error.args.map(make_error)
+    const label = args.reduce((acc, n) => {
+      return (acc == "" ? "" : acc + "_") + n[0].toUpperCase()
+    }, "")
+    return [ label, factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("pair_to_mich")
+      ),
+      undefined,
+      [factory.createArrayLiteralExpression(args.map(p => p[1]))]
+    ) ]
+  } else {
+    return [ "NOT_HANDLED", factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createStringLiteral("'" + error.string + "'")]
+    ) ]
+  }
+}

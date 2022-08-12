@@ -30,11 +30,15 @@
               "string": null,
               "args": [],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "key_type_michelson": {
           "prim": "address",
@@ -43,7 +47,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "value_type_michelson": {
           "prim": "unit",
@@ -52,7 +58,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       },
       {
@@ -91,7 +99,9 @@
               "string": null,
               "args": [],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "nat",
@@ -100,11 +110,15 @@
               "string": null,
               "args": [],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "key_type_michelson": {
           "prim": "address",
@@ -113,7 +127,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "value_type_michelson": {
           "prim": "nat",
@@ -122,7 +138,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       },
       {
@@ -170,7 +188,9 @@
               "string": null,
               "args": [],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -187,7 +207,9 @@
                   "annots": [
                     "%nb_visits2"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "timestamp",
@@ -198,15 +220,21 @@
                   "annots": [
                     "%last"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "key_type_michelson": {
           "prim": "address",
@@ -215,7 +243,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "value_type_michelson": {
           "prim": "pair",
@@ -232,7 +262,9 @@
               "annots": [
                 "%nb_visits2"
               ],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "timestamp",
@@ -243,11 +275,15 @@
               "annots": [
                 "%last"
               ],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       }
     ],
@@ -416,7 +452,9 @@
                   "annots": [
                     "%f1"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -433,7 +471,9 @@
                       "annots": [
                         "%f2"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "mutez",
@@ -444,15 +484,21 @@
                       "annots": [
                         "%f3"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -479,7 +525,9 @@
                           "string": null,
                           "args": [],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "nat",
@@ -488,13 +536,17 @@
                           "string": null,
                           "args": [],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [
                         "%f4"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "bool",
@@ -505,11 +557,15 @@
                       "annots": [
                         "%f5"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -526,7 +582,9 @@
                       "annots": [
                         "%f6"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "pair",
@@ -543,7 +601,9 @@
                           "annots": [
                             "%f7"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "pair",
@@ -560,7 +620,9 @@
                               "annots": [
                                 "%f8"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -577,7 +639,9 @@
                                   "annots": [
                                     "%f9"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "pair",
@@ -594,7 +658,9 @@
                                       "annots": [
                                         "%f10"
                                       ],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     },
                                     {
                                       "prim": "pair",
@@ -615,13 +681,17 @@
                                               "string": null,
                                               "args": [],
                                               "annots": [],
-                                              "array": []
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
                                             }
                                           ],
                                           "annots": [
                                             "%f11"
                                           ],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         },
                                         {
                                           "prim": "pair",
@@ -642,13 +712,17 @@
                                                   "string": null,
                                                   "args": [],
                                                   "annots": [],
-                                                  "array": []
+                                                  "array": [],
+                                                  "var_id": null,
+                                                  "var_type": null
                                                 }
                                               ],
                                               "annots": [
                                                 "%f12"
                                               ],
-                                              "array": []
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
                                             },
                                             {
                                               "prim": "set",
@@ -669,7 +743,9 @@
                                                       "string": null,
                                                       "args": [],
                                                       "annots": [],
-                                                      "array": []
+                                                      "array": [],
+                                                      "var_id": null,
+                                                      "var_type": null
                                                     },
                                                     {
                                                       "prim": "pair",
@@ -684,7 +760,9 @@
                                                           "string": null,
                                                           "args": [],
                                                           "annots": [],
-                                                          "array": []
+                                                          "array": [],
+                                                          "var_id": null,
+                                                          "var_type": null
                                                         },
                                                         {
                                                           "prim": "int",
@@ -693,57 +771,83 @@
                                                           "string": null,
                                                           "args": [],
                                                           "annots": [],
-                                                          "array": []
+                                                          "array": [],
+                                                          "var_id": null,
+                                                          "var_type": null
                                                         }
                                                       ],
                                                       "annots": [],
-                                                      "array": []
+                                                      "array": [],
+                                                      "var_id": null,
+                                                      "var_type": null
                                                     }
                                                   ],
                                                   "annots": [],
-                                                  "array": []
+                                                  "array": [],
+                                                  "var_id": null,
+                                                  "var_type": null
                                                 }
                                               ],
                                               "annots": [
                                                 "%f13"
                                               ],
-                                              "array": []
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
                                             }
                                           ],
                                           "annots": [],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         }
                                       ],
                                       "annots": [],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     }
                                   ],
                                   "annots": [],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       }
     ],
@@ -921,8 +1025,89 @@
           }
         }
       ]
+    },
+    {
+      "name": "myentry2",
+      "args": [
+        {
+          "name": "arg",
+          "type": {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "nat",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
     }
   ],
   "getters": [],
-  "errors": []
+  "errors": [
+    {
+      "prim": null,
+      "int": null,
+      "bytes": null,
+      "string": "NOT_TO_BE_CALLED",
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    {
+      "prim": null,
+      "int": null,
+      "bytes": null,
+      "string": "INVALID_CALLER",
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    {
+      "prim": "Pair",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": null,
+          "int": null,
+          "bytes": null,
+          "string": "KEY_EXISTS",
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": null,
+          "int": null,
+          "bytes": null,
+          "string": "just_a_key",
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    }
+  ]
 }
