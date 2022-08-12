@@ -667,7 +667,7 @@ const get_lambda_form = (body : ts.Statement[], arg : ts.Expression) : ts.Expres
   )
 }
 
-export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
+export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
   switch (atype.node) {
     case "bool"     :
     case "string"   : return [factory.createReturnStatement(elt)]
@@ -723,7 +723,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
         factory.createToken(ts.SyntaxKind.QuestionToken),
         factory.createNull(),
         factory.createToken(ts.SyntaxKind.ColonToken),
-        get_lambda_form(get_return_body(root, factory.createIdentifier("x"), atype.args[0], ci), elt)
+        get_lambda_form(get_return_body(factory.createIdentifier("x"), atype.args[0], ci), elt)
       )]
     ))]
     case "set"  :
@@ -774,7 +774,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
               ),
               undefined,
               [ get_lambda_form(
-                  get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[0], ci),
+                  get_return_body(factory.createIdentifier("x"), atype.args[0], ci),
                   factory.createElementAccessExpression(
                     elt,
                     factory.createIdentifier("i")
@@ -821,7 +821,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
             }
           ]
         }
-        return get_return_body(root, elt, map_type, augmented_ci)
+        return get_return_body(elt, map_type, augmented_ci)
       } else if (fields_no_key.length == 1) {
         // create local equivalent type to map<key, value>
         const map_type : ArchetypeType = {
@@ -832,14 +832,14 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
             fields_no_key[0].type
           ]
         }
-        return get_return_body(root, elt, map_type, ci)
+        return get_return_body(elt, map_type, ci)
       } else {
         const list_type : ArchetypeType = {
           node : "list",
           name : null,
           args : [ key_type ]
         }
-        return get_return_body(root, elt, list_type, ci)
+        return get_return_body(elt, list_type, ci)
       }
     }
     case "map" : {
@@ -889,14 +889,14 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
               [factory.createArrayLiteralExpression(
                 [
                   get_lambda_form(
-                    get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[0], ci),
+                    get_return_body(factory.createIdentifier("x"), atype.args[0], ci),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("0")
                     )
                   ),
                   get_lambda_form(
-                    get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), atype.args[1], ci),
+                    get_return_body(factory.createIdentifier("x"), atype.args[1], ci),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("1")
@@ -916,7 +916,7 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
       return [ factory.createReturnStatement(factory.createArrayLiteralExpression(
         atype.args.map((t,i) => {
           return get_lambda_form(
-            get_return_body(factory.createIdentifier("x"), factory.createIdentifier("x"), t, ci),
+            get_return_body(factory.createIdentifier("x"), t, ci),
             factory.createElementAccessExpression(
               elt,
               factory.createIdentifier(""+i)
@@ -932,12 +932,12 @@ export const get_return_body = (root : ts.Expression, elt : ts.Expression, atype
       return [factory.createReturnStatement(factory.createObjectLiteralExpression(
         r.fields.map(f => {
           const field_value = factory.createPropertyAccessExpression(
-            root,
+            elt,
             factory.createIdentifier(field_annot_names[f.name])
           )
           return factory.createPropertyAssignment(
             factory.createIdentifier(f.name),
-            get_lambda_form(get_return_body(root, factory.createIdentifier("x"), f.type, ci), field_value)
+            get_lambda_form(get_return_body(factory.createIdentifier("x"), f.type, ci), field_value)
           )
         })
       ))]
@@ -1351,7 +1351,7 @@ export const make_error = (error : MichelsonType) : [ string, ts.Expression ] =>
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
-      [factory.createStringLiteral(error.string)]
+      [factory.createStringLiteral("\"" + error.string + "\"")]
     ) ]
   } else if (error.prim == "Pair") {
     const args = error.args.map(make_error)
@@ -1373,7 +1373,125 @@ export const make_error = (error : MichelsonType) : [ string, ts.Expression ] =>
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
-      [factory.createStringLiteral("'" + error.string + "'")]
+      [factory.createStringLiteral("" + error.string)]
     ) ]
+  }
+}
+
+/* Completium litteral ------------------------------------------------ */
+
+export const make_completium_literal = (name : string, t : ArchetypeType) : ts.Expression => {
+  switch (t.node) {
+    case "address" :
+    case "tez"     :
+    case "nat"     :
+    case "int"     :
+    case "bytes"   :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(name),
+          factory.createIdentifier("toString")
+        ),
+        undefined,
+        []
+      )
+    case "date"   :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(name),
+          factory.createIdentifier("toIsoString")
+        ),
+        undefined,
+        []
+      )
+    case "option" :
+      return factory.createConditionalExpression(
+        factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier(name),
+            factory.createIdentifier("is_some")
+          ),
+          undefined,
+          []
+        ),
+        factory.createToken(ts.SyntaxKind.QuestionToken),
+        make_completium_literal(name + ".get()", t.args[0]),
+        factory.createToken(ts.SyntaxKind.ColonToken),
+        factory.createNull()
+      )
+    case "list" :
+    case "set"  :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(name),
+          factory.createIdentifier("map")
+        ),
+        undefined,
+        [factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("e"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          make_completium_literal("e", t.args[0])
+        )]
+      )
+    case "tuple" :
+      return factory.createArrayLiteralExpression(
+        t.args.map((t, i) => {
+          return make_completium_literal(name + "[" + i + "]", t)
+        })
+        ,
+        false
+      )
+    case "big_map" :
+    case "map"     :
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier(name),
+          factory.createIdentifier("map")
+        ),
+        undefined,
+        [factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("e"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [factory.createReturnStatement(factory.createObjectLiteralExpression(
+              [
+                factory.createPropertyAssignment(
+                  factory.createIdentifier("key"),
+                  make_completium_literal("e[0]", t.args[0])
+                ),
+                factory.createPropertyAssignment(
+                  factory.createIdentifier("value"),
+                  make_completium_literal("e[1]", t.args[1])
+                )
+              ],
+              true
+            ))],
+            true
+          )
+        )]
+      )
+    default : return factory.createIdentifier(name)
   }
 }

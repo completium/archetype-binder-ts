@@ -1,7 +1,7 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
 import contract_json from '../examples/test-binding.json'
-import { ArchetypeType, get_return_body, archetype_type_to_ts_type, make_cmp_body, mich_to_field_decl, archetype_type_to_mich_to_name, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, MichelsonType, Record, StorageElement, value_to_mich_type, make_error } from "./utils";
+import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -520,7 +520,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    get_return_body(root, elt, selt.type, ci)
+    get_return_body(elt, selt.type, ci)
   )
 }
 
@@ -704,7 +704,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
                       factory.createObjectLiteralExpression(ci.parameters.filter(x => !x.const).map(x =>
                         factory.createPropertyAssignment(
                           factory.createIdentifier(x.name),
-                          factory.createIdentifier(x.name)
+                          make_completium_literal(x.name, x.type)
                         )
                       ), true),
                       factory.createIdentifier("params")
