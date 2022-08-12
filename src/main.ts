@@ -1,12 +1,9 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import contract_json from '../examples/test-binding.json'
 import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
-
-const contract_interface : ContractInterface = contract_json
 
 // https://ts-ast-viewer.com/#
 
@@ -907,41 +904,44 @@ const not_a_set = (a : Asset) => {
   return a.container_type_michelson.prim != "set"
 }
 
-const nodes : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] = [
-  ...([get_imports()]),
-  // enums
-  ...(contract_interface.types.enums.map(enumToDecl)),
-  // records
-  ...(contract_interface.types.records.map(recordToInterfaceDecl)),
-  ...(contract_interface.types.records.map(recordToMichDecl)),
-  ...(contract_interface.types.records.map(recordToMichTypeDecl)),
-  ...(contract_interface.types.records.map(mich_to_record_decl)),
-  ...(contract_interface.types.records.map(record_to_cmp_decl)),
-  // asset keys
-  ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
-  ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
-  ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
-  // asset values
-  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToInterfaceDecl)),
-  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichDecl)),
-  ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichTypeDecl)),
-  ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
-  ...(contract_interface.types.assets.filter(not_a_set).map(asset_to_cmp_decl)),
-  // asset containers
-  ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
-  ...(contract_interface.types.assets.map(assetContainerToMichDecl)),
-  ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),
-  // entrypoint argument to michelson
-  ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
-  ...([
-  // contract class
-    get_contract_class_node(contract_interface),
-  // contract instance
-    get_contract_decl(contract_interface)
-  ]),
-]
+const get_nodes = (contract_interface : ContractInterface) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
+  return [
+    ...([get_imports()]),
+    // enums
+    ...(contract_interface.types.enums.map(enumToDecl)),
+    // records
+    ...(contract_interface.types.records.map(recordToInterfaceDecl)),
+    ...(contract_interface.types.records.map(recordToMichDecl)),
+    ...(contract_interface.types.records.map(recordToMichTypeDecl)),
+    ...(contract_interface.types.records.map(mich_to_record_decl)),
+    ...(contract_interface.types.records.map(record_to_cmp_decl)),
+    // asset keys
+    ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
+    ...(contract_interface.types.assets.map(assetKeyToMichDecl)),
+    ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
+    // asset values
+    ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToInterfaceDecl)),
+    ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichDecl)),
+    ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichTypeDecl)),
+    ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
+    ...(contract_interface.types.assets.filter(not_a_set).map(asset_to_cmp_decl)),
+    // asset containers
+    ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
+    ...(contract_interface.types.assets.map(assetContainerToMichDecl)),
+    ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),
+    // entrypoint argument to michelson
+    ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
+    ...([
+    // contract class
+      get_contract_class_node(contract_interface),
+    // contract instance
+      get_contract_decl(contract_interface)
+    ]),
+  ]
+}
 
-const nodeArr = factory.createNodeArray(nodes);
-
-const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
-console.log(result);
+export const generate_binding = (contract_interface : ContractInterface) : string => {
+  const nodeArr = factory.createNodeArray(get_nodes(contract_interface));
+  const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
+  return result
+}

@@ -1,10 +1,7 @@
 {
-  "name": "archetype-binder-ts",
+  "name": "@completium/archetype-binder-ts",
   "version": "0.0.1",
   "description": "Binds Archetype contract interface to Typescript",
-  "directories": {
-    "example": "examples"
-  },
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "files": [

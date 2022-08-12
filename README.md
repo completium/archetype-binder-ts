@@ -1,2 +1,2 @@
 # archetype-binder-ts
-Binds Archetype contract API to Typescript 
+Binds [Archetype](https://archetype-lang.org/) contract API to Typescript.
