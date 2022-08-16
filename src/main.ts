@@ -660,7 +660,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
         factory.createIdentifier("deploy"),
         undefined,
         undefined,
-        ci.parameters.filter(x => !x.const).map(contractParameterToParamDecl).concat([
+        ci.parameters.map(contractParameterToParamDecl).concat([
           factory.createParameterDeclaration(
             undefined,
             undefined,
@@ -698,7 +698,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
                     undefined,
                     [
                       factory.createStringLiteral("./contracts/"+ci.name+".arl"),
-                      factory.createObjectLiteralExpression(ci.parameters.filter(x => !x.const).map(x =>
+                      factory.createObjectLiteralExpression(ci.parameters.map(x =>
                         factory.createPropertyAssignment(
                           factory.createIdentifier(x.name),
                           make_completium_literal(x.name, x.type)
