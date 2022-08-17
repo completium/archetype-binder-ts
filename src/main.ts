@@ -891,7 +891,7 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
       ci.errors.map(x => {
         const [ label, expr ] = make_error(x)
         return factory.createPropertyAssignment(
-          factory.createIdentifier(label),
+          factory.createIdentifier(label.split(' ').join('_')),
           expr
         )
       }),
@@ -945,3 +945,6 @@ export const generate_binding = (contract_interface : ContractInterface) : strin
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result
 }
+
+import ci from "../examples/verification.json"
+console.log(generate_binding(ci))

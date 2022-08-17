@@ -1,0 +1,85 @@
+{
+  "name": "account",
+  "parameters": [
+    {
+      "name": "owner",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "total",
+      "type": {
+        "node": "int",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "lastSubDate",
+      "type": {
+        "node": "date",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "add",
+      "args": [
+        {
+          "name": "value",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "sub",
+      "args": []
+    }
+  ],
+  "getters": [],
+  "errors": [
+    {
+      "prim": null,
+      "int": null,
+      "bytes": null,
+      "string": "Wait 5 minutes before you decrement again",
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    {
+      "prim": null,
+      "int": null,
+      "bytes": null,
+      "string": "INVALID_CALLER",
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    }
+  ]
+}
