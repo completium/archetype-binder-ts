@@ -946,5 +946,5 @@ export const generate_binding = (contract_interface : ContractInterface) : strin
   return result
 }
 
-import ci from "../examples/verification.json"
-console.log(generate_binding(ci))
+//import ci from "../examples/verification.json"
+//console.log(generate_binding(ci))
