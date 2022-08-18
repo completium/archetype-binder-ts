@@ -891,7 +891,7 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
       ci.errors.map(x => {
         const [ label, expr ] = make_error(x)
         return factory.createPropertyAssignment(
-          factory.createIdentifier(label.split(' ').join('_')),
+          factory.createIdentifier(label),
           expr
         )
       }),

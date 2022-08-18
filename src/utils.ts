@@ -75,6 +75,12 @@ export type Getter = {} /* TODO */
 
 export type Event = {} /* TODO */
 
+export type Error = {
+  "kind" : string
+  "args" : Array<string>
+  "expr" : MichelsonType
+}
+
 export type ContractInterface = {
   "name" : string,
   "parameters" : Array<ContractParameter>
@@ -87,7 +93,7 @@ export type ContractInterface = {
   "storage": Array<StorageElement>
   "entrypoints": Array<Entrypoint>
   "getters": Array<Getter>
-  "errors": Array<MichelsonType>
+  "errors": Array<Error>
 }
 
 /* Archetype type to Typescript type --------------------------------------- */
@@ -1343,18 +1349,18 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
 
 /* Errors ------------------------------------------------------------------ */
 
-export const make_error = (error : MichelsonType) : [ string, ts.Expression ] => {
-  if (error.string != null) {
-    return [ error.string, factory.createCallExpression(
+export const mich_type_to_error = (expr : MichelsonType) : [string, ts.Expression] => {
+  if (expr.string != null) {
+    return [ expr.string, factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
-      [factory.createStringLiteral("\"" + error.string + "\"")]
+      [factory.createStringLiteral("\"" + expr.string + "\"")]
     ) ]
-  } else if (error.prim == "Pair") {
-    const args = error.args.map(make_error)
+  } else if (expr.prim == "Pair") {
+    const args = expr.args.map(mich_type_to_error)
     const label = args.reduce((acc, n) => {
       return (acc == "" ? "" : acc + "_") + n[0].toUpperCase()
     }, "")
@@ -1373,8 +1379,17 @@ export const make_error = (error : MichelsonType) : [ string, ts.Expression ] =>
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
-      [factory.createStringLiteral("" + error.string)]
+      [factory.createStringLiteral("" + expr.string)]
     ) ]
+  }
+}
+
+export const make_error = (error : Error) : [ string, ts.Expression ] => {
+  switch (error.kind) {
+    case "InvalidCondition" :
+      return [ error.args[0], mich_type_to_error(error.expr)[1] ]
+    default :
+      return mich_type_to_error(error.expr)
   }
 }
 
