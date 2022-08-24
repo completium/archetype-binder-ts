@@ -614,7 +614,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   }
 }
 
-const get_contract_class_node = (ci : ContractInterface) => {
+const get_contract_class_node = (ci : ContractInterface, cp : string) => {
   return factory.createClassDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
@@ -697,7 +697,7 @@ const get_contract_class_node = (ci : ContractInterface) => {
                     ),
                     undefined,
                     [
-                      factory.createStringLiteral("./contracts/"+ci.name+".arl"),
+                      factory.createStringLiteral(cp + ci.name + ".arl"),
                       factory.createObjectLiteralExpression(ci.parameters.map(x =>
                         factory.createPropertyAssignment(
                           factory.createIdentifier(x.name),
@@ -904,7 +904,7 @@ const not_a_set = (a : Asset) => {
   return a.container_type_michelson.prim != "set"
 }
 
-const get_nodes = (contract_interface : ContractInterface) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
+const get_nodes = (contract_interface : ContractInterface, contract_path : string) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
     ...([get_imports()]),
     // enums
@@ -933,18 +933,18 @@ const get_nodes = (contract_interface : ContractInterface) : (ts.ImportDeclarati
     ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
     ...([
     // contract class
-      get_contract_class_node(contract_interface),
+      get_contract_class_node(contract_interface, contract_path),
     // contract instance
       get_contract_decl(contract_interface)
     ]),
   ]
 }
 
-export const generate_binding = (contract_interface : ContractInterface) : string => {
-  const nodeArr = factory.createNodeArray(get_nodes(contract_interface));
+export const generate_binding = (contract_interface : ContractInterface, contract_path : string) : string => {
+  const nodeArr = factory.createNodeArray(get_nodes(contract_interface, contract_path));
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result
 }
 
-//import ci from "../examples/verification.json"
-//console.log(generate_binding(ci))
+import ci from "../examples/verification.json"
+console.log(generate_binding(ci, "./contracts/"))
