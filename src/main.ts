@@ -1,4 +1,4 @@
-import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
+import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
 import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
 
@@ -725,6 +725,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
       )
     ]
     .concat(ci.entrypoints.map(entryToMethod))
+    .concat(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[]))
     .concat(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[]))
     .concat(ci.types.enums.filter(x => x.name == "state").map(getStateDecl))
     .concat([errors_to_decl(ci)])
@@ -940,11 +941,11 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
   ]
 }
 
-export const generate_binding = (contract_interface : ContractInterface, contract_path : string) : string => {
+export const generate_binding = (contract_interface : ContractInterface, contract_path : string = "./contracts/") : string => {
   const nodeArr = factory.createNodeArray(get_nodes(contract_interface, contract_path));
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result
 }
 
-import ci from "../examples/verification.json"
-console.log(generate_binding(ci, "./contracts/"))
+//import ci from "../examples/verification.json"
+//console.log(generate_binding(ci))
