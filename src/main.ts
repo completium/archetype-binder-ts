@@ -655,6 +655,67 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
       ),
       factory.createMethodDeclaration(
         undefined,
+        [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+        undefined,
+        factory.createIdentifier("get_balance"),
+        undefined,
+        undefined,
+        [],
+        factory.createTypeReferenceNode(
+          factory.createIdentifier("Promise"),
+          [factory.createTypeReferenceNode(
+            factory.createQualifiedName(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("Tez")
+            ),
+            undefined
+          )]
+        ),
+        factory.createBlock(
+          [
+            factory.createIfStatement(
+              factory.createBinaryExpression(
+                factory.createNull(),
+                factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("address")
+                )
+              ),
+              factory.createBlock(
+                [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+                  factory.createPropertyAccessExpression(
+                    factory.createIdentifier("ex"),
+                    factory.createIdentifier("get_balance")
+                  ),
+                  undefined,
+                  [factory.createNewExpression(
+                    factory.createPropertyAccessExpression(
+                      factory.createIdentifier("ex"),
+                      factory.createIdentifier("Address")
+                    ),
+                    undefined,
+                    [factory.createPropertyAccessExpression(
+                      factory.createThis(),
+                      factory.createIdentifier("address")
+                    )]
+                  )]
+                )))],
+                true
+              ),
+              undefined
+            ),
+            factory.createThrowStatement(factory.createNewExpression(
+              factory.createIdentifier("Error"),
+              undefined,
+              [factory.createStringLiteral("Contract not initialised")]
+            ))
+          ],
+          true
+        )
+      ),
+      factory.createMethodDeclaration(
+        undefined,
         [factory.createModifier(SyntaxKind.AsyncKeyword)],
         undefined,
         factory.createIdentifier("deploy"),
