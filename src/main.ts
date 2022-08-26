@@ -641,18 +641,50 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
         undefined,
         undefined,
         [],
-        factory.createUnionTypeNode([
-          factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
-          factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)
-        ]),
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("Address")
+          ),
+          undefined
+        ),
         factory.createBlock(
-          [factory.createReturnStatement(factory.createPropertyAccessExpression(
-            factory.createThis(),
-            factory.createIdentifier("address")
-          ))],
+          [
+            factory.createIfStatement(
+              factory.createBinaryExpression(
+                factory.createIdentifier("undefined"),
+                factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("address")
+                )
+              ),
+              factory.createBlock(
+                [factory.createReturnStatement(factory.createNewExpression(
+                  factory.createPropertyAccessExpression(
+                    factory.createIdentifier("ex"),
+                    factory.createIdentifier("Address")
+                  ),
+                  undefined,
+                  [factory.createPropertyAccessExpression(
+                    factory.createThis(),
+                    factory.createIdentifier("address")
+                  )]
+                ))],
+                true
+              ),
+              undefined
+            ),
+            factory.createThrowStatement(factory.createNewExpression(
+              factory.createIdentifier("Error"),
+              undefined,
+              [factory.createStringLiteral("Contract not initialised")]
+            ))
+          ],
           true
         )
-      ),
+      )
+      ,
       factory.createMethodDeclaration(
         undefined,
         [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
