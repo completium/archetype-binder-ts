@@ -112,6 +112,20 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
+    case "signature":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Signature")
+      ),
+      undefined
+    );
+    case "key":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Key")
+      ),
+      undefined
+    );
     case "bytes":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("ex"),
@@ -142,7 +156,20 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       undefined
     );
     case "string":    return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
-    case "signature": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
+    case "signature": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Signature")
+      ),
+      undefined
+    );
+    case "key": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Key")
+      ),
+      undefined
+    );
     case "int":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("ex"),
@@ -310,14 +337,16 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
         [b]
       )
     )
-    case "int"      :
-    case "nat"      :
-    case "rational" :
-    case "bytes"    :
-    case "address"  :
-    case "option"   :
-    case "currency" :
-    case "duration" :
+    case "int"       :
+    case "nat"       :
+    case "rational"  :
+    case "bytes"     :
+    case "address"   :
+    case "option"    :
+    case "currency"  :
+    case "duration"  :
+    case "signature" :
+    case "key"       :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
           a,
@@ -578,6 +607,8 @@ export const archetype_type_to_mich_to_name = (atype : ArchetypeType) : string =
     case "rational" : return "mich_to_rational"
     case "address"  : return "mich_to_address"
     case "bytes"    : return "mich_to_bytes"
+    case "signature": return "mich_to_signaure"
+    case "key"      : return "mich_to_key"
     default: throw new Error("archetype_type_to_mich_to_name: unknown type '" + atype.node + "'")
   }
 }
@@ -681,6 +712,8 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     case "nat"      :
     case "bytes"    :
     case "address"  :
+    case "signature":
+    case "key"      :
     case "duration" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
@@ -1122,7 +1155,6 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 
 const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
   switch (fp.type.node) {
-    case "signature"   :
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
@@ -1134,6 +1166,8 @@ const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
     case "duration"    :
     case "rational"    :
     case "option"      :
+    case "signature"   :
+    case "key"         :
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
@@ -1351,7 +1385,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
 
 export const mich_type_to_error = (expr : MichelsonType) : [string, ts.Expression] => {
   if (expr.string != null) {
-    return [ expr.string, factory.createCallExpression(
+    return [ expr.string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("string_to_mich")
@@ -1397,11 +1431,13 @@ export const make_error = (error : Error) : [ string, ts.Expression ] => {
 
 export const make_completium_literal = (name : string, t : ArchetypeType) : ts.Expression => {
   switch (t.node) {
-    case "address" :
-    case "tez"     :
-    case "nat"     :
-    case "int"     :
-    case "bytes"   :
+    case "address"   :
+    case "tez"       :
+    case "nat"       :
+    case "int"       :
+    case "bytes"     :
+    case "signature" :
+    case "key"       :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
           factory.createIdentifier(name),

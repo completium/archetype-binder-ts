@@ -950,8 +950,21 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
     undefined,
     undefined,
     factory.createObjectLiteralExpression(
-      ci.errors.map(x => {
-        const [ label, expr ] = make_error(x)
+      ci.errors.map(make_error).reduce((acc,x) => {
+        const [label, expr] = x
+        if (!acc.reduce((a,p) => {
+          const [l, _] = p
+          if (!a) {
+            return label == l
+          } else {
+            return false
+          }
+        }, false)) {
+          acc.push([label, expr])
+        }
+        return acc
+      }, <Array<[string, ts.Expression]>>[]).map(x => {
+        const [label, expr] = x
         return factory.createPropertyAssignment(
           factory.createIdentifier(label),
           expr
@@ -1008,5 +1021,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/verification.json"
+//import ci from "../examples/oracle.json"
 //console.log(generate_binding(ci))

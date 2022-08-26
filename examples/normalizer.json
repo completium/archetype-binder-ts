@@ -103,7 +103,9 @@
               "string": null,
               "args": [],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -120,7 +122,9 @@
                   "annots": [
                     "%computedPrice"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -137,7 +141,9 @@
                       "annots": [
                         "%lastUpdateTime"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "pair",
@@ -160,7 +166,9 @@
                               "annots": [
                                 "%first"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -177,7 +185,9 @@
                                   "annots": [
                                     "%last"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "pair",
@@ -194,7 +204,9 @@
                                       "annots": [
                                         "%sum"
                                       ],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     },
                                     {
                                       "prim": "map",
@@ -209,7 +221,9 @@
                                           "string": null,
                                           "args": [],
                                           "annots": [],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         },
                                         {
                                           "prim": "nat",
@@ -218,27 +232,37 @@
                                           "string": null,
                                           "args": [],
                                           "annots": [],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         }
                                       ],
                                       "annots": [
                                         "%saved"
                                       ],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     }
                                   ],
                                   "annots": [],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [
                             "%prices"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "pair",
@@ -255,7 +279,9 @@
                               "annots": [
                                 "%first"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -272,7 +298,9 @@
                                   "annots": [
                                     "%last"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "pair",
@@ -289,7 +317,9 @@
                                       "annots": [
                                         "%sum"
                                       ],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     },
                                     {
                                       "prim": "map",
@@ -304,7 +334,9 @@
                                           "string": null,
                                           "args": [],
                                           "annots": [],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         },
                                         {
                                           "prim": "nat",
@@ -313,43 +345,61 @@
                                           "string": null,
                                           "args": [],
                                           "annots": [],
-                                          "array": []
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
                                         }
                                       ],
                                       "annots": [
                                         "%saved"
                                       ],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     }
                                   ],
                                   "annots": [],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [
                             "%volumes"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "key_type_michelson": {
           "prim": "string",
@@ -358,7 +408,9 @@
           "string": null,
           "args": [],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         },
         "value_type_michelson": {
           "prim": "pair",
@@ -375,7 +427,9 @@
               "annots": [
                 "%computedPrice"
               ],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -392,7 +446,9 @@
                   "annots": [
                     "%lastUpdateTime"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -415,7 +471,9 @@
                           "annots": [
                             "%first"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "pair",
@@ -432,7 +490,9 @@
                               "annots": [
                                 "%last"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -449,7 +509,9 @@
                                   "annots": [
                                     "%sum"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "map",
@@ -464,7 +526,9 @@
                                       "string": null,
                                       "args": [],
                                       "annots": [],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     },
                                     {
                                       "prim": "nat",
@@ -473,27 +537,37 @@
                                       "string": null,
                                       "args": [],
                                       "annots": [],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     }
                                   ],
                                   "annots": [
                                     "%saved"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [
                         "%prices"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "pair",
@@ -510,7 +584,9 @@
                           "annots": [
                             "%first"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "pair",
@@ -527,7 +603,9 @@
                               "annots": [
                                 "%last"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -544,7 +622,9 @@
                                   "annots": [
                                     "%sum"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "map",
@@ -559,7 +639,9 @@
                                       "string": null,
                                       "args": [],
                                       "annots": [],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     },
                                     {
                                       "prim": "nat",
@@ -568,39 +650,55 @@
                                       "string": null,
                                       "args": [],
                                       "annots": [],
-                                      "array": []
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
                                     }
                                   ],
                                   "annots": [
                                     "%saved"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [
                         "%volumes"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       }
     ],
@@ -668,7 +766,9 @@
               "annots": [
                 "%first"
               ],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -685,7 +785,9 @@
                   "annots": [
                     "%last"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -702,7 +804,9 @@
                       "annots": [
                         "%sum"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "map",
@@ -717,7 +821,9 @@
                           "string": null,
                           "args": [],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "nat",
@@ -726,25 +832,35 @@
                           "string": null,
                           "args": [],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [
                         "%saved"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       },
       {
@@ -822,7 +938,9 @@
               "annots": [
                 "%start"
               ],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             },
             {
               "prim": "pair",
@@ -839,7 +957,9 @@
                   "annots": [
                     "%end"
                   ],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 },
                 {
                   "prim": "pair",
@@ -856,7 +976,9 @@
                       "annots": [
                         "%open"
                       ],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     },
                     {
                       "prim": "pair",
@@ -873,7 +995,9 @@
                           "annots": [
                             "%high"
                           ],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         },
                         {
                           "prim": "pair",
@@ -890,7 +1014,9 @@
                               "annots": [
                                 "%low"
                               ],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             },
                             {
                               "prim": "pair",
@@ -907,7 +1033,9 @@
                                   "annots": [
                                     "%close"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 },
                                 {
                                   "prim": "nat",
@@ -918,31 +1046,45 @@
                                   "annots": [
                                     "%volume"
                                   ],
-                                  "array": []
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
                                 }
                               ],
                               "annots": [],
-                              "array": []
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
                             }
                           ],
                           "annots": [],
-                          "array": []
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
                         }
                       ],
                       "annots": [],
-                      "array": []
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
                     }
                   ],
                   "annots": [],
-                  "array": []
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
                 }
               ],
               "annots": [],
-              "array": []
+              "array": [],
+              "var_id": null,
+              "var_type": null
             }
           ],
           "annots": [],
-          "array": []
+          "array": [],
+          "var_id": null,
+          "var_type": null
         }
       }
     ],
@@ -1048,5 +1190,96 @@
       }
     }
   ],
-  "errors": []
+  "errors": [
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "OPTION_IS_NONE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "OPTION_IS_NONE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "bad sender",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "bad request",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "bad request",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "invalid sum",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    }
+  ]
 }
