@@ -100,7 +100,6 @@ export type ContractInterface = {
 
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
   switch (at.node) {
-    case "key":       return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "date":      return factory.createTypeReferenceNode(
       factory.createIdentifier("Date"),
       undefined
