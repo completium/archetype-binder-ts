@@ -32,6 +32,15 @@ const make_mich_to_entity_decl = (name : string, body : ts.Statement[]) => {
             undefined
           ),
           undefined
+        ),
+        factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("collapsed"),
+          undefined,
+          factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+          factory.createFalse()
         )],
         factory.createTypeReferenceNode(
           factory.createIdentifier(name),
@@ -54,6 +63,35 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
           factory.createIdentifier("fields"),
           undefined,
           undefined,
+          factory.createArrayLiteralExpression(
+            [],
+            false
+          )
+        )],
+        ts.NodeFlags.Let
+      )
+    ),
+    factory.createIfStatement(
+      factory.createIdentifier("collapsed"),
+      factory.createBlock(
+        [factory.createExpressionStatement(factory.createBinaryExpression(
+          factory.createIdentifier("fields"),
+          factory.createToken(ts.SyntaxKind.EqualsToken),
+          factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("mich_to_pairs")
+            ),
+            undefined,
+            [factory.createIdentifier("v")]
+          )
+        ))],
+        true
+      ),
+      factory.createBlock(
+        [factory.createExpressionStatement(factory.createBinaryExpression(
+          factory.createIdentifier("fields"),
+          factory.createToken(ts.SyntaxKind.EqualsToken),
           factory.createCallExpression(
             factory.createPropertyAccessExpression(
               factory.createIdentifier("ex"),
@@ -65,8 +103,8 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
               factory.createIdentifier(name + "_mich_type")
             ]
           )
-        )],
-        ts.NodeFlags.Const
+        ))],
+        true
       )
     ),
     factory.createReturnStatement(factory.createObjectLiteralExpression(fields.map((x, i) => {
@@ -567,7 +605,7 @@ const get_big_map_value_getter_body = (name : string) : ts.Statement[] => {
         [factory.createReturnStatement(factory.createCallExpression(
           factory.createIdentifier("mich_to_" + name + "_value"),
           undefined,
-          [factory.createIdentifier("data")]
+          [factory.createIdentifier("data"), factory.createTrue()]
         ))],
         true
       ),

@@ -569,10 +569,10 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
           )
         ],
         false
-      )]) : factory.createCallExpression(
+      ), factory.createIdentifier("collapsed")]) : factory.createCallExpression(
         factory.createIdentifier("mich_to_" + atype.name),
         undefined,
-        [arg])
+        [arg, factory.createIdentifier("collapsed")])
       return larg
     }
     case "option" :
