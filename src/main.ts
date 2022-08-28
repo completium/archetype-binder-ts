@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type } from "./utils";
+import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue,Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type, function_param_to_mich } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -896,8 +896,197 @@ const get_contract_decl = (ci : ContractInterface) => {
   )
 }
 
-const enumToDecl = (e : Enum) : ts.EnumDeclaration => {
+const make_enum_type_decl = (e : Enum) => {
   return factory.createEnumDeclaration(
+    undefined,
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createIdentifier(e.name + "_types"),
+    e.constructors.map(c => {
+      return factory.createEnumMember(
+        factory.createIdentifier(c.name),
+        factory.createStringLiteral(c.name)
+      )
+    })
+  )
+}
+
+const make_enum_class_decl = (e : Enum) => {
+  return factory.createClassDeclaration(
+    undefined,
+    [
+      factory.createModifier(ts.SyntaxKind.ExportKeyword),
+      factory.createModifier(ts.SyntaxKind.AbstractKeyword)
+    ],
+    factory.createIdentifier(e.name),
+    undefined,
+    [factory.createHeritageClause(
+      ts.SyntaxKind.ExtendsKeyword,
+      [factory.createExpressionWithTypeArguments(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("Enum")
+        ),
+        [factory.createTypeReferenceNode(
+          factory.createIdentifier(e.name + "_types"),
+          undefined
+        )]
+      )]
+    )],
+    []
+  )
+}
+
+const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Expression => {
+  var mich_value : ts.Expression = factory.createPropertyAccessExpression(
+    factory.createIdentifier("ex"),
+    factory.createIdentifier("unit_mich")
+  )
+  if (c.types.length > 0) {
+    var atype : ArchetypeType = {
+      node: "unit",
+      name: null,
+      args: []
+    }
+    if (c.types.length > 1) {
+      atype = {
+        node: "tuple",
+        name: null,
+        args: c.types
+      }
+    } else {
+      atype = c.types[0]
+    }
+    const param : FunctionParameter = {
+      name : "this.content",
+      type : atype
+    }
+    mich_value = function_param_to_mich(param)
+  }
+  if (idx == 0) {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("left_to_mich")
+      ),
+      undefined,
+      [mich_value]
+    )
+  } else {
+    const last = factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier((idx % 2 == 0) ? "right_to_mich" : "left_to_mich")
+      ),
+      undefined,
+      [mich_value]
+    )
+    var res = last
+    for (var i = 0; i < Math.floor((idx + 1) / 2); i++) {
+      res = factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("right_to_mich")
+        ),
+        undefined,
+        [res]
+      )
+    }
+    return res
+  }
+}
+
+const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number) : ts.ClassDeclaration => {
+  let args : ts.ParameterDeclaration[] = []
+  if (c.types.length > 0) {
+    let atype = c.types[0]
+    if (c.types.length > 1) {
+      atype = {
+        node : "tuple",
+        name : null,
+        args : c.types
+      }
+    }
+    args = [factory.createParameterDeclaration(
+      undefined,
+      [factory.createModifier(ts.SyntaxKind.PrivateKeyword)],
+      undefined,
+      factory.createIdentifier("content"),
+      undefined,
+      archetype_type_to_ts_type(atype),
+      undefined
+    )]
+  }
+  return factory.createClassDeclaration(
+    undefined,
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createIdentifier(c.name),
+    undefined,
+    [factory.createHeritageClause(
+      ts.SyntaxKind.ExtendsKeyword,
+      [factory.createExpressionWithTypeArguments(
+        factory.createIdentifier(name),
+        undefined
+      )]
+    )],[
+    ...([
+      factory.createConstructorDeclaration(
+        undefined,
+        undefined,
+        args,
+        factory.createBlock(
+          [factory.createExpressionStatement(factory.createCallExpression(
+            factory.createSuper(),
+            undefined,
+            [factory.createPropertyAccessExpression(
+              factory.createIdentifier("anenum_types"),
+              factory.createIdentifier(c.name)
+            )]
+          ))],
+          true
+        )
+      ),
+      factory.createMethodDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("to_mich"),
+        undefined,
+        undefined,
+        [],
+        undefined,
+        factory.createBlock(
+          [factory.createReturnStatement(
+            make_enum_type_to_mich_return_stt(c, idx))],
+          false
+        )
+      )
+    ]),
+    ...(c.types.length > 0 ? [
+      factory.createMethodDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("get"),
+        undefined,
+        undefined,
+        [],
+        undefined,
+        factory.createBlock(
+          [factory.createReturnStatement(factory.createPropertyAccessExpression(
+            factory.createThis(),
+            factory.createIdentifier("content")
+          ))],
+          false
+        )
+      )
+    ]: [])
+    ]
+  )
+}
+
+const enumToDecl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
+  switch (e.name) {
+    case "state" : return [factory.createEnumDeclaration(
       undefined,
       [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
       factory.createIdentifier("states"),
@@ -907,8 +1096,12 @@ const enumToDecl = (e : Enum) : ts.EnumDeclaration => {
           i == 0 ? factory.createNumericLiteral("1") : undefined
         )
       })
-    );
-    /* TODO manage non integer enums */
+    )];
+    default : return [
+      ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
+      ...(e.constructors.map((x,i) => make_enum_type_class_decl(e.name, x, i)))
+    ]
+  }
 }
 
 const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
@@ -1027,7 +1220,7 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
           if (!a) {
             return label == l
           } else {
-            return false
+            return true
           }
         }, false)) {
           acc.push([label, expr])
@@ -1053,7 +1246,7 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
   return [
     ...([get_imports()]),
     // enums
-    ...(contract_interface.types.enums.map(enumToDecl)),
+    ...(contract_interface.types.enums.map(enumToDecl)).flat(),
     // records
     ...(contract_interface.types.records.map(recordToInterfaceDecl)),
     ...(contract_interface.types.records.map(recordToMichDecl)),
@@ -1091,5 +1284,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/oracle.json"
+//import ci from "../examples/test-binding.json"
 //console.log(generate_binding(ci))

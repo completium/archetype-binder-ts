@@ -314,7 +314,128 @@
         }
       }
     ],
-    "enums": [],
+    "enums": [
+      {
+        "name": "anenum",
+        "constructors": [
+          {
+            "name": "A",
+            "types": [
+              {
+                "node": "int",
+                "name": null,
+                "args": []
+              }
+            ]
+          },
+          {
+            "name": "B",
+            "types": [
+              {
+                "node": "nat",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              }
+            ]
+          },
+          {
+            "name": "C",
+            "types": []
+          }
+        ],
+        "type_michelson": {
+          "prim": "or",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "int",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%A"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "or",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "string",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [
+                    "%B"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "unit",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%C"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
     "records": [
       {
         "name": "all",
@@ -1037,6 +1158,33 @@
         "args": []
       },
       "const": false
+    },
+    {
+      "name": "a_value",
+      "type": {
+        "node": "enum",
+        "name": "anenum",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "b_value",
+      "type": {
+        "node": "enum",
+        "name": "anenum",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "c_value",
+      "type": {
+        "node": "enum",
+        "name": "anenum",
+        "args": []
+      },
+      "const": false
     }
   ],
   "entrypoints": [
@@ -1076,65 +1224,67 @@
           }
         }
       ]
+    },
+    {
+      "name": "myentry3",
+      "args": [
+        {
+          "name": "ev",
+          "type": {
+            "node": "enum",
+            "name": "anenum",
+            "args": []
+          }
+        }
+      ]
     }
   ],
   "getters": [],
   "errors": [
     {
-      "prim": null,
-      "int": null,
-      "bytes": null,
-      "string": "NOT_TO_BE_CALLED",
+      "kind": "InvalidCaller",
       "args": [],
-      "annots": [],
-      "array": [],
-      "var_id": null,
-      "var_type": null
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
     },
     {
-      "prim": null,
-      "int": null,
-      "bytes": null,
-      "string": "INVALID_CALLER",
+      "kind": "Invalid",
       "args": [],
-      "annots": [],
-      "array": [],
-      "var_id": null,
-      "var_type": null
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "NOT_TO_BE_CALLED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
     },
     {
-      "prim": "Pair",
-      "int": null,
-      "bytes": null,
-      "string": null,
-      "args": [
-        {
-          "prim": null,
-          "int": null,
-          "bytes": null,
-          "string": "KEY_EXISTS",
-          "args": [],
-          "annots": [],
-          "array": [],
-          "var_id": null,
-          "var_type": null
-        },
-        {
-          "prim": null,
-          "int": null,
-          "bytes": null,
-          "string": "just_a_key",
-          "args": [],
-          "annots": [],
-          "array": [],
-          "var_id": null,
-          "var_type": null
-        }
-      ],
-      "annots": [],
-      "array": [],
-      "var_id": null,
-      "var_type": null
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
     }
   ]
 }

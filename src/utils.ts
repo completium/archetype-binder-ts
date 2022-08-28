@@ -50,7 +50,7 @@ export type Asset = {
 
 export type EnumValue = {
   "name": string,
-  "types": Array<string> /* TODO */
+  "types": Array<ArchetypeType>
 }
 
 export type Enum = {
@@ -100,6 +100,10 @@ export type ContractInterface = {
 
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
   switch (at.node) {
+    case "enum":      return factory.createTypeReferenceNode(
+      factory.createIdentifier(at.name != null ? at.name : ""),
+      undefined
+    )
     case "date":      return factory.createTypeReferenceNode(
       factory.createIdentifier("Date"),
       undefined
@@ -703,8 +707,98 @@ const get_lambda_form = (body : ts.Statement[], arg : ts.Expression) : ts.Expres
   )
 }
 
+const get_enum = (name : string | null, ci : ContractInterface) => {
+  for (var i = 0; i < ci.types.enums.length; i++) {
+    if (ci.types.enums[i].name == name) {
+      return ci.types.enums[i]
+    }
+  }
+  return null
+}
+
+const make_enum_type_case_body = (elt : ts.Expression, c : EnumValue, ci : ContractInterface) => {
+  if (c.types.length == 0) {
+    return factory.createReturnStatement(factory.createNewExpression(
+      factory.createIdentifier(c.name),
+      undefined,
+      []
+    ))
+  } else {
+    var atype : ArchetypeType
+    if (c.types.length == 1) {
+      atype = c.types[0]
+    } else {
+      atype = {
+        node : "tuple",
+        name : null,
+        args : c.types
+      }
+    }
+    return factory.createReturnStatement(factory.createNewExpression(
+      factory.createIdentifier(c.name),
+      undefined,
+      [factory.createCallExpression(
+        factory.createParenthesizedExpression(factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          archetype_type_to_ts_type(atype),
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            get_return_body(factory.createIdentifier("x"), atype, ci),
+            false
+          )
+        )),
+        undefined,
+        [factory.createPropertyAccessExpression(
+          elt,
+          factory.createIdentifier(c.name)
+        )]
+      )]
+    ))
+  }
+}
+
+const make_enum_return_body = (elt : ts.Expression, e : Enum, ci : ContractInterface) : ts.Statement => {
+  return e.constructors.slice(1).reduce(
+    (acc, c) => {
+      return factory.createIfStatement(
+        factory.createBinaryExpression(
+          factory.createPropertyAccessExpression(
+            elt,
+            factory.createIdentifier(c.name)
+          ),
+          factory.createToken(ts.SyntaxKind.ExclamationEqualsEqualsToken),
+          factory.createIdentifier("undefined")
+        ),
+        factory.createBlock(
+          [make_enum_type_case_body(elt, c, ci)],
+          true
+        ),
+        acc
+      )
+    },
+    <ts.Statement>make_enum_type_case_body(elt, e.constructors[0], ci)
+  )
+}
+
 export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
   switch (atype.node) {
+    case "enum"     : {
+      const e = get_enum(atype.name, ci)
+      if (e != null) {
+        return [make_enum_return_body(elt, e, ci)]
+      }
+      throw new Error("enum not found: " + atype.name)
+    }
     case "bool"     :
     case "string"   : return [factory.createReturnStatement(elt)]
     case "int"      :
@@ -957,7 +1051,17 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
             get_return_body(factory.createIdentifier("x"), t, ci),
             factory.createElementAccessExpression(
               elt,
-              factory.createIdentifier(""+i)
+              factory.createElementAccessExpression(
+                factory.createCallExpression(
+                  factory.createPropertyAccessExpression(
+                    factory.createIdentifier("Object"),
+                    factory.createIdentifier("keys")
+                  ),
+                  undefined,
+                  [factory.createIdentifier("x")]
+                ),
+                factory.createNumericLiteral("" + i)
+              )
             )
           )
         }),
@@ -1152,7 +1256,7 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
   ])
 }
 
-const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
+export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
   switch (fp.type.node) {
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
@@ -1167,6 +1271,7 @@ const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
     case "option"      :
     case "signature"   :
     case "key"         :
+    case "enum"        :
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
