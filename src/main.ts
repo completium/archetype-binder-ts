@@ -62,7 +62,13 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
         [factory.createVariableDeclaration(
           factory.createIdentifier("fields"),
           undefined,
-          undefined,
+          factory.createArrayTypeNode(factory.createTypeReferenceNode(
+            factory.createQualifiedName(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("Micheline")
+            ),
+            undefined
+          )),
           factory.createArrayLiteralExpression(
             [],
             false
@@ -1066,7 +1072,7 @@ const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number) :
             factory.createSuper(),
             undefined,
             [factory.createPropertyAccessExpression(
-              factory.createIdentifier("anenum_types"),
+              factory.createIdentifier(name + "_types"),
               factory.createIdentifier(c.name)
             )]
           ))],
