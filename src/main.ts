@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue,Field, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, value_to_mich_type, function_param_to_mich } from "./utils";
+import { archetype_type_to_mich_to_name, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, make_cmp_body, make_completium_literal, make_error, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -124,10 +124,12 @@ const mich_to_asset_value_decl = (a : Asset) => {
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
     return fields_to_mich_to_entity_decl(a.name + "_value", a.fields.filter(x => !x.is_key))
-  } else {
+  } else if (fields_no_key.length == 1) {
     return make_mich_to_entity_decl(name, [
       factory.createReturnStatement(mich_to_field_decl(fields_no_key[0].type, factory.createIdentifier("v")))
     ])
+  } else {
+    return make_mich_to_entity_decl(name, [ factory.createReturnStatement(unit_to_mich()) ])
   }
 }
 const mich_to_record_decl = (r : Record) => fields_to_mich_to_entity_decl(r.name, r.fields)
@@ -210,10 +212,12 @@ const asset_to_cmp_decl = (a : Asset) => {
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
     return fields_to_cmp_decl(name, fields_no_key)
-  } else {
+  } else if (fields_no_key.length == 1) {
     const arg_a = factory.createIdentifier("a")
     const arg_b = factory.createIdentifier("b")
     return make_cmp_decl(name, make_cmp_body(arg_a, arg_b, fields_no_key[0].type))
+  } else {
+    return make_cmp_decl(name, factory.createTrue())
   }
 }
 
@@ -620,6 +624,30 @@ const get_big_map_value_getter_body = (name : string) : ts.Statement[] => {
 const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   switch (selt.type.node) {
     /* TODO same for big maps ? */
+    case "big_map" : // special treatment
+      return storage_elt_to_getter_skeleton(
+        selt.name + "_value",
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("key"),
+          undefined,
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(selt.name+"_key"),
+            undefined
+          ),
+          undefined
+        )],
+        factory.createUnionTypeNode([
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(selt.name+"_value"),
+            undefined
+          ),
+          factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+        ]),
+        get_big_map_value_getter_body(selt.name)
+      )
     case "asset"   : // Special treatment for big map assets
       const assetType = ci.types.assets.find(x => x.name == selt.name)
       if (assetType != undefined && assetType.container_kind == "big_map") {
@@ -1284,5 +1312,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/test-binding.json"
+//import ci from "../examples/fa2-fungible.json"
 //console.log(generate_binding(ci))

@@ -100,6 +100,16 @@ export type ContractInterface = {
 
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
   switch (at.node) {
+    case "or":        return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("Or")
+      ),
+      [
+        archetype_type_to_ts_type(at.args[0]),
+        archetype_type_to_ts_type(at.args[1])
+      ]
+    )
     case "enum":      return factory.createTypeReferenceNode(
       factory.createIdentifier(at.name != null ? at.name : ""),
       undefined
@@ -1112,6 +1122,17 @@ const string_to_mich = (x : ts.Expression) => {
   );
 }
 
+export const unit_to_mich = () => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("unit_to_mich")
+    ),
+    undefined,
+    []
+  );
+}
+
 const bool_to_mich = (x : ts.Expression) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
@@ -1258,6 +1279,7 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 
 export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
   switch (fp.type.node) {
+    case "unit"        : return unit_to_mich()
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
@@ -1272,6 +1294,7 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
     case "signature"   :
     case "key"         :
     case "enum"        :
+    case "or"          :
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
     case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
