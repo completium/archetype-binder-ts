@@ -1358,6 +1358,8 @@ const mich_type_to_archetype = (mt : MichelsonType) : ArchetypeType => {
     case "address"   : return { node: "address", name: null, args: [] }
     case "bytes"     : return { node: "bytes"  , name: null, args: [] }
     case "unit"      : return { node: "unit"   , name :null, args: [] }
+    case "list"      : return { node: "list"   , name: null, args: [mich_type_to_archetype(mt.args[0])] }
+    case "pair"      : return { node: "tuple"  , name: null, args: [mich_type_to_archetype(mt.args[0]), mich_type_to_archetype(mt.args[1])] }
     default: throw new Error("mich_type_to_archetype: cannot convert prim '" + mt.prim + "'")
   }
 }
