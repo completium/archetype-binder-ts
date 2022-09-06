@@ -1,5 +1,5 @@
 {
-  "name": "fa2nft",
+  "name": "fa2fungible",
   "parameters": [
     {
       "name": "owner",
@@ -354,7 +354,9 @@
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [],
+                  "annots": [
+                    "%oaddr"
+                  ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
@@ -371,7 +373,9 @@
                       "bytes": null,
                       "string": null,
                       "args": [],
-                      "annots": [],
+                      "annots": [
+                        "%otoken"
+                      ],
                       "array": [],
                       "var_id": null,
                       "var_type": null
@@ -382,7 +386,9 @@
                       "bytes": null,
                       "string": null,
                       "args": [],
-                      "annots": [],
+                      "annots": [
+                        "%oowner"
+                      ],
                       "array": [],
                       "var_id": null,
                       "var_type": null
@@ -428,7 +434,9 @@
               "bytes": null,
               "string": null,
               "args": [],
-              "annots": [],
+              "annots": [
+                "%oaddr"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null
@@ -445,7 +453,9 @@
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [],
+                  "annots": [
+                    "%otoken"
+                  ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
@@ -456,7 +466,9 @@
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [],
+                  "annots": [
+                    "%oowner"
+                  ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
@@ -526,7 +538,9 @@
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [],
+                  "annots": [
+                    "%fa_oaddr"
+                  ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
@@ -537,7 +551,9 @@
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [],
+                  "annots": [
+                    "%fa_oowner"
+                  ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
@@ -577,7 +593,9 @@
               "bytes": null,
               "string": null,
               "args": [],
-              "annots": [],
+              "annots": [
+                "%fa_oaddr"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null
@@ -588,7 +606,9 @@
               "bytes": null,
               "string": null,
               "args": [],
-              "annots": [],
+              "annots": [
+                "%fa_oowner"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null

@@ -96,6 +96,23 @@ export type ContractInterface = {
   "errors": Array<Error>
 }
 
+/* Archetype type to Michelson type ---------------------------------------- */
+
+export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType => {
+  switch (at.node) {
+    /* TODO record asset tuple enum option or ... */
+    default : return {
+      prim: at.node,
+      int: null,
+      bytes: null,
+      string: null,
+      args: [],
+      annots: [],
+      array: [],
+    }
+  }
+}
+
 /* Archetype type to Typescript type --------------------------------------- */
 
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
@@ -620,7 +637,7 @@ export const archetype_type_to_mich_to_name = (atype : ArchetypeType) : string =
     case "rational" : return "mich_to_rational"
     case "address"  : return "mich_to_address"
     case "bytes"    : return "mich_to_bytes"
-    case "signature": return "mich_to_signaure"
+    case "signature": return "mich_to_signature"
     case "key"      : return "mich_to_key"
     default: throw new Error("archetype_type_to_mich_to_name: unknown type '" + atype.node + "'")
   }
@@ -1155,17 +1172,6 @@ const date_to_mich = (x : ts.Expression) => {
   );
 }
 
-const asset_value_to_mich = (type_name : string | null, x : ts.Expression) => {
-  if (type_name == null) {
-    throw (new Error("asset_value_to_mich: null type name"))
-  }
-  return factory.createCallExpression(
-    factory.createIdentifier(type_name + "_value_to_mich"),
-    undefined,
-    [x]
-  )
-}
-
 const tuple_to_mich = (name : string, types : ArchetypeType[]) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
@@ -1184,13 +1190,6 @@ const list_to_mich = (name : string, atype : ArchetypeType) => {
   return internal_list_to_mich(name, [
     factory.createReturnStatement(function_param_to_mich({ name: "x", type: atype }))
   ])
-}
-
-const record_to_mich = (name : string, x : ts.Expression) => {
-  return factory.createCallExpression(
-    factory.createIdentifier(name + "_to_mich"),
-    undefined,
-    [x])
 }
 
 const internal_list_to_mich = (name : string, body : ts.Statement[]) => {
@@ -1295,14 +1294,12 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
     case "key"         :
     case "enum"        :
     case "or"          :
+    case "asset_value" :
+    case "record"      :
     case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
-    case "asset_value" : return asset_value_to_mich(fp.type.args[0].name, factory.createIdentifier(fp.name))
     case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
     case "set"         :
     case "list"        : return list_to_mich(fp.name, fp.type.args[0])
-    case "record"      : if (fp.type.name == null) {
-      throw new Error("function_param_to_mich: null record name")
-    } else return record_to_mich(fp.type.name, factory.createIdentifier(fp.name))
     case "map"         :
     case "big_map"     : return map_to_mich(fp.name, fp.type.args[0], fp.type.args[1])
     default            : throw new Error("function_param_to_mich: unhandled type '" + fp.type.node + "'")
@@ -1674,4 +1671,34 @@ export const make_completium_literal = (name : string, t : ArchetypeType) : ts.E
       )
     default : return factory.createIdentifier(name)
   }
+}
+
+/* constant code functions */
+
+export const make_to_string_decl = () => {
+  return factory.createMethodDeclaration(
+    undefined,
+    undefined,
+    undefined,
+    factory.createIdentifier("toString"),
+    undefined,
+    undefined,
+    [],
+    factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+    factory.createBlock(
+      [factory.createReturnStatement(factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("JSON"),
+          factory.createIdentifier("stringify")
+        ),
+        undefined,
+        [
+          factory.createThis(),
+          factory.createNull(),
+          factory.createNumericLiteral("2")
+        ]
+      ))],
+      true
+    )
+  )
 }
