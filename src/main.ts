@@ -670,7 +670,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
           ]),
           get_big_map_value_getter_body(
             selt.name,
-            { node: "record", name: selt.name+"_key", args: [] },
+            get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name+"_key_mich_type"),
             factory.createCallExpression(
               factory.createIdentifier("mich_to_" + selt.name + "_value"),
@@ -683,6 +683,20 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
       }
     default : return storage_elt_to_class(selt, ci)
   }
+}
+
+const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface) => {
+  const assetType = ci.types.assets.find(x => x.name == a.name)
+  if (assetType != undefined) {
+    const fields = assetType.fields.filter(x => x.is_key)
+    if (fields.length == 1) {
+      return fields[0].type
+    }
+    else {
+      return { node: "record", name: assetType.name + "_key", args: [] }
+    }
+  }
+  throw new Error("get_asset_key_archetype_type: asset " + a.name + " not found")
 }
 
 const get_contract_class_node = (ci : ContractInterface, cp : string) => {
@@ -1312,5 +1326,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/visitors.json"
+//import ci from "../examples/oracle.json"
 //console.log(generate_binding(ci))

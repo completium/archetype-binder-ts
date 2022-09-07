@@ -1,6 +1,6 @@
 {
   "name": "@completium/archetype-binder-ts",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Binds Archetype contract interface to Typescript",
   "main": "build/src/main.js",
   "types": "build/src/main.d.ts",
