@@ -1096,20 +1096,22 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
       ))]
     }
     case "record" : {
-      const r = get_record_type(atype.name, ci)
-      const field_annot_names = get_field_annot_names(r)
-      return [factory.createReturnStatement(factory.createObjectLiteralExpression(
-        r.fields.map(f => {
-          const field_value = factory.createPropertyAccessExpression(
-            elt,
-            factory.createIdentifier(field_annot_names[f.name])
-          )
-          return factory.createPropertyAssignment(
-            factory.createIdentifier(f.name),
-            get_lambda_form(get_return_body(factory.createIdentifier("x"), f.type, ci), field_value)
-          )
-        })
-      ))]
+      const name = atype.name
+      if (null != name) {
+        const r = get_record_type(name, ci)
+        const field_annot_names = get_field_annot_names(r)
+        return [factory.createReturnStatement(factory.createNewExpression(
+          factory.createIdentifier(name),
+          undefined,
+          r.fields.map(f => {
+            const field_value = factory.createPropertyAccessExpression(
+              elt,
+              factory.createIdentifier(field_annot_names[f.name])
+            )
+            return  get_lambda_form(get_return_body(factory.createIdentifier("x"), f.type, ci), field_value)
+          })
+        ))]
+      }
     }
   }
   throw new Error("get_return_body: type '" + atype.node + "' not found")

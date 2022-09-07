@@ -1312,5 +1312,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/fa2-fungible.json"
+//import ci from "../examples/visitors.json"
 //console.log(generate_binding(ci))
