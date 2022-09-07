@@ -484,12 +484,12 @@ const entryToMethod = (e : Entrypoint) => {
   )
 }
 
-const storage_elt_to_getter_skeleton = (elt_name : string, args : ts.ParameterDeclaration[], ts_type : ts.KeywordTypeNode<any>, body : ts.Statement[]) => {
+const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args : ts.ParameterDeclaration[], ts_type : ts.KeywordTypeNode<any>, body : ts.Statement[]) => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
     undefined,
-    factory.createIdentifier("get_" + elt_name),
+    factory.createIdentifier(prefix + elt_name),
     undefined,
     undefined,
     args,
@@ -559,6 +559,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     ) :
     root
   return storage_elt_to_getter_skeleton(
+    "get_",
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
@@ -566,7 +567,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
   )
 }
 
-const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, key_mich_type : ts.Expression, mich_to_value : ts.Expression) : ts.Statement[] => {
+const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, key_mich_type : ts.Expression, ret_value_found : ts.Expression, ret_value_not_found : ts.Expression) : ts.Statement[] => {
   return [
     factory.createVariableStatement(
       undefined,
@@ -605,11 +606,11 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
         factory.createIdentifier("undefined")
       ),
       factory.createBlock(
-        [factory.createReturnStatement(mich_to_value)],
+        [factory.createReturnStatement(ret_value_found)],
         true
       ),
       factory.createBlock(
-        [factory.createReturnStatement(factory.createIdentifier("undefined"))],
+        [factory.createReturnStatement(ret_value_not_found)],
         true
       )
     )
@@ -619,35 +620,64 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
 const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   switch (selt.type.node) {
     case "big_map" : // special treatment
-      return storage_elt_to_getter_skeleton(
-        selt.name + "_value",
-        [factory.createParameterDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          factory.createIdentifier("key"),
-          undefined,
-          archetype_type_to_ts_type(selt.type.args[0]),
-          undefined
-        )],
-        factory.createUnionTypeNode([
-          archetype_type_to_ts_type(selt.type.args[1]),
-          factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
-        ]),
-        get_big_map_value_getter_body(
-          selt.name,
-          selt.type.args[0],
-          value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
-          /* TODO: handle above when record, asset_value, enum, ...
-            these types already have a michelson_type variable created for that purpose
-          */
-          mich_to_field_decl(selt.type.args[1], factory.createIdentifier("data"))
+      return [
+        storage_elt_to_getter_skeleton(
+          "get_",
+          selt.name + "_value",
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("key"),
+            undefined,
+            archetype_type_to_ts_type(selt.type.args[0]),
+            undefined
+          )],
+          factory.createUnionTypeNode([
+            archetype_type_to_ts_type(selt.type.args[1]),
+            factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+          ]),
+          get_big_map_value_getter_body(
+            selt.name,
+            selt.type.args[0],
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            /* TODO: handle above when record, asset_value, enum, ...
+              these types already have a michelson_type variable created for that purpose
+            */
+            mich_to_field_decl(selt.type.args[1], factory.createIdentifier("data")),
+            factory.createIdentifier("undefined")
+          )
+        ),
+        storage_elt_to_getter_skeleton(
+          "has_",
+          selt.name + "_value",
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("key"),
+            undefined,
+            archetype_type_to_ts_type(selt.type.args[0]),
+            undefined
+          )],
+          factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+          get_big_map_value_getter_body(
+            selt.name,
+            selt.type.args[0],
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            /* TODO: handle above when record, asset_value, enum, ...
+              these types already have a michelson_type variable created for that purpose
+            */
+            factory.createTrue(),
+            factory.createFalse()
+          )
         )
-      )
+      ]
     case "asset"   : // Special treatment for big map assets
       const assetType = ci.types.assets.find(x => x.name == selt.name)
       if (assetType != undefined && assetType.container_kind == "big_map") {
-        return storage_elt_to_getter_skeleton(
+        return [storage_elt_to_getter_skeleton(
+          "get_",
           selt.name + "_value",
           [factory.createParameterDeclaration(
             undefined,
@@ -675,10 +705,35 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             factory.createCallExpression(
               factory.createIdentifier("mich_to_" + selt.name + "_value"),
               undefined,
-              [factory.createIdentifier("data"), factory.createTrue()]
+              [factory.createIdentifier("data"), factory.createTrue()],
+            ),
+            factory.createIdentifier("undefined")
+          )),
+          storage_elt_to_getter_skeleton(
+            "has_",
+            selt.name + "_value",
+            [factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("key"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createIdentifier(selt.name+"_key"),
+                undefined
+              ),
+              undefined
+            )],
+            factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+            get_big_map_value_getter_body(
+              selt.name,
+              get_asset_key_archetype_type(selt.type, ci),
+              factory.createIdentifier(selt.name+"_key_mich_type"),
+              factory.createTrue(),
+              factory.createFalse()
             )
           )
-        )
+        ]
         //return [assetValueToBigMapGetter(assetType)]
       }
     default : return storage_elt_to_class(selt, ci)
@@ -1326,5 +1381,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/oracle.json"
+//import ci from "../examples/fa2-fungible.json"
 //console.log(generate_binding(ci))
