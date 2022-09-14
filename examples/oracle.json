@@ -2,6 +2,16 @@
   "name": "oracle",
   "parameters": [
     {
+      "name": "owner",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
       "name": "publickey",
       "type": {
         "node": "key",
@@ -518,9 +528,88 @@
         "args": []
       },
       "const": true
+    },
+    {
+      "name": "owner_candidate",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
     }
   ],
   "entrypoints": [
+    {
+      "name": "declare_ownership",
+      "args": [
+        {
+          "name": "candidate",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim_ownership",
+      "args": []
+    },
+    {
+      "name": "update_oracle_data",
+      "args": [
+        {
+          "name": "upl",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "or",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "string",
+                        "name": null,
+                        "args": []
+                      },
+                      {
+                        "node": "asset_value",
+                        "name": null,
+                        "args": [
+                          {
+                            "node": "asset",
+                            "name": "oracleData",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
     {
       "name": "update",
       "args": [
@@ -602,6 +691,32 @@
     }
   ],
   "getters": [],
+  "views": [
+    {
+      "name": "getPrice",
+      "args": [
+        {
+          "name": "c",
+          "type": {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "asset_value",
+        "name": null,
+        "args": [
+          {
+            "node": "asset",
+            "name": "oracleData",
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
   "errors": [
     {
       "kind": "InvalidState",
@@ -658,6 +773,68 @@
         "int": null,
         "bytes": null,
         "string": "revoked",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "ownership_r1"
+      ],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "bad request",
         "args": [],
         "annots": [],
         "array": [],

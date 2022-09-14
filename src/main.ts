@@ -1014,7 +1014,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
     ]
     .concat(ci.entrypoints.map(entryToMethod))
     .concat(ci.getters.map(getter_to_entry).map(entryToMethod))
-    .concat(ci.views.map(viewToMethod))
+    //.concat(ci.views.map(viewToMethod))
     .concat(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[]))
     .concat(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[]))
     .concat(ci.types.enums.filter(x => x.name == "state").map(getStateDecl))
@@ -1488,5 +1488,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/memorizer.json"
+//import ci from "../examples/oracle.json"
 //console.log(generate_binding(ci))
