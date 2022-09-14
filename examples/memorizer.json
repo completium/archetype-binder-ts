@@ -1,0 +1,665 @@
+{
+  "name": "memorizer",
+  "parameters": [
+    {
+      "name": "owner",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
+      "name": "storage",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [
+      {
+        "name": "memorizer",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "v_addr",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "set",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "unit",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "asset_normalizer",
+        "container_kind": "big_map",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "node": "string",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "addr",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "big_map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "ASSET_NOT_FOUND",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "NORMALIZER_ERROR",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "STORAGE_ERROR",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "VIEWER_NOT_AUTHORIZED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "CALLER_NOT_MEMORIZER",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "owner_candidate",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "memorizer",
+      "type": {
+        "node": "asset",
+        "name": "memorizer",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "asset_normalizer",
+      "type": {
+        "node": "asset",
+        "name": "asset_normalizer",
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "declare_ownership",
+      "args": [
+        {
+          "name": "candidate",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim_ownership",
+      "args": []
+    },
+    {
+      "name": "manage_memorizer",
+      "args": [
+        {
+          "name": "c",
+          "type": {
+            "node": "or",
+            "name": null,
+            "args": [
+              {
+                "node": "address",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "address",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_normalizer",
+      "args": [
+        {
+          "name": "ups",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "or",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "string",
+                        "name": null,
+                        "args": []
+                      },
+                      {
+                        "node": "address",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "consume",
+      "args": [
+        {
+          "name": "keys",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "date",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "cb",
+          "type": {
+            "node": "contract",
+            "name": null,
+            "args": [
+              {
+                "node": "map",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "string",
+                        "name": null,
+                        "args": []
+                      },
+                      {
+                        "node": "date",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "node": "nat",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "clean",
+      "args": [
+        {
+          "name": "keys",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "date",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [
+    {
+      "name": "memorize",
+      "args": [
+        {
+          "name": "asset_id",
+          "type": {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "date",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "views": [
+    {
+      "name": "get_values",
+      "args": [
+        {
+          "name": "keys",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "date",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "return": {
+        "node": "map",
+        "name": null,
+        "args": [
+          {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "date",
+                "name": null,
+                "args": []
+              }
+            ]
+          },
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "ownership_r1"
+      ],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "OPTION_IS_NONE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INTERNAL_ERROR",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "ASSET_NOT_FOUND",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CALLER_NOT_MEMORIZER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    }
+  ]
+}

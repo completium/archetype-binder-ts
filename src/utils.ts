@@ -71,7 +71,17 @@ export type Record = {
   "type_michelson": MichelsonType
 }
 
-export type Getter = {} /* TODO */
+export type Getter = {
+  "name": string
+  "args": Array<FunctionParameter>
+  "return" : ArchetypeType
+}
+
+export type View = {
+  "name": string
+  "args": Array<FunctionParameter>
+  "return" : ArchetypeType
+}
 
 export type Event = {} /* TODO */
 
@@ -93,6 +103,7 @@ export type ContractInterface = {
   "storage": Array<StorageElement>
   "entrypoints": Array<Entrypoint>
   "getters": Array<Getter>
+  "views": Array<View>
   "errors": Array<Error>
 }
 
