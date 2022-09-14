@@ -347,8 +347,10 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
       factory.createParenthesizedExpression(rm_milliseconds_from(b))
     );
-    case "set" :
-    case "list": return factory.createBinaryExpression(
+    case "set"   :
+    case "list"  :
+    case "map"   :
+    case "asset" :return factory.createBinaryExpression(
       factory.createCallExpression(
         factory.createPropertyAccessExpression(
           factory.createIdentifier("JSON"),
