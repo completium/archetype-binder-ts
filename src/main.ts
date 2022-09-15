@@ -472,7 +472,7 @@ const entry_to_method = (name : string, args : FunctionParameter[], ret : ts.Typ
 
 const entryToMethod = (e : Entrypoint) => {
   return entry_to_method(e.name, e.args, factory.createKeywordTypeNode(SyntaxKind.AnyKeyword), [
-    factory.createExpressionStatement(factory.createAwaitExpression(factory.createCallExpression(
+    factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("call")
