@@ -1,0 +1,48 @@
+{
+  "name": "stringStorage",
+  "parameters": [
+    {
+      "name": "stor",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "count",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "addString",
+      "args": [
+        {
+          "name": "add",
+          "type": {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

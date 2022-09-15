@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_completium_literal, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_completium_literal, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, ContractParameter } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -607,7 +607,7 @@ const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args
 
 const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
   const root = factory.createIdentifier("storage")
-  const elt = ci.storage.length > 1 ?
+  const elt = ci.storage.length + ci.parameters.length > 1 ?
     factory.createPropertyAccessExpression(
       root,
       factory.createIdentifier(selt.name)
@@ -1013,7 +1013,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
       )
     ]
     .concat(ci.entrypoints.map(entryToMethod))
-    .concat(ci.getters.map(getter_to_entry).map(entryToMethod))
+    .concat(ci.getters ? ci.getters.map(getter_to_entry).map(entryToMethod): [])
     //.concat(ci.views.map(viewToMethod))
     .concat(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[]))
     .concat(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[]))
@@ -1470,9 +1470,9 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
     // entrypoint argument to michelson
     ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
     // entrypoint argument to michelson
-    ...(contract_interface.getters.map(getter_to_entry).map(entryToArgToMichDecl)),
+    ...(contract_interface.getters ? contract_interface.getters.map(getter_to_entry).map(entryToArgToMichDecl) : []),
     // getter argument to michelson
-    ...(contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl)),
+    ...(contract_interface.views ? contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl) : []),
     ...([
     // contract class
       get_contract_class_node(contract_interface, contract_path),
@@ -1488,5 +1488,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/oracle.json"
+//import ci from "../examples/string_storage.json"
 //console.log(generate_binding(ci))

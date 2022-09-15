@@ -102,8 +102,8 @@ export type ContractInterface = {
   }
   "storage": Array<StorageElement>
   "entrypoints": Array<Entrypoint>
-  "getters": Array<Getter>
-  "views": Array<View>
+  "getters" ?: Array<Getter>
+  "views" ?: Array<View>
   "errors": Array<Error>
 }
 
