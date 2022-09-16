@@ -989,7 +989,13 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                       factory.createObjectLiteralExpression(ci.parameters.map(x =>
                         factory.createPropertyAssignment(
                           factory.createIdentifier(x.name),
-                          function_param_to_mich({ name : x.name, type : x.type })
+                          factory.createCallExpression(
+                            factory.createPropertyAccessExpression(
+                              factory.createIdentifier("JSON"),
+                              factory.createIdentifier("stringify")
+                            ),
+                            undefined,
+                            [function_param_to_mich({ name : x.name, type : x.type })])
                         )
                       ), true),
                       factory.createIdentifier("params")
