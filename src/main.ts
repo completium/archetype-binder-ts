@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_completium_literal, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, ContractParameter } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, ContractParameter } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -989,7 +989,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                       factory.createObjectLiteralExpression(ci.parameters.map(x =>
                         factory.createPropertyAssignment(
                           factory.createIdentifier(x.name),
-                          make_completium_literal(x.name, x.type)
+                          function_param_to_mich({ name : x.name, type : x.type })
                         )
                       ), true),
                       factory.createIdentifier("params")
