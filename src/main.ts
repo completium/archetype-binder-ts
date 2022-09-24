@@ -610,7 +610,7 @@ const getter_to_method = (g : Getter, ci : ContractInterface) => {
             [
               factory.createPropertyAccessExpression(
                 factory.createThis(),
-                factory.createIdentifier("memorize_callback_address")
+                factory.createIdentifier(g.name + "_callback_address")
               ),
               factory.createArrowFunction(
                 undefined,
