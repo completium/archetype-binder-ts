@@ -1,0 +1,1036 @@
+{
+  "name": "shifumi",
+  "parameters": [],
+  "types": {
+    "assets": [
+      {
+        "name": "action",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "player",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "choice_",
+            "type": {
+              "node": "enum",
+              "name": "choice",
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "int",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "session",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "players",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "address",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            },
+            "is_key": false
+          },
+          {
+            "name": "creation",
+            "type": {
+              "node": "date",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          },
+          {
+            "name": "secret_actions",
+            "type": {
+              "node": "map",
+              "name": null,
+              "args": [
+                {
+                  "node": "address",
+                  "name": null,
+                  "args": []
+                },
+                {
+                  "node": "bytes",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            },
+            "is_key": false
+          },
+          {
+            "name": "revealed_actions",
+            "type": {
+              "node": "map",
+              "name": null,
+              "args": [
+                {
+                  "node": "address",
+                  "name": null,
+                  "args": []
+                },
+                {
+                  "node": "asset_value",
+                  "name": null,
+                  "args": [
+                    {
+                      "node": "asset",
+                      "name": "action",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            },
+            "is_key": false
+          },
+          {
+            "name": "status_",
+            "type": {
+              "node": "enum",
+              "name": "status",
+              "args": []
+            },
+            "is_key": false
+          },
+          {
+            "name": "total_rounds",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          },
+          {
+            "name": "current_round",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "list",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "address",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [
+                    "%players"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "timestamp",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%creation"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "map",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "address",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "bytes",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [
+                            "%secret_actions"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "pair",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "map",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "address",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "int",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [
+                                "%revealed_actions"
+                              ],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "pair",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "or",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "unit",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%Inplay"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "or",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [
+                                        {
+                                          "prim": "unit",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [
+                                            "%Draw"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        },
+                                        {
+                                          "prim": "address",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [
+                                            "%Winner"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        }
+                                      ],
+                                      "annots": [],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [
+                                    "%status_"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "pair",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "nat",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%total_rounds"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "nat",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%current_round"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "list",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "address",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%players"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "timestamp",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%creation"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "map",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "address",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "bytes",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [
+                        "%secret_actions"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "map",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "address",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "int",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [
+                            "%revealed_actions"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "pair",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "or",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "unit",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [
+                                    "%Inplay"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "or",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "unit",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%Draw"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "address",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%Winner"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [
+                                "%status_"
+                              ],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "pair",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "nat",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [
+                                    "%total_rounds"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "nat",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [
+                                    "%current_round"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "enums": [
+      {
+        "name": "choice",
+        "constructors": [
+          {
+            "name": "Stone",
+            "types": []
+          },
+          {
+            "name": "Paper",
+            "types": []
+          },
+          {
+            "name": "Cisor",
+            "types": []
+          }
+        ],
+        "type_michelson": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "status",
+        "constructors": [
+          {
+            "name": "Inplay",
+            "types": []
+          },
+          {
+            "name": "Draw",
+            "types": []
+          },
+          {
+            "name": "Winner",
+            "types": [
+              {
+                "node": "address",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        ],
+        "type_michelson": {
+          "prim": "or",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "unit",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%Inplay"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "or",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "unit",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%Draw"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "address",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%Winner"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "action",
+      "type": {
+        "node": "asset",
+        "name": "action",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "session",
+      "type": {
+        "node": "asset",
+        "name": "session",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "session_next_id",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "createGame",
+      "args": [
+        {
+          "name": "players_param",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "address",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "play",
+      "args": [
+        {
+          "name": "game_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "player_",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "chest_",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": [
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "pas de partie",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    }
+  ]
+}

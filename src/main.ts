@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, ContractParameter } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -494,49 +494,190 @@ const entryToMethod = (e : Entrypoint) => {
     )))])
 }
 
-const getterToMethod = (e : Getter, exec : string = "exec_getter") => {
-  return entry_to_method(e.name, e.args, archetype_type_to_ts_type(e.return), [
-    factory.createVariableStatement(
+const entryToGetParam = (e : Entrypoint) => {
+  return entry_to_method("get_" + e.name + "_param", e.args,
+    factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("CallParameter")
+      ),
+      undefined
+    ), [
+    factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("get_call_param")
+      ),
       undefined,
-      factory.createVariableDeclarationList(
-        [factory.createVariableDeclaration(
-          factory.createIdentifier("mich"),
+      [
+        factory.createPropertyAccessExpression(
+          factory.createThis(),
+          factory.createIdentifier("address")
+        ),
+        factory.createStringLiteral(e.name),
+        factory.createCallExpression(
+          factory.createIdentifier(e.name+"_arg_to_mich"),
           undefined,
-          undefined,
-          factory.createAwaitExpression(factory.createCallExpression(
+          e.args.map(x => x.name).map(x => factory.createIdentifier(x))
+        ),
+        factory.createIdentifier("params")
+      ]
+    )))])
+}
+
+const getter_to_method = (g : Getter, ci : ContractInterface) => {
+  return entry_to_method(g.name, g.args, archetype_type_to_ts_type(g.return),
+  [
+    factory.createIfStatement(
+      factory.createBinaryExpression(
+        factory.createPropertyAccessExpression(
+          factory.createThis(),
+          factory.createIdentifier(g.name + "_callback_address")
+        ),
+        factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+        factory.createIdentifier("undefined")
+      ),
+      factory.createBlock(
+        [
+          factory.createVariableStatement(
+            undefined,
+            factory.createVariableDeclarationList(
+              [factory.createVariableDeclaration(
+                factory.createIdentifier("entrypoint"),
+                undefined,
+                undefined,
+                factory.createNewExpression(
+                  factory.createPropertyAccessExpression(
+                    factory.createIdentifier("ex"),
+                    factory.createIdentifier("Entrypoint")
+                  ),
+                  undefined,
+                  [
+                    factory.createNewExpression(
+                      factory.createPropertyAccessExpression(
+                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("Address")
+                      ),
+                      undefined,
+                      [factory.createPropertyAccessExpression(
+                        factory.createThis(),
+                        factory.createIdentifier(g.name + "_callback_address")
+                      )]
+                    ),
+                    factory.createStringLiteral("callback")
+                  ]
+                )
+              )],
+              ts.NodeFlags.Const
+            )
+          ),
+          factory.createExpressionStatement(factory.createAwaitExpression(factory.createCallExpression(
             factory.createPropertyAccessExpression(
               factory.createIdentifier("ex"),
-              factory.createIdentifier(exec)
+              factory.createIdentifier("call")
             ),
             undefined,
             [
+              factory.createPropertyAccessExpression(
+                factory.createThis(),
+                factory.createIdentifier("address")
+              ),
+              factory.createStringLiteral(g.name),
               factory.createCallExpression(
                 factory.createPropertyAccessExpression(
-                  factory.createThis(),
-                  factory.createIdentifier("get_address")
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier("getter_args_to_mich")
                 ),
                 undefined,
-                []
-              ),
-              factory.createStringLiteral(e.name),
-              factory.createCallExpression(
-                factory.createIdentifier(e.name + "_arg_to_mich"),
-                undefined,
-                e.args.map(x => x.name).map(x => factory.createIdentifier(x))
+                [
+                  factory.createCallExpression(
+                    factory.createIdentifier(g.name+"_arg_to_mich"),
+                    undefined,
+                    g.args.map(x => x.name).map(x => factory.createIdentifier(x))
+                  ),
+                  factory.createIdentifier("entrypoint")
+                ]
               ),
               factory.createIdentifier("params")
             ]
-          ))
-        )],
-        ts.NodeFlags.Const
-      )
-    ),
-    factory.createReturnStatement(mich_to_field_decl(e.return, factory.createIdentifier("mich")))
-  ])
+          ))),
+          factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("get_callback_value")
+            ),
+            [archetype_type_to_ts_type(g.return)],
+            [
+              factory.createPropertyAccessExpression(
+                factory.createThis(),
+                factory.createIdentifier("memorize_callback_address")
+              ),
+              factory.createArrowFunction(
+                undefined,
+                undefined,
+                [factory.createParameterDeclaration(
+                  undefined,
+                  undefined,
+                  undefined,
+                  factory.createIdentifier("x"),
+                  undefined,
+                  undefined,
+                  undefined
+                )],
+                undefined,
+                factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                factory.createBlock(get_return_body(factory.createIdentifier("x"), g.return, ci))
+              )
+            ]
+          )))
+        ],
+        true
+      ),
+      undefined
+    )
+  ]
+  )
 }
 
-const viewToMethod = (v : View) => {
-  return getterToMethod(view_to_getter(v), "exec_view")
+const view_to_method = (v : View, ci : ContractInterface) => {
+  return entry_to_method("view_" + v.name, v.args, archetype_type_to_ts_type(v.return),
+  [ ...[factory.createVariableStatement(
+    undefined,
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("mich"),
+        undefined,
+        undefined,
+        factory.createAwaitExpression(factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("exec_view")
+          ),
+          undefined,
+          [
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createThis(),
+                factory.createIdentifier("get_address")
+              ),
+              undefined,
+              []
+            ),
+            factory.createStringLiteral(v.name),
+            factory.createCallExpression(
+              factory.createIdentifier("view_" + v.name + "_arg_to_mich"),
+              undefined,
+              v.args.map(x => x.name).map(x => factory.createIdentifier(x))
+            ),
+            factory.createIdentifier("params")
+          ]
+        ))
+      )],
+      ts.NodeFlags.Const
+    )
+  )],
+  ...(get_return_body(factory.createIdentifier("mich"), v.return, ci))
+  ])
 }
 
 const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args : ts.ParameterDeclaration[], ts_type : ts.KeywordTypeNode<any>, body : ts.Statement[]) => {
@@ -795,6 +936,73 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
   }
 }
 
+const decl_callback_deploy = (g : Getter) => {
+  return  factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("deploy_" + g.name + "_callback"),
+        undefined,
+        undefined,
+        factory.createArrowFunction(
+          [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+          undefined,
+          [],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier("Promise"),
+            [factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)]
+          ),
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("deploy_callback")
+              ),
+              undefined,
+              [
+                factory.createStringLiteral(g.name),
+                value_to_mich_type(g.return_michelson.value)
+              ]
+            )))],
+            true
+          )
+        )
+      )],
+      ts.NodeFlags.Const
+    )
+  )
+}
+
+const get_addr_decl = (name : string) => {
+  return factory.createPropertyDeclaration(
+    undefined,
+    undefined,
+    factory.createIdentifier(name),
+    undefined,
+    factory.createUnionTypeNode([
+      factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
+      factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)
+    ]),
+    undefined
+  )
+}
+
+const get_addr_assignement = (name : string) => {
+  return factory.createExpressionStatement(factory.createBinaryExpression(
+    factory.createPropertyAccessExpression(
+      factory.createThis(),
+      factory.createIdentifier(name + "_callback_address")
+    ),
+    factory.createToken(ts.SyntaxKind.EqualsToken),
+    factory.createAwaitExpression(factory.createCallExpression(
+      factory.createIdentifier("deploy_" + name + "_callback"),
+      undefined,
+      []
+    ))
+  ))
+}
+
 const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface) => {
   const assetType = ci.types.assets.find(x => x.name == a.name)
   if (assetType != undefined) {
@@ -817,106 +1025,37 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
     undefined,
     undefined,
     [
-      factory.createPropertyDeclaration(
-        undefined,
-        undefined,
-        factory.createIdentifier("address"),
-        undefined,
-        factory.createUnionTypeNode([
-          factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
-          factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)
-        ]),
-        undefined
-      ),
-      factory.createMethodDeclaration(
-        undefined,
-        undefined,
-        undefined,
-        factory.createIdentifier("get_address"),
-        undefined,
-        undefined,
-        [],
-        factory.createTypeReferenceNode(
-          factory.createQualifiedName(
-            factory.createIdentifier("ex"),
-            factory.createIdentifier("Address")
-          ),
-          undefined
-        ),
-        factory.createBlock(
-          [
-            factory.createIfStatement(
-              factory.createBinaryExpression(
-                factory.createIdentifier("undefined"),
-                factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-                factory.createPropertyAccessExpression(
-                  factory.createThis(),
-                  factory.createIdentifier("address")
-                )
-              ),
-              factory.createBlock(
-                [factory.createReturnStatement(factory.createNewExpression(
-                  factory.createPropertyAccessExpression(
-                    factory.createIdentifier("ex"),
-                    factory.createIdentifier("Address")
-                  ),
-                  undefined,
-                  [factory.createPropertyAccessExpression(
-                    factory.createThis(),
-                    factory.createIdentifier("address")
-                  )]
-                ))],
-                true
-              ),
-              undefined
-            ),
-            factory.createThrowStatement(factory.createNewExpression(
-              factory.createIdentifier("Error"),
-              undefined,
-              [factory.createStringLiteral("Contract not initialised")]
-            ))
-          ],
-          true
-        )
-      )
-      ,
-      factory.createMethodDeclaration(
-        undefined,
-        [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
-        undefined,
-        factory.createIdentifier("get_balance"),
-        undefined,
-        undefined,
-        [],
-        factory.createTypeReferenceNode(
-          factory.createIdentifier("Promise"),
-          [factory.createTypeReferenceNode(
+      ...([get_addr_decl("address")]),
+      ...(ci.getters.map(x => get_addr_decl(x.name + "_callback_address"))),
+      ...([
+        factory.createMethodDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("get_address"),
+          undefined,
+          undefined,
+          [],
+          factory.createTypeReferenceNode(
             factory.createQualifiedName(
               factory.createIdentifier("ex"),
-              factory.createIdentifier("Tez")
+              factory.createIdentifier("Address")
             ),
             undefined
-          )]
-        ),
-        factory.createBlock(
-          [
-            factory.createIfStatement(
-              factory.createBinaryExpression(
-                factory.createNull(),
-                factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-                factory.createPropertyAccessExpression(
-                  factory.createThis(),
-                  factory.createIdentifier("address")
-                )
-              ),
-              factory.createBlock(
-                [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+          ),
+          factory.createBlock(
+            [
+              factory.createIfStatement(
+                factory.createBinaryExpression(
+                  factory.createIdentifier("undefined"),
+                  factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
                   factory.createPropertyAccessExpression(
-                    factory.createIdentifier("ex"),
-                    factory.createIdentifier("get_balance")
-                  ),
-                  undefined,
-                  [factory.createNewExpression(
+                    factory.createThis(),
+                    factory.createIdentifier("address")
+                  )
+                ),
+                factory.createBlock(
+                  [factory.createReturnStatement(factory.createNewExpression(
                     factory.createPropertyAccessExpression(
                       factory.createIdentifier("ex"),
                       factory.createIdentifier("Address")
@@ -926,100 +1065,163 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                       factory.createThis(),
                       factory.createIdentifier("address")
                     )]
-                  )]
-                )))],
-                true
-              ),
-              undefined
-            ),
-            factory.createThrowStatement(factory.createNewExpression(
-              factory.createIdentifier("Error"),
-              undefined,
-              [factory.createStringLiteral("Contract not initialised")]
-            ))
-          ],
-          true
-        )
-      ),
-      factory.createMethodDeclaration(
-        undefined,
-        [factory.createModifier(SyntaxKind.AsyncKeyword)],
-        undefined,
-        factory.createIdentifier("deploy"),
-        undefined,
-        undefined,
-        ci.parameters.map(x => contractParameterToParamDecl(x)).concat([
-          factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("params"),
-            undefined,
-            factory.createTypeReferenceNode(
-              factory.createIdentifier("Partial"),
-              [factory.createTypeReferenceNode(
-                factory.createQualifiedName(
-                  factory.createIdentifier("ex"),
-                  factory.createIdentifier("Parameters")
+                  ))],
+                  true
                 ),
                 undefined
-              )]
-            ),
-            undefined
+              ),
+              factory.createThrowStatement(factory.createNewExpression(
+                factory.createIdentifier("Error"),
+                undefined,
+                [factory.createStringLiteral("Contract not initialised")]
+              ))
+            ],
+            true
           )
-        ]),
-        undefined,
-        factory.createBlock(
-          [
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("address"),
-                  undefined,
-                  undefined,
-                  factory.createAwaitExpression(factory.createCallExpression(
+        )
+        ,
+        factory.createMethodDeclaration(
+          undefined,
+          [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+          undefined,
+          factory.createIdentifier("get_balance"),
+          undefined,
+          undefined,
+          [],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier("Promise"),
+            [factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("Tez")
+              ),
+              undefined
+            )]
+          ),
+          factory.createBlock(
+            [
+              factory.createIfStatement(
+                factory.createBinaryExpression(
+                  factory.createNull(),
+                  factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+                  factory.createPropertyAccessExpression(
+                    factory.createThis(),
+                    factory.createIdentifier("address")
+                  )
+                ),
+                factory.createBlock(
+                  [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
                     factory.createPropertyAccessExpression(
                       factory.createIdentifier("ex"),
-                      factory.createIdentifier("deploy")
+                      factory.createIdentifier("get_balance")
                     ),
                     undefined,
-                    [
-                      factory.createStringLiteral(cp + ci.name + ".arl"),
-                      factory.createObjectLiteralExpression(ci.parameters.map(x =>
-                        factory.createPropertyAssignment(
-                          factory.createIdentifier(x.name),
-                          function_param_to_mich({ name : x.name, type : x.type })
-                        )
-                      ), true),
-                      factory.createIdentifier("params")
-                    ]
-                  ))
-                )],
-                NodeFlags.Const | NodeFlags.AwaitContext | NodeFlags.ContextFlags | NodeFlags.TypeExcludesFlags
-              )
-            ),
-            factory.createExpressionStatement(factory.createBinaryExpression(
-              factory.createPropertyAccessExpression(
-                factory.createThis(),
-                factory.createIdentifier("address")
+                    [factory.createNewExpression(
+                      factory.createPropertyAccessExpression(
+                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("Address")
+                      ),
+                      undefined,
+                      [factory.createPropertyAccessExpression(
+                        factory.createThis(),
+                        factory.createIdentifier("address")
+                      )]
+                    )]
+                  )))],
+                  true
+                ),
+                undefined
               ),
-              factory.createToken(SyntaxKind.EqualsToken),
-              factory.createIdentifier("address")
-            ))
-          ],
-          true
+              factory.createThrowStatement(factory.createNewExpression(
+                factory.createIdentifier("Error"),
+                undefined,
+                [factory.createStringLiteral("Contract not initialised")]
+              ))
+            ],
+            true
+          )
+        ),
+        factory.createMethodDeclaration(
+          undefined,
+          [factory.createModifier(SyntaxKind.AsyncKeyword)],
+          undefined,
+          factory.createIdentifier("deploy"),
+          undefined,
+          undefined,
+          ci.parameters.map(x => contractParameterToParamDecl(x)).concat([
+            factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("params"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createIdentifier("Partial"),
+                [factory.createTypeReferenceNode(
+                  factory.createQualifiedName(
+                    factory.createIdentifier("ex"),
+                    factory.createIdentifier("Parameters")
+                  ),
+                  undefined
+                )]
+              ),
+              undefined
+            )
+          ]),
+          undefined,
+          factory.createBlock(
+            [
+              factory.createVariableStatement(
+                undefined,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(
+                    factory.createIdentifier("address"),
+                    undefined,
+                    undefined,
+                    factory.createAwaitExpression(factory.createCallExpression(
+                      factory.createPropertyAccessExpression(
+                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("deploy")
+                      ),
+                      undefined,
+                      [
+                        factory.createStringLiteral(cp + ci.name + ".arl"),
+                        factory.createObjectLiteralExpression(ci.parameters.map(x =>
+                          factory.createPropertyAssignment(
+                            factory.createIdentifier(x.name),
+                            function_param_to_mich({ name : x.name, type : x.type })
+                          )
+                        ), true),
+                        factory.createIdentifier("params")
+                      ]
+                    ))
+                  )],
+                  NodeFlags.Const | NodeFlags.AwaitContext | NodeFlags.ContextFlags | NodeFlags.TypeExcludesFlags
+                )
+              ),
+              factory.createExpressionStatement(factory.createBinaryExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("address")
+                ),
+                factory.createToken(SyntaxKind.EqualsToken),
+                factory.createIdentifier("address")
+              ))
+            ].concat(ci.getters.map(x => get_addr_assignement(x.name))),
+            true
+          )
         )
-      )
-    ]
-    .concat(ci.entrypoints.map(entryToMethod))
-    .concat(ci.getters ? ci.getters.map(getter_to_entry).map(entryToMethod): [])
-    //.concat(ci.views.map(viewToMethod))
-    .concat(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[]))
-    .concat(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[]))
-    .concat(ci.types.enums.filter(x => x.name == "state").map(getStateDecl))
-    .concat([errors_to_decl(ci)])
-  )
+      ]
+    ),
+    ...(ci.entrypoints.map(entryToMethod)),
+    ...(ci.entrypoints.map(entryToGetParam)),
+    ...(ci.getters.map(x => getter_to_method(x, ci))),
+    ...(ci.views.map(x => view_to_method(x, ci))),
+    ...(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[])),
+    ...(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[])),
+    ...(ci.types.enums.filter(x => x.name == "state").map(getStateDecl)),
+    ...([errors_to_decl(ci)])
+  ])
 }
 
 const get_imports = () : ts.ImportDeclaration => {
@@ -1403,48 +1605,11 @@ const not_a_set = (a : Asset) => {
 }
 
 const view_to_getter = (v : View) : Getter => {
-  return { ...v, name : "view_" + v.name  }
-}
-
-const getter_arg_to_arg_type = (g : Getter) : ArchetypeType => {
-  const get_pair = (left : ArchetypeType) : ArchetypeType => {
-    return {
-      node : "tuple",
-      name :null,
-      args : [ left, call_back ]
+  return { ...v, name : "view_" + v.name,
+    return_michelson : {
+      value : { prim : "int", int : null, args : [], annots : [], array: [], bytes: null, string : null },
+      is_storable : true
     }
-  }
-  const call_back : ArchetypeType = {
-    node : "contract",
-    name : null,
-    args : [g.return]
-  }
-  if (g.args.length == 0) {
-    return get_pair({
-      node : 'unit',
-      name : null,
-      args : []
-    })
-  } else if (g.args.length == 1) {
-    return get_pair(g.args[0].type)
-  } else {
-    return get_pair({
-      node : 'tuple',
-      name : null,
-      args : g.args.map(x => x.type)
-    })
-  }
-}
-
-const getter_to_entry = (g : Getter) : Entrypoint => {
-  return {
-    name : g.name,
-    args : [
-      {
-        name : g.name + "_arg",
-        type : getter_arg_to_arg_type(g)
-      }
-    ]
   }
 }
 
@@ -1469,10 +1634,10 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
     ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),
     // entrypoint argument to michelson
     ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
-    // entrypoint argument to michelson
-    ...(contract_interface.getters ? contract_interface.getters.map(getter_to_entry).map(entryToArgToMichDecl) : []),
-    // getter argument to michelson
-    ...(contract_interface.views ? contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl) : []),
+    // getter/view argument to michelson
+    ...(contract_interface.getters.map(entryToArgToMichDecl)),
+    ...(contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl)),
+    ...(contract_interface.getters.map(decl_callback_deploy)),
     ...([
     // contract class
       get_contract_class_node(contract_interface, contract_path),
@@ -1488,5 +1653,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/string_storage.json"
+//import ci from "../examples/memorizer.json"
 //console.log(generate_binding(ci))

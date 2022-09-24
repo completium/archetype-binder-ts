@@ -75,6 +75,10 @@ export type Getter = {
   "name": string
   "args": Array<FunctionParameter>
   "return" : ArchetypeType
+  "return_michelson" : {
+    "value" : MichelsonType
+    "is_storable" : boolean
+  }
 }
 
 export type View = {
@@ -102,8 +106,8 @@ export type ContractInterface = {
   }
   "storage": Array<StorageElement>
   "entrypoints": Array<Entrypoint>
-  "getters" ?: Array<Getter>
-  "views" ?: Array<View>
+  "getters" : Array<Getter>
+  "views" : Array<View>
   "errors": Array<Error>
 }
 
