@@ -1461,16 +1461,24 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       undefined,
       [ factory.createStringLiteral("map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ]
     )
-    case "pair": return factory.createCallExpression(
+    case "pair":
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
         factory.createIdentifier("pair_array_to_mich_type")
       ),
       undefined,
-      [factory.createArrayLiteralExpression(
-        [ value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ],
-        true
-      )]
+      [
+        factory.createArrayLiteralExpression(
+          [ value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]) ],
+          true
+        ),
+        factory.createArrayLiteralExpression(
+          annots,
+          false
+        )
+      ]
     )
     case "option": {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
