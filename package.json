@@ -11,6 +11,7 @@
     "access": "public"
   },
   "scripts": {
+    "test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.spec.ts",
     "build": "rm -rf ./build && npx tsc --outDir build",
     "exec": "rm -rf ./build && npx tsc --outDir build && node ./build/src/main.js"
   },
@@ -32,5 +33,11 @@
   "homepage": "https://github.com/completium/archetype-binder-ts#readme",
   "dependencies": {
     "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "@completium/experiment-ts": "latest",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.0",
+    "ts-mocha": "^10.0.0"
   }
 }
