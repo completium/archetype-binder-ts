@@ -1,0 +1,1358 @@
+{
+  "name": "whitelist",
+  "parameters": [
+    {
+      "name": "admin",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
+      "name": "users",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [
+      {
+        "name": "whitelister",
+        "container_kind": "map",
+        "fields": [
+          {
+            "name": "waddr",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "set",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "unit",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "enums": [],
+    "records": [
+      {
+        "name": "transfer_list",
+        "fields": [
+          {
+            "name": "unrestricted",
+            "type": {
+              "node": "bool",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "allowed_transfer_lists",
+            "type": {
+              "node": "set",
+              "name": null,
+              "args": [
+                {
+                  "node": "nat",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "bool",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%unrestricted"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "set",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%allowed_transfer_lists"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "CONTRACT_NOT_PAUSED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "CONTRACT_PAUSED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "FROM_INVALID_UNRESTRICTED_STATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "FROM_RESTRICTED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "FROM_TRANSFERLIST_NOT_FOUND",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INTERNAL_ERROR",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "TO_INVALID_UNRESTRICTED_STATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "TO_NOT_ALLOWED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "TO_RESTRICTED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "TO_TRANSFERLIST_NOT_FOUND",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "TO_TRANSFERLIST_NOT_FOUND_IN_FROM",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "USER_GETOPT_INTERNAL_ERROR",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "USER_RESTRICTED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "MISSING_ADMIN_CANDIDATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_CALLER",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "admin_candidate",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "paused",
+      "type": {
+        "node": "bool",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "super_users",
+      "type": {
+        "node": "set",
+        "name": null,
+        "args": [
+          {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "whitelister",
+      "type": {
+        "node": "asset",
+        "name": "whitelister",
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "transfer_lists",
+      "type": {
+        "node": "big_map",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "record",
+            "name": "transfer_list",
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "declare_admin",
+      "args": [
+        {
+          "name": "candidate",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim_admin",
+      "args": []
+    },
+    {
+      "name": "pause",
+      "args": []
+    },
+    {
+      "name": "unpause",
+      "args": []
+    },
+    {
+      "name": "add_super_user",
+      "args": [
+        {
+          "name": "su",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "remove_super_user",
+      "args": [
+        {
+          "name": "su",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "add_whitelister",
+      "args": [
+        {
+          "name": "v",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "remove_whitelister",
+      "args": [
+        {
+          "name": "v",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "assert_receivers",
+      "args": [
+        {
+          "name": "addrs",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "address",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "assert_transfers",
+      "args": [
+        {
+          "name": "input_list",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "address",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "list",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "address",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "assert_transfer_list",
+      "args": [
+        {
+          "name": "from_transfer_list_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "to_transfer_list_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_user",
+      "args": [
+        {
+          "name": "user",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "transfer_list_id",
+          "type": {
+            "node": "option",
+            "name": null,
+            "args": [
+              {
+                "node": "nat",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_users",
+      "args": [
+        {
+          "name": "utl",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "address",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "option",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "nat",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_transfer_list",
+      "args": [
+        {
+          "name": "transfer_list_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "u",
+          "type": {
+            "node": "option",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "bool",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "set",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "nat",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [
+    {
+      "name": "get_user",
+      "args": [
+        {
+          "name": "user",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "option",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
+      }
+    }
+  ],
+  "views": [
+    {
+      "name": "assert_transfer",
+      "args": [
+        {
+          "name": "sender",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "from",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "to",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
+      }
+    }
+  ],
+  "errors": [
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r2"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r2",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r1"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r1",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_TRANSFERLIST_NOT_FOUND_IN_FROM",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_INVALID_UNRESTRICTED_STATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_INVALID_UNRESTRICTED_STATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FROM_INVALID_UNRESTRICTED_STATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_INVALID_UNRESTRICTED_STATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_TRANSFERLIST_NOT_FOUND",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FROM_TRANSFERLIST_NOT_FOUND",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "ASSERT_TRANSFER_FAILED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "USER_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CONTRACT_NOT_PAUSED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CONTRACT_PAUSED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "co1"
+      ],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "MISSING_ADMIN_CANDIDATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "TO_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FROM_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FROM_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FROM_RESTRICTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "USER_GETOPT_INTERNAL_ERROR",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "OPTION_IS_NONE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "OPTION_IS_NONE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CONTRACT_PAUSED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    }
+  ]
+}

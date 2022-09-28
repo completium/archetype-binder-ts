@@ -800,6 +800,12 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
               key_mich_type
             ]
           ))
+        ),
+        factory.createVariableDeclaration(
+          factory.createIdentifier("collapsed"),
+          undefined,
+          undefined,
+          factory.createTrue()
         )],
         ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
       )
@@ -845,7 +851,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
           get_big_map_value_getter_body(
             selt.name,
             selt.type.args[0],
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
@@ -869,7 +875,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
           get_big_map_value_getter_body(
             selt.name,
             selt.type.args[0],
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
@@ -1807,5 +1813,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/feeless.json"
+//import ci from "../examples/whitelist.json"
 //console.log(generate_binding(ci))
