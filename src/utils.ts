@@ -630,6 +630,12 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
       return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
     case "tuple":
       return mich_to_tuple(atype.args, arg)
+    case "enum":
+      return factory.createCallExpression(
+        factory.createIdentifier("mich_to_" + atype.name),
+        undefined,
+        [arg]
+      )
     default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
@@ -1513,6 +1519,21 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
           )
         ])
     }
+    case "or":
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("or_to_mich_type")
+        ),
+        undefined,
+        [
+          value_to_mich_type(mt.args[0]),
+          value_to_mich_type(mt.args[1]),
+          factory.createArrayLiteralExpression(
+            mt.annots.map(a => factory.createStringLiteral(a, false))
+          )
+        ]
+      )
     default: {
       const prim = mt.prim == null ? "string" : mt.prim
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []

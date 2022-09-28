@@ -1,0 +1,3188 @@
+{
+  "name": "sales",
+  "parameters": [
+    {
+      "name": "owner",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
+      "name": "protocol_fee",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
+      "name": "transfer_manager",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    },
+    {
+      "name": "sales_storage",
+      "type": {
+        "node": "address",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [
+      {
+        "name": "asset_type",
+        "constructors": [
+          {
+            "name": "XTZ",
+            "types": []
+          },
+          {
+            "name": "FA12",
+            "types": []
+          },
+          {
+            "name": "FA2",
+            "types": []
+          }
+        ],
+        "type_michelson": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "records": [
+      {
+        "name": "FA2_asset",
+        "fields": [
+          {
+            "name": "fa2_asset_contract",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "fa2_asset_token_id",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%fa2_asset_contract"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%fa2_asset_token_id"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "FA12_asset",
+        "fields": [
+          {
+            "name": "fa12_asset_contract",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "transfer_param",
+        "fields": [
+          {
+            "name": "destination_address",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "token_id",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "token_amount",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%to"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%token_id"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%amount"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "process_transfer_param",
+        "fields": [
+          {
+            "name": "ptp_asset_type",
+            "type": {
+              "node": "enum",
+              "name": "asset_type",
+              "args": []
+            }
+          },
+          {
+            "name": "ptp_asset",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "ptp_amount",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "ptp_origin",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "ptp_destination",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "int",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%ptp_asset_type"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "bytes",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%ptp_asset"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%ptp_amount"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "address",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%ptp_origin"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "address",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%ptp_destination"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "part",
+        "fields": [
+          {
+            "name": "part_account",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "part_value",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%part_account"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%part_value"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "fees",
+        "fields": [
+          {
+            "name": "origin_fees",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "payouts",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "list",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "address",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_account"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_value"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%origin_fees"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "list",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "address",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_account"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_value"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%payouts"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "bundle_item",
+        "fields": [
+          {
+            "name": "bundle_item_contract",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "bundle_item_id",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "bundle_item_qty",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%bundle_item_contract"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%bundle_item_id"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%bundle_item_qty"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "bundle_sale",
+        "fields": [
+          {
+            "name": "bundle_sale_origin_fees",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "bundle_sale_payouts",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "bundle_sale_amount",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "bundle_sale_start",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "date",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "bundle_sale_end",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "date",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "bundle_sale_qty",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "bundle_sale_max_fees_base_boint",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "bundle_sale_data_type",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "bytes",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "bundle_sale_data",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "bytes",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "list",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "address",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_account"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%part_value"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%bundle_sale_origin_fees"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "list",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "address",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%part_account"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "nat",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%part_value"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [
+                    "%bundle_sale_payouts"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%bundle_sale_amount"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "option",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "timestamp",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [
+                            "%bundle_sale_start"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "pair",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "option",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "timestamp",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [
+                                "%bundle_sale_end"
+                              ],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "pair",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "nat",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [],
+                                  "annots": [
+                                    "%bundle_sale_qty"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "pair",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "nat",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%bundle_sale_max_fees_base_boint"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "pair",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [
+                                        {
+                                          "prim": "option",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [
+                                            {
+                                              "prim": "bytes",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [],
+                                              "annots": [],
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
+                                            }
+                                          ],
+                                          "annots": [
+                                            "%bundle_sale_data_type"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        },
+                                        {
+                                          "prim": "option",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [
+                                            {
+                                              "prim": "bytes",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [],
+                                              "annots": [],
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
+                                            }
+                                          ],
+                                          "annots": [
+                                            "%bundle_sale_data"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        }
+                                      ],
+                                      "annots": [],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "sale",
+        "fields": [
+          {
+            "name": "sale_asset_contract",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_asset_token_id",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_type",
+            "type": {
+              "node": "enum",
+              "name": "asset_type",
+              "args": []
+            }
+          },
+          {
+            "name": "sale_asset",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_origin_fees",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "sale_payouts",
+            "type": {
+              "node": "list",
+              "name": null,
+              "args": [
+                {
+                  "node": "record",
+                  "name": "part",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "sale_amount",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_asset_qty",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_start",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "date",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "sale_end",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "date",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "sale_max_fees_base_boint",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "sale_data_type",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "bytes",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "sale_data",
+            "type": {
+              "node": "option",
+              "name": null,
+              "args": [
+                {
+                  "node": "bytes",
+                  "name": null,
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%sale_asset_contract"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%sale_asset_token_id"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "int",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%sale_type"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "pair",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [
+                        {
+                          "prim": "bytes",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [],
+                          "annots": [
+                            "%sale_asset"
+                          ],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        },
+                        {
+                          "prim": "pair",
+                          "int": null,
+                          "bytes": null,
+                          "string": null,
+                          "args": [
+                            {
+                              "prim": "list",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "pair",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "address",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%part_account"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "nat",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%part_value"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [
+                                "%sale_origin_fees"
+                              ],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            },
+                            {
+                              "prim": "pair",
+                              "int": null,
+                              "bytes": null,
+                              "string": null,
+                              "args": [
+                                {
+                                  "prim": "list",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "pair",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [
+                                        {
+                                          "prim": "address",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [
+                                            "%part_account"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        },
+                                        {
+                                          "prim": "nat",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [
+                                            "%part_value"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        }
+                                      ],
+                                      "annots": [],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [
+                                    "%sale_payouts"
+                                  ],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                },
+                                {
+                                  "prim": "pair",
+                                  "int": null,
+                                  "bytes": null,
+                                  "string": null,
+                                  "args": [
+                                    {
+                                      "prim": "nat",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [],
+                                      "annots": [
+                                        "%sale_amount"
+                                      ],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    },
+                                    {
+                                      "prim": "pair",
+                                      "int": null,
+                                      "bytes": null,
+                                      "string": null,
+                                      "args": [
+                                        {
+                                          "prim": "nat",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [],
+                                          "annots": [
+                                            "%sale_asset_qty"
+                                          ],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        },
+                                        {
+                                          "prim": "pair",
+                                          "int": null,
+                                          "bytes": null,
+                                          "string": null,
+                                          "args": [
+                                            {
+                                              "prim": "option",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [
+                                                {
+                                                  "prim": "timestamp",
+                                                  "int": null,
+                                                  "bytes": null,
+                                                  "string": null,
+                                                  "args": [],
+                                                  "annots": [],
+                                                  "array": [],
+                                                  "var_id": null,
+                                                  "var_type": null
+                                                }
+                                              ],
+                                              "annots": [
+                                                "%sale_start"
+                                              ],
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
+                                            },
+                                            {
+                                              "prim": "pair",
+                                              "int": null,
+                                              "bytes": null,
+                                              "string": null,
+                                              "args": [
+                                                {
+                                                  "prim": "option",
+                                                  "int": null,
+                                                  "bytes": null,
+                                                  "string": null,
+                                                  "args": [
+                                                    {
+                                                      "prim": "timestamp",
+                                                      "int": null,
+                                                      "bytes": null,
+                                                      "string": null,
+                                                      "args": [],
+                                                      "annots": [],
+                                                      "array": [],
+                                                      "var_id": null,
+                                                      "var_type": null
+                                                    }
+                                                  ],
+                                                  "annots": [
+                                                    "%sale_end"
+                                                  ],
+                                                  "array": [],
+                                                  "var_id": null,
+                                                  "var_type": null
+                                                },
+                                                {
+                                                  "prim": "pair",
+                                                  "int": null,
+                                                  "bytes": null,
+                                                  "string": null,
+                                                  "args": [
+                                                    {
+                                                      "prim": "nat",
+                                                      "int": null,
+                                                      "bytes": null,
+                                                      "string": null,
+                                                      "args": [],
+                                                      "annots": [
+                                                        "%sale_max_fees_base_boint"
+                                                      ],
+                                                      "array": [],
+                                                      "var_id": null,
+                                                      "var_type": null
+                                                    },
+                                                    {
+                                                      "prim": "pair",
+                                                      "int": null,
+                                                      "bytes": null,
+                                                      "string": null,
+                                                      "args": [
+                                                        {
+                                                          "prim": "option",
+                                                          "int": null,
+                                                          "bytes": null,
+                                                          "string": null,
+                                                          "args": [
+                                                            {
+                                                              "prim": "bytes",
+                                                              "int": null,
+                                                              "bytes": null,
+                                                              "string": null,
+                                                              "args": [],
+                                                              "annots": [],
+                                                              "array": [],
+                                                              "var_id": null,
+                                                              "var_type": null
+                                                            }
+                                                          ],
+                                                          "annots": [
+                                                            "%sale_data_type"
+                                                          ],
+                                                          "array": [],
+                                                          "var_id": null,
+                                                          "var_type": null
+                                                        },
+                                                        {
+                                                          "prim": "option",
+                                                          "int": null,
+                                                          "bytes": null,
+                                                          "string": null,
+                                                          "args": [
+                                                            {
+                                                              "prim": "bytes",
+                                                              "int": null,
+                                                              "bytes": null,
+                                                              "string": null,
+                                                              "args": [],
+                                                              "annots": [],
+                                                              "array": [],
+                                                              "var_id": null,
+                                                              "var_type": null
+                                                            }
+                                                          ],
+                                                          "annots": [
+                                                            "%sale_data"
+                                                          ],
+                                                          "array": [],
+                                                          "var_id": null,
+                                                          "var_type": null
+                                                        }
+                                                      ],
+                                                      "annots": [],
+                                                      "array": [],
+                                                      "var_id": null,
+                                                      "var_type": null
+                                                    }
+                                                  ],
+                                                  "annots": [],
+                                                  "array": [],
+                                                  "var_id": null,
+                                                  "var_type": null
+                                                }
+                                              ],
+                                              "annots": [],
+                                              "array": [],
+                                              "var_id": null,
+                                              "var_type": null
+                                            }
+                                          ],
+                                          "annots": [],
+                                          "array": [],
+                                          "var_id": null,
+                                          "var_type": null
+                                        }
+                                      ],
+                                      "annots": [],
+                                      "array": [],
+                                      "var_id": null,
+                                      "var_type": null
+                                    }
+                                  ],
+                                  "annots": [],
+                                  "array": [],
+                                  "var_id": null,
+                                  "var_type": null
+                                }
+                              ],
+                              "annots": [],
+                              "array": [],
+                              "var_id": null,
+                              "var_type": null
+                            }
+                          ],
+                          "annots": [],
+                          "array": [],
+                          "var_id": null,
+                          "var_type": null
+                        }
+                      ],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "AMOUNT_MISMATCH",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "BUNDLE_CANT_BE_EMPTY",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "CANT_UNPACK_BUNDLE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "CANT_UNPACK_FA12_ASSET",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "CANT_UNPACK_FA2_ASSET",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "FEES_OVER_SELLER_LIMIT",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_BUNDLE_ITEM_QTY",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_BUY_AMOUNT",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_CALLER",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_SIGNATURE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_SALE_END_DATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "INVALID_SALE_START_DATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "MAX_BUNDLE_SIZE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "MISSING_BUNDLE_SALE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "MISSING_CANDIDATE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "MISSING_SALE",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "SALE_ALREADY_EXISTS",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "SALE_CLOSED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "SALE_NOT_STARTED",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "WRONG_XTZ_PAYLOAD",
+      "type": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "const": true
+    },
+    {
+      "name": "owner_candidate",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "max_bundle_items",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "max_fees_limit",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "metadata",
+      "type": {
+        "node": "big_map",
+        "name": null,
+        "args": [
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "declare_ownership",
+      "args": [
+        {
+          "name": "candidate",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim_ownership",
+      "args": []
+    },
+    {
+      "name": "set_sales_storage_contract",
+      "args": [
+        {
+          "name": "sesc_contract",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_protocol_fee",
+      "args": [
+        {
+          "name": "spf",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_fees_limit",
+      "args": [
+        {
+          "name": "sfl",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_transfer_manager",
+      "args": [
+        {
+          "name": "stm_contract",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_sales_storage",
+      "args": [
+        {
+          "name": "sss_contract",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_max_bundle_items",
+      "args": [
+        {
+          "name": "smbi_number",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "sell",
+      "args": [
+        {
+          "name": "s_sale",
+          "type": {
+            "node": "record",
+            "name": "sale",
+            "args": []
+          }
+        },
+        {
+          "name": "s_seller_pubk",
+          "type": {
+            "node": "key",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "s_sig",
+          "type": {
+            "node": "signature",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "sell_bundle",
+      "args": [
+        {
+          "name": "sb_bundle",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "sb_sale_type",
+          "type": {
+            "node": "enum",
+            "name": "asset_type",
+            "args": []
+          }
+        },
+        {
+          "name": "sb_sale_asset",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "sb_sale",
+          "type": {
+            "node": "record",
+            "name": "bundle_sale",
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy",
+      "args": [
+        {
+          "name": "b_asset_contract",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "b_asset_token_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "b_seller",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "b_sale_type",
+          "type": {
+            "node": "enum",
+            "name": "asset_type",
+            "args": []
+          }
+        },
+        {
+          "name": "b_sale_asset",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "b_amount",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "b_origin_fees",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "record",
+                "name": "part",
+                "args": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "b_payouts",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "record",
+                "name": "part",
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "buy_bundle",
+      "args": [
+        {
+          "name": "bb_bundle",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "bb_seller",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "bb_sale_type",
+          "type": {
+            "node": "enum",
+            "name": "asset_type",
+            "args": []
+          }
+        },
+        {
+          "name": "bb_sale_asset",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "bb_amount",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "bb_origin_fees",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "record",
+                "name": "part",
+                "args": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "bb_payouts",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "record",
+                "name": "part",
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel_sale",
+      "args": [
+        {
+          "name": "cs_asset_contract",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "cs_asset_token_id",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "cs_sale_type",
+          "type": {
+            "node": "enum",
+            "name": "asset_type",
+            "args": []
+          }
+        },
+        {
+          "name": "cs_sale_asset",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel_bundle_sale",
+      "args": [
+        {
+          "name": "cbs_bundle",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "cbs_sale_type",
+          "type": {
+            "node": "enum",
+            "name": "asset_type",
+            "args": []
+          }
+        },
+        {
+          "name": "cbs_sale_asset",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "default",
+      "args": []
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": [
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_cbs0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_cbs0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_cs0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_cs0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "SALE_NOT_STARTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "SALE_CLOSED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_BUY_AMOUNT",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FEES_OVER_SELLER_LIMIT",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "MISSING_BUNDLE_SALE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "SALE_NOT_STARTED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "SALE_CLOSED",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_BUY_AMOUNT",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "FEES_OVER_SELLER_LIMIT",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "MISSING_SALE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_SALE_START_DATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_SALE_END_DATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_sb2"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_sb2",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_sb1"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_sb1",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_sb0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_sb0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_SALE_START_DATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_SALE_END_DATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_SIGNATURE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_s3"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_s3",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_s2"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_s2",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_s1"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_s1",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r_s0"
+      ],
+      "expr": {
+        "prim": "Pair",
+        "int": null,
+        "bytes": null,
+        "string": null,
+        "args": [
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "INVALID_CONDITION",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          },
+          {
+            "prim": null,
+            "int": null,
+            "bytes": null,
+            "string": "r_s0",
+            "args": [],
+            "annots": [],
+            "array": [],
+            "var_id": null,
+            "var_type": null
+          }
+        ],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCondition",
+      "args": [
+        "r0"
+      ],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "MISSING_CANDIDATE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_BUNDLE_ITEM_QTY",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "BUNDLE_CANT_BE_EMPTY",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CANT_UNPACK_BUNDLE",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CANT_UNPACK_FA2_ASSET",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "CANT_UNPACK_FA12_ASSET",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "WRONG_XTZ_PAYLOAD",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    }
+  ]
+}

@@ -143,8 +143,17 @@ const mich_to_asset_value_decl = (a : Asset) => {
     ))])
   }
 }
-const mich_to_record_decl = (r : Record) => fields_to_mich_to_entity_decl(r.name, r.fields)
-
+const mich_to_record_decl = (r : Record) => {
+  if (r.fields.length > 1) {
+    return fields_to_mich_to_entity_decl(r.name, r.fields)
+  } else {
+    return make_mich_to_entity_decl(r.name, [factory.createThrowStatement(factory.createNewExpression(
+      factory.createIdentifier("Error"),
+      undefined,
+      [factory.createStringLiteral("mich_to_" + r.name + " should not be called")]
+    ))])
+  }
+}
 const field_to_cmp_body = (field : Omit<Field, "is_key">, arg_a : ts.Expression, arg_b : ts.Expression) => {
   const a = factory.createPropertyAccessExpression(
     arg_a,
@@ -1446,7 +1455,7 @@ const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number) :
   )
 }
 
-const enumToDecl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
+const enum_to_decl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
   switch (e.name) {
     case "state" : return [factory.createEnumDeclaration(
       undefined,
@@ -1463,6 +1472,150 @@ const enumToDecl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration> 
       ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
       ...(e.constructors.map((x,i) => make_enum_type_class_decl(e.name, x, i)))
     ]
+  }
+}
+
+const mich_to_simple_enum_decl = (e : Enum) => {
+  return factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("mich_to_" + e.name),
+        undefined,
+        undefined,
+        factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("m"),
+            undefined,
+            factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+            undefined
+          )],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(e.name),
+            undefined
+          ),
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [
+              factory.createVariableStatement(
+                undefined,
+                factory.createVariableDeclarationList(
+                  [factory.createVariableDeclaration(
+                    factory.createIdentifier("v"),
+                    undefined,
+                    undefined,
+                    factory.createCallExpression(
+                      factory.createPropertyAccessExpression(
+                        factory.createCallExpression(
+                          factory.createPropertyAccessExpression(
+                            factory.createParenthesizedExpression(factory.createNewExpression(
+                              factory.createPropertyAccessExpression(
+                                factory.createIdentifier("ex"),
+                                factory.createIdentifier("Nat")
+                              ),
+                              undefined,
+                              [factory.createIdentifier("m")]
+                            )),
+                            factory.createIdentifier("to_big_number")
+                          ),
+                          undefined,
+                          []
+                        ),
+                        factory.createIdentifier("toNumber")
+                      ),
+                      undefined,
+                      []
+                    )
+                  )],
+                  ts.NodeFlags.Const
+                )
+              ),
+              factory.createSwitchStatement(
+                factory.createIdentifier("v"),
+                factory.createCaseBlock(
+                  [
+                    ...(e.constructors.map((c, i) => {
+                    return factory.createCaseClause(
+                      factory.createNumericLiteral(""+i),
+                      [factory.createReturnStatement(factory.createNewExpression(
+                        factory.createIdentifier(c.name),
+                        undefined,
+                        []
+                      ))]
+                    )
+                    })),
+                    ...([factory.createDefaultClause([factory.createThrowStatement(factory.createNewExpression(
+                      factory.createIdentifier("Error"),
+                      undefined,
+                      [factory.createBinaryExpression(
+                        factory.createStringLiteral("mich_to_asset_type : invalid value "),
+                       factory.createToken(ts.SyntaxKind.PlusToken),
+                        factory.createIdentifier("v")
+                      )]
+                      ))])])
+                  ]
+                )
+              )
+            ],
+            true
+          )
+        )
+      )],
+      ts.NodeFlags.Const
+    )
+  )
+}
+
+const mich_to_complex_enum_decl = (e : Enum) => {
+  return factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("mich_to_" + e.name),
+        undefined,
+        undefined,
+        factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("m"),
+            undefined,
+            factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+            undefined
+          )],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(e.name),
+            undefined
+          ),
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [factory.createThrowStatement(factory.createNewExpression(
+              factory.createIdentifier("Error"),
+              undefined,
+              [factory.createStringLiteral("mich_to" + e.name + " : complex enum not supported yet")]
+            ))],
+            true
+          )
+        )
+      )],
+      ts.NodeFlags.Const
+    )
+  )
+}
+
+const mich_to_enum_decl = (e : Enum) => {
+  if (e.type_michelson.prim == "or") {
+    return mich_to_complex_enum_decl(e)
+  } else {
+    return mich_to_simple_enum_decl(e)
   }
 }
 
@@ -1617,7 +1770,8 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
   return [
     ...([get_imports()]),
     // enums
-    ...(contract_interface.types.enums.map(enumToDecl)).flat(),
+    ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
+    ...(contract_interface.types.enums.map(mich_to_enum_decl)),
     // records
     ...(contract_interface.types.records.map(recordToInterfaceDecl)),
     ...(contract_interface.types.records.map(recordToMichTypeDecl)),
@@ -1653,5 +1807,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/memorizer.json"
+//import ci from "../examples/feeless.json"
 //console.log(generate_binding(ci))
