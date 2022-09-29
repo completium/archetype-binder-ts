@@ -1,0 +1,7 @@
+archetype type_simple_set_string
+
+variable res : set<string> = []
+
+entry set_value(i : set<string>) {
+  res := i
+}
