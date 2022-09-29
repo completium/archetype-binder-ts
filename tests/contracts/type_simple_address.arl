@@ -1,0 +1,7 @@
+archetype type_simple_address
+
+variable res : address = tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg
+
+entry set_value(i : address) {
+  res := i
+}
