@@ -857,6 +857,15 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     case "address"  :
     case "signature":
     case "key"      :
+    case "bls12_381_fr":
+    case "bls12_381_g1":
+    case "bls12_381_g2":
+    case "chain_id"    :
+    case "chest"       :
+    case "chest_key"   :
+    case "key_hash"    :
+    case "sapling_transaction":
+    case "unit"        :
     case "duration" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
@@ -1307,6 +1316,16 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
+    case "bls12_381_fr":
+    case "bls12_381_g1":
+    case "bls12_381_g2":
+    case "chain_id"    :
+    case "chest"       :
+    case "chest_key"   :
+    case "key_hash"    :
+    case "sapling_transaction":
+    case "signature"   :
+    case "unit"        :
     case "int"         :
     case "nat"         :
     case "bytes"       :
