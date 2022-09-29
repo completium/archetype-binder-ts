@@ -1,6 +1,6 @@
 archetype type_simple_int
 
-variable res : int = 0
+variable res : int = 0i
 
 entry set_value(i : int) {
   res := i
