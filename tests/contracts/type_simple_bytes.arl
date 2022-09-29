@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_bytes
+
+variable res : bytes = 0x
+
+entry set_value(i : bytes) {
+  res := i
+}

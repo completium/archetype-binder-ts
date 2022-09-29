@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_set_nat
+
+variable res : set<nat> = []
+
+entry set_value(i : set<nat>) {
+  res := i
+}

@@ -1,0 +1,5 @@
+archetype simple_fail
+
+entry f() {
+  fail("myerror")
+}

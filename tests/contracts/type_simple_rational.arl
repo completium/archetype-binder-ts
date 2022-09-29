@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_rational
+
+variable res : rational = 0.1
+
+entry set_value(i : rational) {
+  res := i
+}
