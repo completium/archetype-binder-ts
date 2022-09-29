@@ -1,9 +1,9 @@
+import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
+import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
+import * as ts from "typescript";
+
 import { generate_binding } from '../src/main'
 import { ContractInterface } from '../src/utils'
-
-import * as ts from "typescript";
-import { Nat, Int, Tez, Unit, Bytes, Duration, Rational, Chest, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Key_hash, Sapling_transaction, Chain_id, Chest_key } from '@completium/archetype-ts-types';
-import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 const archetype = require('@completium/archetype');
 const assert = require('assert')
