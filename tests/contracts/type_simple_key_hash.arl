@@ -1,3 +1,4 @@
+/* DO NOT EDIT, GENERATED FILE */
 archetype type_simple_key_hash
 
 variable res : key_hash = "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg"

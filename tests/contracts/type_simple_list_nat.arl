@@ -1,3 +1,4 @@
+/* DO NOT EDIT, GENERATED FILE */
 archetype type_simple_list_nat
 
 variable res : list<nat> = []

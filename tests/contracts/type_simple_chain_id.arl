@@ -1,3 +1,4 @@
+/* DO NOT EDIT, GENERATED FILE */
 archetype type_simple_chain_id
 
 variable res : chain_id = "NetXLH1uAxK7CCh"
