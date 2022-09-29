@@ -134,7 +134,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
   switch (at.node) {
     case "or":        return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Or")
       ),
       [
@@ -152,42 +152,42 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
     )
     case "duration":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Duration")
       ),
       undefined
     );
     case "signature":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Signature")
       ),
       undefined
     );
     case "key":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Key")
       ),
       undefined
     );
     case "bytes":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Bytes")
       ),
       undefined
     );
     case "option": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Option"),
       ),
       [ archetype_type_to_ts_type(at.args[0]) ]
     );
     case "address":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Address")
       ),
       undefined
@@ -195,7 +195,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
     case "bool":      return factory.createKeywordTypeNode(SyntaxKind.BooleanKeyword)
     case "contract":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Entrypoint")
       ),
       undefined
@@ -203,42 +203,42 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
     case "string":    return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
     case "signature": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Signature")
       ),
       undefined
     );
     case "key": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Key")
       ),
       undefined
     );
     case "int":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Int")
       ),
       undefined
     );
     case "nat":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Nat")
       ),
       undefined
     );
     case "rational":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Rational")
       ),
       undefined
     );
     case "currency":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Tez")
       ),
       undefined
@@ -440,7 +440,7 @@ const make_pair_decl = (arg : ts.Expression, i : number) => {
             arg,
             factory.createTypeReferenceNode(
               factory.createQualifiedName(
-                factory.createIdentifier("ex"),
+                factory.createIdentifier("att"),
                 factory.createIdentifier("Mpair")
               ),
               undefined
@@ -468,7 +468,7 @@ const make_pair_decl = (arg : ts.Expression, i : number) => {
             ),
             factory.createTypeReferenceNode(
               factory.createQualifiedName(
-                factory.createIdentifier("ex"),
+                factory.createIdentifier("att"),
                 factory.createIdentifier("Mpair")
               ),
               undefined
@@ -520,7 +520,7 @@ const mich_to_tuple = (types : Array<ArchetypeType>, arg : ts.Expression ) => {
 const contained_type_to_field_decl = (fname : string, arg : ts.Expression, atype : ArchetypeType) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier(fname)
     ),
     undefined,
@@ -553,7 +553,7 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
   switch (atype.node) {
     case "map" : return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("mich_to_map")
       ),
       undefined,
@@ -639,7 +639,7 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
     default :
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier(archetype_type_to_mich_to_name(atype))
         ),
         undefined,
@@ -857,9 +857,18 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     case "address"  :
     case "signature":
     case "key"      :
+    case "bls12_381_fr":
+    case "bls12_381_g1":
+    case "bls12_381_g2":
+    case "chain_id"    :
+    case "chest"       :
+    case "chest_key"   :
+    case "key_hash"    :
+    case "sapling_transaction":
+    case "unit"        :
     case "duration" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
       ),
       undefined,
@@ -868,7 +877,7 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     case "rational" :
       return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Rational")
       ),
       undefined,
@@ -879,7 +888,7 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     ))]
     case "currency" : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Tez")
       ),
       undefined,
@@ -892,7 +901,7 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
     ))]
     case "option"  : return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("Option")
       ),
       [ archetype_type_to_ts_type(atype.args[0]) ],
@@ -1156,7 +1165,7 @@ const class_to_mich = (x  :ts.Expression) => {
 const string_to_mich = (x : ts.Expression) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("string_to_mich")
     ),
     undefined,
@@ -1167,7 +1176,7 @@ const string_to_mich = (x : ts.Expression) => {
 export const unit_to_mich = () => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("unit_to_mich")
     ),
     undefined,
@@ -1178,7 +1187,7 @@ export const unit_to_mich = () => {
 const bool_to_mich = (x : ts.Expression) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("bool_to_mich")
     ),
     undefined,
@@ -1189,7 +1198,7 @@ const bool_to_mich = (x : ts.Expression) => {
 const date_to_mich = (x : ts.Expression) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("date_to_mich")
     ),
     undefined,
@@ -1200,7 +1209,7 @@ const date_to_mich = (x : ts.Expression) => {
 const tuple_to_mich = (name : string, types : ArchetypeType[]) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("pair_to_mich")
     ),
     undefined,
@@ -1220,7 +1229,7 @@ const list_to_mich = (name : string, atype : ArchetypeType) => {
 const internal_list_to_mich = (name : string, body : ts.Statement[]) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("list_to_mich")
     ),
     undefined,
@@ -1283,7 +1292,7 @@ const internal_map_to_mich = (name : string, decls : ts.CallExpression[]) => {
     ),
     factory.createReturnStatement(factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("elt_to_mich")
       ),
       undefined,
@@ -1307,6 +1316,16 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
     case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
+    case "bls12_381_fr":
+    case "bls12_381_g1":
+    case "bls12_381_g2":
+    case "chain_id"    :
+    case "chest"       :
+    case "chest_key"   :
+    case "key_hash"    :
+    case "sapling_transaction":
+    case "signature"   :
+    case "unit"        :
     case "int"         :
     case "nat"         :
     case "bytes"       :
@@ -1334,7 +1353,7 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
 export const function_params_to_mich = (a : Array<FunctionParameter>) => {
   if (a.length == 0) {
     return factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
+      factory.createIdentifier("att"),
       factory.createIdentifier("unit_mich")
     )
   } else if (a.length == 1) {
@@ -1342,7 +1361,7 @@ export const function_params_to_mich = (a : Array<FunctionParameter>) => {
   } else {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("pair_to_mich")
       ),
       undefined,
@@ -1415,7 +1434,7 @@ export const entity_to_mich = (v : string, mt: MichelsonType, fields : Array<Par
         const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx0)
         return [fidx1, factory.createCallExpression(
           factory.createPropertyAccessExpression(
-            factory.createIdentifier("ex"),
+            factory.createIdentifier("att"),
             factory.createIdentifier("pair_to_mich")
           ),
           undefined,
@@ -1453,7 +1472,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
   switch (mt.prim) {
     case "big_map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("pair_to_mich_type")
       ),
       undefined,
@@ -1461,7 +1480,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
     )
     case "map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("pair_to_mich_type")
       ),
       undefined,
@@ -1471,7 +1490,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("pair_array_to_mich_type")
       ),
       undefined,
@@ -1490,7 +1509,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("option_annot_to_mich_type")
       ),
       undefined,
@@ -1507,7 +1526,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("list_annot_to_mich_type")
         ),
         undefined,
@@ -1522,7 +1541,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
     case "or":
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("or_to_mich_type")
         ),
         undefined,
@@ -1539,7 +1558,7 @@ export const value_to_mich_type = (mt : MichelsonType) : ts.CallExpression => {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("prim_annot_to_mich_type")
         ),
         undefined,
@@ -1561,7 +1580,7 @@ export const mich_type_to_error = (expr : MichelsonType) : [string, ts.Expressio
   if (expr.string != null) {
     return [ expr.string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
@@ -1574,7 +1593,7 @@ export const mich_type_to_error = (expr : MichelsonType) : [string, ts.Expressio
     }, "")
     return [ label, factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("pair_to_mich")
       ),
       undefined,
@@ -1583,7 +1602,7 @@ export const mich_type_to_error = (expr : MichelsonType) : [string, ts.Expressio
   } else {
     return [ "NOT_HANDLED", factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("string_to_mich")
       ),
       undefined,

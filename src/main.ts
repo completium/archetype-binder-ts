@@ -26,7 +26,7 @@ const make_mich_to_entity_decl = (name : string, body : ts.Statement[]) => {
           undefined,
           factory.createTypeReferenceNode(
             factory.createQualifiedName(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("Micheline")
             ),
             undefined
@@ -64,7 +64,7 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
           undefined,
           factory.createArrayTypeNode(factory.createTypeReferenceNode(
             factory.createQualifiedName(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("Micheline")
             ),
             undefined
@@ -85,7 +85,7 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
           factory.createToken(ts.SyntaxKind.EqualsToken),
           factory.createCallExpression(
             factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("mich_to_pairs")
             ),
             undefined,
@@ -100,7 +100,7 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
           factory.createToken(ts.SyntaxKind.EqualsToken),
           factory.createCallExpression(
             factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("annotated_mich_to_array")
             ),
             undefined,
@@ -175,7 +175,7 @@ const entity_to_mich_type_decl = (name : string, mt : MichelsonType) => {
         undefined,
         factory.createTypeReferenceNode(
           factory.createQualifiedName(
-            factory.createIdentifier("ex"),
+            factory.createIdentifier("att"),
             factory.createIdentifier("MichelineType")
           ),
           undefined
@@ -204,7 +204,7 @@ const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationLi
         e.args.map(x => contractParameterToParamDecl(x)),
         factory.createTypeReferenceNode(
           factory.createQualifiedName(
-            factory.createIdentifier("ex"),
+            factory.createIdentifier("att"),
             factory.createIdentifier("Micheline")
           ),
           undefined
@@ -249,7 +249,7 @@ const entityToInterfaceDecl = (name : string, mt : MichelsonType, fields : Array
         ts.SyntaxKind.ImplementsKeyword,
         [factory.createExpressionWithTypeArguments(
           factory.createPropertyAccessExpression(
-            factory.createIdentifier("ex"),
+            factory.createIdentifier("att"),
             factory.createIdentifier("ArchetypeType")
           ),
           undefined
@@ -276,7 +276,7 @@ const entityToInterfaceDecl = (name : string, mt : MichelsonType, fields : Array
           [],
           factory.createTypeReferenceNode(
             factory.createQualifiedName(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("Micheline")
             ),
             undefined
@@ -381,7 +381,7 @@ const entityToMichDecl = (entity_postfix : string, aname : string, mt : Michelso
         )],
         factory.createTypeReferenceNode(
           factory.createQualifiedName(
-            factory.createIdentifier("ex"),
+            factory.createIdentifier("att"),
             factory.createIdentifier("Micheline")
           ),
           undefined
@@ -507,7 +507,7 @@ const entryToGetParam = (e : Entrypoint) => {
   return entry_to_method("get_" + e.name + "_param", e.args,
     factory.createTypeReferenceNode(
       factory.createQualifiedName(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("CallParameter")
       ),
       undefined
@@ -557,14 +557,14 @@ const getter_to_method = (g : Getter, ci : ContractInterface) => {
                 undefined,
                 factory.createNewExpression(
                   factory.createPropertyAccessExpression(
-                    factory.createIdentifier("ex"),
+                    factory.createIdentifier("att"),
                     factory.createIdentifier("Entrypoint")
                   ),
                   undefined,
                   [
                     factory.createNewExpression(
                       factory.createPropertyAccessExpression(
-                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("att"),
                         factory.createIdentifier("Address")
                       ),
                       undefined,
@@ -594,7 +594,7 @@ const getter_to_method = (g : Getter, ci : ContractInterface) => {
               factory.createStringLiteral(g.name),
               factory.createCallExpression(
                 factory.createPropertyAccessExpression(
-                  factory.createIdentifier("ex"),
+                  factory.createIdentifier("att"),
                   factory.createIdentifier("getter_args_to_mich")
                 ),
                 undefined,
@@ -1053,7 +1053,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
           [],
           factory.createTypeReferenceNode(
             factory.createQualifiedName(
-              factory.createIdentifier("ex"),
+              factory.createIdentifier("att"),
               factory.createIdentifier("Address")
             ),
             undefined
@@ -1072,7 +1072,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                 factory.createBlock(
                   [factory.createReturnStatement(factory.createNewExpression(
                     factory.createPropertyAccessExpression(
-                      factory.createIdentifier("ex"),
+                      factory.createIdentifier("att"),
                       factory.createIdentifier("Address")
                     ),
                     undefined,
@@ -1107,7 +1107,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
             factory.createIdentifier("Promise"),
             [factory.createTypeReferenceNode(
               factory.createQualifiedName(
-                factory.createIdentifier("ex"),
+                factory.createIdentifier("att"),
                 factory.createIdentifier("Tez")
               ),
               undefined
@@ -1133,7 +1133,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                     undefined,
                     [factory.createNewExpression(
                       factory.createPropertyAccessExpression(
-                        factory.createIdentifier("ex"),
+                        factory.createIdentifier("att"),
                         factory.createIdentifier("Address")
                       ),
                       undefined,
@@ -1239,18 +1239,25 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
   ])
 }
 
-const get_imports = () : ts.ImportDeclaration => {
+const get_import = (namespace : string, name : string) => {
   return factory.createImportDeclaration(
     undefined,
     undefined,
     factory.createImportClause(
       false,
       undefined,
-      factory.createNamespaceImport(factory.createIdentifier("ex"))
+      factory.createNamespaceImport(factory.createIdentifier(namespace))
     ),
-    factory.createStringLiteral("@completium/experiment-ts"),
+    factory.createStringLiteral(name),
     undefined
   )
+}
+
+const get_imports = () : ts.ImportDeclaration[] => {
+  return [
+    get_import("ex", "@completium/experiment-ts"),
+    get_import("att", "@completium/archetype-ts-types")
+  ]
 }
 
 const get_contract_decl = (ci : ContractInterface) => {
@@ -1299,7 +1306,7 @@ const make_enum_class_decl = (e : Enum) => {
       ts.SyntaxKind.ExtendsKeyword,
       [factory.createExpressionWithTypeArguments(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("Enum")
         ),
         [factory.createTypeReferenceNode(
@@ -1314,7 +1321,7 @@ const make_enum_class_decl = (e : Enum) => {
 
 const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Expression => {
   var mich_value : ts.Expression = factory.createPropertyAccessExpression(
-    factory.createIdentifier("ex"),
+    factory.createIdentifier("att"),
     factory.createIdentifier("unit_mich")
   )
   if (c.types.length > 0) {
@@ -1341,7 +1348,7 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
   if (idx == 0) {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier("left_to_mich")
       ),
       undefined,
@@ -1350,7 +1357,7 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
   } else {
     const last = factory.createCallExpression(
       factory.createPropertyAccessExpression(
-        factory.createIdentifier("ex"),
+        factory.createIdentifier("att"),
         factory.createIdentifier((idx % 2 == 0) ? "right_to_mich" : "left_to_mich")
       ),
       undefined,
@@ -1360,7 +1367,7 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
     for (var i = 0; i < Math.floor((idx + 1) / 2); i++) {
       res = factory.createCallExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("right_to_mich")
         ),
         undefined,
@@ -1376,7 +1383,7 @@ const make_simple_enum_type_to_mich_return_stt = (idx : number) : ts.Expression 
     factory.createPropertyAccessExpression(
       factory.createNewExpression(
         factory.createPropertyAccessExpression(
-          factory.createIdentifier("ex"),
+          factory.createIdentifier("att"),
           factory.createIdentifier("Nat")
         ),
         undefined,
@@ -1539,7 +1546,7 @@ const mich_to_simple_enum_decl = (e : Enum) => {
                           factory.createPropertyAccessExpression(
                             factory.createParenthesizedExpression(factory.createNewExpression(
                               factory.createPropertyAccessExpression(
-                                factory.createIdentifier("ex"),
+                                factory.createIdentifier("att"),
                                 factory.createIdentifier("Nat")
                               ),
                               undefined,
@@ -1792,7 +1799,7 @@ const view_to_getter = (v : View) : Getter => {
 
 const get_nodes = (contract_interface : ContractInterface, contract_path : string) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
-    ...([get_imports()]),
+    ...(get_imports()),
     // enums
     ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
     ...(contract_interface.types.enums.map(mich_to_enum_decl)),
@@ -1831,5 +1838,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/feeless.json"
+//import ci from "../examples/fa1_2.json"
 //console.log(generate_binding(ci))
