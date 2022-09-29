@@ -1371,7 +1371,25 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
   }
 }
 
-const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number) : ts.ClassDeclaration => {
+const make_simple_enum_type_to_mich_return_stt = (idx : number) : ts.Expression => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createNewExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("ex"),
+          factory.createIdentifier("Nat")
+        ),
+        undefined,
+        [factory.createIdentifier("" + idx)]
+      ),
+      factory.createIdentifier("to_mich")
+    ),
+    undefined,
+    []
+  )
+}
+
+const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number, complex : boolean) : ts.ClassDeclaration => {
   let args : ts.ParameterDeclaration[] = []
   if (c.types.length > 0) {
     let atype = c.types[0]
@@ -1432,7 +1450,7 @@ const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number) :
         undefined,
         factory.createBlock(
           [factory.createReturnStatement(
-            make_enum_type_to_mich_return_stt(c, idx))],
+            complex ? make_enum_type_to_mich_return_stt(c, idx) : make_simple_enum_type_to_mich_return_stt(idx))],
           false
         )
       ),
@@ -1476,7 +1494,7 @@ const enum_to_decl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration
     )];
     default : return [
       ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
-      ...(e.constructors.map((x,i) => make_enum_type_class_decl(e.name, x, i)))
+      ...(e.constructors.map((x,i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or")))
     ]
   }
 }
@@ -1813,5 +1831,5 @@ export const generate_binding = (contract_interface : ContractInterface, contrac
   return result
 }
 
-//import ci from "../examples/whitelist.json"
+//import ci from "../examples/feeless.json"
 //console.log(generate_binding(ci))
