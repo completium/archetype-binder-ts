@@ -1032,7 +1032,7 @@ const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface)
   throw new Error("get_asset_key_archetype_type: asset " + a.name + " not found")
 }
 
-const get_contract_class_node = (ci : ContractInterface, cp : string) => {
+const get_contract_class_node = (ci : ContractInterface, settings : BindingSettings) => {
   return factory.createClassDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
@@ -1200,7 +1200,7 @@ const get_contract_class_node = (ci : ContractInterface, cp : string) => {
                       ),
                       undefined,
                       [
-                        factory.createStringLiteral(cp + ci.name + ".arl"),
+                        factory.createStringLiteral(settings.path + ci.name + ".arl"),
                         factory.createObjectLiteralExpression(ci.parameters.map(x =>
                           factory.createPropertyAssignment(
                             factory.createIdentifier(x.name),
@@ -1797,7 +1797,7 @@ const view_to_getter = (v : View) : Getter => {
   }
 }
 
-const get_nodes = (contract_interface : ContractInterface, contract_path : string) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
+const get_nodes = (contract_interface : ContractInterface, settings : BindingSettings) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
     ...(get_imports()),
     // enums
@@ -1825,15 +1825,15 @@ const get_nodes = (contract_interface : ContractInterface, contract_path : strin
     ...(contract_interface.getters.map(decl_callback_deploy)),
     ...([
     // contract class
-      get_contract_class_node(contract_interface, contract_path),
+      get_contract_class_node(contract_interface, settings),
     // contract instance
       get_contract_decl(contract_interface)
     ]),
   ]
 }
 
-export const generate_binding = (contract_interface : ContractInterface, settings : BindingSettings, contract_path : string = "./contracts/") : string => {
-  const nodeArr = factory.createNodeArray(get_nodes(contract_interface, contract_path));
+export const generate_binding = (contract_interface : ContractInterface, settings : BindingSettings) : string => {
+  const nodeArr = factory.createNodeArray(get_nodes(contract_interface, settings));
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result
 }
