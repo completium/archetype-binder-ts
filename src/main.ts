@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, get_constructor, get_get_address_decl, get_get_balance_decl } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -1101,7 +1101,7 @@ const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
     undefined,
     [factory.createModifier(SyntaxKind.AsyncKeyword)],
     undefined,
-    factory.createIdentifier("deploy"),
+    factory.createIdentifier(name),
     undefined,
     undefined,
     params.map(x => contractParameterToParamDecl(x)).concat([
@@ -1164,36 +1164,6 @@ const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
   )
 }
 
-const get_constructor = () => {
-  return factory.createConstructorDeclaration(
-    undefined,
-    undefined,
-    [factory.createParameterDeclaration(
-      undefined,
-      undefined,
-      undefined,
-      factory.createIdentifier("address"),
-      undefined,
-      factory.createUnionTypeNode([
-        factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-        factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
-      ]),
-      factory.createIdentifier("undefined")
-    )],
-    factory.createBlock(
-      [factory.createExpressionStatement(factory.createBinaryExpression(
-        factory.createPropertyAccessExpression(
-          factory.createThis(),
-          factory.createIdentifier("address")
-        ),
-        factory.createToken(ts.SyntaxKind.EqualsToken),
-        factory.createIdentifier("address")
-      ))],
-      true
-    )
-  )
-}
-
 const get_contract_class_node = (ci : ContractInterface, settings : BindingSettings) => {
   return factory.createClassDeclaration(
     undefined,
@@ -1206,119 +1176,8 @@ const get_contract_class_node = (ci : ContractInterface, settings : BindingSetti
       ...([get_constructor()]),
       ...(ci.getters.map(x => get_addr_decl(x.name + "_callback_address"))),
       ...([
-        factory.createMethodDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          factory.createIdentifier("get_address"),
-          undefined,
-          undefined,
-          [],
-          factory.createTypeReferenceNode(
-            factory.createQualifiedName(
-              factory.createIdentifier("att"),
-              factory.createIdentifier("Address")
-            ),
-            undefined
-          ),
-          factory.createBlock(
-            [
-              factory.createIfStatement(
-                factory.createBinaryExpression(
-                  factory.createIdentifier("undefined"),
-                  factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-                  factory.createPropertyAccessExpression(
-                    factory.createThis(),
-                    factory.createIdentifier("address")
-                  )
-                ),
-                factory.createBlock(
-                  [factory.createReturnStatement(factory.createNewExpression(
-                    factory.createPropertyAccessExpression(
-                      factory.createIdentifier("att"),
-                      factory.createIdentifier("Address")
-                    ),
-                    undefined,
-                    [factory.createPropertyAccessExpression(
-                      factory.createThis(),
-                      factory.createIdentifier("address")
-                    )]
-                  ))],
-                  true
-                ),
-                undefined
-              ),
-              factory.createThrowStatement(factory.createNewExpression(
-                factory.createIdentifier("Error"),
-                undefined,
-                [factory.createStringLiteral("Contract not initialised")]
-              ))
-            ],
-            true
-          )
-        )
-        ,
-        factory.createMethodDeclaration(
-          undefined,
-          [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
-          undefined,
-          factory.createIdentifier("get_balance"),
-          undefined,
-          undefined,
-          [],
-          factory.createTypeReferenceNode(
-            factory.createIdentifier("Promise"),
-            [factory.createTypeReferenceNode(
-              factory.createQualifiedName(
-                factory.createIdentifier("att"),
-                factory.createIdentifier("Tez")
-              ),
-              undefined
-            )]
-          ),
-          factory.createBlock(
-            [
-              factory.createIfStatement(
-                factory.createBinaryExpression(
-                  factory.createNull(),
-                  factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-                  factory.createPropertyAccessExpression(
-                    factory.createThis(),
-                    factory.createIdentifier("address")
-                  )
-                ),
-                factory.createBlock(
-                  [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
-                    factory.createPropertyAccessExpression(
-                      factory.createIdentifier("ex"),
-                      factory.createIdentifier("get_balance")
-                    ),
-                    undefined,
-                    [factory.createNewExpression(
-                      factory.createPropertyAccessExpression(
-                        factory.createIdentifier("att"),
-                        factory.createIdentifier("Address")
-                      ),
-                      undefined,
-                      [factory.createPropertyAccessExpression(
-                        factory.createThis(),
-                        factory.createIdentifier("address")
-                      )]
-                    )]
-                  )))],
-                  true
-                ),
-                undefined
-              ),
-              factory.createThrowStatement(factory.createNewExpression(
-                factory.createIdentifier("Error"),
-                undefined,
-                [factory.createStringLiteral("Contract not initialised")]
-              ))
-            ],
-            true
-          )
-        ),
+        get_get_address_decl(),
+        get_get_balance_decl(),
         get_deploy(ci, settings)
       ]
     ),

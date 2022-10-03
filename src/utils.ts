@@ -1653,3 +1653,153 @@ export const make_to_string_decl = () => {
     )
   )
 }
+
+// class utils
+
+export const get_constructor = () => {
+  return factory.createConstructorDeclaration(
+    undefined,
+    undefined,
+    [factory.createParameterDeclaration(
+      undefined,
+      undefined,
+      undefined,
+      factory.createIdentifier("address"),
+      undefined,
+      factory.createUnionTypeNode([
+        factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+        factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+      ]),
+      factory.createIdentifier("undefined")
+    )],
+    factory.createBlock(
+      [factory.createExpressionStatement(factory.createBinaryExpression(
+        factory.createPropertyAccessExpression(
+          factory.createThis(),
+          factory.createIdentifier("address")
+        ),
+        factory.createToken(ts.SyntaxKind.EqualsToken),
+        factory.createIdentifier("address")
+      ))],
+      true
+    )
+  )
+}
+
+export const get_get_address_decl = () => {
+  return factory.createMethodDeclaration(
+    undefined,
+    undefined,
+    undefined,
+    factory.createIdentifier("get_address"),
+    undefined,
+    undefined,
+    [],
+    factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Address")
+      ),
+      undefined
+    ),
+    factory.createBlock(
+      [
+        factory.createIfStatement(
+          factory.createBinaryExpression(
+            factory.createIdentifier("undefined"),
+            factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+            factory.createPropertyAccessExpression(
+              factory.createThis(),
+              factory.createIdentifier("address")
+            )
+          ),
+          factory.createBlock(
+            [factory.createReturnStatement(factory.createNewExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("Address")
+              ),
+              undefined,
+              [factory.createPropertyAccessExpression(
+                factory.createThis(),
+                factory.createIdentifier("address")
+              )]
+            ))],
+            true
+          ),
+          undefined
+        ),
+        factory.createThrowStatement(factory.createNewExpression(
+          factory.createIdentifier("Error"),
+          undefined,
+          [factory.createStringLiteral("Contract not initialised")]
+        ))
+      ],
+      true
+    )
+  )
+}
+
+export const get_get_balance_decl = () => {
+  return factory.createMethodDeclaration(
+    undefined,
+    [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+    undefined,
+    factory.createIdentifier("get_balance"),
+    undefined,
+    undefined,
+    [],
+    factory.createTypeReferenceNode(
+      factory.createIdentifier("Promise"),
+      [factory.createTypeReferenceNode(
+        factory.createQualifiedName(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("Tez")
+        ),
+        undefined
+      )]
+    ),
+    factory.createBlock(
+      [
+        factory.createIfStatement(
+          factory.createBinaryExpression(
+            factory.createNull(),
+            factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+            factory.createPropertyAccessExpression(
+              factory.createThis(),
+              factory.createIdentifier("address")
+            )
+          ),
+          factory.createBlock(
+            [factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("get_balance")
+              ),
+              undefined,
+              [factory.createNewExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Address")
+                ),
+                undefined,
+                [factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("address")
+                )]
+              )]
+            )))],
+            true
+          ),
+          undefined
+        ),
+        factory.createThrowStatement(factory.createNewExpression(
+          factory.createIdentifier("Error"),
+          undefined,
+          [factory.createStringLiteral("Contract not initialised")]
+        ))
+      ],
+      true
+    )
+  )
+}
