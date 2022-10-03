@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, get_constructor, get_get_address_decl, get_get_balance_decl } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, get_constructor, get_get_address_decl, get_get_balance_decl, storage_to_mich } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -210,20 +210,20 @@ const generate_storage_utils = (ci : ContractInterface) => {
     // generate storage michelson type
     entity_to_mich_type_decl("storage_mich_stype", ci.storage_type?.value),
     // generate storage literal maker
-    entryToArgToMichDecl(storage_to_entry(ci))
+    entity_to_mich_decl("storage", ci.storage, storage_to_mich(ci.storage_type.value, ci.storage))
   ]
 }
 
-const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationList => {
+const entity_to_mich_decl = (name :string, args : FunctionParameter[], body : ts.Expression) => {
   return factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
-      factory.createIdentifier(e.name+"_arg_to_mich"),
+      factory.createIdentifier(name + "_arg_to_mich"),
       undefined,
       undefined,
       factory.createArrowFunction(
         undefined,
         undefined,
-        e.args.map(x => contractParameterToParamDecl(x)),
+        args.map(x => contractParameterToParamDecl(x)),
         factory.createTypeReferenceNode(
           factory.createQualifiedName(
             factory.createIdentifier("att"),
@@ -233,13 +233,17 @@ const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationLi
         ),
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(function_params_to_mich(e.args))],
+          [factory.createReturnStatement(body)],
           true
         )
       )
     )],
     ts.NodeFlags.Const
   )
+}
+
+const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationList => {
+  return entity_to_mich_decl(e.name, e.args, function_params_to_mich(e.args))
 }
 
 const fieldToPropertyDecl = (f : Omit<Field, "is_key">) => {
@@ -1809,5 +1813,5 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   return result
 }
 
-//import ci from "../examples/michelson.json"
+//import ci from "../examples/contract_eq.json"
 //console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))

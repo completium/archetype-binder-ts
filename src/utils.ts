@@ -1377,6 +1377,38 @@ export const function_params_to_mich = (a : Array<FunctionParameter>) => {
   }
 }
 
+export const storage_to_mich = (mt : MichelsonType, selts : Array<StorageElement>) : ts.Expression => {
+  switch (mt.prim) {
+    case "pair" : {
+      if (mt.annots.length == 0) {
+        return factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("att"),
+            factory.createIdentifier("pair_to_mich")
+          ),
+          undefined,
+          [factory.createArrayLiteralExpression(
+            mt.args.map(x => storage_to_mich(x, selts)),
+            false
+          )]
+        )
+      }
+    }
+    default : {
+      let selt = selts[0]
+      if (mt.annots.length > 0) {
+        const annot = mt.annots[0]
+        for(let i = 0; i < selts.length; i++) {
+          if (annot == "%" + selts[i].name) {
+            selt = selts[i]
+          }
+        }
+      }
+      return function_param_to_mich(selt)
+    }
+  }
+}
+
 const get_archetype_type_of = (name : string, fields : Array<Omit<Field, "is_key">>) => {
   for (var i = 0; i < fields.length; i++) {
     const field = fields[i]
