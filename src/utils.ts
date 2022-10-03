@@ -105,7 +105,10 @@ export type ContractInterface = {
     "events": Array<Event>
   }
   "storage": Array<StorageElement>
-  "storage_type" : null | MichelsonType
+  "storage_type" : null | {
+    "value" : MichelsonType
+    "is_storable" : boolean
+  }
   "entrypoints": Array<Entrypoint>
   "getters" : Array<Getter>
   "views" : Array<View>

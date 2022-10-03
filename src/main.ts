@@ -192,6 +192,9 @@ const assetValueToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name 
 const assetContainerToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_container_mich_type", a.container_type_michelson)
 const recordToMichTypeDecl = (r : Record) => entity_to_mich_type_decl(r.name + "_mich_type", r.type_michelson)
 
+
+const generate_storage_utils = () => []
+
 const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationList => {
   return factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
@@ -1800,6 +1803,8 @@ const view_to_getter = (v : View) : Getter => {
 const get_nodes = (contract_interface : ContractInterface, settings : BindingSettings) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
     ...(get_imports()),
+    // storage
+    ...(settings.language == Language.Michelson ? generate_storage_utils() : []),
     // enums
     ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
     ...(contract_interface.types.enums.map(mich_to_enum_decl)),
@@ -1838,5 +1843,5 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   return result
 }
 
-//import ci from "../examples/michelson.json"
-//console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))
+import ci from "../examples/michelson.json"
+console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))
