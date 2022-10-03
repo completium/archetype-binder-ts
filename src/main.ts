@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, BindingSettings, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, Target, Language } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_return_body, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -1835,6 +1835,22 @@ const get_nodes = (contract_interface : ContractInterface, settings : BindingSet
       get_contract_decl(contract_interface)
     ]),
   ]
+}
+
+export enum Target {
+  Experiment,
+  Dapp
+}
+
+export enum Language {
+  Archetype,
+  Michelson
+}
+
+export type BindingSettings = {
+  target   : Target
+  language : Language
+  path     : string
 }
 
 export const generate_binding = (contract_interface : ContractInterface, settings : BindingSettings) : string => {
