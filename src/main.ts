@@ -192,8 +192,27 @@ const assetValueToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name 
 const assetContainerToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_container_mich_type", a.container_type_michelson)
 const recordToMichTypeDecl = (r : Record) => entity_to_mich_type_decl(r.name + "_mich_type", r.type_michelson)
 
+const storage_to_entry = (ci : ContractInterface) : Entrypoint => {
+  return {
+    name : "storage",
+    args : ci.storage.map(x => {
+      return {
+        name : x.name,
+        type : x.type
+      }
+    })
+  }
+}
 
-const generate_storage_utils = () => []
+const generate_storage_utils = (ci : ContractInterface) => {
+  if (ci.storage_type?.value == undefined) return []
+  return [
+    // generate storage michelson type
+    entity_to_mich_type_decl("storage_mich_stype", ci.storage_type?.value),
+    // generate storage literal maker
+    entryToArgToMichDecl(storage_to_entry(ci))
+  ]
+}
 
 const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationList => {
   return factory.createVariableDeclarationList(
@@ -1035,6 +1054,146 @@ const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface)
   throw new Error("get_asset_key_archetype_type: asset " + a.name + " not found")
 }
 
+const storage_elt_to_param = (selt : StorageElement) : ContractParameter => {
+  return {
+    name: selt.name,
+    type: selt.type,
+    const: false,
+    default: null
+  }
+}
+
+const language_to_deploy_name = (l : Language) : string => {
+  switch(l) {
+    case(Language.Archetype) : return "deploy"
+    case(Language.Michelson) : return "originate"
+  }
+}
+
+const language_to_extension = (l : Language) : ".arl" | ".tz" => {
+  switch(l) {
+    case(Language.Archetype) : return ".arl"
+    case(Language.Michelson) : return ".tz"
+  }
+}
+
+const language_to_storage_literal = (ci : ContractInterface, l : Language) => {
+  switch(l) {
+    case(Language.Archetype) : return factory.createObjectLiteralExpression(ci.parameters.map(x =>
+      factory.createPropertyAssignment(
+        factory.createIdentifier(x.name),
+        function_param_to_mich({ name : x.name, type : x.type })
+      )
+    ), true)
+    case(Language.Michelson) : return factory.createCallExpression(
+      factory.createIdentifier("storage_arg_to_mich"),
+      undefined, ci.storage.map(x => factory.createIdentifier(x.name))
+    )
+  }
+}
+
+const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
+  const name = language_to_deploy_name(settings.language)
+  const params = settings.language == Language.Archetype ? ci.parameters : ci.storage.map(storage_elt_to_param)
+  const extension = language_to_extension(settings.language)
+  const storage = language_to_storage_literal(ci, settings.language)
+  return factory.createMethodDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.AsyncKeyword)],
+    undefined,
+    factory.createIdentifier("deploy"),
+    undefined,
+    undefined,
+    params.map(x => contractParameterToParamDecl(x)).concat([
+      factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("params"),
+        undefined,
+        factory.createTypeReferenceNode(
+          factory.createIdentifier("Partial"),
+          [factory.createTypeReferenceNode(
+            factory.createQualifiedName(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("Parameters")
+            ),
+            undefined
+          )]
+        ),
+        undefined
+      )
+    ]),
+    undefined,
+    factory.createBlock(
+      [
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("address"),
+              undefined,
+              undefined,
+              factory.createAwaitExpression(factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier(name)
+                ),
+                undefined,
+                [
+                  factory.createStringLiteral(settings.path + ci.name + extension),
+                  storage,
+                  factory.createIdentifier("params")
+                ]
+              ))
+            )],
+            NodeFlags.Const | NodeFlags.AwaitContext | NodeFlags.ContextFlags | NodeFlags.TypeExcludesFlags
+          )
+        ),
+        factory.createExpressionStatement(factory.createBinaryExpression(
+          factory.createPropertyAccessExpression(
+            factory.createThis(),
+            factory.createIdentifier("address")
+          ),
+          factory.createToken(SyntaxKind.EqualsToken),
+          factory.createIdentifier("address")
+        ))
+      ].concat(ci.getters.map(x => get_addr_assignement(x.name))),
+      true
+    )
+  )
+}
+
+const get_constructor = () => {
+  return factory.createConstructorDeclaration(
+    undefined,
+    undefined,
+    [factory.createParameterDeclaration(
+      undefined,
+      undefined,
+      undefined,
+      factory.createIdentifier("address"),
+      undefined,
+      factory.createUnionTypeNode([
+        factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+        factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+      ]),
+      factory.createIdentifier("undefined")
+    )],
+    factory.createBlock(
+      [factory.createExpressionStatement(factory.createBinaryExpression(
+        factory.createPropertyAccessExpression(
+          factory.createThis(),
+          factory.createIdentifier("address")
+        ),
+        factory.createToken(ts.SyntaxKind.EqualsToken),
+        factory.createIdentifier("address")
+      ))],
+      true
+    )
+  )
+}
+
 const get_contract_class_node = (ci : ContractInterface, settings : BindingSettings) => {
   return factory.createClassDeclaration(
     undefined,
@@ -1044,6 +1203,7 @@ const get_contract_class_node = (ci : ContractInterface, settings : BindingSetti
     undefined,
     [
       ...([get_addr_decl("address")]),
+      ...([get_constructor()]),
       ...(ci.getters.map(x => get_addr_decl(x.name + "_callback_address"))),
       ...([
         factory.createMethodDeclaration(
@@ -1159,76 +1319,7 @@ const get_contract_class_node = (ci : ContractInterface, settings : BindingSetti
             true
           )
         ),
-        factory.createMethodDeclaration(
-          undefined,
-          [factory.createModifier(SyntaxKind.AsyncKeyword)],
-          undefined,
-          factory.createIdentifier("deploy"),
-          undefined,
-          undefined,
-          ci.parameters.map(x => contractParameterToParamDecl(x)).concat([
-            factory.createParameterDeclaration(
-              undefined,
-              undefined,
-              undefined,
-              factory.createIdentifier("params"),
-              undefined,
-              factory.createTypeReferenceNode(
-                factory.createIdentifier("Partial"),
-                [factory.createTypeReferenceNode(
-                  factory.createQualifiedName(
-                    factory.createIdentifier("ex"),
-                    factory.createIdentifier("Parameters")
-                  ),
-                  undefined
-                )]
-              ),
-              undefined
-            )
-          ]),
-          undefined,
-          factory.createBlock(
-            [
-              factory.createVariableStatement(
-                undefined,
-                factory.createVariableDeclarationList(
-                  [factory.createVariableDeclaration(
-                    factory.createIdentifier("address"),
-                    undefined,
-                    undefined,
-                    factory.createAwaitExpression(factory.createCallExpression(
-                      factory.createPropertyAccessExpression(
-                        factory.createIdentifier("ex"),
-                        factory.createIdentifier("deploy")
-                      ),
-                      undefined,
-                      [
-                        factory.createStringLiteral(settings.path + ci.name + ".arl"),
-                        factory.createObjectLiteralExpression(ci.parameters.map(x =>
-                          factory.createPropertyAssignment(
-                            factory.createIdentifier(x.name),
-                            function_param_to_mich({ name : x.name, type : x.type })
-                          )
-                        ), true),
-                        factory.createIdentifier("params")
-                      ]
-                    ))
-                  )],
-                  NodeFlags.Const | NodeFlags.AwaitContext | NodeFlags.ContextFlags | NodeFlags.TypeExcludesFlags
-                )
-              ),
-              factory.createExpressionStatement(factory.createBinaryExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createThis(),
-                  factory.createIdentifier("address")
-                ),
-                factory.createToken(SyntaxKind.EqualsToken),
-                factory.createIdentifier("address")
-              ))
-            ].concat(ci.getters.map(x => get_addr_assignement(x.name))),
-            true
-          )
-        )
+        get_deploy(ci, settings)
       ]
     ),
     ...(ci.entrypoints.map(entryToMethod)),
@@ -1804,7 +1895,7 @@ const get_nodes = (contract_interface : ContractInterface, settings : BindingSet
   return [
     ...(get_imports()),
     // storage
-    ...(settings.language == Language.Michelson ? generate_storage_utils() : []),
+    ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
     // enums
     ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
     ...(contract_interface.types.enums.map(mich_to_enum_decl)),
@@ -1859,5 +1950,5 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   return result
 }
 
-import ci from "../examples/michelson.json"
-console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))
+//import ci from "../examples/michelson.json"
+//console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))
