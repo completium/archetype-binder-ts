@@ -2,8 +2,8 @@ import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest
 import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 import * as ts from "typescript";
 
-import { generate_binding } from '../src/main'
-import { BindingSettings, ContractInterface, Language, Target } from '../src/utils'
+import { BindingSettings, Language, Target, generate_binding } from '../src/main'
+import { ContractInterface } from '../src/utils'
 
 const archetype = require('@completium/archetype');
 const assert = require('assert')
