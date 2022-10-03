@@ -3,7 +3,7 @@ import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/
 import * as ts from "typescript";
 
 import { generate_binding } from '../src/main'
-import { ContractInterface } from '../src/utils'
+import { BindingSettings, ContractInterface, Language, Target } from '../src/utils'
 
 const archetype = require('@completium/archetype');
 const assert = require('assert')
@@ -32,7 +32,11 @@ const get_binding = async (filename: string) => {
     contract_interface: true
   });
   let ci: ContractInterface = JSON.parse(json.replaceAll("keyHash", "key_hash"));
-  const output = generate_binding(ci, path_contracts);
+  const settings : BindingSettings = {
+    language: Language.Archetype,
+    target: Target.Experiment
+  }
+  const output = generate_binding(ci, settings, path_contracts);
   let result = ts.transpile(output);
   const res: any = eval(result);
   return res

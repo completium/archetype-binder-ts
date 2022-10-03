@@ -111,6 +111,22 @@ export type ContractInterface = {
   "errors": Array<Error>
 }
 
+
+export enum Target {
+  Experiment,
+  Dapp
+}
+
+export enum Language {
+  Archetype,
+  Michelson
+}
+
+export type BindingSettings = {
+  "target": Target
+  "language": Language
+}
+
 /* Archetype type to Michelson type ---------------------------------------- */
 
 export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType => {
