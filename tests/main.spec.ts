@@ -34,9 +34,10 @@ const get_binding = async (filename: string) => {
   let ci: ContractInterface = JSON.parse(json.replaceAll("keyHash", "key_hash"));
   const settings : BindingSettings = {
     language: Language.Archetype,
-    target: Target.Experiment
+    target: Target.Experiment,
+    path : path_contract
   }
-  const output = generate_binding(ci, settings, path_contracts);
+  const output = generate_binding(ci, settings);
   let result = ts.transpile(output);
   const res: any = eval(result);
   return res

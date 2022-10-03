@@ -123,9 +123,9 @@ export enum Language {
 }
 
 export type BindingSettings = {
-  "target": Target
-  "language": Language
-  "path": string
+  target   : Target
+  language : Language
+  path     : string
 }
 
 /* Archetype type to Michelson type ---------------------------------------- */
