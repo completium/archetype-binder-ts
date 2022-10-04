@@ -844,6 +844,43 @@ const make_enum_return_body = (elt : ts.Expression, e : Enum, ci : ContractInter
   )
 }
 
+const get_element_access = (elt : ts.Expression, idx : number) => {
+  return factory.createElementAccessExpression(
+    elt,
+    factory.createElementAccessExpression(
+      factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("Object"),
+          factory.createIdentifier("keys")
+        ),
+        undefined,
+        [elt]
+      ),
+      factory.createNumericLiteral("" + idx)
+    )
+  )
+}
+
+const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInterface, start_idx : number = 0) : [ts.Expression[], number] => {
+  const [array, idx] = t.args.reduce((acc, a) => {
+    const [acc_array, acc_idx ] = acc
+    switch (a.node) {
+      case "tuple" :
+        const [ tuple_array, tuple_idx ] = get_tuple_body(elt, a, ci, acc_idx)
+        return [
+          [ ...acc_array, factory.createArrayLiteralExpression(tuple_array) ],
+          acc_idx + tuple_idx
+        ]
+      default :
+        return [
+          [ ...acc_array, get_lambda_form(get_return_body(factory.createIdentifier("x"), a, ci), get_element_access(elt, acc_idx)) ],
+          acc_idx + 1
+        ]
+    }
+  }, [<ts.Expression[]>[], start_idx])
+  return [array, idx]
+}
+
 export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
   switch (atype.node) {
     case "enum"     : {
@@ -1108,28 +1145,8 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
       ]
     }
     case "tuple" : {
-      return [ factory.createReturnStatement(factory.createArrayLiteralExpression(
-        atype.args.map((t,i) => {
-          return get_lambda_form(
-            get_return_body(factory.createIdentifier("x"), t, ci),
-            factory.createElementAccessExpression(
-              elt,
-              factory.createElementAccessExpression(
-                factory.createCallExpression(
-                  factory.createPropertyAccessExpression(
-                    factory.createIdentifier("Object"),
-                    factory.createIdentifier("keys")
-                  ),
-                  undefined,
-                  [factory.createIdentifier("x")]
-                ),
-                factory.createNumericLiteral("" + i)
-              )
-            )
-          )
-        }),
-        false
-      ))]
+      const [ array, _ ] = get_tuple_body(elt, atype, ci)
+      return [factory.createReturnStatement(factory.createArrayLiteralExpression(array))]
     }
     case "record" : {
       const name = atype.name
