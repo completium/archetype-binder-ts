@@ -352,6 +352,13 @@ describe('Composite type', async () => {
     const res = await test_type_simple('(((nat * string) * bytes) * bool)', '(((0, ""), 0x), false)', v, 'tuple_nat_string_bytes_bool_rev');
     assert(res[0][0][0].equals(v[0][0][0]) && res[0][0][1] == v[0][0][1] && res[0][1].equals(v[0][1]) && res[1] == v[1], "Invalid Value")
   })
+
+  it('nat * (string * bytes) * bool', async () => {
+    const item = true;
+    const v: [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
+    const res = await test_type_simple('(nat * (string * bytes) * bool)', '(0, ("", 0x), false)', v, 'tuple_nat_string_bytes_bool_custom');
+    assert(res[0].equals(v[0]) && res[1][0] == v[1][0] && res[1][1].equals(v[1][1]) && res[2] == v[2], "Invalid Value")
+  })
 })
 
 describe('Abstract type', async () => {
