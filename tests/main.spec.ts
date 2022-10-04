@@ -35,7 +35,7 @@ const get_binding = async (filename: string) => {
   const settings : BindingSettings = {
     language: Language.Archetype,
     target: Target.Experiment,
-    path : path_contract
+    path : path_contracts
   }
   const output = generate_binding(ci, settings);
   let result = ts.transpile(output);
