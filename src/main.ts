@@ -1813,5 +1813,5 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   return result
 }
 
- //import ci from "../examples/tuple_rev.json"
+ //import ci from "../examples/tuple.custom.json"
  //console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Archetype, path : "./contracts/" }))

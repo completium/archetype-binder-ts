@@ -869,7 +869,7 @@ const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInt
         const [ tuple_array, tuple_idx ] = get_tuple_body(elt, a, ci, acc_idx)
         return [
           [ ...acc_array, factory.createArrayLiteralExpression(tuple_array) ],
-          acc_idx + tuple_idx
+          tuple_idx
         ]
       default :
         return [
