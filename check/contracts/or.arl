@@ -1,0 +1,7 @@
+archetype %or
+
+variable res : or<nat, string> = right<nat>("")
+
+entry set_value(i : or<nat, string>) {
+  res := i
+}

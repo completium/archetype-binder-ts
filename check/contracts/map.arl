@@ -1,0 +1,7 @@
+archetype %map
+
+variable res : map<nat, string> = []
+
+entry set_value(i : map<nat, string>) {
+  res := i
+}

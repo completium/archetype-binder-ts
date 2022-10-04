@@ -1,0 +1,11 @@
+archetype record_1
+
+record r1 {
+  n : nat
+}
+
+variable res : r1 = {0}
+
+entry set_value(i : r1) {
+  res := i
+}

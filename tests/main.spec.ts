@@ -262,8 +262,8 @@ describe('Composite type', async () => {
 
   // map
   it('map<nat, string>', async () => {
-    const item = [new Nat(0), "mystr"];
-    const v = [item];
+    const item : [ Nat, string ] = [new Nat(0), "mystr"];
+    const v : Array<[ Nat, string ]> = [item];
     const res = await test_type_simple('map<nat, string>', '[]', v, 'map_nat_string');
     assert(res.length == 1 && res[0][0].equals(item[0]) && res[0][1] == item[1], "Invalid Value")
   });
@@ -319,45 +319,56 @@ describe('Composite type', async () => {
   // ticket
   // tuple
   it('nat * string', async () => {
-    const item = true;
     const v: [Nat, string] = [new Nat(2), "mystring"];
     const res = await test_type_simple('(nat * string)', '(0, "")', v, 'tuple_nat_string');
     assert(res[0].equals(v[0]) && res[1] == v[1], "Invalid Value")
   })
 
   it('nat * string * bytes', async () => {
-    const item = true;
     const v: [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
     const res = await test_type_simple('(nat * string * bytes)', '(0, "", 0x)', v, 'tuple_nat_string_bytes');
     assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]), "Invalid Value")
   })
 
   it('nat * string * bytes * bool', async () => {
-    const item = true;
     const v: [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
     const res = await test_type_simple('(nat * string * bytes * bool)', '(0, "", 0x, false)', v, 'tuple_nat_string_bytes_bool');
     assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]) && res[3] == v[3], "Invalid Value")
   })
 
   it('(nat * string) * bytes', async () => {
-    const item = true;
     const v: [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
     const res = await test_type_simple('((nat * string) * bytes)', '((0, ""), 0x)', v, 'tuple_nat_string_bytes_rev');
     assert(res[0][0].equals(v[0][0]) && res[0][1] == v[0][1] && res[1].equals(v[1]), "Invalid Value")
   })
 
   it('((nat * string) * bytes) * bool', async () => {
-    const item = true;
     const v: [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
     const res = await test_type_simple('(((nat * string) * bytes) * bool)', '(((0, ""), 0x), false)', v, 'tuple_nat_string_bytes_bool_rev');
     assert(res[0][0][0].equals(v[0][0][0]) && res[0][0][1] == v[0][0][1] && res[0][1].equals(v[0][1]) && res[1] == v[1], "Invalid Value")
   })
 
   it('nat * (string * bytes) * bool', async () => {
-    const item = true;
     const v: [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
     const res = await test_type_simple('(nat * (string * bytes) * bool)', '(0, ("", 0x), false)', v, 'tuple_nat_string_bytes_bool_custom');
     assert(res[0].equals(v[0]) && res[1][0] == v[1][0] && res[1][1].equals(v[1][1]) && res[2] == v[2], "Invalid Value")
+  })
+})
+
+describe('Record', async () => {
+  it('record 2', async () => {
+    const contract_path = `./record_2.arl`;
+
+    const binding: any = await get_binding(contract_path);
+    await binding.deploy({ as: alice })
+
+    // const v = new binding['r2'](new Nat(2), "mystr");
+    // await binding.set_value(v, { as: alice });
+    const res = await binding.get_res();
+
+    console.log(res)
+
+    // assert(v.equals(res), "Invalid Value")
   })
 })
 
