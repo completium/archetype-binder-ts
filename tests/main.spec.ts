@@ -1,4 +1,4 @@
-import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
+import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
 import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 import * as ts from "typescript";
 
@@ -32,10 +32,10 @@ const get_binding = async (filename: string) => {
     contract_interface: true
   });
   let ci: ContractInterface = JSON.parse(json.replaceAll("keyHash", "key_hash"));
-  const settings : BindingSettings = {
+  const settings: BindingSettings = {
     language: Language.Archetype,
     target: Target.Experiment,
-    path : path_contracts
+    path: path_contracts
   }
   const output = generate_binding(ci, settings);
   let result = ts.transpile(output);
@@ -261,8 +261,39 @@ describe('Composite type', async () => {
   });
 
   // map
+  it('map<nat, string>', async () => {
+    const item = [new Nat(0), "mystr"];
+    const v = [item];
+    const res = await test_type_simple('map<nat, string>', '[]', v, 'map_nat_string');
+    assert(res.length == 1 && res[0][0].equals(item[0]) && res[0][1] == item[1], "Invalid Value")
+  });
+
   // option
+  it('option<nat>', async () => {
+    const v = Option.Some(new Nat(2));
+    const res = await test_type_simple('option<nat>', 'none', v, 'option_nat');
+    assert(res.equals(v), "Invalid Value")
+  });
+
+  it('option<string>', async () => {
+    const v = Option.Some("mystr");
+    const res = await test_type_simple('option<string>', 'none', v, 'option_string');
+    assert(res.equals(v), "Invalid Value")
+  });
+
+  it('option<bool>', async () => {
+    const v = Option.Some(true);
+    const res = await test_type_simple('option<bool>', 'none', v, 'option_bool');
+    assert(res.equals(v), "Invalid Value")
+  })
+
   // or
+  it('or<nat, string>', async () => {
+    const v = Or.Left(new Nat(2));
+    const res = await test_type_simple('or<nat, string>', 'right<nat>("")', v, 'or_nat_string');
+    assert(res.equals(v), "Invalid Value")
+  });
+
   // set
   it('set<nat>', async () => {
     const item = new Nat(2);
@@ -283,9 +314,43 @@ describe('Composite type', async () => {
     const v = [item];
     const res = await test_type_simple('set<bool>', '[]', v, 'set_bool');
     assert(res.length == 1 && res[0] == item, "Invalid Value")
+  })
 
-    // ticket
-    // tuple
+  // ticket
+  // tuple
+  it('nat * string', async () => {
+    const item = true;
+    const v: [Nat, string] = [new Nat(2), "mystring"];
+    const res = await test_type_simple('(nat * string)', '(0, "")', v, 'tuple_nat_string');
+    assert(res[0].equals(v[0]) && res[1] == v[1], "Invalid Value")
+  })
+
+  it('nat * string * bytes', async () => {
+    const item = true;
+    const v: [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
+    const res = await test_type_simple('(nat * string * bytes)', '(0, "", 0x)', v, 'tuple_nat_string_bytes');
+    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]), "Invalid Value")
+  })
+
+  it('nat * string * bytes * bool', async () => {
+    const item = true;
+    const v: [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
+    const res = await test_type_simple('(nat * string * bytes * bool)', '(0, "", 0x, false)', v, 'tuple_nat_string_bytes_bool');
+    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]) && res[3] == v[3], "Invalid Value")
+  })
+
+  it('(nat * string) * bytes', async () => {
+    const item = true;
+    const v: [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
+    const res = await test_type_simple('((nat * string) * bytes)', '((0, ""), 0x)', v, 'tuple_nat_string_bytes_rev');
+    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]), "Invalid Value")
+  })
+
+  it('((nat * string) * bytes) * bool', async () => {
+    const item = true;
+    const v: [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
+    const res = await test_type_simple('(((nat * string) * bytes) * bool)', '(((0, ""), 0x), false)', v, 'tuple_nat_string_bytes_bool_rev');
+    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]) && res[3] == v[3], "Invalid Value")
   })
 })
 
