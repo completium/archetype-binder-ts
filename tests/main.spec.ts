@@ -341,16 +341,16 @@ describe('Composite type', async () => {
 
   it('(nat * string) * bytes', async () => {
     const item = true;
-    const v: [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
+    const v: [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
     const res = await test_type_simple('((nat * string) * bytes)', '((0, ""), 0x)', v, 'tuple_nat_string_bytes_rev');
-    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]), "Invalid Value")
+    assert(res[0][0].equals(v[0][0]) && res[0][1] == v[0][1] && res[1].equals(v[1]), "Invalid Value")
   })
 
   it('((nat * string) * bytes) * bool', async () => {
     const item = true;
-    const v: [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
+    const v: [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
     const res = await test_type_simple('(((nat * string) * bytes) * bool)', '(((0, ""), 0x), false)', v, 'tuple_nat_string_bytes_bool_rev');
-    assert(res[0].equals(v[0]) && res[1] == v[1] && res[2].equals(v[2]) && res[3] == v[3], "Invalid Value")
+    assert(res[0][0][0].equals(v[0][0][0]) && res[0][0][1] == v[0][0][1] && res[0][1].equals(v[0][1]) && res[1] == v[1], "Invalid Value")
   })
 })
 
