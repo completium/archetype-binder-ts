@@ -1813,5 +1813,5 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   return result
 }
 
-//import ci from "../examples/contract_eq.json"
-//console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))
+// import ci from "../examples/contract_p.json"
+// console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Michelson, path : "./contracts/" }))

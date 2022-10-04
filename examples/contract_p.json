@@ -1,0 +1,353 @@
+{
+  "name": "e",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "s",
+      "type": {
+        "node": "tuple",
+        "name": "%s",
+        "args": [
+          {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "nat",
+                    "name": "%a",
+                    "args": []
+                  },
+                  {
+                    "node": "string",
+                    "name": "%b",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "node": "bytes",
+                "name": "%c",
+                "args": []
+              }
+            ]
+          },
+          {
+            "node": "bool",
+            "name": "%d",
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    },
+    {
+      "name": "n",
+      "type": {
+        "node": "nat",
+        "name": "%n",
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "storage_type": {
+    "value": {
+      "prim": "pair",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%a"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "string",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [
+                        "%b"
+                      ],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "bytes",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%c"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "bool",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%d"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [
+            "%s"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%n"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
+  "entrypoints": [
+    {
+      "name": "set_a",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "nat",
+            "name": "%set_a",
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_s",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "tuple",
+            "name": "%set_s",
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "nat",
+                        "name": "%a",
+                        "args": []
+                      },
+                      {
+                        "node": "string",
+                        "name": "%b",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "node": "bytes",
+                    "name": "%c",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "node": "bool",
+                "name": "%d",
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_b",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "string",
+            "name": "%set_b",
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_c",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "bytes",
+            "name": "%set_c",
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_d",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "bool",
+            "name": "%set_d",
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_n",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "nat",
+            "name": "%set_n",
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [
+    {
+      "name": "v_a",
+      "args": [],
+      "return": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
+      }
+    },
+    {
+      "name": "v_b",
+      "args": [
+        {
+          "name": "_",
+          "type": {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "string",
+        "name": null,
+        "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
+      }
+    }
+  ],
+  "errors": []
+}
