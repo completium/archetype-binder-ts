@@ -1,7 +1,7 @@
 import ts, { factory, KeywordTypeNode, SyntaxKind } from "typescript";
 
 export type ArchetypeType = {
-  "node": string
+  "node": "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "unit"
   "name": string | null
   "args": Array<ArchetypeType>
 }
@@ -118,7 +118,7 @@ export type ContractInterface = {
 /* Archetype type to Michelson type ---------------------------------------- */
 
 export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType => {
-  switch (at.node) {
+  switch (at.node) { // oui
     /* TODO record asset tuple enum option or ... */
     default : return {
       prim: at.node,
@@ -134,37 +134,131 @@ export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType 
 
 /* Archetype type to Typescript type --------------------------------------- */
 
+const throw_error_not_handled = (ty : string) => {
+  throw new Error(`archetype_type_to_ts_type: '${ty}' type not handled`)
+}
+
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
   switch (at.node) {
-    case "or":        return factory.createTypeReferenceNode(
+    case "address":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
-        factory.createIdentifier("Or")
+        factory.createIdentifier("Address")
       ),
-      [
+      undefined
+    );
+    case "aggregate": throw_error_not_handled(at.node)
+    case "asset_container": throw_error_not_handled(at.node)
+    case "asset_key": throw_error_not_handled(at.node)
+    case "asset_value":  return factory.createTypeReferenceNode(
+      factory.createIdentifier(at.args[0].name+"_value"),
+      undefined
+    );
+    case "asset_view": throw_error_not_handled(at.node)
+    case "asset": return factory.createTypeReferenceNode(
+      factory.createIdentifier(at.name+"_container"),
+      undefined
+    );
+    case "big_map": return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [factory.createTupleTypeNode([
         archetype_type_to_ts_type(at.args[0]),
         archetype_type_to_ts_type(at.args[1])
-      ]
-    )
-    case "enum":      return factory.createTypeReferenceNode(
-      factory.createIdentifier(at.name != null ? at.name : ""),
+      ])]
+    );
+    case "bls12_381_fr": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Bls12_381_fr")
+      ),
       undefined
-    )
-    case "date":      return factory.createTypeReferenceNode(
+    );
+    case "bls12_381_g1": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Bls12_381_g1")
+      ),
+      undefined
+    );
+    case "bls12_381_g2": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Bls12_381_g2")
+      ),
+      undefined
+    );
+    case "bool": return factory.createKeywordTypeNode(SyntaxKind.BooleanKeyword)
+    case "bytes": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Bytes")
+      ),
+      undefined
+    );
+    case "chain_id":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Chain_id")
+      ),
+      undefined
+    );
+    case "chest_key":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Chest_key")
+      ),
+      undefined
+    );
+    case "chest":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Chest")
+      ),
+      undefined
+    );
+    case "collection": throw_error_not_handled(at.node)
+    case "contract":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Entrypoint")
+      ),
+      undefined
+    );
+    case "currency": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Tez")
+      ),
+      undefined
+    );
+    case "date": return factory.createTypeReferenceNode(
       factory.createIdentifier("Date"),
       undefined
     )
-    case "duration":  return factory.createTypeReferenceNode(
+    case "duration": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
         factory.createIdentifier("Duration")
       ),
       undefined
     );
-    case "signature":  return factory.createTypeReferenceNode(
+    case "enum": return factory.createTypeReferenceNode(
+      factory.createIdentifier(at.name != null ? at.name : ""),
+      undefined
+    )
+    case "event": throw_error_not_handled(at.node)
+    case "int": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
-        factory.createIdentifier("Signature")
+        factory.createIdentifier("Int")
+      ),
+      undefined
+    );
+    case "iterable_big_map": throw_error_not_handled(at.node)
+    case "key_hash":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Key_hash")
       ),
       undefined
     );
@@ -175,56 +269,17 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "bytes":  return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Bytes")
-      ),
-      undefined
-    );
-    case "option": return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Option"),
-      ),
-      [ archetype_type_to_ts_type(at.args[0]) ]
-    );
-    case "address":  return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Address")
-      ),
-      undefined
-    );
-    case "bool":      return factory.createKeywordTypeNode(SyntaxKind.BooleanKeyword)
-    case "contract":  return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Entrypoint")
-      ),
-      undefined
-    );
-    case "string":    return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
-    case "signature": return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Signature")
-      ),
-      undefined
-    );
-    case "key": return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Key")
-      ),
-      undefined
-    );
-    case "int":       return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Int")
-      ),
-      undefined
+    case "lambda": throw_error_not_handled(at.node)
+    case "list": return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [archetype_type_to_ts_type(at.args[0])]
+    )
+    case "map": return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [factory.createTupleTypeNode([
+        archetype_type_to_ts_type(at.args[0]),
+        archetype_type_to_ts_type(at.args[1])
+      ])]
     );
     case "nat":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -233,6 +288,26 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
+    case "never": throw_error_not_handled(at.node)
+    case "operation": throw_error_not_handled(at.node)
+    case "option": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Option"),
+      ),
+      [ archetype_type_to_ts_type(at.args[0]) ]
+    );
+    case "or":        return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Or")
+      ),
+      [
+        archetype_type_to_ts_type(at.args[0]),
+        archetype_type_to_ts_type(at.args[1])
+      ]
+    )
+    case "partition": throw_error_not_handled(at.node)
     case "rational":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -240,42 +315,44 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "currency":       return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Tez")
-      ),
-      undefined
-    );
-    case "asset":     return factory.createTypeReferenceNode(
-      factory.createIdentifier(at.name+"_container"),
-      undefined
-    );
-    case "asset_value":  return factory.createTypeReferenceNode(
-      factory.createIdentifier(at.args[0].name+"_value"),
-      undefined
-    );
-    case "map": case "big_map" : return factory.createTypeReferenceNode(
-      factory.createIdentifier("Array"),
-      [factory.createTupleTypeNode([
-        archetype_type_to_ts_type(at.args[0]),
-        archetype_type_to_ts_type(at.args[1])
-      ])]
-    );
-    case "set" :
-    case "list":   return factory.createTypeReferenceNode(
-      factory.createIdentifier("Array"),
-      [archetype_type_to_ts_type(at.args[0])]
-    )
     case "record": if (at.name != null) {
       return factory.createTypeReferenceNode(
         factory.createIdentifier(at.name),
         undefined)
     };
+    case "sapling_state": throw_error_not_handled(at.node)
+    case "sapling_transaction":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Sapling_transaction")
+      ),
+      undefined
+    );
+    case "set" :   return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [archetype_type_to_ts_type(at.args[0])]
+    )
+    case "signature":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Signature")
+      ),
+      undefined
+    );
+    case "state": throw_error_not_handled(at.node)
+    case "string": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
+    case "ticket": throw_error_not_handled(at.node)
+    case "timestamp": throw_error_not_handled(at.node)
     case "tuple": return factory.createTupleTypeNode(
       at.args.map(t => archetype_type_to_ts_type(t))
     );
-    default:       return factory.createKeywordTypeNode(SyntaxKind.StringKeyword)
+    case "unit":  return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Unit")
+      ),
+      undefined
+    );
   }
 }
 
@@ -360,7 +437,7 @@ const make_tuple_cmp_body = (a : ts.Expression, b : ts.Expression, types: Array<
 }
 
 export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: ArchetypeType) => {
-  switch (atype.node) {
+  switch (atype.node) {// oui
     case "date": return  factory.createBinaryExpression(
       factory.createParenthesizedExpression(rm_milliseconds_from(a)),
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
@@ -398,6 +475,7 @@ export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: Arche
     case "duration"  :
     case "signature" :
     case "key"       :
+    case "bls12_381_fr":
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
           a,
@@ -654,18 +732,19 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
 
 export const archetype_type_to_mich_to_name = (atype : ArchetypeType) : string => {
   switch (atype.node) {
-    case "date"     : return "mich_to_date"
-    case "nat"      : return "mich_to_nat"
-    case "int"      : return "mich_to_int"
-    case "currency" : return "mich_to_tez"
-    case "duration" : return "mich_to_duration"
-    case "bool"     : return "mich_to_bool"
-    case "string"   : return "mich_to_string"
-    case "rational" : return "mich_to_rational"
-    case "address"  : return "mich_to_address"
-    case "bytes"    : return "mich_to_bytes"
-    case "signature": return "mich_to_signature"
-    case "key"      : return "mich_to_key"
+    case "date"         : return "mich_to_date"
+    case "nat"          : return "mich_to_nat"
+    case "int"          : return "mich_to_int"
+    case "currency"     : return "mich_to_tez"
+    case "duration"     : return "mich_to_duration"
+    case "bool"         : return "mich_to_bool"
+    case "string"       : return "mich_to_string"
+    case "rational"     : return "mich_to_rational"
+    case "address"      : return "mich_to_address"
+    case "bytes"        : return "mich_to_bytes"
+    case "signature"    : return "mich_to_signature"
+    case "key"          : return "mich_to_key"
+    case "bls12_381_fr" : return "mich_to_bls12_381_fr"
     default: throw new Error("archetype_type_to_mich_to_name: unknown type '" + atype.node + "'")
   }
 }
@@ -882,7 +961,7 @@ const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInt
 }
 
 export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
-  switch (atype.node) {
+  switch (atype.node) { // oui (taquito_to_ts)
     case "enum"     : {
       const e = get_enum(atype.name, ci)
       if (e != null) {
@@ -890,24 +969,25 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
       }
       throw new Error("enum not found: " + atype.name)
     }
-    case "bool"     :
-    case "string"   : return [factory.createReturnStatement(elt)]
-    case "int"      :
-    case "nat"      :
-    case "bytes"    :
-    case "address"  :
-    case "signature":
-    case "key"      :
-    case "bls12_381_fr":
-    case "bls12_381_g1":
-    case "bls12_381_g2":
-    case "chain_id"    :
-    case "chest"       :
-    case "chest_key"   :
-    case "key_hash"    :
-    case "sapling_transaction":
-    case "unit"        :
-    case "duration" : return [factory.createReturnStatement(factory.createNewExpression(
+    case "bool"                :
+    case "string"              : return [factory.createReturnStatement(elt)]
+    case "int"                 :
+    case "nat"                 :
+    case "bytes"               :
+    case "address"             :
+    case "signature"           :
+    case "key"                 :
+    case "bls12_381_fr"        :
+    case "bls12_381_g1"        :
+    case "bls12_381_g2"        :
+    case "chain_id"            :
+    case "chest"               :
+    case "chest_key"           :
+    case "key_hash"            :
+    case "sapling_transaction" :
+    case "unit"                :
+    case "duration"            :
+       return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
@@ -1332,7 +1412,7 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 }
 
 export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
-  switch (fp.type.node) {
+  switch (fp.type.node) { // oui
     case "unit"        : return unit_to_mich()
     case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
     case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))

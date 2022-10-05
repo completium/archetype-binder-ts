@@ -1044,7 +1044,7 @@ const get_addr_assignement = (name : string) => {
   ))
 }
 
-const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface) => {
+const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface) : ArchetypeType => {
   const assetType = ci.types.assets.find(x => x.name == a.name)
   if (assetType != undefined) {
     const fields = assetType.fields.filter(x => x.is_key)
