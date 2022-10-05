@@ -117,28 +117,78 @@ export type ContractInterface = {
 
 /* Archetype type to Michelson type ---------------------------------------- */
 
+
 export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType => {
-  switch (at.node) { // oui
+  const generate_mich = (prim : string) => {
+    return {
+        prim: prim,
+        int: null,
+        bytes: null,
+        string: null,
+        args: [],
+        annots: [],
+        array: [],
+      }
+  }
+  switch (at.node) {
     /* TODO record asset tuple enum option or ... */
-    default : return {
-      prim: at.node,
-      int: null,
-      bytes: null,
-      string: null,
-      args: [],
-      annots: [],
-      array: [],
-    }
+    case "address": return generate_mich(at.node)
+    case "aggregate": return generate_mich(at.node)
+    case "asset_container": return generate_mich(at.node)
+    case "asset_key": return generate_mich(at.node)
+    case "asset_value": return generate_mich(at.node)
+    case "asset_view": return generate_mich(at.node)
+    case "asset": return generate_mich(at.node)
+    case "big_map": return generate_mich(at.node)
+    case "bls12_381_fr": return generate_mich(at.node)
+    case "bls12_381_g1": return generate_mich(at.node)
+    case "bls12_381_g2": return generate_mich(at.node)
+    case "bool": return generate_mich(at.node)
+    case "bytes": return generate_mich(at.node)
+    case "chain_id": return generate_mich(at.node)
+    case "chest_key": return generate_mich(at.node)
+    case "chest": return generate_mich(at.node)
+    case "collection": return generate_mich(at.node)
+    case "contract": return generate_mich(at.node)
+    case "currency": return generate_mich(at.node)
+    case "date": return generate_mich(at.node)
+    case "duration": return generate_mich(at.node)
+    case "enum": return generate_mich(at.node)
+    case "event": return generate_mich(at.node)
+    case "int": return generate_mich(at.node)
+    case "iterable_big_map": return generate_mich(at.node)
+    case "key_hash": return generate_mich(at.node)
+    case "key": return generate_mich(at.node)
+    case "lambda": return generate_mich(at.node)
+    case "list": return generate_mich(at.node)
+    case "map": return generate_mich(at.node)
+    case "nat": return generate_mich(at.node)
+    case "never": return generate_mich(at.node)
+    case "operation": return generate_mich(at.node)
+    case "option": return generate_mich(at.node)
+    case "or": return generate_mich(at.node)
+    case "partition": return generate_mich(at.node)
+    case "rational": return generate_mich(at.node)
+    case "record": return generate_mich(at.node)
+    case "sapling_state": return generate_mich(at.node)
+    case "sapling_transaction": return generate_mich(at.node)
+    case "set": return generate_mich(at.node)
+    case "signature": return generate_mich(at.node)
+    case "state": return generate_mich(at.node)
+    case "string": return generate_mich(at.node)
+    case "ticket": return generate_mich(at.node)
+    case "timestamp": return generate_mich(at.node)
+    case "tuple": return generate_mich(at.node)
+    case "unit": return generate_mich(at.node)
   }
 }
 
 /* Archetype type to Typescript type --------------------------------------- */
 
-const throw_error_not_handled = (ty : string) => {
-  throw new Error(`archetype_type_to_ts_type: '${ty}' type not handled`)
-}
-
 export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<any>  => {
+  const throw_error = (ty : string) => {
+    throw new Error(`archetype_type_to_ts_type: '${ty}' type not handled`)
+  }
   switch (at.node) {
     case "address":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -147,14 +197,14 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "aggregate": throw_error_not_handled(at.node)
-    case "asset_container": throw_error_not_handled(at.node)
-    case "asset_key": throw_error_not_handled(at.node)
+    case "aggregate": throw_error(at.node)
+    case "asset_container": throw_error(at.node)
+    case "asset_key": throw_error(at.node)
     case "asset_value":  return factory.createTypeReferenceNode(
       factory.createIdentifier(at.args[0].name+"_value"),
       undefined
     );
-    case "asset_view": throw_error_not_handled(at.node)
+    case "asset_view": throw_error(at.node)
     case "asset": return factory.createTypeReferenceNode(
       factory.createIdentifier(at.name+"_container"),
       undefined
@@ -216,7 +266,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "collection": throw_error_not_handled(at.node)
+    case "collection": throw_error(at.node)
     case "contract":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -246,7 +296,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       factory.createIdentifier(at.name != null ? at.name : ""),
       undefined
     )
-    case "event": throw_error_not_handled(at.node)
+    case "event": throw_error(at.node)
     case "int": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -254,7 +304,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "iterable_big_map": throw_error_not_handled(at.node)
+    case "iterable_big_map": throw_error(at.node)
     case "key_hash":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -269,7 +319,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "lambda": throw_error_not_handled(at.node)
+    case "lambda": throw_error(at.node)
     case "list": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [archetype_type_to_ts_type(at.args[0])]
@@ -288,8 +338,8 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "never": throw_error_not_handled(at.node)
-    case "operation": throw_error_not_handled(at.node)
+    case "never": throw_error(at.node)
+    case "operation": throw_error(at.node)
     case "option": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -307,7 +357,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
         archetype_type_to_ts_type(at.args[1])
       ]
     )
-    case "partition": throw_error_not_handled(at.node)
+    case "partition": throw_error(at.node)
     case "rational":       return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -320,7 +370,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
         factory.createIdentifier(at.name),
         undefined)
     };
-    case "sapling_state": throw_error_not_handled(at.node)
+    case "sapling_state": throw_error(at.node)
     case "sapling_transaction":  return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -339,10 +389,10 @@ export const archetype_type_to_ts_type = (at: ArchetypeType) : KeywordTypeNode<a
       ),
       undefined
     );
-    case "state": throw_error_not_handled(at.node)
+    case "state": throw_error(at.node)
     case "string": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
-    case "ticket": throw_error_not_handled(at.node)
-    case "timestamp": throw_error_not_handled(at.node)
+    case "ticket": throw_error(at.node)
+    case "timestamp": throw_error(at.node)
     case "tuple": return factory.createTupleTypeNode(
       at.args.map(t => archetype_type_to_ts_type(t))
     );
@@ -437,60 +487,93 @@ const make_tuple_cmp_body = (a : ts.Expression, b : ts.Expression, types: Array<
 }
 
 export const make_cmp_body = (a : ts.Expression, b : ts.Expression, atype: ArchetypeType) => {
-  switch (atype.node) {// oui
-    case "date": return  factory.createBinaryExpression(
+  const make_cmp_equals = (a : ts.Expression, b : ts.Expression) => {
+    return factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              a,
+              factory.createIdentifier("equals")
+            ),
+            undefined,
+            [b]
+          )
+  }
+  const make_cmp_equals_default = (a : ts.Expression, b : ts.Expression) => {
+    return factory.createBinaryExpression(a, factory.createToken(ts.SyntaxKind.EqualsEqualsToken), b)
+  }
+  const make_cmp_equals_container = (a : ts.Expression, b : ts.Expression) => {
+    return factory.createBinaryExpression(
+        factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("JSON"),
+            factory.createIdentifier("stringify")
+          ),
+          undefined,
+          [a]
+        ),
+        factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+        factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("JSON"),
+            factory.createIdentifier("stringify")
+          ),
+          undefined,
+          [b]
+        )
+      )
+  }
+  switch (atype.node) {
+    case "address": return make_cmp_equals(a, b);
+    case "aggregate": return make_cmp_equals_default(a, b);
+    case "asset_container": return make_cmp_equals_default(a, b);
+    case "asset_key": return make_cmp_equals_default(a, b);
+    case "asset_value": return make_cmp_equals_default(a, b);
+    case "asset_view": return make_cmp_equals_default(a, b);
+    case "asset": return make_cmp_equals_container(a, b);
+    case "big_map": return make_cmp_equals_default(a, b);
+    case "bls12_381_fr": return make_cmp_equals(a, b);
+    case "bls12_381_g1": return make_cmp_equals(a, b);
+    case "bls12_381_g2": return make_cmp_equals(a, b);
+    case "bool": return make_cmp_equals_default(a, b);
+    case "bytes": return make_cmp_equals(a, b);
+    case "chain_id": return make_cmp_equals(a, b);
+    case "chest_key": return make_cmp_equals(a, b);
+    case "chest": return make_cmp_equals(a, b);
+    case "collection": return make_cmp_equals_default(a, b);
+    case "contract": return make_cmp_equals(a, b);
+    case "currency": return make_cmp_equals(a, b);
+    case "date": return factory.createBinaryExpression(
       factory.createParenthesizedExpression(rm_milliseconds_from(a)),
       factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
       factory.createParenthesizedExpression(rm_milliseconds_from(b))
     );
-    case "set"   :
-    case "list"  :
-    case "map"   :
-    case "asset" :return factory.createBinaryExpression(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("JSON"),
-          factory.createIdentifier("stringify")
-        ),
-        undefined,
-        [a]
-      ),
-      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("JSON"),
-          factory.createIdentifier("stringify")
-        ),
-        undefined,
-        [b]
-      )
-    )
-    case "int"       :
-    case "nat"       :
-    case "rational"  :
-    case "bytes"     :
-    case "address"   :
-    case "option"    :
-    case "currency"  :
-    case "duration"  :
-    case "signature" :
-    case "key"       :
-    case "bls12_381_fr":
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          a,
-          factory.createIdentifier("equals")
-        ),
-        undefined,
-        [b]
-      )
-    case "tuple"    :
-      return make_tuple_cmp_body(a, b, atype.args)
-    default: return factory.createBinaryExpression(
-      a,
-      factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-      b
-    )
+    case "duration": return make_cmp_equals(a, b);
+    case "enum": return make_cmp_equals_default(a, b);
+    case "event": return make_cmp_equals_default(a, b);
+    case "int": return make_cmp_equals(a, b);
+    case "iterable_big_map": return make_cmp_equals_default(a, b);
+    case "key_hash": return make_cmp_equals(a, b);
+    case "key": return make_cmp_equals(a, b);
+    case "lambda": return make_cmp_equals_default(a, b);
+    case "list": return make_cmp_equals_container(a, b);
+    case "map": return make_cmp_equals_container(a, b);
+    case "nat": return make_cmp_equals(a, b);
+    case "never": return make_cmp_equals_default(a, b);
+    case "operation": return make_cmp_equals_default(a, b);
+    case "option": return make_cmp_equals(a, b);
+    case "or": return make_cmp_equals_default(a, b);
+    case "partition": return make_cmp_equals_default(a, b);
+    case "rational": return make_cmp_equals(a, b);
+    case "record": return make_cmp_equals_default(a, b);
+    case "sapling_state": return make_cmp_equals(a, b);
+    case "sapling_transaction": return make_cmp_equals(a, b);
+    case "set": return make_cmp_equals_container(a, b);
+    case "signature": return make_cmp_equals(a, b);
+    case "state": return make_cmp_equals(a, b);
+    case "string": return make_cmp_equals_default(a, b);
+    case "ticket": return make_cmp_equals(a, b);
+    case "timestamp": return make_cmp_equals_default(a, b);
+    case "tuple": return make_tuple_cmp_body(a, b, atype.args);
+    case "unit": return make_cmp_equals(a, b);
   }
 }
 
@@ -886,7 +969,7 @@ const make_enum_type_case_body = (elt : ts.Expression, c : EnumValue, ci : Contr
           archetype_type_to_ts_type(atype),
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createBlock(
-            get_return_body(factory.createIdentifier("x"), atype, ci),
+            taquito_to_ts(factory.createIdentifier("x"), atype, ci),
             false
           )
         )),
@@ -952,7 +1035,7 @@ const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInt
         ]
       default :
         return [
-          [ ...acc_array, get_lambda_form(get_return_body(factory.createIdentifier("x"), a, ci), get_element_access(elt, acc_idx)) ],
+          [ ...acc_array, get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), a, ci), get_element_access(elt, acc_idx)) ],
           acc_idx + 1
         ]
     }
@@ -960,34 +1043,9 @@ const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInt
   return [array, idx]
 }
 
-export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
-  switch (atype.node) { // oui (taquito_to_ts)
-    case "enum"     : {
-      const e = get_enum(atype.name, ci)
-      if (e != null) {
-        return [make_enum_return_body(elt, e, ci)]
-      }
-      throw new Error("enum not found: " + atype.name)
-    }
-    case "bool"                :
-    case "string"              : return [factory.createReturnStatement(elt)]
-    case "int"                 :
-    case "nat"                 :
-    case "bytes"               :
-    case "address"             :
-    case "signature"           :
-    case "key"                 :
-    case "bls12_381_fr"        :
-    case "bls12_381_g1"        :
-    case "bls12_381_g2"        :
-    case "chain_id"            :
-    case "chest"               :
-    case "chest_key"           :
-    case "key_hash"            :
-    case "sapling_transaction" :
-    case "unit"                :
-    case "duration"            :
-       return [factory.createReturnStatement(factory.createNewExpression(
+export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
+  const make_class = () => {
+    return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
@@ -995,51 +1053,8 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
       undefined,
       [ elt ]
     ))]
-    case "rational" :
-      return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Rational")
-      ),
-      undefined,
-      [
-        access_nth_field(elt, 0),
-        access_nth_field(elt, 1)
-      ]
-    ))]
-    case "currency" : return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Tez")
-      ),
-      undefined,
-      [ elt, factory.createStringLiteral("mutez") ]
-    ))]
-    case "date"    : return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createIdentifier("Date"),
-      undefined,
-      [ elt ]
-    ))]
-    case "option"  : return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Option")
-      ),
-      [ archetype_type_to_ts_type(atype.args[0]) ],
-      [factory.createConditionalExpression(
-        factory.createBinaryExpression(
-          elt,
-          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-          factory.createNull()
-        ),
-        factory.createToken(ts.SyntaxKind.QuestionToken),
-        factory.createNull(),
-        factory.createToken(ts.SyntaxKind.ColonToken),
-        get_lambda_form(get_return_body(factory.createIdentifier("x"), atype.args[0], ci), elt)
-      )]
-    ))]
-    case "set"  :
-    case "list" : {
+  }
+  const make_list = () => {
       return [
         factory.createVariableStatement(
           undefined,
@@ -1086,7 +1101,7 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
               ),
               undefined,
               [ get_lambda_form(
-                  get_return_body(factory.createIdentifier("x"), atype.args[0], ci),
+                  taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
                   factory.createElementAccessExpression(
                     elt,
                     factory.createIdentifier("i")
@@ -1100,7 +1115,19 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
         factory.createReturnStatement(factory.createIdentifier("res"))
       ];
     }
-    case "asset" : {
+
+  const throw_error = () => {
+    throw new Error("get_return_body: type '" + atype.node + "' not found")
+  }
+
+  switch (atype.node) {
+    case "address": return make_class();
+    case "aggregate": throw_error();
+    case "asset_container": throw_error();
+    case "asset_key": throw_error();
+    case "asset_value": throw_error();
+    case "asset_view": throw_error();
+    case "asset": {
       const a = get_asset_type(atype.name, ci)
       const fields_no_key = a.fields.filter(x => !x.is_key)
       const keys = a.fields.filter(x => x.is_key)
@@ -1133,7 +1160,7 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
             }
           ]
         }
-        return get_return_body(elt, map_type, augmented_ci)
+        return taquito_to_ts(elt, map_type, augmented_ci)
       } else if (fields_no_key.length == 1) {
         // create local equivalent type to map<key, value>
         const map_type : ArchetypeType = {
@@ -1144,17 +1171,56 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
             fields_no_key[0].type
           ]
         }
-        return get_return_body(elt, map_type, ci)
+        return taquito_to_ts(elt, map_type, ci)
       } else {
         const list_type : ArchetypeType = {
           node : "list",
           name : null,
           args : [ key_type ]
         }
-        return get_return_body(elt, list_type, ci)
+        return taquito_to_ts(elt, list_type, ci)
       }
-    }
-    case "map" : {
+    };
+    case "big_map": throw_error();
+    case "bls12_381_fr": return make_class();
+    case "bls12_381_g1": return make_class();
+    case "bls12_381_g2": return make_class();
+    case "bool": return [factory.createReturnStatement(elt)];
+    case "bytes": return make_class();
+    case "chain_id": return make_class();
+    case "chest_key": return make_class();
+    case "chest": return make_class();
+    case "collection": throw_error();
+    case "contract": throw_error();
+    case "currency": return [factory.createReturnStatement(factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Tez")
+      ),
+      undefined,
+      [ elt, factory.createStringLiteral("mutez") ]
+    ))];
+    case "date": return [factory.createReturnStatement(factory.createNewExpression(
+      factory.createIdentifier("Date"),
+      undefined,
+      [ elt ]
+    ))];
+    case "duration": return make_class();
+    case "enum": {
+        const e = get_enum(atype.name, ci)
+        if (e != null) {
+          return [make_enum_return_body(elt, e, ci)]
+        }
+        throw new Error("enum not found: " + atype.name)
+      };
+    case "event": throw_error();
+    case "int": return make_class();
+    case "iterable_big_map": throw_error();
+    case "key_hash": return make_class();
+    case "key": return make_class();
+    case "lambda": throw_error();
+    case "list": return make_list();
+    case "map": {
       return [
         factory.createVariableStatement(
           undefined,
@@ -1201,14 +1267,14 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
               [factory.createArrayLiteralExpression(
                 [
                   get_lambda_form(
-                    get_return_body(factory.createIdentifier("x"), atype.args[0], ci),
+                    taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("0")
                     )
                   ),
                   get_lambda_form(
-                    get_return_body(factory.createIdentifier("x"), atype.args[1], ci),
+                    taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("1")
@@ -1223,12 +1289,42 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
         ),
         factory.createReturnStatement(factory.createIdentifier("res"))
       ]
-    }
-    case "tuple" : {
-      const [ array, _ ] = get_tuple_body(elt, atype, ci)
-      return [factory.createReturnStatement(factory.createArrayLiteralExpression(array))]
-    }
-    case "record" : {
+    };
+    case "nat": return make_class();
+    case "never": throw_error();
+    case "operation": throw_error();
+    case "option": return [factory.createReturnStatement(factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Option")
+      ),
+      [ archetype_type_to_ts_type(atype.args[0]) ],
+      [factory.createConditionalExpression(
+        factory.createBinaryExpression(
+          elt,
+          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+          factory.createNull()
+        ),
+        factory.createToken(ts.SyntaxKind.QuestionToken),
+        factory.createNull(),
+        factory.createToken(ts.SyntaxKind.ColonToken),
+        get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci), elt)
+      )]
+    ))];
+    case "or": throw_error();
+    case "partition": throw_error();
+    case "rational": return [factory.createReturnStatement(factory.createNewExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("Rational")
+        ),
+        undefined,
+        [
+          access_nth_field(elt, 0),
+          access_nth_field(elt, 1)
+        ]
+      ))];
+    case "record": {
       const name = atype.name
       if (null != name) {
         const r = get_record_type(name, ci)
@@ -1241,13 +1337,25 @@ export const get_return_body = (elt : ts.Expression, atype: ArchetypeType, ci : 
               elt,
               factory.createIdentifier(field_annot_names[f.name])
             )
-            return  get_lambda_form(get_return_body(factory.createIdentifier("x"), f.type, ci), field_value)
+            return  get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
           })
         ))]
       }
-    }
+    };
+    case "sapling_state": return make_class();
+    case "sapling_transaction": return make_class();
+    case "set": return make_list();
+    case "signature": return make_class();
+    case "state": throw_error();
+    case "string": return [factory.createReturnStatement(elt)];
+    case "ticket": throw_error();
+    case "timestamp": throw_error();
+    case "tuple": {
+        const [ array, _ ] = get_tuple_body(elt, atype, ci)
+        return [factory.createReturnStatement(factory.createArrayLiteralExpression(array))]
+      };
+    case "unit": return make_class();
   }
-  throw new Error("get_return_body: type '" + atype.node + "' not found")
 }
 
 /* Typescript To Micheline utils ------------------------------------------------------ */
@@ -1412,42 +1520,58 @@ const map_to_mich = (name : string, key_type : ArchetypeType | null, value_type 
 }
 
 export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpression => {
-  switch (fp.type.node) { // oui
-    case "unit"        : return unit_to_mich()
-    case "string"      : return string_to_mich(factory.createIdentifier(fp.name))
-    case "bool"        : return bool_to_mich(factory.createIdentifier(fp.name))
-    case "date"        : return date_to_mich(factory.createIdentifier(fp.name))
-    case "bls12_381_fr":
-    case "bls12_381_g1":
-    case "bls12_381_g2":
-    case "chain_id"    :
-    case "chest"       :
-    case "chest_key"   :
-    case "key_hash"    :
-    case "sapling_transaction":
-    case "signature"   :
-    case "unit"        :
-    case "int"         :
-    case "nat"         :
-    case "bytes"       :
-    case "currency"    :
-    case "address"     :
-    case "duration"    :
-    case "rational"    :
-    case "option"      :
-    case "signature"   :
-    case "key"         :
-    case "enum"        :
-    case "or"          :
-    case "asset_value" :
-    case "record"      :
-    case "contract"    : return class_to_mich(factory.createIdentifier(fp.name))
-    case "tuple"       : return tuple_to_mich(fp.name, fp.type.args)
-    case "set"         :
-    case "list"        : return list_to_mich(fp.name, fp.type.args[0])
-    case "map"         :
-    case "big_map"     : return map_to_mich(fp.name, fp.type.args[0], fp.type.args[1])
-    default            : throw new Error("function_param_to_mich: unhandled type '" + fp.type.node + "'")
+  const throw_error = (ty : string) => {
+    throw new Error("function_param_to_mich: unhandled type '" + ty + "'")
+  }
+  switch (fp.type.node) {
+    case "address": return class_to_mich(factory.createIdentifier(fp.name));
+    case "aggregate": throw_error(fp.type.node);
+    case "asset_container": throw_error(fp.type.node);
+    case "asset_key": throw_error(fp.type.node);
+    case "asset_value": return class_to_mich(factory.createIdentifier(fp.name));
+    case "asset_view": throw_error(fp.type.node);
+    case "asset": throw_error(fp.type.node);
+    case "big_map": return map_to_mich(fp.name, fp.type.args[0], fp.type.args[1]);
+    case "bls12_381_fr": return class_to_mich(factory.createIdentifier(fp.name));
+    case "bls12_381_g1": return class_to_mich(factory.createIdentifier(fp.name));
+    case "bls12_381_g2": return class_to_mich(factory.createIdentifier(fp.name));
+    case "bool": return bool_to_mich(factory.createIdentifier(fp.name));
+    case "bytes": return class_to_mich(factory.createIdentifier(fp.name));
+    case "chain_id": return class_to_mich(factory.createIdentifier(fp.name));
+    case "chest_key": return class_to_mich(factory.createIdentifier(fp.name));
+    case "chest": return class_to_mich(factory.createIdentifier(fp.name));
+    case "collection": throw_error(fp.type.node);
+    case "contract": return class_to_mich(factory.createIdentifier(fp.name));
+    case "currency": return class_to_mich(factory.createIdentifier(fp.name));
+    case "date": return date_to_mich(factory.createIdentifier(fp.name));
+    case "duration": return class_to_mich(factory.createIdentifier(fp.name));
+    case "enum": return class_to_mich(factory.createIdentifier(fp.name));
+    case "event": throw_error(fp.type.node);
+    case "int": return class_to_mich(factory.createIdentifier(fp.name));
+    case "iterable_big_map": throw_error(fp.type.node);
+    case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
+    case "key": return class_to_mich(factory.createIdentifier(fp.name));
+    case "lambda": throw_error(fp.type.node);
+    case "list": return list_to_mich(fp.name, fp.type.args[0]);
+    case "map": return map_to_mich(fp.name, fp.type.args[0], fp.type.args[1]);
+    case "nat": return class_to_mich(factory.createIdentifier(fp.name));
+    case "never": throw_error(fp.type.node);
+    case "operation": throw_error(fp.type.node);
+    case "option": return class_to_mich(factory.createIdentifier(fp.name));
+    case "or": return class_to_mich(factory.createIdentifier(fp.name));
+    case "partition": throw_error(fp.type.node);
+    case "rational": return class_to_mich(factory.createIdentifier(fp.name));
+    case "record": return class_to_mich(factory.createIdentifier(fp.name));
+    case "sapling_state": return class_to_mich(factory.createIdentifier(fp.name));
+    case "sapling_transaction": return class_to_mich(factory.createIdentifier(fp.name));
+    case "set": return list_to_mich(fp.name, fp.type.args[0]);
+    case "signature": return class_to_mich(factory.createIdentifier(fp.name));
+    case "state": throw_error(fp.type.node);
+    case "string": return string_to_mich(factory.createIdentifier(fp.name));
+    case "ticket": throw_error(fp.type.node);
+    case "timestamp": throw_error(fp.type.node);
+    case "tuple": return tuple_to_mich(fp.name, fp.type.args);
+    case "unit": return unit_to_mich()
   }
 }
 
