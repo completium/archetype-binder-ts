@@ -2,3 +2,5 @@ node_modules
 build.history
 .history
 build
+coverage
+.nyc_output/
