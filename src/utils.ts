@@ -1117,7 +1117,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
     }
 
   const throw_error = () => {
-    throw new Error("get_return_body: type '" + atype.node + "' not found")
+    throw new Error("taquito_to_ts: type '" + atype.node + "' not found")
   }
 
   switch (atype.node) {
@@ -1311,7 +1311,137 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci), elt)
       )]
     ))];
-    case "or": throw_error();
+    case "or": return [factory.createReturnStatement(factory.createCallExpression(
+      factory.createParenthesizedExpression(factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("x"),
+          undefined,
+          undefined,
+          undefined
+        )],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [factory.createVariableDeclaration(
+                  factory.createIdentifier("is_left"),
+                  undefined,
+                  undefined,
+                  factory.createBinaryExpression(
+                    factory.createElementAccessExpression(
+                      factory.createIdentifier("x"),
+                      factory.createStringLiteral("0")
+                    ),
+                    factory.createToken(ts.SyntaxKind.ExclamationEqualsEqualsToken),
+                    factory.createIdentifier("undefined")
+                  )
+                )],
+                ts.NodeFlags.Const
+              )
+            ),
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [factory.createVariableDeclaration(
+                  factory.createIdentifier("value"),
+                  undefined,
+                  undefined,
+                  factory.createConditionalExpression(
+                    factory.createIdentifier("is_left"),
+                    factory.createToken(ts.SyntaxKind.QuestionToken),
+                    factory.createCallExpression(
+                      factory.createParenthesizedExpression(factory.createArrowFunction(
+                        undefined,
+                        undefined,
+                        [factory.createParameterDeclaration(
+                          undefined,
+                          undefined,
+                          undefined,
+                          factory.createIdentifier("x"),
+                          undefined,
+                          undefined,
+                          undefined
+                        )],
+                        undefined,
+                        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                        factory.createBlock(
+                          taquito_to_ts(factory.createElementAccessExpression(
+                        factory.createIdentifier("x"),
+                        factory.createStringLiteral("0")
+                      ), atype.args[0], ci),
+                          false
+                        )
+                      )),
+                      undefined,
+                      [factory.createElementAccessExpression(
+                        factory.createIdentifier("x"),
+                        factory.createStringLiteral("0")
+                      )]
+                    ),
+                    factory.createToken(ts.SyntaxKind.ColonToken),
+                    factory.createCallExpression(
+                      factory.createParenthesizedExpression(factory.createArrowFunction(
+                        undefined,
+                        undefined,
+                        [factory.createParameterDeclaration(
+                          undefined,
+                          undefined,
+                          undefined,
+                          factory.createIdentifier("x"),
+                          undefined,
+                          undefined,
+                          undefined
+                        )],
+                        undefined,
+                        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                        factory.createBlock(
+                          taquito_to_ts(factory.createElementAccessExpression(
+                        factory.createIdentifier("x"),
+                        factory.createStringLiteral("1")
+                      ), atype.args[1], ci),
+                          false
+                        )
+                      )),
+                      undefined,
+                      [factory.createElementAccessExpression(
+                        factory.createIdentifier("x"),
+                        factory.createStringLiteral("1")
+                      )]
+                    )
+                  )
+                )],
+                ts.NodeFlags.Const
+              )
+            ),
+            factory.createReturnStatement(factory.createNewExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("Or")
+              ),
+              [
+                archetype_type_to_ts_type(atype.args[0]),
+                archetype_type_to_ts_type(atype.args[1])
+              ],
+              [
+                factory.createIdentifier("value"),
+                factory.createIdentifier("is_left")
+              ]
+            ))
+          ],
+          true
+        )
+      )),
+      undefined,
+      [factory.createIdentifier("storage")]
+    ))];
     case "partition": throw_error();
     case "rational": return [factory.createReturnStatement(factory.createNewExpression(
         factory.createPropertyAccessExpression(
