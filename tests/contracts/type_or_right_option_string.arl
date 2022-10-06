@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_option_string
+
+variable res : or<nat, option<string>> = left<option<string>>(0)
+
+entry set_value(i : option<string>) {
+  res := right<nat>(i)
+}

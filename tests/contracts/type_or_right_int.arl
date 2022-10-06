@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_int
+
+variable res : or<nat, int> = left<int>(0)
+
+entry set_value(i : int) {
+  res := right<nat>(i)
+}

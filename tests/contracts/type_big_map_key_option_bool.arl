@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_key_option_bool
+
+variable res : big_map<nat, option<bool>> = []
+
+entry set_value(i : option<bool>) {
+  res.put(0, i)
+}

@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_2_signature
+
+asset my_asset identified by k n {
+  k : signature;
+  n : nat;
+  v : string;
+}
+
+entry asset_put(i : signature) {
+  my_asset.put({i; 0; ""})
+}

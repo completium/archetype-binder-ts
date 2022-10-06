@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_option_string
+
+asset my_asset {
+  k : option<string>;
+  v : string;
+}
+
+entry asset_put(i : option<string>) {
+  my_asset.put({i; ""})
+}

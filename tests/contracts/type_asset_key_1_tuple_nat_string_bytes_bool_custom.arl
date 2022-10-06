@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_tuple_nat_string_bytes_bool_custom
+
+asset my_asset {
+  k : (nat * (string * bytes) * bool);
+  v : string;
+}
+
+entry asset_put(i : (nat * (string * bytes) * bool)) {
+  my_asset.put({i; ""})
+}

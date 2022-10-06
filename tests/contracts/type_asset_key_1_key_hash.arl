@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_key_hash
+
+asset my_asset {
+  k : key_hash;
+  v : string;
+}
+
+entry asset_put(i : key_hash) {
+  my_asset.put({i; ""})
+}

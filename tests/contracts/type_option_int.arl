@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_int
+
+variable res : option<int> = none
+
+entry set_value(i : option<int>) {
+  res := i
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_tez
+
+variable res : or<tez, nat> = right<tez>(0)
+
+entry set_value(i : tez) {
+  res := left<nat>(i)
+}

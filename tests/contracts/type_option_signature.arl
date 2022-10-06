@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_signature
+
+variable res : option<signature> = none
+
+entry set_value(i : option<signature>) {
+  res := i
+}

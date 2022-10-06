@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_signature
+
+record my_record {
+  n : nat;
+  v : signature;
+  s : string;
+}
+
+variable res : my_record = {0; "edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

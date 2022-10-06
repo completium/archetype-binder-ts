@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_rational
+
+variable res : or<nat, rational> = left<rational>(0)
+
+entry set_value(i : rational) {
+  res := right<nat>(i)
+}

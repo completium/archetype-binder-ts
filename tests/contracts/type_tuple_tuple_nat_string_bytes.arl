@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_tuple_nat_string_bytes
+
+variable res : (nat * (nat * string * bytes) * string) = ((0, ((0, "", 0x)), ""))
+
+entry set_value(i : (nat * string * bytes)) {
+  res := ((0, i, ""))
+}

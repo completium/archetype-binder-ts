@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_set_bool
+
+asset my_asset {
+  k : nat;
+  s : string;
+  v : set<bool>;
+}
+
+entry asset_put(i : set<bool>) {
+  my_asset.put({0; ""; i})
+}

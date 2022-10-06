@@ -1,0 +1,6 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_parameter_chest(res : chest)
+
+entry asset_add(i : chest) {
+  res := i
+}

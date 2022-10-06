@@ -1,0 +1,62 @@
+{
+  "name": "type_asset_parameter_or_nat_string",
+  "parameters": [
+    {
+      "name": "res",
+      "type": {
+        "node": "or",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [],
+  "entrypoints": [
+    {
+      "name": "asset_add",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "or",
+            "name": null,
+            "args": [
+              {
+                "node": "nat",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

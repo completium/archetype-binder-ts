@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_duration
+
+variable res : or<duration, nat> = right<duration>(0)
+
+entry set_value(i : duration) {
+  res := left<nat>(i)
+}

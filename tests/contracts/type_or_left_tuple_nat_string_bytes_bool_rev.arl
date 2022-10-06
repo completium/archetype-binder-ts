@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_tuple_nat_string_bytes_bool_rev
+
+variable res : or<(((nat * string) * bytes) * bool), nat> = right<(((nat * string) * bytes) * bool)>(0)
+
+entry set_value(i : (((nat * string) * bytes) * bool)) {
+  res := left<nat>(i)
+}

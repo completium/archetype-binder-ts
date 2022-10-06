@@ -1,0 +1,40 @@
+{
+  "name": "type_asset_parameter_key",
+  "parameters": [
+    {
+      "name": "res",
+      "type": {
+        "node": "key",
+        "name": null,
+        "args": []
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [],
+  "entrypoints": [
+    {
+      "name": "asset_add",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "key",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

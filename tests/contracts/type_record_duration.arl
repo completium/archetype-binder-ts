@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_duration
+
+record my_record {
+  n : nat;
+  v : duration;
+  s : string;
+}
+
+variable res : my_record = {0; 1s; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_or_nat_string
+
+asset my_asset {
+  k : nat;
+  s : string;
+  v : or<nat, string>;
+}
+
+entry asset_put(i : or<nat, string>) {
+  my_asset.put({0; ""; i})
+}

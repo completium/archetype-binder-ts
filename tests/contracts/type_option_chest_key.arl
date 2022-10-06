@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_chest_key
+
+variable res : option<chest_key> = none
+
+entry set_value(i : option<chest_key>) {
+  res := i
+}

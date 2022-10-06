@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_bytes
+
+variable res : option<bytes> = none
+
+entry set_value(i : option<bytes>) {
+  res := i
+}

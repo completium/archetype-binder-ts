@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_list_string
+
+record my_record {
+  n : nat;
+  v : list<string>;
+  s : string;
+}
+
+variable res : my_record = {0; []; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

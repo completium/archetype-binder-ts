@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_key
+
+variable res : (nat * key * string) = ((0, "edpkurLzuFFL1XyP3fed4u7MsgeywQoQmHM45Bz91PBzDvUjQ9bvdn", ""))
+
+entry set_value(i : key) {
+  res := ((0, i, ""))
+}

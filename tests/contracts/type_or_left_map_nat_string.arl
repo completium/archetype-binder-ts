@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_map_nat_string
+
+variable res : or<map<nat, string>, nat> = right<map<nat, string>>(0)
+
+entry set_value(i : map<nat, string>) {
+  res := left<nat>(i)
+}

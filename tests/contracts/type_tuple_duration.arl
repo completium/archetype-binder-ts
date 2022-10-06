@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_duration
+
+variable res : (nat * duration * string) = ((0, 1s, ""))
+
+entry set_value(i : duration) {
+  res := ((0, i, ""))
+}

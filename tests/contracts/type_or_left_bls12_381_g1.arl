@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_bls12_381_g1
+
+variable res : or<bls12_381_g1, nat> = right<bls12_381_g1>(0)
+
+entry set_value(i : bls12_381_g1) {
+  res := left<nat>(i)
+}

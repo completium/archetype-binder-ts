@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_tuple_nat_string_bytes
+
+variable res : or<(nat * string * bytes), nat> = right<(nat * string * bytes)>(0)
+
+entry set_value(i : (nat * string * bytes)) {
+  res := left<nat>(i)
+}

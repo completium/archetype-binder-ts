@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_set_bool
+
+variable res : option<set<bool>> = none
+
+entry set_value(i : option<set<bool>>) {
+  res := i
+}

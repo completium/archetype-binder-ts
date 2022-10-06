@@ -1,0 +1,6 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_parameter_option_nat(res : option<nat>)
+
+entry asset_add(i : option<nat>) {
+  res := i
+}

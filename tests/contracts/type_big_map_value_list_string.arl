@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_value_list_string
+
+variable res : big_map<nat, list<string>> = []
+
+entry set_value(i : list<string>) {
+  res.put(0, i)
+}

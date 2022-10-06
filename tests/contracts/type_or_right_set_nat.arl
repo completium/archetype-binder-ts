@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_set_nat
+
+variable res : or<nat, set<nat>> = left<set<nat>>(0)
+
+entry set_value(i : set<nat>) {
+  res := right<nat>(i)
+}

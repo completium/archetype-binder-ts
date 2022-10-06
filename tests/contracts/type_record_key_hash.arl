@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_key_hash
+
+record my_record {
+  n : nat;
+  v : key_hash;
+  s : string;
+}
+
+variable res : my_record = {0; "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg"; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

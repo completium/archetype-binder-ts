@@ -1,7 +1,7 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_simple_tuple_nat_string_bytes_bool_custom
 
-variable res : (nat * (string * bytes) * bool) = (0, ("", 0x), false)
+variable res : (nat * (string * bytes) * bool) = ((0, ("", 0x), false))
 
 entry set_value(i : (nat * (string * bytes) * bool)) {
   res := i

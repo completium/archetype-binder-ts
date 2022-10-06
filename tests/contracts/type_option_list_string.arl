@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_list_string
+
+variable res : option<list<string>> = none
+
+entry set_value(i : option<list<string>>) {
+  res := i
+}

@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_option_string
+
+record my_record {
+  n : nat;
+  v : option<string>;
+  s : string;
+}
+
+variable res : my_record = {0; none; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

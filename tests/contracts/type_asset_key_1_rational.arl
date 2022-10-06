@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_rational
+
+asset my_asset {
+  k : rational;
+  v : string;
+}
+
+entry asset_put(i : rational) {
+  my_asset.put({i; ""})
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_duration
+
+variable res : map<nat, duration> = []
+
+entry set_value(i : duration) {
+  res.put(0, i)
+}

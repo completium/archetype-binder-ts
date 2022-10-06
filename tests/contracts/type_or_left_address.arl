@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_address
+
+variable res : or<address, nat> = right<address>(0)
+
+entry set_value(i : address) {
+  res := left<nat>(i)
+}

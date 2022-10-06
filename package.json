@@ -12,8 +12,11 @@
   },
   "scripts": {
     "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.spec.ts",
+    "test:main": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/main.spec.ts",
     "test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.spec.ts",
     "test:coverage": "nyc npm run test",
+    "test:generate:coverage": "nyc npm run test:generate",
+    "test:main:coverage": "nyc npm run test:main",
     "build": "rm -rf ./build && npx tsc --outDir build",
     "exec": "rm -rf ./build && npx tsc --outDir build && node ./build/src/main.js"
   },

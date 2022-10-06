@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_tuple_nat_string_bytes_bool
+
+variable res : option<(nat * string * bytes * bool)> = none
+
+entry set_value(i : option<(nat * string * bytes * bool)>) {
+  res := i
+}

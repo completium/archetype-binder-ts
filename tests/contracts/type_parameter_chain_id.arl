@@ -1,0 +1,6 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_parameter_chain_id(res : chain_id)
+
+entry asset_add(i : chain_id) {
+  res := i
+}

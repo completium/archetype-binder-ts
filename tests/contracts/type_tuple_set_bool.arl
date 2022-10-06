@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_set_bool
+
+variable res : (nat * set<bool> * string) = ((0, [], ""))
+
+entry set_value(i : set<bool>) {
+  res := ((0, i, ""))
+}

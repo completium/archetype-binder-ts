@@ -1,0 +1,10 @@
+archetype simple_fail_invalid_condition
+
+entry f() {
+  require {
+    r1: false
+  }
+  effect {
+    ()
+  }
+}

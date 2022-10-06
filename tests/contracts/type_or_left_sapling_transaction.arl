@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_sapling_transaction
+
+variable res : or<sapling_transaction(8), nat> = right<sapling_transaction(8)>(0)
+
+entry set_value(i : sapling_transaction(8)) {
+  res := left<nat>(i)
+}

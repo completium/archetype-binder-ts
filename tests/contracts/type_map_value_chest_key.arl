@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_chest_key
+
+variable res : map<nat, chest_key> = []
+
+entry set_value(i : chest_key) {
+  res.put(0, i)
+}

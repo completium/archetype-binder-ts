@@ -1,7 +1,7 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_simple_tuple_nat_string
 
-variable res : (nat * string) = (0, "")
+variable res : (nat * string) = ((0, ""))
 
 entry set_value(i : (nat * string)) {
   res := i

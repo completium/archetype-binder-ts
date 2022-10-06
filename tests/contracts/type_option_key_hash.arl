@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_key_hash
+
+variable res : option<key_hash> = none
+
+entry set_value(i : option<key_hash>) {
+  res := i
+}

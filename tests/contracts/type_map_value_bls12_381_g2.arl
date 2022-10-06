@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_bls12_381_g2
+
+variable res : map<nat, bls12_381_g2> = []
+
+entry set_value(i : bls12_381_g2) {
+  res.put(0, i)
+}

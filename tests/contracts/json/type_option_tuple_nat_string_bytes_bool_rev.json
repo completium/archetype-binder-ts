@@ -1,0 +1,117 @@
+{
+  "name": "type_option_tuple_nat_string_bytes_bool_rev",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "nat",
+                        "name": null,
+                        "args": []
+                      },
+                      {
+                        "node": "string",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "node": "bytes",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "node": "bool",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "set_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "option",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "tuple",
+                    "name": null,
+                    "args": [
+                      {
+                        "node": "tuple",
+                        "name": null,
+                        "args": [
+                          {
+                            "node": "nat",
+                            "name": null,
+                            "args": []
+                          },
+                          {
+                            "node": "string",
+                            "name": null,
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "node": "bytes",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "node": "bool",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_list_bool
+
+variable res : or<nat, list<bool>> = left<list<bool>>(0)
+
+entry set_value(i : list<bool>) {
+  res := right<nat>(i)
+}

@@ -1,0 +1,6 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_parameter_or_nat_string(res : or<nat, string>)
+
+entry asset_add(i : or<nat, string>) {
+  res := i
+}

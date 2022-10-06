@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_map_nat_string
+
+variable res : (nat * map<nat, string> * string) = ((0, [], ""))
+
+entry set_value(i : map<nat, string>) {
+  res := ((0, i, ""))
+}

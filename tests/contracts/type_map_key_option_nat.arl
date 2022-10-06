@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_option_nat
+
+variable res : map<nat, option<nat>> = []
+
+entry set_value(i : option<nat>) {
+  res.put(0, i)
+}

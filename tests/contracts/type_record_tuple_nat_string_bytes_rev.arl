@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_tuple_nat_string_bytes_rev
+
+record my_record {
+  n : nat;
+  v : ((nat * string) * bytes);
+  s : string;
+}
+
+variable res : my_record = {0; (((0, ""), 0x)); ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

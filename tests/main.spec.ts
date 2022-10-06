@@ -1,9 +1,8 @@
 import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
 import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
-import { record_2, r2 } from './contracts/bindings/record_2'
-import * as record_3 from './contracts/bindings/record_3'
 import { simple_fail } from './contracts/bindings/simple_fail'
+import { simple_fail_invalid_condition } from './contracts/bindings/simple_fail_invalid_condition'
 import { type_simple_address } from './contracts/bindings/type_simple_address'
 import { type_simple_bls12_381_fr } from './contracts/bindings/type_simple_bls12_381_fr'
 import { type_simple_bls12_381_g1 } from './contracts/bindings/type_simple_bls12_381_g1'
@@ -72,6 +71,15 @@ describe('Fails', async () => {
       simple_fail.f({ as: alice })
     }, simple_fail.errors.MYERROR)
   });
+
+  it('Simple fail invalid condition', async () => {
+    await simple_fail_invalid_condition.deploy({ as: alice })
+
+    expect_to_fail(async () => {
+      simple_fail_invalid_condition.f({ as: alice })
+    }, simple_fail_invalid_condition.errors.r1)
+  });
+
 })
 
 
@@ -303,12 +311,11 @@ describe('Composite type', async () => {
 
   // // map
   // it('map<nat, string>', async () => {
-  //   const item: [Nat, string] = [new Nat(0), "mystr"];
-  //   const v: Array<[Nat, string]> = [item];
+  //   const v: Array<[Nat, string]> = [[new Nat(0), "mystr"]];
   //   await type_simple_map_nat_string.deploy({ as: alice });
   //   await type_simple_map_nat_string.set_value(v, { as: alice });
   //   const res = await type_simple_map_nat_string.get_res();
-  //   assert(res.length == 1 && res[0][0].equals(item[0]) && res[0][1] == item[1], "Invalid Value")
+  //   assert(res.length == 1 && res[0][0].equals(v[0][0]) && res[0][1] == v[0][1], "Invalid Value")
   // });
 
   // option
@@ -425,19 +432,7 @@ describe('Composite type', async () => {
 })
 
 describe('Record', async () => {
-  it('record 2', async () => {
-    const v = new r2(new Nat(2), "mystr");
-    await record_2.deploy({ as: alice });
-    await record_2.set_value(v, { as: alice });
-    const res = await record_2.get_res();
-  })
 
-    it('record 3', async () => {
-    const v = new record_3.r3(new Nat(2), "mystr", new Bytes("ff"));
-    await record_3.record_3.deploy({ as: alice });
-    await record_3.record_3.set_value(v, { as: alice });
-    const res = await record_2.get_res();
-  })
 })
 
 describe('Abstract type', async () => {

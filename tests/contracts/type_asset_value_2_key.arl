@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_key
+
+asset my_asset {
+  k : nat;
+  v : key;
+}
+
+entry asset_put(i : key) {
+  my_asset.put({0; i})
+}

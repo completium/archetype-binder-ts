@@ -1,0 +1,52 @@
+{
+  "name": "type_asset_parameter_set_bool",
+  "parameters": [
+    {
+      "name": "res",
+      "type": {
+        "node": "set",
+        "name": null,
+        "args": [
+          {
+            "node": "bool",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false,
+      "default": null
+    }
+  ],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [],
+  "entrypoints": [
+    {
+      "name": "asset_add",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "set",
+            "name": null,
+            "args": [
+              {
+                "node": "bool",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

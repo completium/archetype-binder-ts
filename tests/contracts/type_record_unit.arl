@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_unit
+
+record my_record {
+  n : nat;
+  v : unit;
+  s : string;
+}
+
+variable res : my_record = {0; Unit; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

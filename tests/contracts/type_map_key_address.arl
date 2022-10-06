@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_address
+
+variable res : map<nat, address> = []
+
+entry set_value(i : address) {
+  res.put(0, i)
+}

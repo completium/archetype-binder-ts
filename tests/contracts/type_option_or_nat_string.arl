@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_or_nat_string
+
+variable res : option<or<nat, string>> = none
+
+entry set_value(i : option<or<nat, string>>) {
+  res := i
+}

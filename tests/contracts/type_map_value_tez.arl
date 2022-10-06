@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_tez
+
+variable res : map<nat, tez> = []
+
+entry set_value(i : tez) {
+  res.put(0, i)
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_option_bool
+
+variable res : or<option<bool>, nat> = right<option<bool>>(0)
+
+entry set_value(i : option<bool>) {
+  res := left<nat>(i)
+}

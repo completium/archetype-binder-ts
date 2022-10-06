@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_value_bls12_381_fr
+
+variable res : big_map<nat, bls12_381_fr> = []
+
+entry set_value(i : bls12_381_fr) {
+  res.put(0, i)
+}
