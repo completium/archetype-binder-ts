@@ -310,13 +310,13 @@ describe('Composite type', async () => {
   });
 
   // // map
-  // it('map<nat, string>', async () => {
-  //   const v: Array<[Nat, string]> = [[new Nat(0), "mystr"]];
-  //   await type_simple_map_nat_string.deploy({ as: alice });
-  //   await type_simple_map_nat_string.set_value(v, { as: alice });
-  //   const res = await type_simple_map_nat_string.get_res();
-  //   assert(res.length == 1 && res[0][0].equals(v[0][0]) && res[0][1] == v[0][1], "Invalid Value")
-  // });
+  it('map<nat, string>', async () => {
+    const v: Array<[Nat, string]> = [[new Nat(0), "mystr"]];
+    await type_simple_map_nat_string.deploy({ as: alice });
+    await type_simple_map_nat_string.set_value(v, { as: alice });
+    const res = await type_simple_map_nat_string.get_res();
+    assert(res.length == 1 && res[0][0].equals(v[0][0]) && res[0][1] == v[0][1], "Invalid Value")
+  });
 
   // option
   it('option<nat>', async () => {
