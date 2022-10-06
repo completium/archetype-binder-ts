@@ -7,9 +7,6 @@ export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mic
     att.prim_annot_to_mich_type("int", []),
     att.prim_annot_to_mich_type("nat", [])
 ], []);
-export const mich_to_my_asset_value = (v: att.Micheline, collapsed: boolean = false): my_asset_value => {
-    return att.mich_to_rational(v);
-};
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value

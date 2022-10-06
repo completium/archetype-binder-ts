@@ -4,9 +4,6 @@ export type my_asset_key = att.Address;
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("address", []);
 export type my_asset_value = string;
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("string", []);
-export const mich_to_my_asset_value = (v: att.Micheline, collapsed: boolean = false): my_asset_value => {
-    return att.mich_to_string(v);
-};
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value

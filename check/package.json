@@ -7,12 +7,13 @@
     "test-map": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/00-test_map.ts",
     "test-or": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/00-test_or.ts",
     "test-r2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/00-test_r2.ts",
+    "test-big_map": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/00-test_big_map.ts",
     "gen-binding": "completium-cli run binder-ts"
   },
   "dependencies": {
-    "@completium/archetype-ts-types": "latest",
-    "@completium/completium-cli": "latest",
-    "@completium/experiment-ts": "latest"
+    "@completium/archetype-ts-types": "0.0.6",
+    "@completium/completium-cli": "0.4.33",
+    "@completium/experiment-ts": "0.0.90"
   },
   "devDependencies": {
     "@types/expect": "^24.3.0",

@@ -10,12 +10,6 @@ export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mic
     att.prim_annot_to_mich_type("nat", []),
     att.prim_annot_to_mich_type("string", [])
 ], []);
-export const mich_to_my_asset_value = (v: att.Micheline, collapsed: boolean = false): my_asset_value => {
-    return (p => {
-        const p0 = (p as att.Mpair);
-        return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
-    })(v);
-};
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value

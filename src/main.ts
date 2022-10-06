@@ -781,14 +781,18 @@ const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args
   )
 }
 
-const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
+const get_storage_identifier = (selt: StorageElement, ci : ContractInterface) => {
   const root = factory.createIdentifier("storage")
-  const elt = ci.storage.length + ci.parameters.length > 1 ?
+  return ci.storage.length + ci.parameters.length > 1 ?
     factory.createPropertyAccessExpression(
       root,
       factory.createIdentifier(selt.name)
     ) :
     root
+}
+
+const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
+  const elt = get_storage_identifier(selt, ci);
   return storage_elt_to_getter_skeleton(
     "get_",
     selt.name,
@@ -798,7 +802,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
   )
 }
 
-const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, key_mich_type : ts.Expression, ret_value_found : ts.Expression, ret_value_not_found : ts.Expression) : ts.Statement[] => {
+const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, key_mich_type : ts.Expression, value_mich_type : ts.Expression, selt : ts.Expression, return_statement_found : ts.Statement[], ret_value_not_found : ts.Expression) : ts.Statement[] => {
   return [
     factory.createVariableStatement(
       undefined,
@@ -817,13 +821,11 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
               factory.createCallExpression(
                 factory.createIdentifier("BigInt"),
                 undefined,
-                [factory.createPropertyAccessExpression(
-                  factory.createIdentifier("storage"),
-                  factory.createIdentifier(name)
-                )]
+                [selt]
               ),
               function_param_to_mich({ name : "key", type : key_type }),
-              key_mich_type
+              key_mich_type,
+              value_mich_type
             ]
           ))
         ),
@@ -843,7 +845,7 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
         factory.createIdentifier("undefined")
       ),
       factory.createBlock(
-        [factory.createReturnStatement(ret_value_found)],
+        return_statement_found,
         true
       ),
       factory.createBlock(
@@ -878,10 +880,12 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             selt.name,
             selt.type.args[0],
             value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            mich_to_field_decl(selt.type.args[1], factory.createIdentifier("data")),
+            get_storage_identifier(selt, ci),
+            taquito_to_ts(factory.createIdentifier("data"), selt.type.args[1], ci),
             factory.createIdentifier("undefined")
           )
         ),
@@ -902,10 +906,12 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             selt.name,
             selt.type.args[0],
             value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            factory.createTrue(),
+           get_storage_identifier(selt, ci),
+           [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse()
           )
         )
@@ -939,11 +945,13 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             selt.name,
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name+"_key_mich_type"),
-            factory.createCallExpression(
+            factory.createIdentifier(selt.name+"_value_mich_type"),
+            get_storage_identifier(selt, ci),
+            [factory.createReturnStatement(factory.createCallExpression(
               factory.createIdentifier("mich_to_" + selt.name + "_value"),
               undefined,
               [factory.createIdentifier("data"), factory.createTrue()],
-            ),
+            ))],
             factory.createIdentifier("undefined")
           )),
           storage_elt_to_getter_skeleton(
@@ -966,7 +974,9 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
               selt.name,
               get_asset_key_archetype_type(selt.type, ci),
               factory.createIdentifier(selt.name+"_key_mich_type"),
-              factory.createTrue(),
+              factory.createIdentifier(selt.name+"_value_mich_type"),
+              get_storage_identifier(selt, ci),
+              [factory.createReturnStatement(factory.createTrue())],
               factory.createFalse()
             )
           )
@@ -1056,6 +1066,20 @@ const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface)
     }
   }
   throw new Error("get_asset_key_archetype_type: asset " + a.name + " not found")
+}
+
+const get_asset_value_archetype_type = (a : ArchetypeType, ci : ContractInterface) : ArchetypeType => {
+  const assetType = ci.types.assets.find(x => x.name == a.name)
+  if (assetType != undefined) {
+    const fields = assetType.fields.filter(x => !x.is_key)
+    if (fields.length == 1) {
+      return fields[0].type
+    }
+    else {
+      return { node: "record", name: assetType.name + "_value", args: [] }
+    }
+  }
+  throw new Error("get_asset_value_archetype_type: asset " + a.name + " not found")
 }
 
 const storage_elt_to_param = (selt : StorageElement) : ContractParameter => {
@@ -1765,14 +1789,14 @@ const get_nodes = (contract_interface : ContractInterface, settings : BindingSet
     // records
     ...(contract_interface.types.records.map(recordToInterfaceDecl)),
     ...(contract_interface.types.records.map(recordToMichTypeDecl)),
-    ...(contract_interface.types.records.map(mich_to_record_decl)),
+    // ...(contract_interface.types.records.map(mich_to_record_decl)),
     // asset keys
     ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
     ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
     // asset values
     ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToInterfaceDecl)),
     ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichTypeDecl)),
-    ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
+    // ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
     // asset containers
     ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
     ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),

@@ -19,16 +19,6 @@ export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_typ
         att.prim_annot_to_mich_type("string", ["%s"])
     ], [])
 ], []);
-export const mich_to_my_record = (v: att.Micheline, collapsed: boolean = false): my_record => {
-    let fields: att.Micheline[] = [];
-    if (collapsed) {
-        fields = att.mich_to_pairs(v);
-    }
-    else {
-        fields = att.annotated_mich_to_array(v, my_record_mich_type);
-    }
-    return new my_record(att.mich_to_nat(fields[0]), att.mich_to_tez(fields[1]), att.mich_to_string(fields[2]));
-};
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();
 }

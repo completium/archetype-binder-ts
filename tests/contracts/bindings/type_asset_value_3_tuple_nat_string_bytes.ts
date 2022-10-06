@@ -30,20 +30,6 @@ export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mic
         ], [])
     ], ["%v"])
 ], []);
-export const mich_to_my_asset_value = (v: att.Micheline, collapsed: boolean = false): my_asset_value => {
-    let fields: att.Micheline[] = [];
-    if (collapsed) {
-        fields = att.mich_to_pairs(v);
-    }
-    else {
-        fields = att.annotated_mich_to_array(v, my_asset_value_mich_type);
-    }
-    return new my_asset_value(att.mich_to_string(fields[0]), (p => {
-        const p0 = (p as att.Mpair);
-        const p1 = (p0.args[1] as att.Mpair);
-        return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1]), att.mich_to_bytes(p1.args[0])];
-    })(fields[1]));
-};
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value

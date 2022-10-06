@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype %big_map
+
+variable res : big_map<nat, int> = []
+
+entry set_value(i : int) {
+  res.put(0, i)
+}
