@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_int
+
+variable res : int = 0i
+
+view get_value() : int {
+  return res
+}

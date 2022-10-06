@@ -1,0 +1,35 @@
+{
+  "name": "type_getter_unit",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "unit",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "unit",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

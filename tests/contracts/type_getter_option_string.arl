@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_option_string
+
+variable res : option<string> = none
+
+getter get_value() : option<string> {
+  return res
+}

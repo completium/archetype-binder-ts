@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_duration
+
+variable res : duration = 1s
+
+getter get_value() : duration {
+  return res
+}

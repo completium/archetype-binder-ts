@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_set_bool
+
+variable res : set<bool> = []
+
+view get_value() : set<bool> {
+  return res
+}

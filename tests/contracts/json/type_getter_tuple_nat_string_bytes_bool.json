@@ -1,0 +1,77 @@
+{
+  "name": "type_getter_tuple_nat_string_bytes_bool",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "tuple",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "bool",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "tuple",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "bool",
+            "name": null,
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

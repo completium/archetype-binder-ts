@@ -319,6 +319,34 @@ entry asset_add(i : ${type_str}) {
   await generate_type_gen('parameter', generate_test, type_str, default_value, name);
 }
 
+const generate_type_getter = async (type_str: string, default_value: string, name?: string) => {
+  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+    `/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_${postfix}
+
+variable res : ${type_str} = ${default_value}
+
+getter get_value() : ${type_str} {
+  return res
+}
+`
+  await generate_type_gen('getter', generate_test, type_str, default_value, name);
+}
+
+const generate_type_view = async (type_str: string, default_value: string, name?: string) => {
+  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+    `/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_${postfix}
+
+variable res : ${type_str} = ${default_value}
+
+view get_value() : ${type_str} {
+  return res
+}
+`
+  await generate_type_gen('view', generate_test, type_str, default_value, name);
+}
+
 const iterate_on_types = async (g: (type_str: string, default_value: string, name?: string) => Promise<void>) => {
   for (let e of type_default_name) {
     const name = e[2] !== undefined ? e[2] : e[0];
@@ -409,6 +437,13 @@ describe('Generate binding type parameter', async () => {
   iterate_on_types(generate_type_parameter)
 })
 
+describe('Generate binding type getter', async () => {
+  iterate_on_types(generate_type_getter)
+})
+
+describe('Generate binding type view', async () => {
+  iterate_on_types(generate_type_view)
+})
 
 describe('Abstract type', async () => {
   // enum

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_set_string
+
+variable res : set<string> = []
+
+getter get_value() : set<string> {
+  return res
+}

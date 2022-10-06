@@ -1,0 +1,35 @@
+{
+  "name": "type_getter_key_hash",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "key_hash",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "key_hash",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

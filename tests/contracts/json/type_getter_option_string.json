@@ -1,0 +1,47 @@
+{
+  "name": "type_getter_option_string",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

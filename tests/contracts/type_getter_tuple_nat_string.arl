@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_tuple_nat_string
+
+variable res : (nat * string) = ((0, ""))
+
+getter get_value() : (nat * string) {
+  return res
+}

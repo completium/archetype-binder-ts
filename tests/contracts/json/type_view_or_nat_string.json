@@ -1,0 +1,57 @@
+{
+  "name": "type_view_or_nat_string",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "or",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [],
+  "views": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "or",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          },
+          {
+            "node": "string",
+            "name": null,
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

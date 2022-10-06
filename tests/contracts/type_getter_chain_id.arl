@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_chain_id
+
+variable res : chain_id = "NetXLH1uAxK7CCh"
+
+getter get_value() : chain_id {
+  return res
+}

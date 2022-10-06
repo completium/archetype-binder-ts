@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_tez
+
+variable res : tez = 0tz
+
+view get_value() : tez {
+  return res
+}

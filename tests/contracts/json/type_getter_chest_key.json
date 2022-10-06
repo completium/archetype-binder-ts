@@ -1,0 +1,35 @@
+{
+  "name": "type_getter_chest_key",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "chest_key",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "chest_key",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_bls12_381_fr
+
+variable res : bls12_381_fr = 0x12
+
+getter get_value() : bls12_381_fr {
+  return res
+}

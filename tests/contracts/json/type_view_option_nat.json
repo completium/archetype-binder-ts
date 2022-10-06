@@ -1,0 +1,47 @@
+{
+  "name": "type_view_option_nat",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [],
+  "views": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "option",
+        "name": null,
+        "args": [
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

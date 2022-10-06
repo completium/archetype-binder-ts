@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_list_nat
+
+variable res : list<nat> = []
+
+getter get_value() : list<nat> {
+  return res
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_list_nat
+
+variable res : list<nat> = []
+
+view get_value() : list<nat> {
+  return res
+}

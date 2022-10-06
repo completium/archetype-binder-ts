@@ -1,0 +1,35 @@
+{
+  "name": "type_view_key",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "key",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [],
+  "views": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "key",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "errors": []
+}

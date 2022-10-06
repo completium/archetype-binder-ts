@@ -1,0 +1,35 @@
+{
+  "name": "type_getter_bool",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "bool",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "bool",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

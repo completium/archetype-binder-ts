@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_option_nat
+
+variable res : option<nat> = none
+
+getter get_value() : option<nat> {
+  return res
+}

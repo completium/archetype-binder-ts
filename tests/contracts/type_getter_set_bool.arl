@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_set_bool
+
+variable res : set<bool> = []
+
+getter get_value() : set<bool> {
+  return res
+}

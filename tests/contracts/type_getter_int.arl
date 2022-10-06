@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_int
+
+variable res : int = 0i
+
+getter get_value() : int {
+  return res
+}

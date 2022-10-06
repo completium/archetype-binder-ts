@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_list_bool
+
+variable res : list<bool> = []
+
+getter get_value() : list<bool> {
+  return res
+}

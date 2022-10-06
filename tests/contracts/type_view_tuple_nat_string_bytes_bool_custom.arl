@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_tuple_nat_string_bytes_bool_custom
+
+variable res : (nat * (string * bytes) * bool) = ((0, ("", 0x), false))
+
+view get_value() : (nat * (string * bytes) * bool) {
+  return res
+}

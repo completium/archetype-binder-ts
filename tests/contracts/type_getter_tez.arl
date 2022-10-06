@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_tez
+
+variable res : tez = 0tz
+
+getter get_value() : tez {
+  return res
+}

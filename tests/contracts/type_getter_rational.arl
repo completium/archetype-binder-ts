@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_rational
+
+variable res : rational = 0.1
+
+getter get_value() : rational {
+  return res
+}

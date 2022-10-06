@@ -1,0 +1,35 @@
+{
+  "name": "type_view_rational",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "rational",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [],
+  "views": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "rational",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "errors": []
+}

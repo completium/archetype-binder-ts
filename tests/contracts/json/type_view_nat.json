@@ -1,0 +1,35 @@
+{
+  "name": "type_view_nat",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [],
+  "getters": [],
+  "views": [
+    {
+      "name": "get_value",
+      "args": [],
+      "return": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      }
+    }
+  ],
+  "errors": []
+}

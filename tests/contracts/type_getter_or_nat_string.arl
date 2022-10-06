@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_or_nat_string
+
+variable res : or<nat, string> = right<nat>("")
+
+getter get_value() : or<nat, string> {
+  return res
+}
