@@ -15,11 +15,6 @@
         "name": null,
         "args": [
           {
-            "node": "nat",
-            "name": null,
-            "args": []
-          },
-          {
             "node": "tuple",
             "name": null,
             "args": [
@@ -45,6 +40,11 @@
                 "args": []
               }
             ]
+          },
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
           }
         ]
       },

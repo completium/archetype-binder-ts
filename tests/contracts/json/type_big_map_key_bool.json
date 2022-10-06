@@ -15,12 +15,12 @@
         "name": null,
         "args": [
           {
-            "node": "nat",
+            "node": "bool",
             "name": null,
             "args": []
           },
           {
-            "node": "bool",
+            "node": "nat",
             "name": null,
             "args": []
           }

@@ -37,17 +37,17 @@ export class Type_map_key_key {
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<Array<[
-        att.Nat,
-        att.Key
+        att.Key,
+        att.Nat
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                att.Nat,
-                att.Key
+                att.Key,
+                att.Nat
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Key(x); })(e[1])]);
+                res.push([(x => { return new att.Key(x); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
             }
             return res;
         }

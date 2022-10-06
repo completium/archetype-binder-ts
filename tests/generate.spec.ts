@@ -91,262 +91,6 @@ const generate_type_gen = async (kind: string, f: (type_str: string, default_val
   await get_binding(contract_path);
 }
 
-const generate_type_simple = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_simple_${postfix}
-
-variable res : ${type_str} = ${default_value}
-
-entry set_value(i : ${type_str}) {
-  res := i
-}
-`;
-  await generate_type_gen('simple', generate_test, type_str, default_value, name);
-}
-
-const generate_type_option = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_option_${postfix}
-
-variable res : option<${type_str}> = none
-
-entry set_value(i : option<${type_str}>) {
-  res := i
-}
-`
-  await generate_type_gen('option', generate_test, type_str, default_value, name);
-}
-
-const generate_type_tuple = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_tuple_${postfix}
-
-variable res : (nat * ${type_str} * string) = ((0, ${default_value}, ""))
-
-entry set_value(i : ${type_str}) {
-  res := ((0, i, ""))
-}
-`
-  await generate_type_gen('tuple', generate_test, type_str, default_value, name);
-}
-
-const generate_type_or_left = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_or_left_${postfix}
-
-variable res : or<${type_str}, nat> = right<${type_str}>(0)
-
-entry set_value(i : ${type_str}) {
-  res := left<nat>(i)
-}
-`
-  await generate_type_gen('or_left', generate_test, type_str, default_value, name);
-}
-
-const generate_type_or_right = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_or_right_${postfix}
-
-variable res : or<nat, ${type_str}> = left<${type_str}>(0)
-
-entry set_value(i : ${type_str}) {
-  res := right<nat>(i)
-}
-`
-  await generate_type_gen('or_right', generate_test, type_str, default_value, name);
-}
-
-const generate_type_map_value = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_map_value_${postfix}
-
-variable res : map<nat, ${type_str}> = []
-
-entry set_value(i : ${type_str}) {
-  res.put(0, i)
-}
-`
-  await generate_type_gen('map_value', generate_test, type_str, default_value, name);
-}
-
-const generate_type_map_key = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_map_key_${postfix}
-
-variable res : map<nat, ${type_str}> = []
-
-entry set_value(i : ${type_str}) {
-  res.put(0, i)
-}
-`
-  await generate_type_gen('map_key', generate_test, type_str, default_value, name);
-}
-
-const generate_type_big_map_value = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_big_map_value_${postfix}
-
-variable res : big_map<nat, ${type_str}> = []
-
-entry set_value(i : ${type_str}) {
-  res.put(0, i)
-}
-`
-  await generate_type_gen('big_map_value', generate_test, type_str, default_value, name);
-}
-
-const generate_type_big_map_key = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_big_map_key_${postfix}
-
-variable res : big_map<nat, ${type_str}> = []
-
-entry set_value(i : ${type_str}) {
-  res.put(0, i)
-}
-`
-  await generate_type_gen('big_map_key', generate_test, type_str, default_value, name);
-}
-
-const generate_type_record = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_record_${postfix}
-
-record my_record {
-  n : nat;
-  v : ${type_str};
-  s : string;
-}
-
-variable res : my_record = {0; ${default_value}; ""}
-
-entry set_value(i : my_record) {
-  res := i
-}
-`
-  await generate_type_gen('record', generate_test, type_str, default_value, name);
-}
-
-const generate_type_asset_value_2 = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_value_2_${postfix}
-
-asset my_asset {
-  k : nat;
-  v : ${type_str};
-}
-
-entry asset_put(i : ${type_str}) {
-  my_asset.put({0; i})
-}
-`
-  await generate_type_gen('asset_value_2', generate_test, type_str, default_value, name);
-}
-
-const generate_type_asset_value_3 = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_value_3_${postfix}
-
-asset my_asset {
-  k : nat;
-  s : string;
-  v : ${type_str};
-}
-
-entry asset_put(i : ${type_str}) {
-  my_asset.put({0; ""; i})
-}
-`
-  await generate_type_gen('asset_value_3', generate_test, type_str, default_value, name);
-}
-
-const generate_type_asset_key_1 = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_key_1_${postfix}
-
-asset my_asset {
-  k : ${type_str};
-  v : string;
-}
-
-entry asset_put(i : ${type_str}) {
-  my_asset.put({i; ""})
-}
-`
-  await generate_type_gen('asset_key_1', generate_test, type_str, default_value, name);
-}
-
-const generate_type_asset_key_2 = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_key_2_${postfix}
-
-asset my_asset identified by k n {
-  k : ${type_str};
-  n : nat;
-  v : string;
-}
-
-entry asset_put(i : ${type_str}) {
-  my_asset.put({i; 0; ""})
-}
-`
-  await generate_type_gen('asset_key_2', generate_test, type_str, default_value, name);
-}
-
-const generate_type_parameter = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_${postfix}(res : ${type_str})
-
-entry asset_add(i : ${type_str}) {
-  res := i
-}
-`
-  await generate_type_gen('parameter', generate_test, type_str, default_value, name);
-}
-
-const generate_type_getter = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_getter_${postfix}
-
-variable res : ${type_str} = ${default_value}
-
-getter get_value() : ${type_str} {
-  return res
-}
-`
-  await generate_type_gen('getter', generate_test, type_str, default_value, name);
-}
-
-const generate_type_view = async (type_str: string, default_value: string, name?: string) => {
-  const generate_test = (type_str: string, default_value: string, postfix: string): string =>
-    `/* DO NOT EDIT, GENERATED FILE */
-archetype type_view_${postfix}
-
-variable res : ${type_str} = ${default_value}
-
-view get_value() : ${type_str} {
-  return res
-}
-`
-  await generate_type_gen('view', generate_test, type_str, default_value, name);
-}
-
 const iterate_on_types = async (g: (type_str: string, default_value: string, name?: string) => Promise<void>) => {
   for (let e of type_default_name) {
     const name = e[2] !== undefined ? e[2] : e[0];
@@ -378,70 +122,309 @@ describe('Generate binding fails', async () => {
 })
 
 describe('Generate binding type simple', async () => {
+  const generate_type_simple = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_${postfix}
+
+variable res : ${type_str} = ${default_value}
+
+entry set_value(i : ${type_str}) {
+  res := i
+}
+`;
+    await generate_type_gen('simple', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_simple)
 })
 
 describe('Generate binding type option', async () => {
+  const generate_type_option = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_${postfix}
+
+variable res : option<${type_str}> = none
+
+entry set_value(i : option<${type_str}>) {
+  res := i
+}
+`
+    await generate_type_gen('option', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_option)
 })
 
 describe('Generate binding type tuple', async () => {
+  const generate_type_tuple = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_${postfix}
+
+variable res : (nat * ${type_str} * string) = ((0, ${default_value}, ""))
+
+entry set_value(i : ${type_str}) {
+  res := ((0, i, ""))
+}
+`
+    await generate_type_gen('tuple', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_tuple)
 })
 
 describe('Generate binding type or left', async () => {
+  const generate_type_or_left = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_${postfix}
+
+variable res : or<${type_str}, nat> = right<${type_str}>(0)
+
+entry set_value(i : ${type_str}) {
+  res := left<nat>(i)
+}
+`
+    await generate_type_gen('or_left', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_or_left)
 })
 
 describe('Generate binding type or right', async () => {
+  const generate_type_or_right = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_${postfix}
+
+variable res : or<nat, ${type_str}> = left<${type_str}>(0)
+
+entry set_value(i : ${type_str}) {
+  res := right<nat>(i)
+}
+`
+    await generate_type_gen('or_right', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_or_right)
 })
 
 describe('Generate binding type map key', async () => {
+  const generate_type_map_key = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_${postfix}
+
+variable res : map<${type_str}, nat> = []
+
+entry set_value(i : ${type_str}) {
+  res.put(i, 0)
+}
+`
+    await generate_type_gen('map_key', generate_test, type_str, default_value, name);
+  }
   iterate_on_comparable_types(generate_type_map_key)
 })
 
 describe('Generate binding type map value', async () => {
+  const generate_type_map_value = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_${postfix}
+
+variable res : map<nat, ${type_str}> = []
+
+entry set_value(i : ${type_str}) {
+  res.put(0, i)
+}
+`
+    await generate_type_gen('map_value', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_map_value)
 })
 
 describe('Generate binding type big map key', async () => {
+  const generate_type_big_map_key = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_key_${postfix}
+
+variable res : big_map<${type_str}, nat> = []
+
+entry set_value(i : ${type_str}) {
+  res.put(i, 0)
+}
+`
+    await generate_type_gen('big_map_key', generate_test, type_str, default_value, name);
+  }
   iterate_on_comparable_types(generate_type_big_map_key)
 })
 
 describe('Generate binding type big map value', async () => {
+  const generate_type_big_map_value = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_value_${postfix}
+
+variable res : big_map<nat, ${type_str}> = []
+
+entry set_value(i : ${type_str}) {
+  res.put(0, i)
+}
+`
+    await generate_type_gen('big_map_value', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_big_map_value)
 })
 
 describe('Generate binding type record', async () => {
+  const generate_type_record = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_${postfix}
+
+record my_record {
+  n : nat;
+  v : ${type_str};
+  s : string;
+}
+
+variable res : my_record = {0; ${default_value}; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}
+`
+    await generate_type_gen('record', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_record)
 })
 
 describe('Generate binding type asset_value_2', async () => {
+  const generate_type_asset_value_2 = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_${postfix}
+
+asset my_asset {
+  k : nat;
+  v : ${type_str};
+}
+
+entry asset_put(i : ${type_str}) {
+  my_asset.put({0; i})
+}
+`
+    await generate_type_gen('asset_value_2', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_asset_value_2)
 })
 
 describe('Generate binding type asset_value_3', async () => {
+  const generate_type_asset_value_3 = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_${postfix}
+
+asset my_asset {
+  k : nat;
+  s : string;
+  v : ${type_str};
+}
+
+entry asset_put(i : ${type_str}) {
+  my_asset.put({0; ""; i})
+}
+`
+    await generate_type_gen('asset_value_3', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_asset_value_3)
 })
 
 describe('Generate binding type asset_key_1', async () => {
+  const generate_type_asset_key_1 = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_${postfix}
+
+asset my_asset {
+  k : ${type_str};
+  v : string;
+}
+
+entry asset_put(i : ${type_str}) {
+  my_asset.put({i; ""})
+}
+`
+    await generate_type_gen('asset_key_1', generate_test, type_str, default_value, name);
+  }
   iterate_on_comparable_types(generate_type_asset_key_1)
 })
 
 describe('Generate binding type asset_key_2', async () => {
+  const generate_type_asset_key_2 = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_2_${postfix}
+
+asset my_asset identified by k n {
+  k : ${type_str};
+  n : nat;
+  v : string;
+}
+
+entry asset_put(i : ${type_str}) {
+  my_asset.put({i; 0; ""})
+}
+`
+    await generate_type_gen('asset_key_2', generate_test, type_str, default_value, name);
+  }
   iterate_on_comparable_types(generate_type_asset_key_2)
 })
 
 describe('Generate binding type parameter', async () => {
+  const generate_type_parameter = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_parameter_${postfix}(res : ${type_str})
+
+entry asset_add(i : ${type_str}) {
+  res := i
+}
+`
+    await generate_type_gen('parameter', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_parameter)
 })
 
 describe('Generate binding type getter', async () => {
+  const generate_type_getter = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_${postfix}
+
+variable res : ${type_str} = ${default_value}
+
+getter get_value() : ${type_str} {
+  return res
+}
+`
+    await generate_type_gen('getter', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_getter)
 })
 
 describe('Generate binding type view', async () => {
+  const generate_type_view = async (type_str: string, default_value: string, name?: string) => {
+    const generate_test = (type_str: string, default_value: string, postfix: string): string =>
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_${postfix}
+
+variable res : ${type_str} = ${default_value}
+
+view get_value() : ${type_str} {
+  return res
+}
+`
+    await generate_type_gen('view', generate_test, type_str, default_value, name);
+  }
   iterate_on_types(generate_type_view)
 })
 

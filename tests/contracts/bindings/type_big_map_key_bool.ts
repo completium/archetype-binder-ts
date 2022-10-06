@@ -36,12 +36,12 @@ export class Type_big_map_key_bool {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res_value(key: att.Nat): Promise<boolean | undefined> {
+    async get_res_value(key: boolean): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage.res), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", [])), collapsed = true;
             if (data != undefined) {
-                return att.mich_to_bool(data);
+                return att.mich_to_nat(data);
             }
             else {
                 return undefined;
@@ -49,10 +49,10 @@ export class Type_big_map_key_bool {
         }
         throw new Error("Contract not initialised");
     }
-    async has_res_value(key: att.Nat): Promise<boolean> {
+    async has_res_value(key: boolean): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage.res), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

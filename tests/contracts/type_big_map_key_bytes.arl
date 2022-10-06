@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_bytes
 
-variable res : big_map<nat, bytes> = []
+variable res : big_map<bytes, nat> = []
 
 entry set_value(i : bytes) {
-  res.put(0, i)
+  res.put(i, 0)
 }

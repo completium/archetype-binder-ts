@@ -15,12 +15,12 @@
         "name": null,
         "args": [
           {
-            "node": "nat",
+            "node": "key_hash",
             "name": null,
             "args": []
           },
           {
-            "node": "key_hash",
+            "node": "nat",
             "name": null,
             "args": []
           }

@@ -15,12 +15,12 @@
         "name": null,
         "args": [
           {
-            "node": "nat",
+            "node": "rational",
             "name": null,
             "args": []
           },
           {
-            "node": "rational",
+            "node": "nat",
             "name": null,
             "args": []
           }

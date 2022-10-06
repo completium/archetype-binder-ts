@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_or_nat_string
 
-variable res : big_map<nat, or<nat, string>> = []
+variable res : big_map<or<nat, string>, nat> = []
 
 entry set_value(i : or<nat, string>) {
-  res.put(0, i)
+  res.put(i, 0)
 }

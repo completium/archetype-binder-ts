@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_signature
 
-variable res : big_map<nat, signature> = []
+variable res : big_map<signature, nat> = []
 
 entry set_value(i : signature) {
-  res.put(0, i)
+  res.put(i, 0)
 }

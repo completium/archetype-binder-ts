@@ -15,12 +15,12 @@
         "name": null,
         "args": [
           {
-            "node": "nat",
+            "node": "currency",
             "name": null,
             "args": []
           },
           {
-            "node": "currency",
+            "node": "nat",
             "name": null,
             "args": []
           }

@@ -54,24 +54,18 @@ export class Type_big_map_key_tuple_nat_string_bytes_rev {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res_value(key: att.Nat): Promise<[
+    async get_res_value(key: [
         [
             att.Nat,
             string
         ],
         att.Bytes
-    ] | undefined> {
+    ]): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage.res), att.pair_to_mich([att.pair_to_mich([key[0][0].to_mich(), att.string_to_mich(key[0][1])]), key[1].to_mich()]), att.prim_annot_to_mich_type("tuple", [])), collapsed = true;
             if (data != undefined) {
-                return (p => {
-                    const p0 = (p as att.Mpair);
-                    return [(p => {
-                            const p0 = (p as att.Mpair);
-                            return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
-                        })(p0.args[0]), att.mich_to_bytes(p0.args[1])];
-                })(data);
+                return att.mich_to_nat(data);
             }
             else {
                 return undefined;
@@ -79,10 +73,16 @@ export class Type_big_map_key_tuple_nat_string_bytes_rev {
         }
         throw new Error("Contract not initialised");
     }
-    async has_res_value(key: att.Nat): Promise<boolean> {
+    async has_res_value(key: [
+        [
+            att.Nat,
+            string
+        ],
+        att.Bytes
+    ]): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage.res), att.pair_to_mich([att.pair_to_mich([key[0][0].to_mich(), att.string_to_mich(key[0][1])]), key[1].to_mich()]), att.prim_annot_to_mich_type("tuple", [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

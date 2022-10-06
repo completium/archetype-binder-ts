@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_tuple_nat_string_bytes_bool
 
-variable res : big_map<nat, (nat * string * bytes * bool)> = []
+variable res : big_map<(nat * string * bytes * bool), nat> = []
 
 entry set_value(i : (nat * string * bytes * bool)) {
-  res.put(0, i)
+  res.put(i, 0)
 }

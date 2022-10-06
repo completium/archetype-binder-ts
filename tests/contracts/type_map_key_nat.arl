@@ -4,5 +4,5 @@ archetype type_map_key_nat
 variable res : map<nat, nat> = []
 
 entry set_value(i : nat) {
-  res.put(0, i)
+  res.put(i, 0)
 }

@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_duration
 
-variable res : big_map<nat, duration> = []
+variable res : big_map<duration, nat> = []
 
 entry set_value(i : duration) {
-  res.put(0, i)
+  res.put(i, 0)
 }

@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_map_key_tuple_nat_string_bytes_rev
 
-variable res : map<nat, ((nat * string) * bytes)> = []
+variable res : map<((nat * string) * bytes), nat> = []
 
 entry set_value(i : ((nat * string) * bytes)) {
-  res.put(0, i)
+  res.put(i, 0)
 }

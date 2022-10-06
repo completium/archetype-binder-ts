@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_big_map_key_tez
 
-variable res : big_map<nat, tez> = []
+variable res : big_map<tez, nat> = []
 
 entry set_value(i : tez) {
-  res.put(0, i)
+  res.put(i, 0)
 }
