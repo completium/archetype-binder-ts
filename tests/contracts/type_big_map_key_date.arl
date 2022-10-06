@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_key_date
+
+variable res : big_map<date, nat> = []
+
+entry set_value(i : date) {
+  res.put(i, 0)
+}

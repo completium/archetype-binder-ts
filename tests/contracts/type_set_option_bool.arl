@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_option_bool
+
+variable res : list<option<bool>> = []
+
+entry set_value(i : list<option<bool>>) {
+  res := i
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_list_string
+
+variable res : list<list<string>> = []
+
+entry set_value(i : list<list<string>>) {
+  res := i
+}

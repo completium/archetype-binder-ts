@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_date
+
+record my_record {
+  n : nat;
+  v : date;
+  s : string;
+}
+
+variable res : my_record = {0; 2020-01-01; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

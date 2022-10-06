@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_date
+
+asset my_asset {
+  k : date;
+  v : string;
+}
+
+entry asset_put(i : date) {
+  my_asset.put({i; ""})
+}

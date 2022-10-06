@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_chest
+
+variable res : list<chest> = []
+
+entry set_value(i : list<chest>) {
+  res := i
+}

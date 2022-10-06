@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_date
+
+variable res : or<date, nat> = right<date>(0)
+
+entry set_value(i : date) {
+  res := left<nat>(i)
+}

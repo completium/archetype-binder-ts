@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_value_date
+
+variable res : map<nat, date> = []
+
+entry set_value(i : date) {
+  res.put(0, i)
+}

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_date
+
+variable res : option<date> = none
+
+entry set_value(i : option<date>) {
+  res := i
+}
