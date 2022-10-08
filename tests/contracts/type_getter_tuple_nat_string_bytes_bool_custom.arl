@@ -3,6 +3,7 @@ archetype type_getter_tuple_nat_string_bytes_bool_custom
 
 variable res : (nat * (string * bytes) * bool) = ((0, ("", 0x), false))
 
-getter get_value() : (nat * (string * bytes) * bool) {
+getter get_value(i : (nat * (string * bytes) * bool)) : (nat * (string * bytes) * bool) {
+  res := i;
   return res
 }

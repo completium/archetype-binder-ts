@@ -3,6 +3,7 @@ archetype type_getter_option_string
 
 variable res : option<string> = none
 
-getter get_value() : option<string> {
+getter get_value(i : option<string>) : option<string> {
+  res := i;
   return res
 }

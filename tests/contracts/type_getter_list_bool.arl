@@ -3,6 +3,7 @@ archetype type_getter_list_bool
 
 variable res : list<bool> = []
 
-getter get_value() : list<bool> {
+getter get_value(i : list<bool>) : list<bool> {
+  res := i;
   return res
 }

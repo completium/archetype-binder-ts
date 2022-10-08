@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_chain_id",
+  "name": "type_parameter_chain_id",
   "parameters": [
     {
       "name": "res",

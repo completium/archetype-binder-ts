@@ -4,5 +4,5 @@ archetype type_tuple_chain_id
 variable res : (nat * chain_id * string) = ((0, "NetXLH1uAxK7CCh", ""))
 
 entry set_value(i : chain_id) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

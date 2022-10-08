@@ -3,6 +3,7 @@ archetype type_getter_nat
 
 variable res : nat = 0
 
-getter get_value() : nat {
+getter get_value(i : nat) : nat {
+  res := i;
   return res
 }

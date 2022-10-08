@@ -4,5 +4,5 @@ archetype type_tuple_tuple_nat_string_bytes_bool_custom
 variable res : (nat * (nat * (string * bytes) * bool) * string) = ((0, ((0, ("", 0x), false)), ""))
 
 entry set_value(i : (nat * (string * bytes) * bool)) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

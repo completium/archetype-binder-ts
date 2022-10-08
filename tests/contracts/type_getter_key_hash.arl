@@ -3,6 +3,7 @@ archetype type_getter_key_hash
 
 variable res : key_hash = "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg"
 
-getter get_value() : key_hash {
+getter get_value(i : key_hash) : key_hash {
+  res := i;
   return res
 }

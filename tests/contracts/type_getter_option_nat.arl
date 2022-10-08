@@ -3,6 +3,7 @@ archetype type_getter_option_nat
 
 variable res : option<nat> = none
 
-getter get_value() : option<nat> {
+getter get_value(i : option<nat>) : option<nat> {
+  res := i;
   return res
 }

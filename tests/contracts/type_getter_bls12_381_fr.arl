@@ -3,6 +3,7 @@ archetype type_getter_bls12_381_fr
 
 variable res : bls12_381_fr = 0x12
 
-getter get_value() : bls12_381_fr {
+getter get_value(i : bls12_381_fr) : bls12_381_fr {
+  res := i;
   return res
 }

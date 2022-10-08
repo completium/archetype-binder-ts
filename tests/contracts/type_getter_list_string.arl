@@ -3,6 +3,7 @@ archetype type_getter_list_string
 
 variable res : list<string> = []
 
-getter get_value() : list<string> {
+getter get_value(i : list<string>) : list<string> {
+  res := i;
   return res
 }

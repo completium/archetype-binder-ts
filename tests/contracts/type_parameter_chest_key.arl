@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_chest_key(res : chest_key)
+archetype type_parameter_chest_key(res : chest_key)
 
 entry asset_add(i : chest_key) {
   res := i

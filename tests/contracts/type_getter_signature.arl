@@ -3,6 +3,7 @@ archetype type_getter_signature
 
 variable res : signature = "edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"
 
-getter get_value() : signature {
+getter get_value(i : signature) : signature {
+  res := i;
   return res
 }

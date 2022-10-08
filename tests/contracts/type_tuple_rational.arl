@@ -4,5 +4,5 @@ archetype type_tuple_rational
 variable res : (nat * rational * string) = ((0, 0.1, ""))
 
 entry set_value(i : rational) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

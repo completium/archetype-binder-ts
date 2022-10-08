@@ -4,5 +4,5 @@ archetype type_tuple_date
 variable res : (nat * date * string) = ((0, 2020-01-01, ""))
 
 entry set_value(i : date) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

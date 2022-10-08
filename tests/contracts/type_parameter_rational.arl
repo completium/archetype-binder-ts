@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_rational(res : rational)
+archetype type_parameter_rational(res : rational)
 
 entry asset_add(i : rational) {
   res := i

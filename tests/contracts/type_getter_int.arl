@@ -3,6 +3,7 @@ archetype type_getter_int
 
 variable res : int = 0i
 
-getter get_value() : int {
+getter get_value(i : int) : int {
+  res := i;
   return res
 }

@@ -4,5 +4,5 @@ archetype type_tuple_address
 variable res : (nat * address * string) = ((0, tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg, ""))
 
 entry set_value(i : address) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

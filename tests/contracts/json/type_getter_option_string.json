@@ -28,7 +28,22 @@
   "getters": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "option",
+            "name": null,
+            "args": [
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ],
       "return": {
         "node": "option",
         "name": null,

@@ -194,16 +194,30 @@ const finalize = (r: Ret) => {
   fs.writeFileSync(`./tests/type_${r.kind}.spec.ts`, output);
 }
 
-const myiter = (gen_it: (item: item) => string): ((accu: Ret, item: item) => Ret) => {
+class iter_settings {
+  public gen_it: (item: item) => string;
+  public import_star: boolean;
+  constructor(gen_it: (item: item) => string, import_star?: boolean) {
+    this.gen_it = gen_it
+    this.import_star = import_star ? import_star : false
+  }
+}
+
+const myiter = (is: iter_settings): ((accu: Ret, item: item) => Ret) => {
   const res: (accu: Ret, item: item) => Ret = (accu: Ret, item: item) => {
     const comment = item.is_inactivate()
     const name = item.get_name();
     const kind = accu.kind;
 
-    accu.importss.push(`${comment ? '//' : ''}import { type_${kind}_${name} } from './contracts/bindings/type_${kind}_${name}'\n`)
+    if (is.import_star) {
+      accu.importss.push(`${comment ? '//' : ''}import * as type_${kind}_${name} from './contracts/bindings/type_${kind}_${name}'\n`)
+    } else {
+      accu.importss.push(`${comment ? '//' : ''}import { type_${kind}_${name} } from './contracts/bindings/type_${kind}_${name}'\n`)
+    }
+
     accu.items.push(`// ${name}
   ${comment ? '/*' : ''}it('${name}', async () => {
-    ${gen_it(item)}
+    ${is.gen_it(item)}
   });${comment ? '*/' : ''}
 
   `
@@ -213,12 +227,12 @@ const myiter = (gen_it: (item: item) => string): ((accu: Ret, item: item) => Ret
   return res;
 }
 
-const iterate_on_types = async (kind : string, g: (item: item) => Promise<void>, gen_it: (item: item) => string) => {
-  iterate_on_comparable_types_gen(kind, g, myiter(gen_it), finalize, ((e: item) => true))
+const iterate_on_types = async (kind : string, g: (item: item) => Promise<void>, is: iter_settings) => {
+  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true))
 }
 
-const iterate_on_comparable_types = async (kind : string, g: (item: item) => Promise<void>, gen_it: (item: item) => string) => {
-  iterate_on_comparable_types_gen(kind, g, myiter(gen_it), finalize, ((e: item) => e.comparable))
+const iterate_on_comparable_types = async (kind : string, g: (item: item) => Promise<void>, is: iter_settings) => {
+  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable))
 }
 
 describe('Generate binding fails', async () => {
@@ -256,7 +270,7 @@ entry set_value(i : ${item.type}) {
     const res = await type_simple_${name}.get_res();
     assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_simple, gen_it)
+  iterate_on_types(kind, generate_type_simple, new iter_settings(gen_it))
 })
 
 describe('Generate binding type option', async () => {
@@ -283,7 +297,7 @@ entry set_value(i : option<${item.type}>) {
     const res = await type_option_${name}.get_res();
     assert(v.equals(res), "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_option, gen_it)
+  iterate_on_types(kind, generate_type_option, new iter_settings(gen_it))
 })
 
 describe('Generate binding type set', async () => {
@@ -311,7 +325,7 @@ entry set_value(i : set<${item.type}>) {
     const res = await type_${kind}_${name}.get_res();
     assert(v.length == res.length && ${fun_eq != null ? `${fun_eq}(v[0], res[0])` : 'v[0].equals(res[0])'}, "Invalid Value")`
   };
-  iterate_on_comparable_types(kind, generate_type_option, gen_it)
+  iterate_on_comparable_types(kind, generate_type_option, new iter_settings(gen_it))
 })
 
 describe('Generate binding type list', async () => {
@@ -339,7 +353,7 @@ entry set_value(i : list<${item.type}>) {
     const res = await type_${kind}_${name}.get_res();
     assert(v.length == res.length && ${fun_eq != null ? `${fun_eq}(v[0], res[0])` : 'v[0].equals(res[0])'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_option, gen_it)
+  iterate_on_types(kind, generate_type_option, new iter_settings(gen_it))
 })
 
 
@@ -368,7 +382,7 @@ entry set_value(i : ${item.type}) {
     const res = await type_${kind}_${name}.get_res();
     assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0])` : 'v.equals(res[0][0])'}, "Invalid Value")`
   };
-  iterate_on_comparable_types(kind, generate_type_map_key, gen_it)
+  iterate_on_comparable_types(kind, generate_type_map_key, new iter_settings(gen_it))
 })
 
 describe('Generate binding type map value', async () => {
@@ -396,7 +410,7 @@ entry set_value(i : ${item.type}) {
     const res = await type_${kind}_${name}.get_res();
     assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1])` : 'v.equals(res[0][1])'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_map_value, gen_it)
+  iterate_on_types(kind, generate_type_map_value, new iter_settings(gen_it))
 })
 
 
@@ -419,9 +433,15 @@ entry set_value(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res_value(v);
+    assert(res?.equals(new Nat(0)), "Invalid Value")
+    const c = await type_${kind}_${name}.has_res_value(v);
+    assert(c, "Invalid Value")`
   };
-  iterate_on_comparable_types(kind, generate_type_big_map_key, gen_it)
+  iterate_on_comparable_types(kind, generate_type_big_map_key, new iter_settings(gen_it))
 })
 
 describe('Generate binding type big map value', async () => {
@@ -443,9 +463,15 @@ entry set_value(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res_value(new Nat(0));
+    assert(res !== undefined && ${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")
+    const c = await type_${kind}_${name}.has_res_value(new Nat(0));
+    assert(c, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_big_map_value, gen_it)
+  iterate_on_types(kind, generate_type_big_map_value, new iter_settings(gen_it))
 })
 
 describe('Generate binding type tuple', async () => {
@@ -458,7 +484,7 @@ archetype type_${kind}_${item.get_name()}
 variable res : (nat * ${item.type} * string) = ((0, ${item.value}, ""))
 
 entry set_value(i : ${item.type}) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }
 `
     await generate_type_gen(kind, content_arl, item);
@@ -467,9 +493,13 @@ entry set_value(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(${fun_eq != null ? `${fun_eq}(v, res[1])` : 'v.equals(res[1])'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_tuple, gen_it)
+  iterate_on_types(kind, generate_type_tuple, new iter_settings(gen_it))
 })
 
 describe('Generate binding type or left', async () => {
@@ -493,7 +523,7 @@ entry set_value(i : ${item.type}) {
 
     return ``
   };
-  iterate_on_types(kind, generate_type_or_left, gen_it)
+  iterate_on_types(kind, generate_type_or_left, new iter_settings(gen_it))
 })
 
 describe('Generate binding type or right', async () => {
@@ -517,7 +547,7 @@ entry set_value(i : ${item.type}) {
 
     return ``
   };
-  iterate_on_types(kind, generate_type_or_right, gen_it)
+  iterate_on_types(kind, generate_type_or_right, new iter_settings(gen_it))
 })
 
 describe('Generate binding type record', async () => {
@@ -545,9 +575,13 @@ entry set_value(i : my_record) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : type_${kind}_${name}.my_record = new type_${kind}_${name}.my_record(new Nat(2), ${item.ts_value}, "mystr");
+    await type_${kind}_${name}.type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.type_${kind}_${name}.get_res();
+    assert(v.equals(res), "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_record, gen_it)
+  iterate_on_types(kind, generate_type_record, new iter_settings(gen_it, true))
 })
 
 describe('Generate binding type asset_value_2', async () => {
@@ -572,9 +606,13 @@ entry asset_put(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.asset_put(v, { as: alice });
+    const res = await type_${kind}_${name}.get_my_asset();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1])` : 'v.equals(res[0][1])'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_asset_value_2, gen_it)
+  iterate_on_types(kind, generate_type_asset_value_2, new iter_settings(gen_it))
 })
 
 describe('Generate binding type asset_value_3', async () => {
@@ -600,9 +638,13 @@ entry asset_put(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.asset_put(v, { as: alice });
+    const res = await type_${kind}_${name}.get_my_asset();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1].v)` : 'v.equals(res[0][1].v)'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_asset_value_3, gen_it)
+  iterate_on_types(kind, generate_type_asset_value_3, new iter_settings(gen_it))
 })
 
 describe('Generate binding type asset_key_1', async () => {
@@ -627,9 +669,13 @@ entry asset_put(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.asset_put(v, { as: alice });
+    const res = await type_${kind}_${name}.get_my_asset();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0])` : 'v.equals(res[0][0])'}, "Invalid Value")`
   };
-  iterate_on_comparable_types(kind, generate_type_asset_key_1, gen_it)
+  iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
 })
 
 describe('Generate binding type asset_key_2', async () => {
@@ -655,9 +701,13 @@ entry asset_put(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.asset_put(v, { as: alice });
+    const res = await type_${kind}_${name}.get_my_asset();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0].k)` : 'v.equals(res[0][0].k)'}, "Invalid Value")`
   };
-  iterate_on_comparable_types(kind, generate_type_asset_key_2, gen_it)
+  iterate_on_comparable_types(kind, generate_type_asset_key_2, new iter_settings(gen_it))
 })
 
 describe('Generate binding type parameter', async () => {
@@ -665,7 +715,7 @@ describe('Generate binding type parameter', async () => {
   const generate_type_parameter = async (item: item) => {
     const content_arl: string =
       `/* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_${kind}_${item.get_name()}(res : ${item.type})
+archetype type_${kind}_${item.get_name()}(res : ${item.type})
 
 entry asset_add(i : ${item.type}) {
   res := i
@@ -677,9 +727,12 @@ entry asset_add(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_parameter, gen_it)
+  iterate_on_types(kind, generate_type_parameter, new iter_settings(gen_it))
 })
 
 describe('Generate binding type getter', async () => {
@@ -691,7 +744,8 @@ archetype type_${kind}_${item.get_name()}
 
 variable res : ${item.type} = ${item.value}
 
-getter get_value() : ${item.type} {
+getter get_value(i : ${item.type}) : ${item.type} {
+  res := i;
   return res
 }
 `
@@ -701,9 +755,14 @@ getter get_value() : ${item.type} {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    const res = await type_${kind}_${name}.get_value({ as: alice });
+    const s = await type_${kind}_${name}.get_res();
+    assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value");
+    assert(${fun_eq != null ? `${fun_eq}(v, s)` : 'v.equals(s)'}, "Invalid Value");`
   };
-  iterate_on_types(kind, generate_type_getter, gen_it)
+  iterate_on_types(kind, generate_type_getter, new iter_settings(gen_it))
 })
 
 describe('Generate binding type view', async () => {
@@ -725,9 +784,12 @@ view get_value() : ${item.type} {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    const res = await type_${kind}_${name}.view_get_value({ as: alice });
+    assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_view, gen_it)
+  iterate_on_types(kind, generate_type_view, new iter_settings(gen_it))
 })
 
 describe('Abstract type', async () => {

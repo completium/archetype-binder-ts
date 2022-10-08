@@ -3,6 +3,7 @@ archetype type_getter_string
 
 variable res : string = ""
 
-getter get_value() : string {
+getter get_value(i : string) : string {
+  res := i;
   return res
 }

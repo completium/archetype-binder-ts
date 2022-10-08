@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_date(res : date)
+archetype type_parameter_date(res : date)
 
 entry asset_add(i : date) {
   res := i

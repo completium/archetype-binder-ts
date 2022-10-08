@@ -3,6 +3,7 @@ archetype type_getter_set_nat
 
 variable res : set<nat> = []
 
-getter get_value() : set<nat> {
+getter get_value(i : set<nat>) : set<nat> {
+  res := i;
   return res
 }

@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const asset_add_arg_to_mich = (i: att.Bls12_381_fr): att.Micheline => {
     return i.to_mich();
 }
-export class Type_asset_parameter_bls12_381_fr {
+export class Type_parameter_bls12_381_fr {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,7 +21,7 @@ export class Type_asset_parameter_bls12_381_fr {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Bls12_381_fr, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_bls12_381_fr.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_bls12_381_fr.arl", {
             res: res.to_mich()
         }, params);
         this.address = address;
@@ -47,4 +47,4 @@ export class Type_asset_parameter_bls12_381_fr {
     }
     errors = {};
 }
-export const type_asset_parameter_bls12_381_fr = new Type_asset_parameter_bls12_381_fr();
+export const type_parameter_bls12_381_fr = new Type_parameter_bls12_381_fr();

@@ -5,7 +5,7 @@ const asset_add_arg_to_mich = (i: Array<att.Nat>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_asset_parameter_list_nat {
+export class Type_parameter_list_nat {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_asset_parameter_list_nat {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Array<att.Nat>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_list_nat.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_list_nat.arl", {
             res: att.list_to_mich(res, x => {
                 return x.to_mich();
             })
@@ -55,4 +55,4 @@ export class Type_asset_parameter_list_nat {
     }
     errors = {};
 }
-export const type_asset_parameter_list_nat = new Type_asset_parameter_list_nat();
+export const type_parameter_list_nat = new Type_parameter_list_nat();

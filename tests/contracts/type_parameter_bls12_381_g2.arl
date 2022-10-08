@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_bls12_381_g2(res : bls12_381_g2)
+archetype type_parameter_bls12_381_g2(res : bls12_381_g2)
 
 entry asset_add(i : bls12_381_g2) {
   res := i

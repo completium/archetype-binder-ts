@@ -3,6 +3,7 @@ archetype type_getter_tuple_nat_string_bytes_rev
 
 variable res : ((nat * string) * bytes) = (((0, ""), 0x))
 
-getter get_value() : ((nat * string) * bytes) {
+getter get_value(i : ((nat * string) * bytes)) : ((nat * string) * bytes) {
+  res := i;
   return res
 }

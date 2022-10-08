@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_signature",
+  "name": "type_parameter_signature",
   "parameters": [
     {
       "name": "res",

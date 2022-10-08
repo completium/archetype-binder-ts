@@ -3,6 +3,7 @@ archetype type_getter_unit
 
 variable res : unit = Unit
 
-getter get_value() : unit {
+getter get_value(i : unit) : unit {
+  res := i;
   return res
 }

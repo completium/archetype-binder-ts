@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_signature(res : signature)
+archetype type_parameter_signature(res : signature)
 
 entry asset_add(i : signature) {
   res := i

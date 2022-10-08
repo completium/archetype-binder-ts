@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const asset_add_arg_to_mich = (i: att.Duration): att.Micheline => {
     return i.to_mich();
 }
-export class Type_asset_parameter_duration {
+export class Type_parameter_duration {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,7 +21,7 @@ export class Type_asset_parameter_duration {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Duration, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_duration.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_duration.arl", {
             res: res.to_mich()
         }, params);
         this.address = address;
@@ -47,4 +47,4 @@ export class Type_asset_parameter_duration {
     }
     errors = {};
 }
-export const type_asset_parameter_duration = new Type_asset_parameter_duration();
+export const type_parameter_duration = new Type_parameter_duration();

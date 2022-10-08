@@ -3,6 +3,7 @@ archetype type_getter_key
 
 variable res : key = "edpkurLzuFFL1XyP3fed4u7MsgeywQoQmHM45Bz91PBzDvUjQ9bvdn"
 
-getter get_value() : key {
+getter get_value(i : key) : key {
+  res := i;
   return res
 }

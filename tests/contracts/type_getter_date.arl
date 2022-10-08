@@ -3,6 +3,7 @@ archetype type_getter_date
 
 variable res : date = 2020-01-01
 
-getter get_value() : date {
+getter get_value(i : date) : date {
+  res := i;
   return res
 }

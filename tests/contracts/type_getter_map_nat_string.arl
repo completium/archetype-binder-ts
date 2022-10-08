@@ -3,6 +3,7 @@ archetype type_getter_map_nat_string
 
 variable res : map<nat, string> = []
 
-getter get_value() : map<nat, string> {
+getter get_value(i : map<nat, string>) : map<nat, string> {
+  res := i;
   return res
 }

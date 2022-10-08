@@ -5,7 +5,7 @@ const asset_add_arg_to_mich = (i: Array<boolean>): att.Micheline => {
         return att.bool_to_mich(x);
     });
 }
-export class Type_asset_parameter_set_bool {
+export class Type_parameter_set_bool {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_asset_parameter_set_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Array<boolean>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_set_bool.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_set_bool.arl", {
             res: att.list_to_mich(res, x => {
                 return att.bool_to_mich(x);
             })
@@ -55,4 +55,4 @@ export class Type_asset_parameter_set_bool {
     }
     errors = {};
 }
-export const type_asset_parameter_set_bool = new Type_asset_parameter_set_bool();
+export const type_parameter_set_bool = new Type_parameter_set_bool();

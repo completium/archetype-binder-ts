@@ -3,6 +3,7 @@ archetype type_getter_or_nat_string
 
 variable res : or<nat, string> = right<nat>("")
 
-getter get_value() : or<nat, string> {
+getter get_value(i : or<nat, string>) : or<nat, string> {
+  res := i;
   return res
 }

@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_sapling_transaction",
+  "name": "type_parameter_sapling_transaction",
   "parameters": [
     {
       "name": "res",

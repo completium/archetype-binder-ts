@@ -3,6 +3,7 @@ archetype type_getter_set_string
 
 variable res : set<string> = []
 
-getter get_value() : set<string> {
+getter get_value(i : set<string>) : set<string> {
+  res := i;
   return res
 }

@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_bls12_381_fr(res : bls12_381_fr)
+archetype type_parameter_bls12_381_fr(res : bls12_381_fr)
 
 entry asset_add(i : bls12_381_fr) {
   res := i

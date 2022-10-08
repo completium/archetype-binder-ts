@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_duration(res : duration)
+archetype type_parameter_duration(res : duration)
 
 entry asset_add(i : duration) {
   res := i

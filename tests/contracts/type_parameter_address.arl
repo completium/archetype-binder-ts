@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_address(res : address)
+archetype type_parameter_address(res : address)
 
 entry asset_add(i : address) {
   res := i

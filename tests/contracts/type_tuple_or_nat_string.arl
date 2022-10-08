@@ -4,5 +4,5 @@ archetype type_tuple_or_nat_string
 variable res : (nat * or<nat, string> * string) = ((0, right<nat>(""), ""))
 
 entry set_value(i : or<nat, string>) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_tuple_nat_string_bytes_bool_custom",
+  "name": "type_parameter_tuple_nat_string_bytes_bool_custom",
   "parameters": [
     {
       "name": "res",

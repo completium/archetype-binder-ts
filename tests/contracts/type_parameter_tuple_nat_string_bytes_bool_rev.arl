@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_tuple_nat_string_bytes_bool_rev(res : (((nat * string) * bytes) * bool))
+archetype type_parameter_tuple_nat_string_bytes_bool_rev(res : (((nat * string) * bytes) * bool))
 
 entry asset_add(i : (((nat * string) * bytes) * bool)) {
   res := i

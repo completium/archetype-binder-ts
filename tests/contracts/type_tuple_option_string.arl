@@ -4,5 +4,5 @@ archetype type_tuple_option_string
 variable res : (nat * option<string> * string) = ((0, none, ""))
 
 entry set_value(i : option<string>) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

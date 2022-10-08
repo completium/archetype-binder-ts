@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_key_hash",
+  "name": "type_parameter_key_hash",
   "parameters": [
     {
       "name": "res",

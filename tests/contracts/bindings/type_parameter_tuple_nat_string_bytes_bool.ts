@@ -8,7 +8,7 @@ const asset_add_arg_to_mich = (i: [
 ]): att.Micheline => {
     return att.pair_to_mich([i[0].to_mich(), att.string_to_mich(i[1]), i[2].to_mich(), att.bool_to_mich(i[3])]);
 }
-export class Type_asset_parameter_tuple_nat_string_bytes_bool {
+export class Type_parameter_tuple_nat_string_bytes_bool {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -31,7 +31,7 @@ export class Type_asset_parameter_tuple_nat_string_bytes_bool {
         att.Bytes,
         boolean
     ], params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_tuple_nat_string_bytes_bool.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string_bytes_bool.arl", {
             res: att.pair_to_mich([res[0].to_mich(), att.string_to_mich(res[1]), res[2].to_mich(), att.bool_to_mich(res[3])])
         }, params);
         this.address = address;
@@ -72,4 +72,4 @@ export class Type_asset_parameter_tuple_nat_string_bytes_bool {
     }
     errors = {};
 }
-export const type_asset_parameter_tuple_nat_string_bytes_bool = new Type_asset_parameter_tuple_nat_string_bytes_bool();
+export const type_parameter_tuple_nat_string_bytes_bool = new Type_parameter_tuple_nat_string_bytes_bool();

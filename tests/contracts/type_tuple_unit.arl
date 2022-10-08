@@ -4,5 +4,5 @@ archetype type_tuple_unit
 variable res : (nat * unit * string) = ((0, Unit, ""))
 
 entry set_value(i : unit) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

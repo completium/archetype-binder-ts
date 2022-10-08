@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_bls12_381_g2",
+  "name": "type_parameter_bls12_381_g2",
   "parameters": [
     {
       "name": "res",

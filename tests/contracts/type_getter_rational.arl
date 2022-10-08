@@ -3,6 +3,7 @@ archetype type_getter_rational
 
 variable res : rational = 0.1
 
-getter get_value() : rational {
+getter get_value(i : rational) : rational {
+  res := i;
   return res
 }

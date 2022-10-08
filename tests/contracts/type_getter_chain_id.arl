@@ -3,6 +3,7 @@ archetype type_getter_chain_id
 
 variable res : chain_id = "NetXLH1uAxK7CCh"
 
-getter get_value() : chain_id {
+getter get_value(i : chain_id) : chain_id {
+  res := i;
   return res
 }

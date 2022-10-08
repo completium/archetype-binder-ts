@@ -22,7 +22,16 @@
   "getters": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "address",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "address",
         "name": null,

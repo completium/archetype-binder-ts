@@ -3,6 +3,7 @@ archetype type_getter_bytes
 
 variable res : bytes = 0x
 
-getter get_value() : bytes {
+getter get_value(i : bytes) : bytes {
+  res := i;
   return res
 }

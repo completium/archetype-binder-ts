@@ -6,7 +6,7 @@ const asset_add_arg_to_mich = (i: [
 ]): att.Micheline => {
     return att.pair_to_mich([i[0].to_mich(), att.string_to_mich(i[1])]);
 }
-export class Type_asset_parameter_tuple_nat_string {
+export class Type_parameter_tuple_nat_string {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -27,7 +27,7 @@ export class Type_asset_parameter_tuple_nat_string {
         att.Nat,
         string
     ], params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_tuple_nat_string.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string.arl", {
             res: att.pair_to_mich([res[0].to_mich(), att.string_to_mich(res[1])])
         }, params);
         this.address = address;
@@ -62,4 +62,4 @@ export class Type_asset_parameter_tuple_nat_string {
     }
     errors = {};
 }
-export const type_asset_parameter_tuple_nat_string = new Type_asset_parameter_tuple_nat_string();
+export const type_parameter_tuple_nat_string = new Type_parameter_tuple_nat_string();

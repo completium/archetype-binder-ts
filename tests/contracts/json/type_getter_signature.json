@@ -22,7 +22,16 @@
   "getters": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "signature",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "signature",
         "name": null,

@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_tez",
+  "name": "type_parameter_tez",
   "parameters": [
     {
       "name": "res",

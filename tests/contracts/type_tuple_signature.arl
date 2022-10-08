@@ -4,5 +4,5 @@ archetype type_tuple_signature
 variable res : (nat * signature * string) = ((0, "edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8", ""))
 
 entry set_value(i : signature) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

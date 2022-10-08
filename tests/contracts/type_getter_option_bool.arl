@@ -3,6 +3,7 @@ archetype type_getter_option_bool
 
 variable res : option<bool> = none
 
-getter get_value() : option<bool> {
+getter get_value(i : option<bool>) : option<bool> {
+  res := i;
   return res
 }

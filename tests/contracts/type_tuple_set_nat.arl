@@ -4,5 +4,5 @@ archetype type_tuple_set_nat
 variable res : (nat * set<nat> * string) = ((0, [], ""))
 
 entry set_value(i : set<nat>) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

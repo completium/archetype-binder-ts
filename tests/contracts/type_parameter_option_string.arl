@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_option_string(res : option<string>)
+archetype type_parameter_option_string(res : option<string>)
 
 entry asset_add(i : option<string>) {
   res := i

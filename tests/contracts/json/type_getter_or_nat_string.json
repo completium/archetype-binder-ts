@@ -33,7 +33,27 @@
   "getters": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "or",
+            "name": null,
+            "args": [
+              {
+                "node": "nat",
+                "name": null,
+                "args": []
+              },
+              {
+                "node": "string",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ],
       "return": {
         "node": "or",
         "name": null,

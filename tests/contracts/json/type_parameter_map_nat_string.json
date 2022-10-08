@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_map_nat_string",
+  "name": "type_parameter_map_nat_string",
   "parameters": [
     {
       "name": "res",

@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_sapling_transaction(res : sapling_transaction(8))
+archetype type_parameter_sapling_transaction(res : sapling_transaction(8))
 
 entry asset_add(i : sapling_transaction(8)) {
   res := i

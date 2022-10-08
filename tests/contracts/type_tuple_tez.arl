@@ -4,5 +4,5 @@ archetype type_tuple_tez
 variable res : (nat * tez * string) = ((0, 0tz, ""))
 
 entry set_value(i : tez) {
-  res := ((0, i, ""))
+  res := ((2, i, "mystr"))
 }

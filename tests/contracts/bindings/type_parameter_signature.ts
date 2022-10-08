@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const asset_add_arg_to_mich = (i: att.Signature): att.Micheline => {
     return i.to_mich();
 }
-export class Type_asset_parameter_signature {
+export class Type_parameter_signature {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,7 +21,7 @@ export class Type_asset_parameter_signature {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Signature, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_parameter_signature.arl", {
+        const address = await ex.deploy("./tests/contracts/type_parameter_signature.arl", {
             res: res.to_mich()
         }, params);
         this.address = address;
@@ -47,4 +47,4 @@ export class Type_asset_parameter_signature {
     }
     errors = {};
 }
-export const type_asset_parameter_signature = new Type_asset_parameter_signature();
+export const type_parameter_signature = new Type_parameter_signature();

@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_option_nat",
+  "name": "type_parameter_option_nat",
   "parameters": [
     {
       "name": "res",

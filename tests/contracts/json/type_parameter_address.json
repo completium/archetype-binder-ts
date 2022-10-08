@@ -1,5 +1,5 @@
 {
-  "name": "type_asset_parameter_address",
+  "name": "type_parameter_address",
   "parameters": [
     {
       "name": "res",

@@ -3,6 +3,7 @@ archetype type_getter_duration
 
 variable res : duration = 1s
 
-getter get_value() : duration {
+getter get_value(i : duration) : duration {
+  res := i;
   return res
 }

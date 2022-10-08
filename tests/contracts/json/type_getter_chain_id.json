@@ -22,7 +22,16 @@
   "getters": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "chain_id",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "chain_id",
         "name": null,

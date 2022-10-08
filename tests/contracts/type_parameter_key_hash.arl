@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_key_hash(res : key_hash)
+archetype type_parameter_key_hash(res : key_hash)
 
 entry asset_add(i : key_hash) {
   res := i

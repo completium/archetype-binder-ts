@@ -1,5 +1,5 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_asset_parameter_bool(res : bool)
+archetype type_parameter_bool(res : bool)
 
 entry asset_add(i : bool) {
   res := i

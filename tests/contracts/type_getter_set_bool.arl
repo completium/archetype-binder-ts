@@ -3,6 +3,7 @@ archetype type_getter_set_bool
 
 variable res : set<bool> = []
 
-getter get_value() : set<bool> {
+getter get_value(i : set<bool>) : set<bool> {
+  res := i;
   return res
 }
