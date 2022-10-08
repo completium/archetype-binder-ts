@@ -305,7 +305,11 @@ entry set_value(i : set<${item.type}>) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : Array<${item.ts_type}> = [${item.ts_value}];
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(v.length == res.length && ${fun_eq != null ? `${fun_eq}(v[0], res[0])` : 'v[0].equals(res[0])'}, "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_option, gen_it)
 })
@@ -329,7 +333,11 @@ entry set_value(i : list<${item.type}>) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : Array<${item.ts_type}> = [${item.ts_value}];
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(v.length == res.length && ${fun_eq != null ? `${fun_eq}(v[0], res[0])` : 'v[0].equals(res[0])'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_option, gen_it)
 })
@@ -354,7 +362,11 @@ entry set_value(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0])` : 'v.equals(res[0][0])'}, "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_map_key, gen_it)
 })
@@ -378,9 +390,62 @@ entry set_value(i : ${item.type}) {
     const name = item.get_name();
     const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1])` : 'v.equals(res[0][1])'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_map_value, gen_it)
+})
+
+
+describe('Generate binding type big map key', async () => {
+  const kind = 'big_map_key';
+  const generate_type_big_map_key = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+
+variable res : big_map<${item.type}, nat> = []
+
+entry set_value(i : ${item.type}) {
+  res.put(i, 0)
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const fun_eq = item.get_fun_eq();
+
+    return ``
+  };
+  iterate_on_comparable_types(kind, generate_type_big_map_key, gen_it)
+})
+
+describe('Generate binding type big map value', async () => {
+  const kind = 'big_map_value';
+  const generate_type_big_map_value = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+
+variable res : big_map<nat, ${item.type}> = []
+
+entry set_value(i : ${item.type}) {
+  res.put(0, i)
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const fun_eq = item.get_fun_eq();
+
+    return ``
+  };
+  iterate_on_types(kind, generate_type_big_map_value, gen_it)
 })
 
 describe('Generate binding type tuple', async () => {
@@ -453,54 +518,6 @@ entry set_value(i : ${item.type}) {
     return ``
   };
   iterate_on_types(kind, generate_type_or_right, gen_it)
-})
-
-describe('Generate binding type big map key', async () => {
-  const kind = 'big_map_key';
-  const generate_type_big_map_key = async (item: item) => {
-    const content_arl: string =
-      `/* DO NOT EDIT, GENERATED FILE */
-archetype type_${kind}_${item.get_name()}
-
-variable res : big_map<${item.type}, nat> = []
-
-entry set_value(i : ${item.type}) {
-  res.put(i, 0)
-}
-`
-    await generate_type_gen(kind, content_arl, item);
-  }
-  const gen_it = (item: item): string => {
-    const name = item.get_name();
-    const fun_eq = item.get_fun_eq();
-
-    return ``
-  };
-  iterate_on_comparable_types(kind, generate_type_big_map_key, gen_it)
-})
-
-describe('Generate binding type big map value', async () => {
-  const kind = 'big_map_value';
-  const generate_type_big_map_value = async (item: item) => {
-    const content_arl: string =
-      `/* DO NOT EDIT, GENERATED FILE */
-archetype type_${kind}_${item.get_name()}
-
-variable res : big_map<nat, ${item.type}> = []
-
-entry set_value(i : ${item.type}) {
-  res.put(0, i)
-}
-`
-    await generate_type_gen(kind, content_arl, item);
-  }
-  const gen_it = (item: item): string => {
-    const name = item.get_name();
-    const fun_eq = item.get_fun_eq();
-
-    return ``
-  };
-  iterate_on_types(kind, generate_type_big_map_value, gen_it)
 })
 
 describe('Generate binding type record', async () => {
