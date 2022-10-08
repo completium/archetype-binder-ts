@@ -18,6 +18,7 @@
       "const": false
     }
   ],
+  "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
@@ -28,6 +29,20 @@
         "node": "duration",
         "name": null,
         "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
       }
     }
   ],

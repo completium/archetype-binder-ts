@@ -40,6 +40,7 @@
     "events": []
   },
   "storage": [],
+  "storage_type": null,
   "entrypoints": [
     {
       "name": "asset_add",

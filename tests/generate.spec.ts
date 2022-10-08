@@ -1,7 +1,5 @@
 import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
 import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
-import * as ts from "typescript";
-
 import { BindingSettings, Language, Target, generate_binding } from '../src/main'
 import { ContractInterface } from '../src/utils'
 
@@ -140,12 +138,26 @@ describe('Type ${type}', async () => {
 
 /* Functions --------------------------------------------------------------- */
 
+const get_json = async (path_contract: string, filename: string): Promise<string> => {
+  const from_json = true;
+  let json: any;
+  if (from_json) {
+    const path = path_contracts + 'json/' + filename.replace('.arl', '.json');
+    const input : string = fs.readFileSync(path);
+    // console.log(input);
+    return input.toString();
+  } else {
+    const path_contract = path_contracts + filename;
+    json = await archetype.compile(path_contract, {
+      contract_interface: true
+    });
+    return json.replaceAll("keyHash", "key_hash")
+  }
+}
+
 const get_binding = async (filename: string) => {
-  const path_contract = path_contracts + filename;
-  const json = await archetype.compile(path_contract, {
-    contract_interface: true
-  });
-  let ci: ContractInterface = JSON.parse(json.replaceAll("keyHash", "key_hash"));
+  const json = await get_json(path_contracts, filename);
+  let ci: ContractInterface = JSON.parse(json);
   fs.writeFileSync(path_contracts + 'json/' + filename.replace('.arl', '.json'), JSON.stringify(ci, null, 2))
   const settings: BindingSettings = {
     language: Language.Archetype,
@@ -175,7 +187,7 @@ class Ret {
   }
 }
 
-const iterate_on_comparable_types_gen = async (kind : string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean) => {
+const iterate_on_comparable_types_gen = async (kind: string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean) => {
   const ret = new Ret(kind);
   for (let e of type_default_name) {
     if (doit(e)) {
@@ -227,11 +239,11 @@ const myiter = (is: iter_settings): ((accu: Ret, item: item) => Ret) => {
   return res;
 }
 
-const iterate_on_types = async (kind : string, g: (item: item) => Promise<void>, is: iter_settings) => {
+const iterate_on_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings) => {
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true))
 }
 
-const iterate_on_comparable_types = async (kind : string, g: (item: item) => Promise<void>, is: iter_settings) => {
+const iterate_on_comparable_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings) => {
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable))
 }
 

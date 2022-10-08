@@ -8,6 +8,7 @@
     "events": []
   },
   "storage": [],
+  "storage_type": null,
   "entrypoints": [
     {
       "name": "f",

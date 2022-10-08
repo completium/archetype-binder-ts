@@ -62,6 +62,7 @@
       "const": false
     }
   ],
+  "storage_type": null,
   "entrypoints": [
     {
       "name": "set_value",

@@ -208,6 +208,7 @@
       "const": false
     }
   ],
+  "storage_type": null,
   "entrypoints": [
     {
       "name": "asset_put",

@@ -18,6 +18,7 @@
       "const": false
     }
   ],
+  "storage_type": null,
   "entrypoints": [],
   "getters": [
     {
@@ -36,6 +37,20 @@
         "node": "sapling_transaction",
         "name": null,
         "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "sapling_transaction(8)",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
       }
     }
   ],

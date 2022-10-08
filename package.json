@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@completium/archetype-ts-types": "^0.0.6",
-    "@completium/experiment-ts": "^0.0.87",
+    "@completium/experiment-ts": "^0.0.90",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^10.0.0",
     "nyc": "^15.1.0",
