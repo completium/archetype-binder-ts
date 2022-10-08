@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_duration
+archetype type_set_duration
 
-variable res : list<duration> = []
+variable res : set<duration> = []
 
-entry set_value(i : list<duration>) {
+entry set_value(i : set<duration>) {
   res := i
 }

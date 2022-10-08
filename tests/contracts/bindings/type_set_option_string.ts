@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Option<string>>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_option_string {
+export class Type_set_option_string {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_option_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_option_string.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_option_string.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Option<string>>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_option_string {
     }
     errors = {};
 }
-export const type_list_option_string = new Type_list_option_string();
+export const type_set_option_string = new Type_set_option_string();

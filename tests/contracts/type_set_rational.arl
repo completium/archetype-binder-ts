@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_rational
+archetype type_set_rational
 
-variable res : list<rational> = []
+variable res : set<rational> = []
 
-entry set_value(i : list<rational>) {
+entry set_value(i : set<rational>) {
   res := i
 }

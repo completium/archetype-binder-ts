@@ -12,7 +12,7 @@ const set_value_arg_to_mich = (i: Array<[
         return att.pair_to_mich([x[0].to_mich(), att.pair_to_mich([att.string_to_mich(x[1][0]), x[1][1].to_mich()]), att.bool_to_mich(x[2])]);
     });
 }
-export class Type_list_tuple_nat_string_bytes_bool_custom {
+export class Type_set_tuple_nat_string_bytes_bool_custom {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -30,7 +30,7 @@ export class Type_list_tuple_nat_string_bytes_bool_custom {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_tuple_nat_string_bytes_bool_custom.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_tuple_nat_string_bytes_bool_custom.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<[
@@ -86,4 +86,4 @@ export class Type_list_tuple_nat_string_bytes_bool_custom {
     }
     errors = {};
 }
-export const type_list_tuple_nat_string_bytes_bool_custom = new Type_list_tuple_nat_string_bytes_bool_custom();
+export const type_set_tuple_nat_string_bytes_bool_custom = new Type_set_tuple_nat_string_bytes_bool_custom();

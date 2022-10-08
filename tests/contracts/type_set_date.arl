@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_date
+archetype type_set_date
 
-variable res : list<date> = []
+variable res : set<date> = []
 
-entry set_value(i : list<date>) {
+entry set_value(i : set<date>) {
   res := i
 }

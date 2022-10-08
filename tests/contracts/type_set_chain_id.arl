@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_chain_id
+archetype type_set_chain_id
 
-variable res : list<chain_id> = []
+variable res : set<chain_id> = []
 
-entry set_value(i : list<chain_id>) {
+entry set_value(i : set<chain_id>) {
   res := i
 }

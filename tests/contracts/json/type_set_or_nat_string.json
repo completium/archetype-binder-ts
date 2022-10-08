@@ -1,5 +1,5 @@
 {
-  "name": "type_list_or_nat_string",
+  "name": "type_set_or_nat_string",
   "parameters": [],
   "types": {
     "assets": [],
@@ -11,7 +11,7 @@
     {
       "name": "res",
       "type": {
-        "node": "list",
+        "node": "set",
         "name": null,
         "args": [
           {
@@ -42,7 +42,7 @@
         {
           "name": "i",
           "type": {
-            "node": "list",
+            "node": "set",
             "name": null,
             "args": [
               {

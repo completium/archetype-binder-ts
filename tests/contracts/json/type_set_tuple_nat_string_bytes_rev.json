@@ -1,5 +1,5 @@
 {
-  "name": "type_list_tuple_nat_string_bytes_rev",
+  "name": "type_set_tuple_nat_string_bytes_rev",
   "parameters": [],
   "types": {
     "assets": [],
@@ -11,7 +11,7 @@
     {
       "name": "res",
       "type": {
-        "node": "list",
+        "node": "set",
         "name": null,
         "args": [
           {
@@ -53,7 +53,7 @@
         {
           "name": "i",
           "type": {
-            "node": "list",
+            "node": "set",
             "name": null,
             "args": [
               {

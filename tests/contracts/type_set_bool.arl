@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_bool
+archetype type_set_bool
 
-variable res : list<bool> = []
+variable res : set<bool> = []
 
-entry set_value(i : list<bool>) {
+entry set_value(i : set<bool>) {
   res := i
 }

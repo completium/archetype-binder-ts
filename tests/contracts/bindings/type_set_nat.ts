@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Nat>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_nat {
+export class Type_set_nat {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_nat {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_nat.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_nat.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_nat {
     }
     errors = {};
 }
-export const type_list_nat = new Type_list_nat();
+export const type_set_nat = new Type_set_nat();

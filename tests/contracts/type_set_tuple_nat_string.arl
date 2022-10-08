@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_tuple_nat_string
+archetype type_set_tuple_nat_string
 
-variable res : list<(nat * string)> = []
+variable res : set<(nat * string)> = []
 
-entry set_value(i : list<(nat * string)>) {
+entry set_value(i : set<(nat * string)>) {
   res := i
 }

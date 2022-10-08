@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_nat
+archetype type_set_nat
 
-variable res : list<nat> = []
+variable res : set<nat> = []
 
-entry set_value(i : list<nat>) {
+entry set_value(i : set<nat>) {
   res := i
 }

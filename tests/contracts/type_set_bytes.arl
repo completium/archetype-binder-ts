@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_bytes
+archetype type_set_bytes
 
-variable res : list<bytes> = []
+variable res : set<bytes> = []
 
-entry set_value(i : list<bytes>) {
+entry set_value(i : set<bytes>) {
   res := i
 }

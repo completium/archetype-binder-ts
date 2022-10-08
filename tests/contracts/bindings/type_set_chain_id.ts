@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Chain_id>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_chain_id {
+export class Type_set_chain_id {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_chain_id {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_chain_id.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_chain_id.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Chain_id>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_chain_id {
     }
     errors = {};
 }
-export const type_list_chain_id = new Type_list_chain_id();
+export const type_set_chain_id = new Type_set_chain_id();

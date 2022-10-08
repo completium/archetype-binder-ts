@@ -1,0 +1,51 @@
+{
+  "name": "type_list_signature",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "list",
+        "name": null,
+        "args": [
+          {
+            "node": "signature",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "set_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "signature",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_address
+archetype type_set_address
 
-variable res : list<address> = []
+variable res : set<address> = []
 
-entry set_value(i : list<address>) {
+entry set_value(i : set<address>) {
   res := i
 }

@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_address
+
+variable res : list<address> = []
+
+entry set_value(i : list<address>) {
+  res := i
+}

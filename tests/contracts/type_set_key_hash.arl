@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_key_hash
+archetype type_set_key_hash
 
-variable res : list<key_hash> = []
+variable res : set<key_hash> = []
 
-entry set_value(i : list<key_hash>) {
+entry set_value(i : set<key_hash>) {
   res := i
 }

@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Signature>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_signature {
+export class Type_set_signature {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_signature {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_signature.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_signature.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Signature>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_signature {
     }
     errors = {};
 }
-export const type_list_signature = new Type_list_signature();
+export const type_set_signature = new Type_set_signature();

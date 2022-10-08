@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_signature
+
+variable res : list<signature> = []
+
+entry set_value(i : list<signature>) {
+  res := i
+}

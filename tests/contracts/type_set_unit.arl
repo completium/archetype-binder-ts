@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_unit
+archetype type_set_unit
 
-variable res : list<unit> = []
+variable res : set<unit> = []
 
-entry set_value(i : list<unit>) {
+entry set_value(i : set<unit>) {
   res := i
 }

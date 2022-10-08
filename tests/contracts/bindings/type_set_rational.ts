@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Rational>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_rational {
+export class Type_set_rational {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_rational {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_rational.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_rational.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Rational>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_rational {
     }
     errors = {};
 }
-export const type_list_rational = new Type_list_rational();
+export const type_set_rational = new Type_set_rational();

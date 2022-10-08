@@ -1,8 +1,8 @@
 /* DO NOT EDIT, GENERATED FILE */
-archetype type_list_int
+archetype type_set_int
 
-variable res : list<int> = []
+variable res : set<int> = []
 
-entry set_value(i : list<int>) {
+entry set_value(i : set<int>) {
   res := i
 }

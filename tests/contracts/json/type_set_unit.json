@@ -1,5 +1,5 @@
 {
-  "name": "type_list_unit",
+  "name": "type_set_unit",
   "parameters": [],
   "types": {
     "assets": [],
@@ -11,7 +11,7 @@
     {
       "name": "res",
       "type": {
-        "node": "list",
+        "node": "set",
         "name": null,
         "args": [
           {
@@ -31,7 +31,7 @@
         {
           "name": "i",
           "type": {
-            "node": "list",
+            "node": "set",
             "name": null,
             "args": [
               {

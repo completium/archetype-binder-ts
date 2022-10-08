@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Bytes>): att.Micheline => {
         return x.to_mich();
     });
 }
-export class Type_list_bytes {
+export class Type_set_bytes {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_bytes {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_bytes.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_bytes.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_bytes {
     }
     errors = {};
 }
-export const type_list_bytes = new Type_list_bytes();
+export const type_set_bytes = new Type_set_bytes();

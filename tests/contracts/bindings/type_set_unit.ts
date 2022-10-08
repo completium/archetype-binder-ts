@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<att.Unit>): att.Micheline => {
         return att.unit_to_mich();
     });
 }
-export class Type_list_unit {
+export class Type_set_unit {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_unit {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_unit.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_unit.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<att.Unit>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_unit {
     }
     errors = {};
 }
-export const type_list_unit = new Type_list_unit();
+export const type_set_unit = new Type_set_unit();

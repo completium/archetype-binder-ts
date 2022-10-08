@@ -5,7 +5,7 @@ const set_value_arg_to_mich = (i: Array<boolean>): att.Micheline => {
         return att.bool_to_mich(x);
     });
 }
-export class Type_list_bool {
+export class Type_set_bool {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -23,7 +23,7 @@ export class Type_list_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_bool.arl", {}, params);
+        const address = await ex.deploy("./tests/contracts/type_set_bool.arl", {}, params);
         this.address = address;
     }
     async set_value(i: Array<boolean>, params: Partial<ex.Parameters>): Promise<any> {
@@ -51,4 +51,4 @@ export class Type_list_bool {
     }
     errors = {};
 }
-export const type_list_bool = new Type_list_bool();
+export const type_set_bool = new Type_set_bool();
