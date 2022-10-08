@@ -138,25 +138,11 @@ describe('Type ${type}', async () => {
 
 /* Functions --------------------------------------------------------------- */
 
-const get_json = async (path_contract: string, filename: string): Promise<string> => {
-  const from_json = true;
-  let json: any;
-  if (from_json) {
-    const path = path_contracts + 'json/' + filename.replace('.arl', '.json');
-    const input : string = fs.readFileSync(path);
-    // console.log(input);
-    return input.toString();
-  } else {
-    const path_contract = path_contracts + filename;
-    json = await archetype.compile(path_contract, {
-      contract_interface: true
-    });
-    return json.replaceAll("keyHash", "key_hash")
-  }
-}
-
 const get_binding = async (filename: string) => {
-  const json = await get_json(path_contracts, filename);
+  const path_contract = path_contracts + filename;
+  const json = await archetype.compile(path_contract, {
+    contract_interface: true
+  });
   let ci: ContractInterface = JSON.parse(json);
   fs.writeFileSync(path_contracts + 'json/' + filename.replace('.arl', '.json'), JSON.stringify(ci, null, 2))
   const settings: BindingSettings = {
