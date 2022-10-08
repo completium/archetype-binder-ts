@@ -519,9 +519,12 @@ entry set_value(i : ${item.type}) {
   }
   const gen_it = (item: item): string => {
     const name = item.get_name();
-    const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(Or.Left<${item.ts_type}, Nat>(v).equals(res), "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_or_left, new iter_settings(gen_it))
 })
@@ -543,9 +546,12 @@ entry set_value(i : ${item.type}) {
   }
   const gen_it = (item: item): string => {
     const name = item.get_name();
-    const fun_eq = item.get_fun_eq();
 
-    return ``
+    return `const v : ${item.ts_type} = ${item.ts_value};
+    await type_${kind}_${name}.deploy({ as: alice });
+    await type_${kind}_${name}.set_value(v, { as: alice });
+    const res = await type_${kind}_${name}.get_res();
+    assert(Or.Right<Nat, ${item.ts_type}>(v).equals(res), "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_or_right, new iter_settings(gen_it))
 })
