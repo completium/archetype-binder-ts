@@ -947,11 +947,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             factory.createIdentifier(selt.name+"_key_mich_type"),
             factory.createIdentifier(selt.name+"_value_mich_type"),
             get_storage_identifier(selt, ci),
-            [factory.createReturnStatement(factory.createCallExpression(
-              factory.createIdentifier("mich_to_" + selt.name + "_value"),
-              undefined,
-              [factory.createIdentifier("data"), factory.createTrue()],
-            ))],
+            taquito_to_ts(factory.createIdentifier("data"), selt.type, ci),
             factory.createIdentifier("undefined")
           )),
           storage_elt_to_getter_skeleton(
@@ -1234,9 +1230,16 @@ const get_import = (namespace : string, name : string) => {
   )
 }
 
-const get_imports = () : ts.ImportDeclaration[] => {
+const get_execution_import = (target : Target) : string => {
+  switch (target) {
+    case Target.Dapp : return "@completium/dapp-ts"
+    case Target.Experiment : return "@completium/experiment-ts"
+  }
+}
+
+const get_imports = (settings : BindingSettings) : ts.ImportDeclaration[] => {
   return [
-    get_import("ex", "@completium/experiment-ts"),
+    get_import("ex",  get_execution_import(settings.target)),
     get_import("att", "@completium/archetype-ts-types")
   ]
 }
@@ -1780,9 +1783,11 @@ const view_to_getter = (v : View) : Getter => {
 
 const get_nodes = (contract_interface : ContractInterface, settings : BindingSettings) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
-    ...(get_imports()),
+    ...(get_imports(settings)),
     // storage
     ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
+    // events
+    ...(contract_interface.types.events.map(recordToInterfaceDecl)),
     // enums
     ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
     ...(contract_interface.types.enums.map(mich_to_enum_decl)),
@@ -1836,6 +1841,3 @@ export const generate_binding = (contract_interface : ContractInterface, setting
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result
 }
-
- //import ci from "../examples/tuple.custom.json"
- //console.log(generate_binding(ci, { target : Target.Experiment, language : Language.Archetype, path : "./contracts/" }))

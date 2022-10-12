@@ -87,7 +87,11 @@ export type View = {
   "return" : ArchetypeType
 }
 
-export type Event = {} /* TODO */
+export type Event = {
+  "name": string
+  "fields": Array<Omit<Field,"is_key">>
+  "type_michelson": MichelsonType
+}
 
 export type Error = {
   "kind" : string
@@ -889,6 +893,9 @@ const get_field_annot_names = (r : Record) : { [key: string] : string } => {
           const [idx_right, acc_right] = internal_get_fan(mt.args[1], idx_left, acc_left)
           return [idx_right, acc_right]
         }
+        case "unit" : {
+          return [ idx, acc ]
+        }
         default : throw new Error("internal_get_fan: found a node which is not annotated nor is a pair")
       }
     }
@@ -1129,15 +1136,9 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
     case "asset_view": throw_error();
     case "asset": {
       const a = get_asset_type(atype.name, ci)
-      const fields_no_key = a.fields.filter(x => !x.is_key)
-      const keys = a.fields.filter(x => x.is_key)
-      const key_type : ArchetypeType = keys.length > 1 ? {
-        node : "tuple",
-        name : null,
-        args : keys.map(x => x.type)
-      } : keys[0].type
-      if (fields_no_key.length > 1) {
-        // create a record type in Contract Interface corresponding to asset value
+      if (a.container_kind == "big_map") {
+        // create asset value record
+        const fields_no_key = a.fields.filter(x => !x.is_key)
         const asset_value_record_type : Record = {
           name           : a.name + "_value",
           fields         : fields_no_key,
@@ -1148,37 +1149,60 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
             records : [ ...ci.types.records, asset_value_record_type]
           }
         }
-        const map_type : ArchetypeType = {
-          node : "map",
-          name : a.name,
-          args : [
-            key_type,
-            {
-              node : "record",
-              name : a.name + "_value",
-              args : []
-            }
-          ]
-        }
-        return taquito_to_ts(elt, map_type, augmented_ci)
-      } else if (fields_no_key.length == 1) {
-        // create local equivalent type to map<key, value>
-        const map_type : ArchetypeType = {
-          node : "map",
-          name : a.name,
-          args : [
-            key_type,
-            fields_no_key[0].type
-          ]
-        }
-        return taquito_to_ts(elt, map_type, ci)
+        return taquito_to_ts(elt, { name: a.name + "_value", node : "record", args:[] }, augmented_ci)
       } else {
-        const list_type : ArchetypeType = {
-          node : "list",
+        // create asset container (not for asset to big_map)
+        const fields_no_key = a.fields.filter(x => !x.is_key)
+        const keys = a.fields.filter(x => x.is_key)
+        const key_type : ArchetypeType = keys.length > 1 ? {
+          node : "tuple",
           name : null,
-          args : [ key_type ]
+          args : keys.map(x => x.type)
+        } : keys[0].type
+        if (fields_no_key.length > 1) {
+          // create a record type in Contract Interface corresponding to asset value
+          const asset_value_record_type : Record = {
+            name           : a.name + "_value",
+            fields         : fields_no_key,
+            type_michelson : a.value_type_michelson
+          }
+          const augmented_ci : ContractInterface = { ...ci,
+            types : { ...ci.types,
+              records : [ ...ci.types.records, asset_value_record_type]
+            }
+          }
+          const map_type : ArchetypeType = {
+            node : "map",
+            name : a.name,
+            args : [
+              key_type,
+              {
+                node : "record",
+                name : a.name + "_value",
+                args : []
+              }
+            ]
+          }
+        return taquito_to_ts(elt, map_type, augmented_ci)
+        } else if (fields_no_key.length == 1) {
+          // create local equivalent type to map<key, value>
+          const map_type : ArchetypeType = {
+            node : "map",
+            name : a.name,
+            args : [
+              key_type,
+              fields_no_key[0].type
+            ]
+          }
+          return taquito_to_ts(elt, map_type, ci)
+        } else {
+          const list_type : ArchetypeType = {
+            node : "list",
+            name : null,
+            args : [ key_type ]
+          }
+          return taquito_to_ts(elt, list_type, ci)
         }
-        return taquito_to_ts(elt, list_type, ci)
       }
     };
     case "big_map": throw_error();
