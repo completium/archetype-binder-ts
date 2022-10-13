@@ -1,6 +1,6 @@
-import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
+import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, taquito_to_ts, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, StorageElement, unit_to_mich, value_to_mich_type, View, get_constructor, get_get_address_decl, get_get_balance_decl, storage_to_mich } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -715,19 +715,23 @@ const view_to_method = (v : View, ci : ContractInterface) => {
   ])
 }
 
-const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args : ts.ParameterDeclaration[], ts_type : ts.KeywordTypeNode<any>, body : ts.Statement[]) => {
+const make_method_skeleton = (
+  is_async     : boolean,
+  name         : string,
+  args         : ts.ParameterDeclaration[],
+  return_type  : ts.TypeReferenceNode | undefined,
+  with_storage : boolean,
+  body         : ts.Statement[]
+  ) => {
   return factory.createMethodDeclaration(
     undefined,
-    [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
+    is_async ? [factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : [],
     undefined,
-    factory.createIdentifier(prefix + elt_name),
+    factory.createIdentifier(name),
     undefined,
     undefined,
     args,
-    factory.createTypeReferenceNode(
-      factory.createIdentifier("Promise"),
-      [ ts_type ]
-    ),
+    return_type,
     factory.createBlock(
       [
         factory.createIfStatement(
@@ -741,7 +745,7 @@ const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args
           ),
           factory.createBlock(
             ([
-              factory.createVariableStatement(
+              ...(with_storage ? [factory.createVariableStatement(
                 undefined,
                 factory.createVariableDeclarationList(
                   [factory.createVariableDeclaration(
@@ -762,7 +766,7 @@ const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args
                   )],
                   ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
                 )
-              ),
+              ) ] : []),
               ...(body)
             ])
             ,
@@ -778,6 +782,25 @@ const storage_elt_to_getter_skeleton = (prefix : string, elt_name : string, args
       ],
       true
     )
+  )
+}
+
+const storage_elt_to_getter_skeleton = (
+  prefix : string,
+  elt_name : string,
+  args : ts.ParameterDeclaration[],
+  return_type : ts.KeywordTypeNode<any>,
+  body : ts.Statement[]) => {
+  return make_method_skeleton(
+    true,
+    prefix + elt_name,
+    args,
+    factory.createTypeReferenceNode(
+      factory.createIdentifier("Promise"),
+      [ return_type ]
+    ),
+    true,
+    body
   )
 }
 
@@ -799,6 +822,163 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     [],
     archetype_type_to_ts_type(selt.type),
     taquito_to_ts(elt, selt.type, ci)
+  )
+}
+
+const eventToRegister = (e : Event, ci : ContractInterface) => {
+  return make_method_skeleton(
+    false,  // not async
+    "register_" + e.name,
+    [factory.createParameterDeclaration(
+      undefined,
+      undefined,
+      undefined,
+      factory.createIdentifier("ep"),
+      undefined,
+      factory.createTypeReferenceNode(
+        factory.createQualifiedName(
+          factory.createIdentifier("el"),
+          factory.createIdentifier("EventProcessor")
+        ),
+        [factory.createTypeReferenceNode(
+          factory.createIdentifier(e.name),
+          undefined
+        )]
+      ),
+      undefined
+    )],
+    undefined, // returns void
+    false,     // don't need storage
+    [factory.createExpressionStatement(factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("el"),
+        factory.createIdentifier("registerEvent")
+      ),
+      undefined,
+      [factory.createObjectLiteralExpression(
+        [
+          factory.createPropertyAssignment(
+            factory.createIdentifier("source"),
+            factory.createPropertyAccessExpression(
+              factory.createThis(),
+              factory.createIdentifier("address")
+            )
+          ),
+          factory.createPropertyAssignment(
+            factory.createIdentifier("filter"),
+            factory.createArrowFunction(
+              undefined,
+              undefined,
+              [factory.createParameterDeclaration(
+                undefined,
+                undefined,
+                undefined,
+                factory.createIdentifier("tag"),
+                undefined,
+                undefined,
+                undefined
+              )],
+              undefined,
+              factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+              factory.createBlock(
+                [factory.createReturnStatement(factory.createBinaryExpression(
+                  factory.createIdentifier("tag"),
+                  factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+                  factory.createStringLiteral(e.name)
+                ))],
+                false
+              )
+            )
+          ),
+          factory.createPropertyAssignment(
+            factory.createIdentifier("process"),
+            factory.createArrowFunction(
+              undefined,
+              undefined,
+              [
+                factory.createParameterDeclaration(
+                  undefined,
+                  undefined,
+                  undefined,
+                  factory.createIdentifier("raw"),
+                  undefined,
+                  factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+                  undefined
+                ),
+                factory.createParameterDeclaration(
+                  undefined,
+                  undefined,
+                  undefined,
+                  factory.createIdentifier("data"),
+                  undefined,
+                  factory.createUnionTypeNode([
+                    factory.createTypeReferenceNode(
+                      factory.createQualifiedName(
+                        factory.createIdentifier("el"),
+                        factory.createIdentifier("EventData")
+                      ),
+                      undefined
+                    ),
+                    factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
+                  ]),
+                  undefined
+                )
+              ],
+              undefined,
+              factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+              factory.createBlock(
+                [
+                  factory.createVariableStatement(
+                    undefined,
+                    factory.createVariableDeclarationList(
+                      [factory.createVariableDeclaration(
+                        factory.createIdentifier("event"),
+                        undefined,
+                        undefined,
+                        factory.createCallExpression(
+                          factory.createParenthesizedExpression(factory.createArrowFunction(
+                            undefined,
+                            undefined,
+                            [factory.createParameterDeclaration(
+                              undefined,
+                              undefined,
+                              undefined,
+                              factory.createIdentifier("x"),
+                              undefined,
+                              undefined,
+                              undefined
+                            )],
+                            undefined,
+                            factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                            factory.createBlock(
+                              taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci),
+                              true
+                            )
+                          )),
+                          undefined,
+                          [factory.createIdentifier("raw")]
+                        )
+                      )],
+                      ts.NodeFlags.Const
+                    )
+                  ),
+                  factory.createExpressionStatement(factory.createCallExpression(
+                    factory.createIdentifier("ep"),
+                    undefined,
+                    [
+                      factory.createIdentifier("event"),
+                      factory.createIdentifier("data")
+                    ]
+                  ))
+                ],
+                true
+              )
+            )
+          )
+        ],
+        false
+      )]
+    )), factory.createReturnStatement(undefined) ],
   )
 }
 
@@ -1212,6 +1392,7 @@ const get_contract_class_node = (ci : ContractInterface, settings : BindingSetti
     ...(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[])),
     ...(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[])),
     ...(ci.types.enums.filter(x => x.name == "state").map(getStateDecl)),
+    ...(ci.types.events.reduce((acc,x) => acc.concat(eventToRegister(x, ci)), <ts.MethodDeclaration[]>[])),
     ...([errors_to_decl(ci)])
   ])
 }
@@ -1237,11 +1418,11 @@ const get_execution_import = (target : Target) : string => {
   }
 }
 
-const get_imports = (settings : BindingSettings) : ts.ImportDeclaration[] => {
+const get_imports = (ci : ContractInterface, settings : BindingSettings) : ts.ImportDeclaration[] => {
   return [
     get_import("ex",  get_execution_import(settings.target)),
-    get_import("att", "@completium/archetype-ts-types")
-  ]
+    get_import("att", "@completium/archetype-ts-types"),
+  ].concat(ci.types.events.length > 0 ? [get_import("el", "@completium/event-listener")] : [])
 }
 
 const get_contract_decl = (ci : ContractInterface) => {
@@ -1783,7 +1964,7 @@ const view_to_getter = (v : View) : Getter => {
 
 const get_nodes = (contract_interface : ContractInterface, settings : BindingSettings) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
-    ...(get_imports(settings)),
+    ...(get_imports(contract_interface, settings)),
     // storage
     ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
     // events

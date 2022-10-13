@@ -855,15 +855,20 @@ const access_nth_field = (x : ts.Expression, i : number) : ts.Expression => {
   )
 }
 
-const get_record_type = (name : string | null, ci : ContractInterface) => {
+const get_record_or_event_type = (name : string | null, ci : ContractInterface) => {
   if (name != null) {
     for (let i = 0; i < ci.types.records.length; i++) {
       if (ci.types.records[i].name == name) {
         return ci.types.records[i]
       }
     }
+    for (let i = 0; i < ci.types.events.length; i++) {
+      if (ci.types.events[i].name == name) {
+        return ci.types.events[i]
+      }
+    }
   }
-  throw new Error("get_record_type: '" + name + "' not found")
+  throw new Error("get_record_or_event_type: '" + name + "' not found")
 }
 
 const get_asset_type = (name : string | null, ci : ContractInterface) => {
@@ -1237,7 +1242,6 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         }
         throw new Error("enum not found: " + atype.name)
       };
-    case "event": throw_error();
     case "int": return make_class();
     case "iterable_big_map": throw_error();
     case "key_hash": return make_class();
@@ -1478,10 +1482,11 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
           access_nth_field(elt, 1)
         ]
       ))];
+    case "event":
     case "record": {
       const name = atype.name
       if (null != name) {
-        const r = get_record_type(name, ci)
+        const r = get_record_or_event_type(name, ci)
         const field_annot_names = get_field_annot_names(r)
         return [factory.createReturnStatement(factory.createNewExpression(
           factory.createIdentifier(name),
