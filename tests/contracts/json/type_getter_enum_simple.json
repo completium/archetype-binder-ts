@@ -1,0 +1,88 @@
+{
+  "name": "type_getter_enum_simple",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [
+      {
+        "name": "enum_simple",
+        "constructors": [
+          {
+            "name": "e_1",
+            "types": []
+          },
+          {
+            "name": "e_2",
+            "types": []
+          },
+          {
+            "name": "e_3",
+            "types": []
+          }
+        ],
+        "type_michelson": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "enum",
+        "name": "enum_simple",
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "storage_type": null,
+  "entrypoints": [],
+  "getters": [
+    {
+      "name": "get_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "enum",
+            "name": "enum_simple",
+            "args": []
+          }
+        }
+      ],
+      "return": {
+        "node": "enum",
+        "name": "enum_simple",
+        "args": []
+      },
+      "return_michelson": {
+        "value": {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "is_storable": true
+      }
+    }
+  ],
+  "views": [],
+  "errors": []
+}

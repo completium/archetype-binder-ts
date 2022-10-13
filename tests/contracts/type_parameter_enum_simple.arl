@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_parameter_enum_simple(res : enum_simple)
+
+enum enum_simple = | e_1 | e_2 | e_3
+
+entry asset_add(i : enum_simple) {
+  res := i
+}

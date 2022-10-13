@@ -40,6 +40,7 @@ import * as type_record_tuple_nat_string_bytes_bool from './contracts/bindings/t
 import * as type_record_tuple_nat_string_bytes_rev from './contracts/bindings/type_record_tuple_nat_string_bytes_rev'
 import * as type_record_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_record_tuple_nat_string_bytes_bool_rev'
 import * as type_record_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_record_tuple_nat_string_bytes_bool_custom'
+import * as type_record_enum_simple from './contracts/bindings/type_record_enum_simple'
 
 
 const assert = require('assert')
@@ -396,6 +397,15 @@ describe('Type record', async () => {
     await type_record_tuple_nat_string_bytes_bool_custom.type_record_tuple_nat_string_bytes_bool_custom.deploy({ as: alice });
     await type_record_tuple_nat_string_bytes_bool_custom.type_record_tuple_nat_string_bytes_bool_custom.set_value(v, { as: alice });
     const res = await type_record_tuple_nat_string_bytes_bool_custom.type_record_tuple_nat_string_bytes_bool_custom.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // enum_simple
+  it('enum_simple', async () => {
+    const v : type_record_enum_simple.my_record = new type_record_enum_simple.my_record(new Nat(2), new type_record_enum_simple.e_2(), "mystr");
+    await type_record_enum_simple.type_record_enum_simple.deploy({ as: alice });
+    await type_record_enum_simple.type_record_enum_simple.set_value(v, { as: alice });
+    const res = await type_record_enum_simple.type_record_enum_simple.get_res();
     assert(v.equals(res), "Invalid Value")
   });
 
