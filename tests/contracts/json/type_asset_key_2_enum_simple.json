@@ -11,7 +11,7 @@
             "name": "k",
             "type": {
               "node": "enum",
-              "name": "enum_simple",
+              "name": "e_enum",
               "args": []
             },
             "is_key": true
@@ -149,7 +149,7 @@
     ],
     "enums": [
       {
-        "name": "enum_simple",
+        "name": "e_enum",
         "constructors": [
           {
             "name": "e_1",
@@ -200,7 +200,7 @@
           "name": "i",
           "type": {
             "node": "enum",
-            "name": "enum_simple",
+            "name": "e_enum",
             "args": []
           }
         }

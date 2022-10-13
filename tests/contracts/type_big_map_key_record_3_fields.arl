@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_key_record_3_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes}
+
+variable res : big_map<r_record, nat> = []
+
+entry set_value(i : r_record) {
+  res.put(i, 0)
+}

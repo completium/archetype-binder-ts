@@ -1,0 +1,16 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_record_3_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes}
+
+record my_record {
+  n : nat;
+  v : r_record;
+  s : string;
+}
+
+variable res : my_record = {0; {f_a = 0; f_b = ""; f_c = 0x}; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

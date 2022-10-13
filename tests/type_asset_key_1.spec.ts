@@ -13,14 +13,14 @@ import * as type_asset_key_1_key from './contracts/bindings/type_asset_key_1_key
 import * as type_asset_key_1_key_hash from './contracts/bindings/type_asset_key_1_key_hash'
 import * as type_asset_key_1_nat from './contracts/bindings/type_asset_key_1_nat'
 import * as type_asset_key_1_rational from './contracts/bindings/type_asset_key_1_rational'
-//import * as type_asset_key_1_signature from './contracts/bindings/type_asset_key_1_signature'
+import * as type_asset_key_1_signature from './contracts/bindings/type_asset_key_1_signature'
 import * as type_asset_key_1_string from './contracts/bindings/type_asset_key_1_string'
 import * as type_asset_key_1_tez from './contracts/bindings/type_asset_key_1_tez'
 import * as type_asset_key_1_unit from './contracts/bindings/type_asset_key_1_unit'
 import * as type_asset_key_1_option_nat from './contracts/bindings/type_asset_key_1_option_nat'
 import * as type_asset_key_1_option_string from './contracts/bindings/type_asset_key_1_option_string'
 import * as type_asset_key_1_option_bool from './contracts/bindings/type_asset_key_1_option_bool'
-//import * as type_asset_key_1_or_nat_string from './contracts/bindings/type_asset_key_1_or_nat_string'
+import * as type_asset_key_1_or_nat_string from './contracts/bindings/type_asset_key_1_or_nat_string'
 import * as type_asset_key_1_tuple_nat_string from './contracts/bindings/type_asset_key_1_tuple_nat_string'
 import * as type_asset_key_1_tuple_nat_string_bytes from './contracts/bindings/type_asset_key_1_tuple_nat_string_bytes'
 import * as type_asset_key_1_tuple_nat_string_bytes_bool from './contracts/bindings/type_asset_key_1_tuple_nat_string_bytes_bool'
@@ -28,6 +28,10 @@ import * as type_asset_key_1_tuple_nat_string_bytes_rev from './contracts/bindin
 import * as type_asset_key_1_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_asset_key_1_tuple_nat_string_bytes_bool_rev'
 import * as type_asset_key_1_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_asset_key_1_tuple_nat_string_bytes_bool_custom'
 import * as type_asset_key_1_enum_simple from './contracts/bindings/type_asset_key_1_enum_simple'
+import * as type_asset_key_1_record_2_fields from './contracts/bindings/type_asset_key_1_record_2_fields'
+import * as type_asset_key_1_record_3_fields from './contracts/bindings/type_asset_key_1_record_3_fields'
+import * as type_asset_key_1_record_4_fields from './contracts/bindings/type_asset_key_1_record_4_fields'
+import * as type_asset_key_1_record_4_fields_custom from './contracts/bindings/type_asset_key_1_record_4_fields_custom'
 
 
 const assert = require('assert')
@@ -145,13 +149,13 @@ describe('Type asset_key_1', async () => {
   });
 
   // signature
-  /*it('signature', async () => {
+  it('signature', async () => {
     const v : Signature = new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw");
     await type_asset_key_1_signature.type_asset_key_1_signature.deploy({ as: alice });
     await type_asset_key_1_signature.type_asset_key_1_signature.asset_put(v, { as: alice });
     const res = await type_asset_key_1_signature.type_asset_key_1_signature.get_my_asset();
     assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
-  });*/
+  });
 
   // string
   it('string', async () => {
@@ -208,13 +212,13 @@ describe('Type asset_key_1', async () => {
   });
 
   // or_nat_string
-  /*it('or_nat_string', async () => {
+  it('or_nat_string', async () => {
     const v : Or<Nat, string> = Or.Left(new Nat(2));
     await type_asset_key_1_or_nat_string.type_asset_key_1_or_nat_string.deploy({ as: alice });
     await type_asset_key_1_or_nat_string.type_asset_key_1_or_nat_string.asset_put(v, { as: alice });
     const res = await type_asset_key_1_or_nat_string.type_asset_key_1_or_nat_string.get_my_asset();
     assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
-  });*/
+  });
 
   // tuple_nat_string
   it('tuple_nat_string', async () => {
@@ -272,11 +276,47 @@ describe('Type asset_key_1', async () => {
 
   // enum_simple
   it('enum_simple', async () => {
-    const v : type_asset_key_1_enum_simple.enum_simple = new type_asset_key_1_enum_simple.e_2();
+    const v : type_asset_key_1_enum_simple.e_enum = new type_asset_key_1_enum_simple.e_2();
     await type_asset_key_1_enum_simple.type_asset_key_1_enum_simple.deploy({ as: alice });
     await type_asset_key_1_enum_simple.type_asset_key_1_enum_simple.asset_put(v, { as: alice });
     const res = await type_asset_key_1_enum_simple.type_asset_key_1_enum_simple.get_my_asset();
-    assert(1 == res.length && ((x : type_asset_key_1_enum_simple.enum_simple, y : type_asset_key_1_enum_simple.enum_simple) => {return x.toString() == y.toString()})(v, res[0][0]), "Invalid Value")
+    assert(1 == res.length && ((x : type_asset_key_1_enum_simple.e_enum, y : type_asset_key_1_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res[0][0]), "Invalid Value")
+  });
+
+  // record_2_fields
+  it('record_2_fields', async () => {
+    const v : type_asset_key_1_record_2_fields.r_record = new type_asset_key_1_record_2_fields.r_record(new Nat(2), "mystr");
+    await type_asset_key_1_record_2_fields.type_asset_key_1_record_2_fields.deploy({ as: alice });
+    await type_asset_key_1_record_2_fields.type_asset_key_1_record_2_fields.asset_put(v, { as: alice });
+    const res = await type_asset_key_1_record_2_fields.type_asset_key_1_record_2_fields.get_my_asset();
+    assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
+  });
+
+  // record_3_fields
+  it('record_3_fields', async () => {
+    const v : type_asset_key_1_record_3_fields.r_record = new type_asset_key_1_record_3_fields.r_record(new Nat(2), "mystr", new Bytes("02"));
+    await type_asset_key_1_record_3_fields.type_asset_key_1_record_3_fields.deploy({ as: alice });
+    await type_asset_key_1_record_3_fields.type_asset_key_1_record_3_fields.asset_put(v, { as: alice });
+    const res = await type_asset_key_1_record_3_fields.type_asset_key_1_record_3_fields.get_my_asset();
+    assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
+  });
+
+  // record_4_fields
+  it('record_4_fields', async () => {
+    const v : type_asset_key_1_record_4_fields.r_record = new type_asset_key_1_record_4_fields.r_record(new Nat(2), "mystr", new Bytes("02"), true);
+    await type_asset_key_1_record_4_fields.type_asset_key_1_record_4_fields.deploy({ as: alice });
+    await type_asset_key_1_record_4_fields.type_asset_key_1_record_4_fields.asset_put(v, { as: alice });
+    const res = await type_asset_key_1_record_4_fields.type_asset_key_1_record_4_fields.get_my_asset();
+    assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
+  });
+
+  // record_4_fields_custom
+  it('record_4_fields_custom', async () => {
+    const v : type_asset_key_1_record_4_fields_custom.r_record = new type_asset_key_1_record_4_fields_custom.r_record(new Nat(2), "mystr", new Bytes("02"), true);
+    await type_asset_key_1_record_4_fields_custom.type_asset_key_1_record_4_fields_custom.deploy({ as: alice });
+    await type_asset_key_1_record_4_fields_custom.type_asset_key_1_record_4_fields_custom.asset_put(v, { as: alice });
+    const res = await type_asset_key_1_record_4_fields_custom.type_asset_key_1_record_4_fields_custom.get_my_asset();
+    assert(1 == res.length && v.equals(res[0][0]), "Invalid Value")
   });
 
   

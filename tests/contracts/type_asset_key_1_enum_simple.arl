@@ -1,13 +1,13 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_asset_key_1_enum_simple
 
-enum enum_simple = | e_1 | e_2 | e_3
+enum e_enum = | e_1 | e_2 | e_3
 
 asset my_asset {
-  k : enum_simple;
+  k : e_enum;
   v : string;
 }
 
-entry asset_put(i : enum_simple) {
+entry asset_put(i : e_enum) {
   my_asset.put({i; ""})
 }

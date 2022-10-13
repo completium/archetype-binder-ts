@@ -1,10 +1,10 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_enum_simple
 
-enum enum_simple = | e_1 | e_2 | e_3
+enum e_enum = | e_1 | e_2 | e_3
 
-variable res : enum_simple = e_1
+variable res : e_enum = e_1
 
-view get_value() : enum_simple {
+view get_value() : e_enum {
   return res
 }

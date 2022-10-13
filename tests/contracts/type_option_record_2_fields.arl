@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_record_2_fields
+
+record r_record {f_a : nat; f_b : string}
+
+variable res : option<r_record> = none
+
+entry set_value(i : option<r_record>) {
+  res := i
+}

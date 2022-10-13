@@ -1,40 +1,40 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export enum enum_simple_types {
+export enum e_enum_types {
     e_1 = "e_1",
     e_2 = "e_2",
     e_3 = "e_3"
 }
-export abstract class enum_simple extends att.Enum<enum_simple_types> {
+export abstract class e_enum extends att.Enum<e_enum_types> {
 }
-export class e_1 extends enum_simple {
+export class e_1 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_1);
+        super(e_enum_types.e_1);
     }
     to_mich() { return new att.Nat(0).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export class e_2 extends enum_simple {
+export class e_2 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_2);
+        super(e_enum_types.e_2);
     }
     to_mich() { return new att.Nat(1).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export class e_3 extends enum_simple {
+export class e_3 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_3);
+        super(e_enum_types.e_3);
     }
     to_mich() { return new att.Nat(2).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export const mich_to_enum_simple = (m: any): enum_simple => {
+export const mich_to_e_enum = (m: any): e_enum => {
     const v = (new att.Nat(m)).to_big_number().toNumber();
     switch (v) {
         case 0: return new e_1();
@@ -45,14 +45,14 @@ export const mich_to_enum_simple = (m: any): enum_simple => {
 };
 export type my_asset_key = att.Nat;
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
-export type my_asset_value = enum_simple;
+export type my_asset_value = e_enum;
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("int", []);
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("int", []));
-const asset_put_arg_to_mich = (i: enum_simple): att.Micheline => {
+const asset_put_arg_to_mich = (i: e_enum): att.Micheline => {
     return i.to_mich();
 }
 export class Type_asset_value_2_enum_simple {
@@ -76,13 +76,13 @@ export class Type_asset_value_2_enum_simple {
         const address = await ex.deploy("./tests/contracts/type_asset_value_2_enum_simple.arl", {}, params);
         this.address = address;
     }
-    async asset_put(i: enum_simple, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: e_enum, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_asset_put_param(i: enum_simple, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_asset_put_param(i: e_enum, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
             return await ex.get_call_param(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }
@@ -93,7 +93,7 @@ export class Type_asset_value_2_enum_simple {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
                 att.Nat,
-                enum_simple
+                e_enum
             ]> = [];
             for (let e of storage.entries()) {
                 res.push([(x => { return new att.Nat(x); })(e[0]), (x => { if (x.e_3 !== undefined) {

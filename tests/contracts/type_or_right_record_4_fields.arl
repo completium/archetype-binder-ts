@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_right_record_4_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool}
+
+variable res : or<nat, r_record> = left<r_record>(0)
+
+entry set_value(i : r_record) {
+  res := right<nat>(i)
+}

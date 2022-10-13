@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_parameter_record_3_fields(res : r_record)
+
+record r_record {f_a : nat; f_b : string; f_c : bytes}
+
+entry asset_add(i : r_record) {
+  res := i
+}

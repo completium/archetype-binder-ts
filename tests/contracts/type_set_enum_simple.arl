@@ -1,10 +1,10 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_set_enum_simple
 
-enum enum_simple = | e_1 | e_2 | e_3
+enum e_enum = | e_1 | e_2 | e_3
 
-variable res : set<enum_simple> = []
+variable res : set<e_enum> = []
 
-entry set_value(i : set<enum_simple>) {
+entry set_value(i : set<e_enum>) {
   res := i
 }

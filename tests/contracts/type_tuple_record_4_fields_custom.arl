@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_record_4_fields_custom
+
+record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))
+
+variable res : (nat * r_record * string) = ((0, {f_a = 0; f_b = ""; f_c = 0x; f_d = false}, ""))
+
+entry set_value(i : r_record) {
+  res := ((2, i, "mystr"))
+}

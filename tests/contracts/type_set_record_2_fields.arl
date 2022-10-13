@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_set_record_2_fields
+
+record r_record {f_a : nat; f_b : string}
+
+variable res : set<r_record> = []
+
+entry set_value(i : set<r_record>) {
+  res := i
+}

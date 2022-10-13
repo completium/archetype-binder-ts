@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_record_4_fields_custom
+
+record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))
+
+variable res : map<r_record, nat> = []
+
+entry set_value(i : r_record) {
+  res.put(i, 0)
+}

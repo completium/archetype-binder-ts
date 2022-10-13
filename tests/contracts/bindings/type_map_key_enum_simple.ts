@@ -1,40 +1,40 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export enum enum_simple_types {
+export enum e_enum_types {
     e_1 = "e_1",
     e_2 = "e_2",
     e_3 = "e_3"
 }
-export abstract class enum_simple extends att.Enum<enum_simple_types> {
+export abstract class e_enum extends att.Enum<e_enum_types> {
 }
-export class e_1 extends enum_simple {
+export class e_1 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_1);
+        super(e_enum_types.e_1);
     }
     to_mich() { return new att.Nat(0).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export class e_2 extends enum_simple {
+export class e_2 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_2);
+        super(e_enum_types.e_2);
     }
     to_mich() { return new att.Nat(1).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export class e_3 extends enum_simple {
+export class e_3 extends e_enum {
     constructor() {
-        super(enum_simple_types.e_3);
+        super(e_enum_types.e_3);
     }
     to_mich() { return new att.Nat(2).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
 }
-export const mich_to_enum_simple = (m: any): enum_simple => {
+export const mich_to_e_enum = (m: any): e_enum => {
     const v = (new att.Nat(m)).to_big_number().toNumber();
     switch (v) {
         case 0: return new e_1();
@@ -43,7 +43,7 @@ export const mich_to_enum_simple = (m: any): enum_simple => {
         default: throw new Error("mich_to_asset_type : invalid value " + v);
     }
 };
-const set_value_arg_to_mich = (i: enum_simple): att.Micheline => {
+const set_value_arg_to_mich = (i: e_enum): att.Micheline => {
     return i.to_mich();
 }
 export class Type_map_key_enum_simple {
@@ -67,26 +67,26 @@ export class Type_map_key_enum_simple {
         const address = await ex.deploy("./tests/contracts/type_map_key_enum_simple.arl", {}, params);
         this.address = address;
     }
-    async set_value(i: enum_simple, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: e_enum, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_set_value_param(i: enum_simple, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_set_value_param(i: e_enum, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
             return await ex.get_call_param(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<Array<[
-        enum_simple,
+        e_enum,
         att.Nat
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                enum_simple,
+                e_enum,
                 att.Nat
             ]> = [];
             for (let e of storage.entries()) {

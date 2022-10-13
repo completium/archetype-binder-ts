@@ -5,7 +5,7 @@
     "assets": [],
     "enums": [
       {
-        "name": "enum_simple",
+        "name": "e_enum",
         "constructors": [
           {
             "name": "e_1",
@@ -41,7 +41,7 @@
       "name": "res",
       "type": {
         "node": "enum",
-        "name": "enum_simple",
+        "name": "e_enum",
         "args": []
       },
       "const": false
@@ -56,7 +56,7 @@
           "name": "i",
           "type": {
             "node": "enum",
-            "name": "enum_simple",
+            "name": "e_enum",
             "args": []
           }
         }

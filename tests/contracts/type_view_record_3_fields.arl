@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_view_record_3_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes}
+
+variable res : r_record = {f_a = 0; f_b = ""; f_c = 0x}
+
+view get_value() : r_record {
+  return res
+}

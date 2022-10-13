@@ -1,11 +1,11 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_getter_enum_simple
 
-enum enum_simple = | e_1 | e_2 | e_3
+enum e_enum = | e_1 | e_2 | e_3
 
-variable res : enum_simple = e_1
+variable res : e_enum = e_1
 
-getter get_value(i : enum_simple) : enum_simple {
+getter get_value(i : e_enum) : e_enum {
   res := i;
   return res
 }

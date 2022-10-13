@@ -1,11 +1,11 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_record_enum_simple
 
-enum enum_simple = | e_1 | e_2 | e_3
+enum e_enum = | e_1 | e_2 | e_3
 
 record my_record {
   n : nat;
-  v : enum_simple;
+  v : e_enum;
   s : string;
 }
 

@@ -1,0 +1,111 @@
+{
+  "name": "type_map_key_record_2_fields",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [
+      {
+        "name": "r_record",
+        "fields": [
+          {
+            "name": "f_a",
+            "type": {
+              "node": "nat",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "f_b",
+            "type": {
+              "node": "string",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%f_a"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%f_b"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      }
+    ],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "map",
+        "name": null,
+        "args": [
+          {
+            "node": "record",
+            "name": "r_record",
+            "args": []
+          },
+          {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false
+    }
+  ],
+  "storage_type": null,
+  "entrypoints": [
+    {
+      "name": "set_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "record",
+            "name": "r_record",
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

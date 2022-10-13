@@ -19,7 +19,7 @@ import * as type_record_key_hash from './contracts/bindings/type_record_key_hash
 import * as type_record_nat from './contracts/bindings/type_record_nat'
 import * as type_record_rational from './contracts/bindings/type_record_rational'
 //import * as type_record_sapling_transaction from './contracts/bindings/type_record_sapling_transaction'
-//import * as type_record_signature from './contracts/bindings/type_record_signature'
+import * as type_record_signature from './contracts/bindings/type_record_signature'
 import * as type_record_string from './contracts/bindings/type_record_string'
 import * as type_record_tez from './contracts/bindings/type_record_tez'
 import * as type_record_unit from './contracts/bindings/type_record_unit'
@@ -30,7 +30,7 @@ import * as type_record_map_nat_string from './contracts/bindings/type_record_ma
 import * as type_record_option_nat from './contracts/bindings/type_record_option_nat'
 import * as type_record_option_string from './contracts/bindings/type_record_option_string'
 import * as type_record_option_bool from './contracts/bindings/type_record_option_bool'
-//import * as type_record_or_nat_string from './contracts/bindings/type_record_or_nat_string'
+import * as type_record_or_nat_string from './contracts/bindings/type_record_or_nat_string'
 import * as type_record_set_nat from './contracts/bindings/type_record_set_nat'
 import * as type_record_set_string from './contracts/bindings/type_record_set_string'
 import * as type_record_set_bool from './contracts/bindings/type_record_set_bool'
@@ -41,6 +41,10 @@ import * as type_record_tuple_nat_string_bytes_rev from './contracts/bindings/ty
 import * as type_record_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_record_tuple_nat_string_bytes_bool_rev'
 import * as type_record_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_record_tuple_nat_string_bytes_bool_custom'
 import * as type_record_enum_simple from './contracts/bindings/type_record_enum_simple'
+import * as type_record_record_2_fields from './contracts/bindings/type_record_record_2_fields'
+import * as type_record_record_3_fields from './contracts/bindings/type_record_record_3_fields'
+import * as type_record_record_4_fields from './contracts/bindings/type_record_record_4_fields'
+import * as type_record_record_4_fields_custom from './contracts/bindings/type_record_record_4_fields_custom'
 
 
 const assert = require('assert')
@@ -212,13 +216,13 @@ describe('Type record', async () => {
   });*/
 
   // signature
-  /*it('signature', async () => {
+  it('signature', async () => {
     const v : type_record_signature.my_record = new type_record_signature.my_record(new Nat(2), new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw"), "mystr");
     await type_record_signature.type_record_signature.deploy({ as: alice });
     await type_record_signature.type_record_signature.set_value(v, { as: alice });
     const res = await type_record_signature.type_record_signature.get_res();
     assert(v.equals(res), "Invalid Value")
-  });*/
+  });
 
   // string
   it('string', async () => {
@@ -311,13 +315,13 @@ describe('Type record', async () => {
   });
 
   // or_nat_string
-  /*it('or_nat_string', async () => {
+  it('or_nat_string', async () => {
     const v : type_record_or_nat_string.my_record = new type_record_or_nat_string.my_record(new Nat(2), Or.Left(new Nat(2)), "mystr");
     await type_record_or_nat_string.type_record_or_nat_string.deploy({ as: alice });
     await type_record_or_nat_string.type_record_or_nat_string.set_value(v, { as: alice });
     const res = await type_record_or_nat_string.type_record_or_nat_string.get_res();
     assert(v.equals(res), "Invalid Value")
-  });*/
+  });
 
   // set_nat
   it('set_nat', async () => {
@@ -406,6 +410,42 @@ describe('Type record', async () => {
     await type_record_enum_simple.type_record_enum_simple.deploy({ as: alice });
     await type_record_enum_simple.type_record_enum_simple.set_value(v, { as: alice });
     const res = await type_record_enum_simple.type_record_enum_simple.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // record_2_fields
+  it('record_2_fields', async () => {
+    const v : type_record_record_2_fields.my_record = new type_record_record_2_fields.my_record(new Nat(2), new type_record_record_2_fields.r_record(new Nat(2), "mystr"), "mystr");
+    await type_record_record_2_fields.type_record_record_2_fields.deploy({ as: alice });
+    await type_record_record_2_fields.type_record_record_2_fields.set_value(v, { as: alice });
+    const res = await type_record_record_2_fields.type_record_record_2_fields.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // record_3_fields
+  it('record_3_fields', async () => {
+    const v : type_record_record_3_fields.my_record = new type_record_record_3_fields.my_record(new Nat(2), new type_record_record_3_fields.r_record(new Nat(2), "mystr", new Bytes("02")), "mystr");
+    await type_record_record_3_fields.type_record_record_3_fields.deploy({ as: alice });
+    await type_record_record_3_fields.type_record_record_3_fields.set_value(v, { as: alice });
+    const res = await type_record_record_3_fields.type_record_record_3_fields.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // record_4_fields
+  it('record_4_fields', async () => {
+    const v : type_record_record_4_fields.my_record = new type_record_record_4_fields.my_record(new Nat(2), new type_record_record_4_fields.r_record(new Nat(2), "mystr", new Bytes("02"), true), "mystr");
+    await type_record_record_4_fields.type_record_record_4_fields.deploy({ as: alice });
+    await type_record_record_4_fields.type_record_record_4_fields.set_value(v, { as: alice });
+    const res = await type_record_record_4_fields.type_record_record_4_fields.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // record_4_fields_custom
+  it('record_4_fields_custom', async () => {
+    const v : type_record_record_4_fields_custom.my_record = new type_record_record_4_fields_custom.my_record(new Nat(2), new type_record_record_4_fields_custom.r_record(new Nat(2), "mystr", new Bytes("02"), true), "mystr");
+    await type_record_record_4_fields_custom.type_record_record_4_fields_custom.deploy({ as: alice });
+    await type_record_record_4_fields_custom.type_record_record_4_fields_custom.set_value(v, { as: alice });
+    const res = await type_record_record_4_fields_custom.type_record_record_4_fields_custom.get_res();
     assert(v.equals(res), "Invalid Value")
   });
 
