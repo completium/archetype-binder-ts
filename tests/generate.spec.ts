@@ -74,7 +74,7 @@ class item {
   }
 }
 
-const type_default_name: Array<item> = [
+let type_default_name_lit: Array<item> = [
   new item('address', 'tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg', true, 'Address', 'new Address("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")'),
   new item('bls12_381_fr', '0x12', false, 'Bls12_381_fr', 'new Bls12_381_fr("0200000000000000000000000000000000000000000000000000000000000000")'),
   new item('bls12_381_g1', '0x063bd6e11e2fcaac1dd8cf68c6b1925a73c3c583e298ed37c41c3715115cf96358a42dbe85a0228cbfd8a6c8a8c54cd015b5ae2860d1cc47f84698d951f14d9448d03f04df2ca0ffe609a2067d6f1a892163a5e05e541279134cae52b1f23c6b', false, 'Bls12_381_g1', 'new Bls12_381_g1("063bd6e11e2fcaac1dd8cf68c6b1925a73c3c583e298ed37c41c3715115cf96358a42dbe85a0228cbfd8a6c8a8c54cd015b5ae2860d1cc47f84698d951f14d9448d03f04df2ca0ffe609a2067d6f1a892163a5e05e541279134cae52b1f23c6b")'),
@@ -107,15 +107,68 @@ const type_default_name: Array<item> = [
   new item('set<nat>', '[]', false, 'Array<Nat>', '[new Nat(2)]', { fun_eq: '((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0])})', name: 'set_nat' }),
   new item('set<string>', '[]', false, 'Array<string>', '["a", "b"]', { fun_eq: '((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})', name: 'set_string' }),
   new item('set<bool>', '[]', false, 'Array<boolean>', '[false, true]', { fun_eq: '((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})', name: 'set_bool' }),
+
+  // tuple
   new item('(nat * string)', '((0, ""))', true, '[Nat, string]', '[new Nat(2), "mystring"]', { fun_eq: '((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})', name: 'tuple_nat_string' }),
   new item('(nat * string * bytes)', '((0, "", 0x))', true, '[Nat, string, Bytes]', '[new Nat(2), "toto", new Bytes("ff")]', { fun_eq: '((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})', name: 'tuple_nat_string_bytes' }),
   new item('(nat * string * bytes * bool)', '((0, "", 0x, false))', true, '[Nat, string, Bytes, boolean]', '[new Nat(2), "toto", new Bytes("ff"), true]', { fun_eq: '((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})', name: 'tuple_nat_string_bytes_bool' }),
   new item('((nat * string) * bytes)', '(((0, ""), 0x))', true, '[[Nat, string], Bytes]', '[[new Nat(2), "toto"], new Bytes("ff")]', { fun_eq: '((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})', name: 'tuple_nat_string_bytes_rev' }),
   new item('(((nat * string) * bytes) * bool)', '((((0, ""), 0x), false))', true, '[[[Nat, string], Bytes], boolean]', '[[[new Nat(2), "toto"], new Bytes("ff")], true]', { fun_eq: '((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})', name: 'tuple_nat_string_bytes_bool_rev' }),
   new item('(nat * (string * bytes) * bool)', '((0, ("", 0x), false))', true, '[Nat, [string, Bytes], boolean]', '[new Nat(2), ["toto", new Bytes("ff")], true]', { fun_eq: '((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})', name: 'tuple_nat_string_bytes_bool_custom' }),
-  new item('enum_simple', 'e_1', true, '${prefix}.enum_simple', 'new ${prefix}.e_2()', { fun_eq: '((x : ${prefix}.enum_simple, y : ${prefix}.enum_simple) => {return x.toString() == y.toString()})', name: 'enum_simple', decl: 'enum enum_simple = | e_1 | e_2 | e_3' }),
+
+  // enum
+  new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2()', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_simple', decl: 'enum e_enum = | e_1 | e_2 | e_3' }),
+  new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2(new Nat(2))', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_param', decl: 'enum e_enum = | e_1 | e_2<nat> | e_3<string>' }),
+
+  // record
+  // new item('r_record', '{f_a = 0}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2))', { name: 'record_1_field', decl: 'record r_record {f_a : nat}' }),
+  new item('r_record', '{f_a = 0; f_b = ""}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr")', { name: 'record_2_fields', decl: 'record r_record {f_a : nat; f_b : string}' }),
+  new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"))', { name: 'record_3_fields', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes}' }),
+  new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'record_4_fields', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool}' }),
+  new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'record_4_fields_custom', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))' }),
+
+  // event
+  // new item('e_event',  '{f_a = 0}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2))', { name: 'record_1_field', decl: 'event e_event {f_a : nat}' }),
+  // new item('e_event', '{f_a = 0; f_b = ""}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr")', { name: 'event_2_fields', decl: 'event e_event {f_a : nat; f_b : string}' }),
+  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"))', { name: 'event_3_fields', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes}' }),
+  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'event_4_fields', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes; f_d : bool}' }),
+  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'event_4_fields_custom', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))' }),
 ]
 
+const gen_asset = (): Array<item> => {
+  const multi_key = 'multi_key';
+  const tos = ['map', "big_map"]
+  const fields: Array<[string, string]> = [['f_a: nat', '1_field'], ['f_a : nat; f_b : string', '2_fields'], ['f_a : nat; f_b : string; f_c : bytes', '3_fields'], ['f_a : nat; f_b : string; f_c : bytes; f_d : bool', '4_fields']]
+  const keys: Array<[string, string]> = [['f_a', 'single_key'], ['f_a f_b f_c', multi_key]]
+  const types: Array<[string, string, boolean]> = [['asset_key', '{}', true], ['asset_value', '{}', true], ['asset_container', '[]', false]]
+
+  let res : Array<item> = [];
+
+  for (const to of tos) {
+    for (let i = 0; i < fields.length; ++i) {
+      const field = fields[i];
+      for (const key of keys) {
+        if (i < 3 && key[1] == multi_key) {
+          break;
+        }
+        for (const ty of types) {
+          const type_name = ty[0]
+          const name = `asset_${to}_${field[1]}_${key[1]}_${type_name}`
+
+          const decl = `asset a_asset to ${to} identified by ${key[0]} {${field[0]}}`
+          const typ = `${ty[0]}<a_asset>`
+
+          res.push(new item(typ, ty[1], ty[2], '${prefix}.a_asset', 'new ${prefix}.a_asset()', { name: name, decl: decl }))
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
+// const type_default_name = type_default_name_lit.concat(gen_asset())
+const type_default_name = type_default_name_lit
 
 const spec_template = (type: string, imports: string, tests: string) => {
   return `/* DO NOT EDIT, GENERATED FILE */
@@ -237,7 +290,7 @@ const iterate_on_comparable_types = async (kind: string, g: (item: item) => Prom
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable))
 }
 
-const process_prefix = (prefix : string, str : string | null) : string | null => {
+const process_prefix = (prefix: string, str: string | null): string | null => {
   if (str == null) {
     return null
   }
