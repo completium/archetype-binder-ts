@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_enum_simple
+
+enum enum_simple = | e_1 | e_2 | e_3
+
+variable res : or<enum_simple, nat> = right<enum_simple>(0)
+
+entry set_value(i : enum_simple) {
+  res := left<nat>(i)
+}

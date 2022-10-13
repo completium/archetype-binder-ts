@@ -1,0 +1,16 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_enum_simple
+
+enum enum_simple = | e_1 | e_2 | e_3
+
+record my_record {
+  n : nat;
+  v : enum_simple;
+  s : string;
+}
+
+variable res : my_record = {0; e_1; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

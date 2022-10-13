@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_enum_simple
+
+enum enum_simple = | e_1 | e_2 | e_3
+
+variable res : map<enum_simple, nat> = []
+
+entry set_value(i : enum_simple) {
+  res.put(i, 0)
+}

@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_enum_simple
+
+enum enum_simple = | e_1 | e_2 | e_3
+
+variable res : enum_simple = e_1
+
+entry set_value(i : enum_simple) {
+  res := i
+}
