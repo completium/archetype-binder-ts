@@ -1,0 +1,91 @@
+# (Pair (Pair 0 "") (Pair 0x False))
+{
+  storage (pair (pair (nat %a) (string %b)) (pair (bytes %c) (bool %d)));
+  parameter (or (or (nat %set_a) (string %set_b)) (or (bytes %set_c) (bool %set_d)));
+  code { UNPAIR;
+         IF_LEFT
+           { IF_LEFT
+               { DUP 2;
+                 UNPAIR;
+                 UNPAIR;
+                 DROP;
+                 DUP 3;
+                 PAIR;
+                 PAIR;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 NIL operation;
+                 PAIR }
+               { DUP 2;
+                 UNPAIR;
+                 UNPAIR;
+                 SWAP;
+                 DROP;
+                 DUP 3;
+                 SWAP;
+                 PAIR;
+                 PAIR;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 NIL operation;
+                 PAIR } }
+           { IF_LEFT
+               { DUP 2;
+                 UNPAIR;
+                 SWAP;
+                 UNPAIR;
+                 DROP;
+                 DUP 3;
+                 PAIR;
+                 SWAP;
+                 PAIR;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 NIL operation;
+                 PAIR }
+               { DUP 2;
+                 UNPAIR;
+                 SWAP;
+                 UNPAIR;
+                 SWAP;
+                 DROP;
+                 DUP 3;
+                 SWAP;
+                 PAIR;
+                 SWAP;
+                 PAIR;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 NIL operation;
+                 PAIR } } };
+  view
+    "v_a"
+    unit
+    nat
+    { CDR;
+      UNIT;
+      DUP 2;
+      CAR;
+      CAR;
+      SWAP;
+      DROP;
+      DIP { DROP } };
+  view
+    "v_b"
+    string
+    string
+    { UNPAIR;
+      UNIT;
+      DUP 3;
+      CAR;
+      CDR;
+      DUP 3;
+      CONCAT;
+      SWAP;
+      DROP;
+      DIP { DROP 2 } }
+}

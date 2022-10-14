@@ -1,0 +1,119 @@
+# (Pair (Pair (Pair (Pair 0 "") 0x) False) 0)
+{
+  storage (pair (pair %s (pair (pair (nat %a) (string %b)) (bytes %c)) (bool %d)) (nat %n));
+  parameter (or (or (nat %set_a) (pair %set_s (pair (pair (nat %a) (string %b)) (bytes %c)) (bool %d))) (or (or (string %set_b) (bytes %set_c)) (or (bool %set_d) (nat %set_n))));
+  code { UNPAIR;
+         DIP { UNPAIR 2 };
+         IF_LEFT
+           { IF_LEFT
+               { DUP 2;
+                 UNPAIR;
+                 UNPAIR;
+                 UNPAIR;
+                 DROP;
+                 DUP 4;
+                 PAIR;
+                 PAIR;
+                 PAIR;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 PAIR 2;
+                 NIL operation;
+                 PAIR }
+               { DUP;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 PAIR 2;
+                 NIL operation;
+                 PAIR } }
+           { IF_LEFT
+               { IF_LEFT
+                   { DUP 2;
+                     UNPAIR;
+                     UNPAIR;
+                     UNPAIR;
+                     SWAP;
+                     DROP;
+                     DUP 4;
+                     SWAP;
+                     PAIR;
+                     PAIR;
+                     PAIR;
+                     DIP { DIG 1; DROP };
+                     DUG 1;
+                     DROP;
+                     PAIR 2;
+                     NIL operation;
+                     PAIR }
+                   { DUP 2;
+                     UNPAIR;
+                     UNPAIR;
+                     SWAP;
+                     DROP;
+                     DUP 3;
+                     SWAP;
+                     PAIR;
+                     PAIR;
+                     DIP { DIG 1; DROP };
+                     DUG 1;
+                     DROP;
+                     PAIR 2;
+                     NIL operation;
+                     PAIR } }
+               { IF_LEFT
+                   { DUP 2;
+                     UNPAIR;
+                     SWAP;
+                     DROP;
+                     DUP 2;
+                     SWAP;
+                     PAIR;
+                     DIP { DIG 1; DROP };
+                     DUG 1;
+                     DROP;
+                     PAIR 2;
+                     NIL operation;
+                     PAIR }
+                   { DUP;
+                     DIP { DIG 2; DROP };
+                     DUG 2;
+                     DROP;
+                     PAIR 2;
+                     NIL operation;
+                     PAIR } } } };
+  view
+    "v_a"
+    unit
+    nat
+    { CDR;
+      UNPAIR;
+      SWAP;
+      DROP;
+      UNIT;
+      DUP 2;
+      CAR;
+      CAR;
+      CAR;
+      SWAP;
+      DROP;
+      DIP { DROP } };
+  view
+    "v_b"
+    string
+    string
+    { UNPAIR;
+      DIP { UNPAIR; SWAP; DROP };
+      UNIT;
+      DUP 3;
+      CAR;
+      CAR;
+      CDR;
+      DUP 3;
+      CONCAT;
+      SWAP;
+      DROP;
+      DIP { DROP 2 } }
+}
+

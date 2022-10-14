@@ -1,0 +1,56 @@
+# (Pair 0 (Pair "" 0x00))
+{
+  storage (pair (nat %a) (pair (string %b) (bytes %c)));
+  parameter (or (or (nat %e1) (string %e2)) (bytes %e3));
+  code { UNPAIR;
+         DIP { UNPAIR 3 };
+         IF_LEFT
+           { IF_LEFT
+               { DUP;
+                 DIP { DIG 1; DROP };
+                 DUG 1;
+                 DROP;
+                 PAIR 3;
+                 NIL operation;
+                 PAIR }
+               { DUP;
+                 DIP { DIG 2; DROP };
+                 DUG 2;
+                 DROP;
+                 PAIR 3;
+                 NIL operation;
+                 PAIR } }
+           { DUP;
+             DIP { DIG 3; DROP };
+             DUG 3;
+             DROP;
+             PAIR 3;
+             NIL operation;
+             PAIR } };
+  view
+    "v_a"
+    unit
+    nat
+    { CDR;
+      UNPAIR;
+      SWAP;
+      DROP;
+      UNIT;
+      DUP 2;
+      SWAP;
+      DROP;
+      DIP { DROP } };
+  view
+    "v_b"
+    string
+    string
+    { UNPAIR;
+      DIP { CDR; UNPAIR; SWAP; DROP };
+      UNIT;
+      DUP 3;
+      DUP 3;
+      CONCAT;
+      SWAP;
+      DROP;
+      DIP { DROP 2 } }
+}
