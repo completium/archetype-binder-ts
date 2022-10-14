@@ -1,8 +1,0 @@
-/* DO NOT EDIT, GENERATED FILE */
-archetype type_parameter_record_4_fields(res : r_record)
-
-record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool}
-
-entry asset_add(i : r_record) {
-  res := i
-}

@@ -140,7 +140,7 @@ const gen_asset = (): Array<item> => {
   const tos = ['map', "big_map"]
   const fields: Array<[string, string]> = [['f_a: nat', '1_field'], ['f_a : nat; f_b : string', '2_fields'], ['f_a : nat; f_b : string; f_c : bytes', '3_fields'], ['f_a : nat; f_b : string; f_c : bytes; f_d : bool', '4_fields']]
   const keys: Array<[string, string]> = [['f_a', 'single_key'], ['f_a f_b f_c', multi_key]]
-  const types: Array<[string, string, boolean]> = [['asset_key', '{}', true], ['asset_value', '{}', true], ['asset_container', '[]', false]]
+  const types: Array<[string, string, boolean]> = [['asset_key', '{}', true], ['asset_value', '{}', true]/*, ['asset_container', '[]', false]*/]
 
   let res: Array<item> = [];
 
@@ -249,11 +249,14 @@ class Ret {
   }
 }
 
-const iterate_on_comparable_types_gen = async (kind: string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean) => {
+const iterate_on_comparable_types_gen = async (kind: string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean, items : Array<item>, skip ?: Array<string>) => {
   const ret = new Ret(kind);
-  for (let e of type_default_name) {
+  for (let e of items) {
     if (doit(e)) {
       const name = e.get_name();
+      if (skip && skip.indexOf(name) > -1) {
+        continue
+      }
       const a = h(ret, e);
       it(name, async () => {
         await g(e);
@@ -297,12 +300,16 @@ const myiter = (is: iter_settings): ((accu: Ret, item: item) => Ret) => {
   return res;
 }
 
-const iterate_on_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings) => {
-  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true))
+const iterate_on_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true), type_default_name, skip)
 }
 
-const iterate_on_comparable_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings) => {
-  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable))
+const iterate_on_comparable_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable), type_default_name, skip)
+}
+
+const iterate_on_asset_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+  iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true), type_assets, skip)
 }
 
 const process_prefix = (prefix: string, str: string | null): string | null => {
@@ -920,7 +927,8 @@ entry asset_add(i : ${item.type}) {
     const res = await ${prefix}.${prefix}.get_res();
     assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
-  iterate_on_types(kind, generate_type_parameter, new iter_settings(gen_it))
+  const SKIP = ['enum_simple', 'record_1_field', 'record_2_fields', 'record_3_fields', 'record_4_fields', 'record_4_fields_custom'];
+  iterate_on_types(kind, generate_type_parameter, new iter_settings(gen_it), SKIP)
 })
 
 describe('Generate binding type getter', async () => {
@@ -985,6 +993,31 @@ view get_value() : ${item.type} {
   };
   iterate_on_types(kind, generate_type_view, new iter_settings(gen_it))
 })
+
+// describe('Generate binding extra asset', async () => {
+//   const kind = 'extra_asset';
+//   const generate_type_simple = async (item: item) => {
+//     const content_arl: string =
+//       `/* DO NOT EDIT, GENERATED FILE */
+// archetype type_${kind}_${item.get_name()}
+// ${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
+// entry set_value(i : ${item.type}) { }
+// `;
+//     await generate_type_gen(kind, content_arl, item);
+//   }
+//   const gen_it = (item: item): string => {
+//     const name = item.get_name();
+//     const prefix = `type_${kind}_${name}`;
+//     const ts_type = process_prefix(prefix, item.ts_type);
+//     const ts_value = process_prefix(prefix, item.ts_value);
+//     // const fun_eq = process_prefix(prefix, item.get_fun_eq());
+
+//     return `const v : ${ts_type} = ${ts_value};
+//     await ${prefix}.${prefix}.deploy({ as: alice });
+//     await ${prefix}.${prefix}.set_value(v, { as: alice })`
+//   };
+//   iterate_on_asset_types(kind, generate_type_simple, new iter_settings(gen_it))
+// })
 
 describe('Abstract type', async () => {
   // enum
