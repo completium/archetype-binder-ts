@@ -45,7 +45,7 @@ export class Type_or_right_or_nat_string {
                     const is_left = x["0"] !== undefined;
                     const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
                     return new att.Or<att.Nat, string>(value, is_left);
-                })(storage); })(x["1"]);
+                })(x); })(x["1"]);
                 return new att.Or<att.Nat, att.Or<att.Nat, string>>(value, is_left);
             })(storage);
         }

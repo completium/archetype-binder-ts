@@ -47,7 +47,7 @@ export class Type_tuple_or_nat_string {
                     const is_left = x["0"] !== undefined;
                     const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
                     return new att.Or<att.Nat, string>(value, is_left);
-                })(storage); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
+                })(x); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
         }
         throw new Error("Contract not initialised");
     }

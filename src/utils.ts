@@ -1502,7 +1502,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         )
       )),
       undefined,
-      [factory.createIdentifier("storage")]
+      [elt]
     ))];
     case "partition": throw_error();
     case "rational": return [factory.createReturnStatement(factory.createNewExpression(
