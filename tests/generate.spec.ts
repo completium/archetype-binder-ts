@@ -121,7 +121,7 @@ let type_default_name: Array<item> = [
   // new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2(new Nat(2))', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_param', decl: 'enum e_enum = | e_1 | e_2<nat> | e_3<string>' }),
 
   // record
-  // new item('r_record', '{f_a = 0}', true, '${prefix}.r_record', 'new Nat(2)', { name: 'record_1_field', decl: 'record r_record {f_a : nat}' }),
+  new item('r_record', '{f_a = 0}', true, '${prefix}.r_record', 'new Nat(2)', { name: 'record_1_field', decl: 'record r_record {f_a : nat}' }),
   new item('r_record', '{f_a = 0; f_b = ""}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr")', { name: 'record_2_fields', decl: 'record r_record {f_a : nat; f_b : string}' }),
   new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"))', { name: 'record_3_fields', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes}' }),
   new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'record_4_fields', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool}' }),

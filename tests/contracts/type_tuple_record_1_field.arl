@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_record_1_field
+
+record r_record {f_a : nat}
+
+variable res : (nat * r_record * string) = ((0, {f_a = 0}, ""))
+
+entry set_value(i : r_record) {
+  res := ((2, i, "mystr"))
+}

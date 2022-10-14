@@ -1522,6 +1522,10 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
       if (null != name) {
         const r = get_record_or_event_type(name, ci)
         const field_annot_names = get_field_annot_names(r)
+        if (r.fields.length == 1) {
+          const f = r.fields[0];
+          return [factory.createReturnStatement(get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), elt))];
+        } else {
           return [factory.createReturnStatement(factory.createNewExpression(
             factory.createIdentifier(name),
             undefined,
@@ -1530,9 +1534,10 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
                 elt,
                 factory.createIdentifier(field_annot_names[f.name])
               )
-              return  get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
+              return get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
             })
           ))]
+        }
       }
     };
     case "sapling_state": return make_class();

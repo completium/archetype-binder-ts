@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_map_key_record_1_field
+
+record r_record {f_a : nat}
+
+variable res : map<r_record, nat> = []
+
+entry set_value(i : r_record) {
+  res.put(i, 0)
+}
