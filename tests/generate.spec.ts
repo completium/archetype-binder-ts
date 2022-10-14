@@ -142,7 +142,7 @@ const gen_asset = (): Array<item> => {
   const keys: Array<[string, string]> = [['f_a', 'single_key'], ['f_a f_b f_c', multi_key]]
   const types: Array<[string, string, boolean]> = [['asset_key', '{}', true], ['asset_value', '{}', true], ['asset_container', '[]', false]]
 
-  let res : Array<item> = [];
+  let res: Array<item> = [];
 
   for (const to of tos) {
     for (let i = 0; i < fields.length; ++i) {
@@ -213,6 +213,22 @@ const get_binding = async (filename: string) => {
   }
   const output = generate_binding(ci, settings);
   fs.writeFileSync(path_contracts + 'bindings/' + filename.replace('.arl', '.ts'), output)
+}
+
+const get_binding_michelson = async (filename: string) => {
+  const path_contract = path_contracts + filename;
+  const json = await archetype.compile(path_contract, {
+    contract_interface_michelson: true
+  });
+  let ci: ContractInterface = JSON.parse(json);
+  fs.writeFileSync(path_contracts + 'json/' + filename.replace('.tz', '.json'), JSON.stringify(ci, null, 2))
+  const settings: BindingSettings = {
+    language: Language.Michelson,
+    target: Target.Experiment,
+    path: path_contracts
+  }
+  const output = generate_binding(ci, settings);
+  fs.writeFileSync(path_contracts + 'bindings/' + filename.replace('.tz', '.ts'), output)
 }
 
 const generate_type_gen = async (kind: string, content_arl: string, item: item) => {
@@ -312,6 +328,21 @@ describe('Generate binding test', async () => {
     await get_binding('test_big_record.arl');
   });
 })
+
+// describe('Generate michelson test', async () => {
+//   it('contract_eq', async () => {
+//     await get_binding_michelson('contract_eq.tz');
+//   });
+//   it('contract_le', async () => {
+//     await get_binding_michelson('contract_le.tz');
+//   });
+//   it('contract_p', async () => {
+//     await get_binding_michelson('contract_p.tz');
+//   });
+//   it('contract_tz', async () => {
+//     await get_binding_michelson('contract_tz.tz');
+//   });
+// })
 
 describe('Generate binding training', async () => {
   it('training_account', async () => {
