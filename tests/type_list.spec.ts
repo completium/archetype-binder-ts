@@ -41,6 +41,7 @@ import * as type_list_tuple_nat_string_bytes_rev from './contracts/bindings/type
 import * as type_list_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_list_tuple_nat_string_bytes_bool_rev'
 import * as type_list_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_list_tuple_nat_string_bytes_bool_custom'
 import * as type_list_enum_simple from './contracts/bindings/type_list_enum_simple'
+import * as type_list_record_1_field from './contracts/bindings/type_list_record_1_field'
 import * as type_list_record_2_fields from './contracts/bindings/type_list_record_2_fields'
 import * as type_list_record_3_fields from './contracts/bindings/type_list_record_3_fields'
 import * as type_list_record_4_fields from './contracts/bindings/type_list_record_4_fields'
@@ -411,6 +412,15 @@ describe('Type list', async () => {
     await type_list_enum_simple.type_list_enum_simple.set_value(v, { as: alice });
     const res = await type_list_enum_simple.type_list_enum_simple.get_res();
     assert(v.length == res.length && ((x : type_list_enum_simple.e_enum, y : type_list_enum_simple.e_enum) => {return x.toString() == y.toString()})(v[0], res[0]), "Invalid Value")
+  });
+
+  // record_1_field
+  it('record_1_field', async () => {
+    const v : Array<type_list_record_1_field.r_record> = [new Nat(2)];
+    await type_list_record_1_field.type_list_record_1_field.deploy({ as: alice });
+    await type_list_record_1_field.type_list_record_1_field.set_value(v, { as: alice });
+    const res = await type_list_record_1_field.type_list_record_1_field.get_res();
+    assert(v.length == res.length && v[0].equals(res[0]), "Invalid Value")
   });
 
   // record_2_fields

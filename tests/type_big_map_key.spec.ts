@@ -28,6 +28,7 @@ import * as type_big_map_key_tuple_nat_string_bytes_rev from './contracts/bindin
 import * as type_big_map_key_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_big_map_key_tuple_nat_string_bytes_bool_rev'
 import * as type_big_map_key_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_big_map_key_tuple_nat_string_bytes_bool_custom'
 import * as type_big_map_key_enum_simple from './contracts/bindings/type_big_map_key_enum_simple'
+import * as type_big_map_key_record_1_field from './contracts/bindings/type_big_map_key_record_1_field'
 import * as type_big_map_key_record_2_fields from './contracts/bindings/type_big_map_key_record_2_fields'
 import * as type_big_map_key_record_3_fields from './contracts/bindings/type_big_map_key_record_3_fields'
 import * as type_big_map_key_record_4_fields from './contracts/bindings/type_big_map_key_record_4_fields'
@@ -332,6 +333,17 @@ describe('Type big_map_key', async () => {
     const res = await type_big_map_key_enum_simple.type_big_map_key_enum_simple.get_res_value(v);
     assert(res?.equals(new Nat(0)), "Invalid Value")
     const c = await type_big_map_key_enum_simple.type_big_map_key_enum_simple.has_res_value(v);
+    assert(c, "Invalid Value")
+  });
+
+  // record_1_field
+  it('record_1_field', async () => {
+    const v : type_big_map_key_record_1_field.r_record = new Nat(2);
+    await type_big_map_key_record_1_field.type_big_map_key_record_1_field.deploy({ as: alice });
+    await type_big_map_key_record_1_field.type_big_map_key_record_1_field.set_value(v, { as: alice });
+    const res = await type_big_map_key_record_1_field.type_big_map_key_record_1_field.get_res_value(v);
+    assert(res?.equals(new Nat(0)), "Invalid Value")
+    const c = await type_big_map_key_record_1_field.type_big_map_key_record_1_field.has_res_value(v);
     assert(c, "Invalid Value")
   });
 
