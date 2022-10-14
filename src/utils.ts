@@ -940,12 +940,14 @@ const get_lambda_form = (body : ts.Statement[], arg : ts.Expression) : ts.Expres
 }
 
 const get_enum = (name : string | null, ci : ContractInterface) => {
-  for (var i = 0; i < ci.types.enums.length; i++) {
-    if (ci.types.enums[i].name == name) {
-      return ci.types.enums[i]
+  if (name != null) {
+    for (let i = 0; i < ci.types.enums.length; i++) {
+      if (ci.types.enums[i].name == name) {
+        return ci.types.enums[i]
+      }
     }
   }
-  return null
+  throw new Error("get_enum_type: '" + name + "' not found")
 }
 
 const make_enum_type_case_body = (elt : ts.Expression, c : EnumValue, ci : ContractInterface) => {
@@ -997,6 +999,37 @@ const make_enum_type_case_body = (elt : ts.Expression, c : EnumValue, ci : Contr
       )]
     ))
   }
+}
+
+const make_enum_simple_return_body = (elt : ts.Expression, e : Enum, ci : ContractInterface) : ts.Statement => {
+  const tmp = e.constructors.map((x, i) => {
+    return <[EnumValue, number]>[x, i]
+  });
+
+  return tmp.slice(1).reduce(
+    (acc, c) => {
+      return factory.createIfStatement(
+          factory.createBinaryExpression(
+            factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              elt,
+              factory.createIdentifier("toNumber")
+            ),
+            undefined,
+            []
+          ),
+          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+          factory.createNumericLiteral(c[1])
+        ),
+        factory.createBlock(
+          [make_enum_type_case_body(elt, c[0], ci)],
+          true
+        ),
+        acc
+      )
+    },
+    <ts.Statement>make_enum_type_case_body(elt, e.constructors[0], ci)
+  )
 }
 
 const make_enum_return_body = (elt : ts.Expression, e : Enum, ci : ContractInterface) : ts.Statement => {
@@ -1246,10 +1279,8 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
     case "duration": return make_class();
     case "enum": {
         const e = get_enum(atype.name, ci)
-        if (e != null) {
-          return [make_enum_return_body(elt, e, ci)]
-        }
-        throw new Error("enum not found: " + atype.name)
+        const is_simple : boolean = e.type_michelson.prim != "or";
+        return [(is_simple ? make_enum_simple_return_body : make_enum_return_body)(elt, e, ci)]
       };
     case "int": return make_class();
     case "iterable_big_map": throw_error();
