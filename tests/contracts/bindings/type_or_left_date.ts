@@ -41,7 +41,7 @@ export class Type_or_left_date {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new Date(x["0"]); })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                const value = is_left ? (x => { return new Date(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<Date, att.Nat>(value, is_left);
             })(storage);
         }

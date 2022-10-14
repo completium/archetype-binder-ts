@@ -86,10 +86,10 @@ export class Type_set_enum_simple {
             const storage = await ex.get_storage(this.address);
             const res: Array<e_enum> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { if (x.e_3 !== undefined) {
+                res.push((x => { if (x.toNumber() == 2) {
                     return new e_3();
                 }
-                else if (x.e_2 !== undefined) {
+                else if (x.toNumber() == 1) {
                     return new e_2();
                 }
                 else

@@ -1441,10 +1441,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
                         undefined,
                         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                         factory.createBlock(
-                          taquito_to_ts(factory.createElementAccessExpression(
-                        factory.createIdentifier("x"),
-                        factory.createStringLiteral("0")
-                      ), atype.args[0], ci),
+                          taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
                           false
                         )
                       )),
@@ -1471,10 +1468,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
                         undefined,
                         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                         factory.createBlock(
-                          taquito_to_ts(factory.createElementAccessExpression(
-                        factory.createIdentifier("x"),
-                        factory.createStringLiteral("1")
-                      ), atype.args[1], ci),
+                          taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci),
                           false
                         )
                       )),

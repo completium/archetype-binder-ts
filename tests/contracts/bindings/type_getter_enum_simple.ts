@@ -77,10 +77,10 @@ export class Type_getter_enum_simple {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<e_enum>(this.get_value_callback_address, x => { if (x.e_3 !== undefined) {
+                return await ex.get_callback_value<e_enum>(this.get_value_callback_address, x => { if (x.toNumber() == 2) {
                     return new e_3();
                 }
-                else if (x.e_2 !== undefined) {
+                else if (x.toNumber() == 1) {
                     return new e_2();
                 }
                 else
@@ -92,10 +92,10 @@ export class Type_getter_enum_simple {
     async get_res(): Promise<e_enum> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            if (storage.e_3 !== undefined) {
+            if (storage.toNumber() == 2) {
                 return new e_3();
             }
-            else if (storage.e_2 !== undefined) {
+            else if (storage.toNumber() == 1) {
                 return new e_2();
             }
             else

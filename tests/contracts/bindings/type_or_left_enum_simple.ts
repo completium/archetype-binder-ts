@@ -84,14 +84,14 @@ export class Type_or_left_enum_simple {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { if (x["0"].e_3 !== undefined) {
+                const value = is_left ? (x => { if (x.toNumber() == 2) {
                     return new e_3();
                 }
-                else if (x["0"].e_2 !== undefined) {
+                else if (x.toNumber() == 1) {
                     return new e_2();
                 }
                 else
-                    return new e_1(); })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                    return new e_1(); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<e_enum, att.Nat>(value, is_left);
             })(storage);
         }

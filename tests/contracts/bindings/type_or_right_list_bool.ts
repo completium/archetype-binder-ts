@@ -43,8 +43,8 @@ export class Type_or_right_list_bool {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x["0"]); })(x["0"]) : (x => { const res: Array<boolean> = []; for (let i = 0; i < x["1"].length; i++) {
-                    res.push((x => { return x; })(x["1"][i]));
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
+                    res.push((x => { return x; })(x[i]));
                 } return res; })(x["1"]);
                 return new att.Or<att.Nat, Array<boolean>>(value, is_left);
             })(storage);

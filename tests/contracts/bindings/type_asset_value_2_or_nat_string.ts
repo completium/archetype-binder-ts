@@ -55,7 +55,7 @@ export class Type_asset_value_2_or_nat_string {
             for (let e of storage.entries()) {
                 res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return (x => {
                         const is_left = x["0"] !== undefined;
-                        const value = is_left ? (x => { return new att.Nat(x["0"]); })(x["0"]) : (x => { return x["1"]; })(x["1"]);
+                        const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
                         return new att.Or<att.Nat, string>(value, is_left);
                     })(storage); })(e[1])]);
             }

@@ -90,10 +90,10 @@ export class Type_map_key_enum_simple {
                 att.Nat
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { if (x.e_3 !== undefined) {
+                res.push([(x => { if (x.toNumber() == 2) {
                         return new e_3();
                     }
-                    else if (x.e_2 !== undefined) {
+                    else if (x.toNumber() == 1) {
                         return new e_2();
                     }
                     else

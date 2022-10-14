@@ -41,7 +41,6 @@ import * as type_parameter_tuple_nat_string_bytes_rev from './contracts/bindings
 import * as type_parameter_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_rev'
 import * as type_parameter_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_custom'
 import * as type_parameter_enum_simple from './contracts/bindings/type_parameter_enum_simple'
-import * as type_parameter_record_1_field from './contracts/bindings/type_parameter_record_1_field'
 import * as type_parameter_record_2_fields from './contracts/bindings/type_parameter_record_2_fields'
 import * as type_parameter_record_3_fields from './contracts/bindings/type_parameter_record_3_fields'
 import * as type_parameter_record_4_fields from './contracts/bindings/type_parameter_record_4_fields'
@@ -201,7 +200,7 @@ describe('Type parameter', async () => {
 
   // signature
   it('signature', async () => {
-    const v : Signature = new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw");
+    const v : Signature = new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1");
     await type_parameter_signature.type_parameter_signature.deploy(v, { as: alice });
     const res = await type_parameter_signature.type_parameter_signature.get_res();
     assert(v.equals(res), "Invalid Value")
@@ -373,14 +372,6 @@ describe('Type parameter', async () => {
     await type_parameter_enum_simple.type_parameter_enum_simple.deploy(v, { as: alice });
     const res = await type_parameter_enum_simple.type_parameter_enum_simple.get_res();
     assert(((x : type_parameter_enum_simple.e_enum, y : type_parameter_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
-  });
-
-  // record_1_field
-  it('record_1_field', async () => {
-    const v : type_parameter_record_1_field.r_record = new Nat(2);
-    await type_parameter_record_1_field.type_parameter_record_1_field.deploy(v, { as: alice });
-    const res = await type_parameter_record_1_field.type_parameter_record_1_field.get_res();
-    assert(v.equals(res), "Invalid Value")
   });
 
   // record_2_fields

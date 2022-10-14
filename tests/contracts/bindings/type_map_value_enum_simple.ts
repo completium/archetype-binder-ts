@@ -90,10 +90,10 @@ export class Type_map_value_enum_simple {
                 e_enum
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { if (x.e_3 !== undefined) {
+                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { if (x.toNumber() == 2) {
                         return new e_3();
                     }
-                    else if (x.e_2 !== undefined) {
+                    else if (x.toNumber() == 1) {
                         return new e_2();
                     }
                     else

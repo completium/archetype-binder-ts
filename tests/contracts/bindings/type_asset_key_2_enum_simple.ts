@@ -116,10 +116,10 @@ export class Type_asset_key_2_enum_simple {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [(x => { if (x.e_3 !== undefined) {
+                res.push([(x => { return [(x => { if (x.toNumber() == 2) {
                             return new e_3();
                         }
-                        else if (x.e_2 !== undefined) {
+                        else if (x.toNumber() == 1) {
                             return new e_2();
                         }
                         else

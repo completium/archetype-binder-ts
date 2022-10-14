@@ -41,7 +41,7 @@ export class Type_or_right_bls12_381_fr {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x["0"]); })(x["0"]) : (x => { return new att.Bls12_381_fr(x["1"]); })(x["1"]);
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Bls12_381_fr(x); })(x["1"]);
                 return new att.Or<att.Nat, att.Bls12_381_fr>(value, is_left);
             })(storage);
         }

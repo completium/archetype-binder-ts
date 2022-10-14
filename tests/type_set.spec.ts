@@ -28,7 +28,6 @@ import * as type_set_tuple_nat_string_bytes_rev from './contracts/bindings/type_
 import * as type_set_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_set_tuple_nat_string_bytes_bool_rev'
 import * as type_set_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_set_tuple_nat_string_bytes_bool_custom'
 import * as type_set_enum_simple from './contracts/bindings/type_set_enum_simple'
-import * as type_set_record_1_field from './contracts/bindings/type_set_record_1_field'
 import * as type_set_record_2_fields from './contracts/bindings/type_set_record_2_fields'
 import * as type_set_record_3_fields from './contracts/bindings/type_set_record_3_fields'
 import * as type_set_record_4_fields from './contracts/bindings/type_set_record_4_fields'
@@ -151,7 +150,7 @@ describe('Type set', async () => {
 
   // signature
   it('signature', async () => {
-    const v : Array<Signature> = [new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw")];
+    const v : Array<Signature> = [new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1")];
     await type_set_signature.type_set_signature.deploy({ as: alice });
     await type_set_signature.type_set_signature.set_value(v, { as: alice });
     const res = await type_set_signature.type_set_signature.get_res();
@@ -282,15 +281,6 @@ describe('Type set', async () => {
     await type_set_enum_simple.type_set_enum_simple.set_value(v, { as: alice });
     const res = await type_set_enum_simple.type_set_enum_simple.get_res();
     assert(v.length == res.length && ((x : type_set_enum_simple.e_enum, y : type_set_enum_simple.e_enum) => {return x.toString() == y.toString()})(v[0], res[0]), "Invalid Value")
-  });
-
-  // record_1_field
-  it('record_1_field', async () => {
-    const v : Array<type_set_record_1_field.r_record> = [new Nat(2)];
-    await type_set_record_1_field.type_set_record_1_field.deploy({ as: alice });
-    await type_set_record_1_field.type_set_record_1_field.set_value(v, { as: alice });
-    const res = await type_set_record_1_field.type_set_record_1_field.get_res();
-    assert(v.length == res.length && v[0].equals(res[0]), "Invalid Value")
   });
 
   // record_2_fields

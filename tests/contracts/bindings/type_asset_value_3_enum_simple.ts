@@ -113,10 +113,10 @@ export class Type_asset_value_3_enum_simple {
                 my_asset_value
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new my_asset_value((x => { return x; })(x.s), (x => { if (x.e_3 !== undefined) {
+                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new my_asset_value((x => { return x; })(x.s), (x => { if (x.toNumber() == 2) {
                         return new e_3();
                     }
-                    else if (x.e_2 !== undefined) {
+                    else if (x.toNumber() == 1) {
                         return new e_2();
                     }
                     else

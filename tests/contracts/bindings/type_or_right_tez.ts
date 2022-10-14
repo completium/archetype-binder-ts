@@ -41,7 +41,7 @@ export class Type_or_right_tez {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x["0"]); })(x["0"]) : (x => { return new att.Tez(x["1"], "mutez"); })(x["1"]);
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Tez(x, "mutez"); })(x["1"]);
                 return new att.Or<att.Nat, att.Tez>(value, is_left);
             })(storage);
         }

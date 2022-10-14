@@ -60,9 +60,9 @@ export class Type_or_left_map_nat_string {
                 const value = is_left ? (x => { let res: Array<[
                     att.Nat,
                     string
-                ]> = []; for (let e of x["0"].entries()) {
+                ]> = []; for (let e of x.entries()) {
                     res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                } return res; })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                } return res; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<Array<[
                     att.Nat,
                     string

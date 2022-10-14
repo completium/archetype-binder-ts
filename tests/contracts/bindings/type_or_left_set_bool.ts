@@ -43,9 +43,9 @@ export class Type_or_left_set_bool {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { const res: Array<boolean> = []; for (let i = 0; i < x["0"].length; i++) {
-                    res.push((x => { return x; })(x["0"][i]));
-                } return res; })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                const value = is_left ? (x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
+                    res.push((x => { return x; })(x[i]));
+                } return res; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<Array<boolean>, att.Nat>(value, is_left);
             })(storage);
         }

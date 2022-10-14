@@ -43,9 +43,9 @@ export class Type_or_left_or_nat_string {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { return (x => {
                     const is_left = x["0"] !== undefined;
-                    const value = is_left ? (x => { return new att.Nat(x["0"]); })(x["0"]) : (x => { return x["1"]; })(x["1"]);
+                    const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
                     return new att.Or<att.Nat, string>(value, is_left);
-                })(storage); })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                })(storage); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<att.Or<att.Nat, string>, att.Nat>(value, is_left);
             })(storage);
         }

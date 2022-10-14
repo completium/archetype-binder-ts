@@ -7,7 +7,7 @@ record my_record {
   s : string;
 }
 
-variable res : my_record = {0; "sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1"; ""}
+variable res : my_record = {0; "edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"; ""}
 
 entry set_value(i : my_record) {
   res := i

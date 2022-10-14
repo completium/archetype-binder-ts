@@ -41,7 +41,7 @@ export class Type_or_left_signature {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Signature(x["0"]); })(x["0"]) : (x => { return new att.Nat(x["1"]); })(x["1"]);
+                const value = is_left ? (x => { return new att.Signature(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
                 return new att.Or<att.Signature, att.Nat>(value, is_left);
             })(storage);
         }

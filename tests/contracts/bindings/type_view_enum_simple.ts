@@ -70,10 +70,10 @@ export class Type_view_enum_simple {
     async view_get_value(params: Partial<ex.Parameters>): Promise<e_enum> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
-            if (mich.e_3 !== undefined) {
+            if (mich.toNumber() == 2) {
                 return new e_3();
             }
-            else if (mich.e_2 !== undefined) {
+            else if (mich.toNumber() == 1) {
                 return new e_2();
             }
             else
@@ -84,10 +84,10 @@ export class Type_view_enum_simple {
     async get_res(): Promise<e_enum> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            if (storage.e_3 !== undefined) {
+            if (storage.toNumber() == 2) {
                 return new e_3();
             }
-            else if (storage.e_2 !== undefined) {
+            else if (storage.toNumber() == 1) {
                 return new e_2();
             }
             else

@@ -28,7 +28,6 @@ import * as type_big_map_key_tuple_nat_string_bytes_rev from './contracts/bindin
 import * as type_big_map_key_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_big_map_key_tuple_nat_string_bytes_bool_rev'
 import * as type_big_map_key_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_big_map_key_tuple_nat_string_bytes_bool_custom'
 import * as type_big_map_key_enum_simple from './contracts/bindings/type_big_map_key_enum_simple'
-import * as type_big_map_key_record_1_field from './contracts/bindings/type_big_map_key_record_1_field'
 import * as type_big_map_key_record_2_fields from './contracts/bindings/type_big_map_key_record_2_fields'
 import * as type_big_map_key_record_3_fields from './contracts/bindings/type_big_map_key_record_3_fields'
 import * as type_big_map_key_record_4_fields from './contracts/bindings/type_big_map_key_record_4_fields'
@@ -173,7 +172,7 @@ describe('Type big_map_key', async () => {
 
   // signature
   it('signature', async () => {
-    const v : Signature = new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw");
+    const v : Signature = new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1");
     await type_big_map_key_signature.type_big_map_key_signature.deploy({ as: alice });
     await type_big_map_key_signature.type_big_map_key_signature.set_value(v, { as: alice });
     const res = await type_big_map_key_signature.type_big_map_key_signature.get_res_value(v);
@@ -333,17 +332,6 @@ describe('Type big_map_key', async () => {
     const res = await type_big_map_key_enum_simple.type_big_map_key_enum_simple.get_res_value(v);
     assert(res?.equals(new Nat(0)), "Invalid Value")
     const c = await type_big_map_key_enum_simple.type_big_map_key_enum_simple.has_res_value(v);
-    assert(c, "Invalid Value")
-  });
-
-  // record_1_field
-  it('record_1_field', async () => {
-    const v : type_big_map_key_record_1_field.r_record = new Nat(2);
-    await type_big_map_key_record_1_field.type_big_map_key_record_1_field.deploy({ as: alice });
-    await type_big_map_key_record_1_field.type_big_map_key_record_1_field.set_value(v, { as: alice });
-    const res = await type_big_map_key_record_1_field.type_big_map_key_record_1_field.get_res_value(v);
-    assert(res?.equals(new Nat(0)), "Invalid Value")
-    const c = await type_big_map_key_record_1_field.type_big_map_key_record_1_field.has_res_value(v);
     assert(c, "Invalid Value")
   });
 

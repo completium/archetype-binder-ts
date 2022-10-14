@@ -101,10 +101,10 @@ export class Type_record_enum_simple {
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { if (x.e_3 !== undefined) {
+            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { if (x.toNumber() == 2) {
                 return new e_3();
             }
-            else if (x.e_2 !== undefined) {
+            else if (x.toNumber() == 1) {
                 return new e_2();
             }
             else

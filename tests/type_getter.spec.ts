@@ -41,7 +41,6 @@ import * as type_getter_tuple_nat_string_bytes_rev from './contracts/bindings/ty
 import * as type_getter_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_getter_tuple_nat_string_bytes_bool_rev'
 import * as type_getter_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_getter_tuple_nat_string_bytes_bool_custom'
 import * as type_getter_enum_simple from './contracts/bindings/type_getter_enum_simple'
-import * as type_getter_record_1_field from './contracts/bindings/type_getter_record_1_field'
 import * as type_getter_record_2_fields from './contracts/bindings/type_getter_record_2_fields'
 import * as type_getter_record_3_fields from './contracts/bindings/type_getter_record_3_fields'
 import * as type_getter_record_4_fields from './contracts/bindings/type_getter_record_4_fields'
@@ -235,7 +234,7 @@ describe('Type getter', async () => {
 
   // signature
   it('signature', async () => {
-    const v : Signature = new Signature("edsigtZ5u2yo1EfNLoxaPKafnmDZ6q1tjaP6deA7mX5dwx6GyPoN3Y3BfJv76jDcTAy9wsxkL1AQzFb4FvTWxLAtaXiS2dQg9gw");
+    const v : Signature = new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1");
     await type_getter_signature.type_getter_signature.deploy({ as: alice });
     const res = await type_getter_signature.type_getter_signature.get_value(v, { as: alice });
     const s = await type_getter_signature.type_getter_signature.get_res();
@@ -451,16 +450,6 @@ describe('Type getter', async () => {
     const s = await type_getter_enum_simple.type_getter_enum_simple.get_res();
     assert(((x : type_getter_enum_simple.e_enum, y : type_getter_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value");
     assert(((x : type_getter_enum_simple.e_enum, y : type_getter_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, s), "Invalid Value");
-  });
-
-  // record_1_field
-  it('record_1_field', async () => {
-    const v : type_getter_record_1_field.r_record = new Nat(2);
-    await type_getter_record_1_field.type_getter_record_1_field.deploy({ as: alice });
-    const res = await type_getter_record_1_field.type_getter_record_1_field.get_value(v, { as: alice });
-    const s = await type_getter_record_1_field.type_getter_record_1_field.get_res();
-    assert(v.equals(res), "Invalid Value");
-    assert(v.equals(s), "Invalid Value");
   });
 
   // record_2_fields
