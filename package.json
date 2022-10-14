@@ -41,7 +41,8 @@
     "test:main:coverage": "nyc npm run test:main",
     "build": "rm -rf ./build && npx tsc --outDir build",
     "exec": "rm -rf ./build && npx tsc --project tsconfig.json && node ./build/src/main.js",
-    "unit": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/unit.ts"
+    "unit": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/unit.ts",
+    "postpublish" : "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags"
   },
   "repository": {
     "type": "git",
