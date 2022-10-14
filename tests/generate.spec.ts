@@ -307,6 +307,43 @@ describe('Generate binding fails', async () => {
   });
 })
 
+describe('Generate binding test', async () => {
+  it('test_big_record', async () => {
+    await get_binding('test_big_record.arl');
+  });
+})
+
+describe('Generate binding training', async () => {
+  it('training_account', async () => {
+    await get_binding('training_account.arl');
+  });
+
+  it('training_addnumber', async () => {
+    await get_binding('training_addnumber.arl');
+  });
+
+  it('training_charity', async () => {
+    await get_binding('training_charity.arl');
+  });
+
+  it('training_counter_two_numbers', async () => {
+    await get_binding('training_counter_two_numbers.arl');
+  });
+
+  it('training_counter', async () => {
+    await get_binding('training_counter.arl');
+  });
+
+  it('training_storevalue', async () => {
+    await get_binding('training_storevalue.arl');
+  });
+
+  it('training_visitors', async () => {
+    await get_binding('training_visitors.arl');
+  });
+
+})
+
 describe('Generate binding type simple', async () => {
   const kind = 'simple';
   const generate_type_simple = async (item: item) => {

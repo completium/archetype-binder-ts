@@ -1,0 +1,57 @@
+{
+  "name": "training_counter_two_numbers",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "v1",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    },
+    {
+      "name": "v2",
+      "type": {
+        "node": "nat",
+        "name": null,
+        "args": []
+      },
+      "const": false
+    }
+  ],
+  "storage_type": null,
+  "entrypoints": [
+    {
+      "name": "incrementBoth",
+      "args": [
+        {
+          "name": "inc1",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        },
+        {
+          "name": "inc2",
+          "type": {
+            "node": "nat",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

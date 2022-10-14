@@ -1,0 +1,9 @@
+archetype training_charity(owner : address)
+
+entry collect (requestedAmount : tez) {
+  called by owner
+  require { r1 : requestedAmount <= balance }
+  effect { transfer requestedAmount to owner }
+}
+
+entry donate () {}

@@ -1,0 +1,16 @@
+
+archetype training_visitors
+
+asset visitor {
+ login    : string;
+ name     : string;
+ nbvisits : nat = 0;
+}
+
+entry register(l : string, n : string) {
+ visitor.add_update(l, { name = n });
+}
+
+entry visit(l :string) {
+ visitor[l].nbvisits += 1;
+}

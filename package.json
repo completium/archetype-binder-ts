@@ -12,7 +12,9 @@
   },
   "scripts": {
     "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.spec.ts",
-    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_*.spec.ts",
+    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts ./tests/training.spec.ts ./tests/type_*.spec.ts",
+    "test:test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts",
+    "test:training": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/training.spec.ts",
     "test:type_asset_key_1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_1.spec.ts",
     "test:type_asset_key_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_2.spec.ts",
     "test:type_asset_value_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_value_2.spec.ts",

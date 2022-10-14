@@ -1,0 +1,8 @@
+archetype training_storevalue(counter : nat)
+
+entry replace (v : nat) {
+  require { r1 : v < 100; }
+  effect  { counter := v; }
+}
+
+entry double () { counter *= 2 }

@@ -1,0 +1,111 @@
+archetype test_big_record(owner : address, oa : option<address>)
+
+variable s : int = 0
+
+variable o : option<nat> = none
+
+variable l : list<int> = []
+
+variable m : map<nat, (string * int)> = []
+
+variable s1 : set<nat> = []
+
+record all {
+  a : nat;
+  b : int;
+  c : tez;
+  d : rational;
+  e : bool;
+  f : bytes;
+  g : string;
+  h : date;
+  i : duration;
+  j : address;
+  k : option<nat>;
+  n : list<string>;
+  p : set<string * nat * int>
+} as (((f1, f2, f3),((f4, f5), (f6, f7, f8, f9, f10, f11, f12, f13))))
+
+variable l1 : list<all> = []
+
+variable l2 : list<list<all>> = []
+
+variable r : all = {
+  a = 0;
+  b = 0;
+  c = 0tz;
+  d = 0.0;
+  e = false;
+  f = 0x;
+  g = "";
+  h = 2022-08-06;
+  i = 0s;
+  j = tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb;
+  k = none;
+  n = [];
+  p = []
+}
+
+asset just_a_key {
+  key_id : address
+}
+
+asset visitor {
+  id : address;
+  nb_visits : nat = 0
+}
+
+asset visitor_2 {
+  id2 : address;
+  nb_visits2 : nat = 0;
+  last : date = now
+}
+
+enum anenum =
+| A <int>
+| B <nat * string>
+| C
+
+variable a_value : anenum = A(3)
+variable b_value : anenum = B((3, "an str"))
+variable c_value : anenum = C
+
+entry myentry(arg : all) {
+  s := arg.a + arg.b;
+  o := arg.k;
+  r := arg;
+  l := [ s; 2*s; 3*s ];
+  l1 := [ arg; arg ];
+  l2 := [l1];
+  m.put(3, ("test", 5i));
+  s1.add(3);
+  s1.add(4);
+  s1.add(5);
+  visitor.add_update(caller, { nb_visits += 1 });
+  visitor_2.add_update(caller, { nb_visits2 += 1; last := arg.h });
+  just_a_key.add({ caller });
+}
+
+entry myentry2(arg : nat * string) {
+  called by owner
+  effect {
+    const x = arg[0];
+    if x > 10 then
+    fail("NOT_TO_BE_CALLED")
+  }
+}
+
+entry myentry3(ev : anenum) {
+  called by owner
+  effect {
+    a_value := ev
+  }
+}
+
+getter mygetter() : anenum {
+  return a_value
+}
+
+view myview() : anenum {
+  return a_value
+}
