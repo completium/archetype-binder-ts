@@ -39,9 +39,9 @@ export class Type_big_map_value_option_string {
     async get_res_value(key: att.Nat): Promise<att.Option<string> | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), [])), collapsed = true;
             if (data != undefined) {
-                return att.mich_to_option(data, x => { return att.mich_to_string(x); });
+                return new att.Option<string>(data == null ? null : (x => { return x; })(data));
             }
             else {
                 return undefined;
@@ -52,7 +52,7 @@ export class Type_big_map_value_option_string {
     async has_res_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage.res), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

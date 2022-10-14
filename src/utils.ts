@@ -123,13 +123,13 @@ export type ContractInterface = {
 
 
 export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType => {
-  const generate_mich = (prim : string) => {
+  const generate_mich = (prim : string, args ?: Array<MichelsonType>) => {
     return {
         prim: prim,
         int: null,
         bytes: null,
         string: null,
-        args: [],
+        args: args ?? [],
         annots: [],
         array: [],
       }
@@ -143,7 +143,7 @@ export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType 
     case "asset_value": return generate_mich(at.node)
     case "asset_view": return generate_mich(at.node)
     case "asset": return generate_mich(at.node)
-    case "big_map": return generate_mich(at.node)
+    case "big_map": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0]), archetype_type_to_mich_type(at.args[1])])
     case "bls12_381_fr": return generate_mich(at.node)
     case "bls12_381_g1": return generate_mich(at.node)
     case "bls12_381_g2": return generate_mich(at.node)
@@ -153,8 +153,8 @@ export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType 
     case "chest_key": return generate_mich(at.node)
     case "chest": return generate_mich(at.node)
     case "collection": return generate_mich(at.node)
-    case "contract": return generate_mich(at.node)
-    case "currency": return generate_mich(at.node)
+    case "contract": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0])])
+    case "currency": return generate_mich("mutez")
     case "date": return generate_mich(at.node)
     case "duration": return generate_mich(at.node)
     case "enum": return generate_mich(at.node)
@@ -163,26 +163,26 @@ export const archetype_type_to_mich_type = (at : ArchetypeType) : MichelsonType 
     case "iterable_big_map": return generate_mich(at.node)
     case "key_hash": return generate_mich(at.node)
     case "key": return generate_mich(at.node)
-    case "lambda": return generate_mich(at.node)
-    case "list": return generate_mich(at.node)
-    case "map": return generate_mich(at.node)
+    case "lambda": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0]), archetype_type_to_mich_type(at.args[1])])
+    case "list": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0])])
+    case "map": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0]), archetype_type_to_mich_type(at.args[1])])
     case "nat": return generate_mich(at.node)
     case "never": return generate_mich(at.node)
     case "operation": return generate_mich(at.node)
-    case "option": return generate_mich(at.node)
-    case "or": return generate_mich(at.node)
+    case "option": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0])])
+    case "or": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0]), archetype_type_to_mich_type(at.args[1])])
     case "partition": return generate_mich(at.node)
-    case "rational": return generate_mich(at.node)
+    case "rational": return generate_mich("pair", [generate_mich("int"), generate_mich("nat")])
     case "record": return generate_mich(at.node)
     case "sapling_state": return generate_mich(at.node)
     case "sapling_transaction": return generate_mich(at.node)
-    case "set": return generate_mich(at.node)
+    case "set": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0])])
     case "signature": return generate_mich(at.node)
     case "state": return generate_mich(at.node)
     case "string": return generate_mich(at.node)
-    case "ticket": return generate_mich(at.node)
+    case "ticket": return generate_mich(at.node, [archetype_type_to_mich_type(at.args[0])])
     case "timestamp": return generate_mich(at.node)
-    case "tuple": return generate_mich(at.node)
+    case "tuple": return generate_mich("pair", at.args.map(x => { return archetype_type_to_mich_type(x)}))
     case "unit": return generate_mich(at.node)
   }
 }
