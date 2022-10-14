@@ -46,6 +46,15 @@
               ]
             },
             "is_key": false
+          },
+          {
+            "name": "creation",
+            "type": {
+              "node": "date",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
           }
         ],
         "container_type_michelson": {
@@ -65,6 +74,90 @@
               "var_id": null,
               "var_type": null
             },
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "map",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [
+                    "%responses"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "timestamp",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [
+                    "%creation"
+                  ],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "key_type_michelson": {
+          "prim": "bytes",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        "value_type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
             {
               "prim": "map",
               "int": null,
@@ -94,6 +187,79 @@
                   "var_type": null
                 }
               ],
+              "annots": [
+                "%responses"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "timestamp",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%creation"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "poll_to_approve",
+        "container_kind": "big_map",
+        "fields": [
+          {
+            "name": "ipfs_hash_to_approve",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            },
+            "is_key": true
+          },
+          {
+            "name": "poll_creator",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            },
+            "is_key": false
+          }
+        ],
+        "container_type_michelson": {
+          "prim": "big_map",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "bytes",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
               "annots": [],
               "array": [],
               "var_id": null,
@@ -117,34 +283,11 @@
           "var_type": null
         },
         "value_type_michelson": {
-          "prim": "map",
+          "prim": "address",
           "int": null,
           "bytes": null,
           "string": null,
-          "args": [
-            {
-              "prim": "nat",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "nat",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            }
-          ],
+          "args": [],
           "annots": [],
           "array": [],
           "var_id": null,
@@ -286,132 +429,9 @@
         }
       }
     ],
-    "enums": [
-      {
-        "name": "poll_action",
-        "constructors": [
-          {
-            "name": "Add",
-            "types": [
-              {
-                "node": "bytes",
-                "name": null,
-                "args": []
-              }
-            ]
-          },
-          {
-            "name": "Remove",
-            "types": [
-              {
-                "node": "bytes",
-                "name": null,
-                "args": []
-              }
-            ]
-          }
-        ],
-        "type_michelson": {
-          "prim": "or",
-          "int": null,
-          "bytes": null,
-          "string": null,
-          "args": [
-            {
-              "prim": "bytes",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%Add"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "bytes",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%Remove"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            }
-          ],
-          "annots": [],
-          "array": [],
-          "var_id": null,
-          "var_type": null
-        }
-      }
-    ],
+    "enums": [],
     "records": [],
     "events": [
-      {
-        "name": "NewPoll",
-        "fields": [
-          {
-            "name": "creator",
-            "type": {
-              "node": "address",
-              "name": null,
-              "args": []
-            }
-          },
-          {
-            "name": "poll_id",
-            "type": {
-              "node": "bytes",
-              "name": null,
-              "args": []
-            }
-          }
-        ],
-        "type_michelson": {
-          "prim": "pair",
-          "int": null,
-          "bytes": null,
-          "string": null,
-          "args": [
-            {
-              "prim": "address",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%creator"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "bytes",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%poll_id"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            }
-          ],
-          "annots": [],
-          "array": [],
-          "var_id": null,
-          "var_type": null
-        }
-      },
       {
         "name": "Response",
         "fields": [
@@ -503,6 +523,124 @@
           "var_id": null,
           "var_type": null
         }
+      },
+      {
+        "name": "NewPoll",
+        "fields": [
+          {
+            "name": "creator",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "poll_id",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%creator"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "bytes",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%poll_id"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      },
+      {
+        "name": "ApprovePoll",
+        "fields": [
+          {
+            "name": "creator",
+            "type": {
+              "node": "address",
+              "name": null,
+              "args": []
+            }
+          },
+          {
+            "name": "poll_id",
+            "type": {
+              "node": "bytes",
+              "name": null,
+              "args": []
+            }
+          }
+        ],
+        "type_michelson": {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "address",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%creator"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "bytes",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%poll_id"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
       }
     ]
   },
@@ -544,6 +682,15 @@
       "const": false
     },
     {
+      "name": "poll_to_approve",
+      "type": {
+        "node": "asset",
+        "name": "poll_to_approve",
+        "args": []
+      },
+      "const": false
+    },
+    {
       "name": "responder",
       "type": {
         "node": "asset",
@@ -556,13 +703,52 @@
   "storage_type": null,
   "entrypoints": [
     {
-      "name": "manage_poll",
+      "name": "add_poll",
       "args": [
         {
-          "name": "a",
+          "name": "h",
           "type": {
-            "node": "enum",
-            "name": "poll_action",
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "approve",
+      "args": [
+        {
+          "name": "h",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "disapprove",
+      "args": [
+        {
+          "name": "h",
+          "type": {
+            "node": "bytes",
+            "name": null,
+            "args": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "remove",
+      "args": [
+        {
+          "name": "h",
+          "type": {
+            "node": "bytes",
+            "name": null,
             "args": []
           }
         }
@@ -695,7 +881,52 @@
       }
     },
     {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "INVALID_CALLER",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
       "kind": "Invalid",
+      "args": [],
+      "expr": {
+        "prim": null,
+        "int": null,
+        "bytes": null,
+        "string": "POLL_NOT_FOUND",
+        "args": [],
+        "annots": [],
+        "array": [],
+        "var_id": null,
+        "var_type": null
+      }
+    },
+    {
+      "kind": "InvalidCaller",
       "args": [],
       "expr": {
         "prim": null,

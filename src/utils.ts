@@ -901,7 +901,11 @@ const get_field_annot_names = (r : Record) : { [key: string] : string } => {
         case "unit" : {
           return [ idx, acc ]
         }
-        default : throw new Error("internal_get_fan: found a node which is not annotated nor is a pair")
+        //default : throw new Error(`internal_get_fan: found a node '${mt.prim}' which is not annotated nor is a pair`)
+        default : {
+          acc[r.fields[idx].name] = r.fields[idx].name
+          return [ idx + 1, acc ]
+        }
       }
     }
   }
@@ -1142,19 +1146,24 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
     case "asset": {
       const a = get_asset_type(atype.name, ci)
       if (a.container_kind == "big_map") {
-        // create asset value record
         const fields_no_key = a.fields.filter(x => !x.is_key)
-        const asset_value_record_type : Record = {
-          name           : a.name + "_value",
-          fields         : fields_no_key,
-          type_michelson : a.value_type_michelson
-        }
-        const augmented_ci : ContractInterface = { ...ci,
-          types : { ...ci.types,
-            records : [ ...ci.types.records, asset_value_record_type]
+        if (fields_no_key.length == 1) {
+          // asset value is assimiliated to the field
+          return taquito_to_ts(elt, fields_no_key[0].type, ci)
+        } else {
+          // create asset value record
+          const asset_value_record_type : Record = {
+            name           : a.name + "_value",
+            fields         : fields_no_key,
+            type_michelson : a.value_type_michelson
           }
+          const augmented_ci : ContractInterface = { ...ci,
+            types : { ...ci.types,
+              records : [ ...ci.types.records, asset_value_record_type]
+            }
+          }
+          return taquito_to_ts(elt, { name: a.name + "_value", node : "record", args:[] }, augmented_ci)
         }
-        return taquito_to_ts(elt, { name: a.name + "_value", node : "record", args:[] }, augmented_ci)
       } else {
         // create asset container (not for asset to big_map)
         const fields_no_key = a.fields.filter(x => !x.is_key)
@@ -1488,17 +1497,17 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
       if (null != name) {
         const r = get_record_or_event_type(name, ci)
         const field_annot_names = get_field_annot_names(r)
-        return [factory.createReturnStatement(factory.createNewExpression(
-          factory.createIdentifier(name),
-          undefined,
-          r.fields.map(f => {
-            const field_value = factory.createPropertyAccessExpression(
-              elt,
-              factory.createIdentifier(field_annot_names[f.name])
-            )
-            return  get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
-          })
-        ))]
+          return [factory.createReturnStatement(factory.createNewExpression(
+            factory.createIdentifier(name),
+            undefined,
+            r.fields.map(f => {
+              const field_value = factory.createPropertyAccessExpression(
+                elt,
+                factory.createIdentifier(field_annot_names[f.name])
+              )
+              return  get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
+            })
+          ))]
       }
     };
     case "sapling_state": return make_class();
