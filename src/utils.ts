@@ -1335,6 +1335,23 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
               [factory.createArrayLiteralExpression(
                 [
                   get_lambda_form(
+                    atype.args[0].node == 'bool' ?
+                    [
+                      factory.createReturnStatement(factory.createParenthesizedExpression(factory.createConditionalExpression(
+                        factory.createBinaryExpression(
+                          factory.createPropertyAccessExpression(
+                            factory.createIdentifier("x"),
+                            factory.createIdentifier("prim")
+                          ),
+                          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+                          factory.createStringLiteral("True")
+                        ),
+                        factory.createToken(ts.SyntaxKind.QuestionToken),
+                        factory.createTrue(),
+                        factory.createToken(ts.SyntaxKind.ColonToken),
+                        factory.createFalse()
+                      )))
+                    ] :
                     taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),

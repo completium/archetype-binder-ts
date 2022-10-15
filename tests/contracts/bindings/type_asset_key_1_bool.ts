@@ -53,7 +53,7 @@ export class Type_asset_key_1_bool {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return x; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return (x.prim == "True" ? true : false); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

@@ -47,7 +47,7 @@ export class Type_map_key_bool {
                 att.Nat
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return x; })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
+                res.push([(x => { return (x.prim == "True" ? true : false); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
             }
             return res;
         }
