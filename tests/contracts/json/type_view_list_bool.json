@@ -7,30 +7,29 @@
     "records": [],
     "events": []
   },
-  "storage": [
-    {
-      "name": "res",
-      "type": {
-        "node": "list",
-        "name": null,
-        "args": [
-          {
-            "node": "bool",
-            "name": null,
-            "args": []
-          }
-        ]
-      },
-      "const": false
-    }
-  ],
+  "storage": [],
   "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "list",
+            "name": null,
+            "args": [
+              {
+                "node": "bool",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ],
       "return": {
         "node": "list",
         "name": null,

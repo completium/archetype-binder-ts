@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_bytes
 
-variable res : bytes = 0x
-
-view get_value() : bytes {
-  return res
+view get_value(i : bytes) : bytes {
+  return i
 }

@@ -133,24 +133,23 @@
     ],
     "events": []
   },
-  "storage": [
-    {
-      "name": "res",
-      "type": {
-        "node": "record",
-        "name": "r_record",
-        "args": []
-      },
-      "const": false
-    }
-  ],
+  "storage": [],
   "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "record",
+            "name": "r_record",
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "record",
         "name": "r_record",

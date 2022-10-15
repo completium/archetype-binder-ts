@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_unit
 
-variable res : unit = Unit
-
-view get_value() : unit {
-  return res
+view get_value(i : unit) : unit {
+  return i
 }

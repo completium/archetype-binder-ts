@@ -19,8 +19,8 @@ export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type
         att.prim_annot_to_mich_type("bytes", ["%f_c"])
     ], [])
 ], []);
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: r_record): att.Micheline => {
+    return i.to_mich();
 }
 export class Type_view_record_3_fields {
     address: string | undefined;
@@ -43,17 +43,10 @@ export class Type_view_record_3_fields {
         const address = await ex.deploy("./tests/contracts/type_view_record_3_fields.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<r_record> {
+    async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return new r_record((x => { return new att.Nat(x); })(mich.f_a), (x => { return x; })(mich.f_b), (x => { return new att.Bytes(x); })(mich.f_c));
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<r_record> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new r_record((x => { return new att.Nat(x); })(storage.f_a), (x => { return x; })(storage.f_b), (x => { return new att.Bytes(x); })(storage.f_c));
         }
         throw new Error("Contract not initialised");
     }

@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_tuple_nat_string_bytes_rev
 
-variable res : ((nat * string) * bytes) = (((0, ""), 0x))
-
-view get_value() : ((nat * string) * bytes) {
-  return res
+view get_value(i : ((nat * string) * bytes)) : ((nat * string) * bytes) {
+  return i
 }

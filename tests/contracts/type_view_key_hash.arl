@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_key_hash
 
-variable res : key_hash = "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg"
-
-view get_value() : key_hash {
-  return res
+view get_value(i : key_hash) : key_hash {
+  return i
 }

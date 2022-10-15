@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: att.Bls12_381_g1): att.Micheline => {
+    return i.to_mich();
 }
 export class Type_view_bls12_381_g1 {
     address: string | undefined;
@@ -24,17 +24,10 @@ export class Type_view_bls12_381_g1 {
         const address = await ex.deploy("./tests/contracts/type_view_bls12_381_g1.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<att.Bls12_381_g1> {
+    async view_get_value(i: att.Bls12_381_g1, params: Partial<ex.Parameters>): Promise<att.Bls12_381_g1> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return new att.Bls12_381_g1(mich);
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<att.Bls12_381_g1> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Bls12_381_g1(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_option_nat
 
-variable res : option<nat> = none
-
-view get_value() : option<nat> {
-  return res
+view get_value(i : option<nat>) : option<nat> {
+  return i
 }

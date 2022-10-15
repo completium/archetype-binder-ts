@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_set_string
 
-variable res : set<string> = []
-
-view get_value() : set<string> {
-  return res
+view get_value(i : set<string>) : set<string> {
+  return i
 }

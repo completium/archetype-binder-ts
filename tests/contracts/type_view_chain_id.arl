@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_chain_id
 
-variable res : chain_id = "NetXLH1uAxK7CCh"
-
-view get_value() : chain_id {
-  return res
+view get_value(i : chain_id) : chain_id {
+  return i
 }

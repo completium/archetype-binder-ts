@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_or_nat_string
 
-variable res : or<nat, string> = right<nat>("")
-
-view get_value() : or<nat, string> {
-  return res
+view get_value(i : or<nat, string>) : or<nat, string> {
+  return i
 }

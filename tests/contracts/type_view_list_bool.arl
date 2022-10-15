@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_list_bool
 
-variable res : list<bool> = []
-
-view get_value() : list<bool> {
-  return res
+view get_value(i : list<bool>) : list<bool> {
+  return i
 }

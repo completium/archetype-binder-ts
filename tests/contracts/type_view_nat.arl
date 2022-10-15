@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_nat
 
-variable res : nat = 0
-
-view get_value() : nat {
-  return res
+view get_value(i : nat) : nat {
+  return i
 }

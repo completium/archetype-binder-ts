@@ -7,14 +7,17 @@
     "records": [],
     "events": []
   },
-  "storage": [
+  "storage": [],
+  "storage_type": null,
+  "entrypoints": [],
+  "getters": [],
+  "views": [
     {
-      "name": "res",
-      "type": {
-        "node": "tuple",
-        "name": null,
-        "args": [
-          {
+      "name": "get_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
             "node": "tuple",
             "name": null,
             "args": [
@@ -23,41 +26,37 @@
                 "name": null,
                 "args": [
                   {
-                    "node": "nat",
+                    "node": "tuple",
                     "name": null,
-                    "args": []
+                    "args": [
+                      {
+                        "node": "nat",
+                        "name": null,
+                        "args": []
+                      },
+                      {
+                        "node": "string",
+                        "name": null,
+                        "args": []
+                      }
+                    ]
                   },
                   {
-                    "node": "string",
+                    "node": "bytes",
                     "name": null,
                     "args": []
                   }
                 ]
               },
               {
-                "node": "bytes",
+                "node": "bool",
                 "name": null,
                 "args": []
               }
             ]
-          },
-          {
-            "node": "bool",
-            "name": null,
-            "args": []
           }
-        ]
-      },
-      "const": false
-    }
-  ],
-  "storage_type": null,
-  "entrypoints": [],
-  "getters": [],
-  "views": [
-    {
-      "name": "get_value",
-      "args": [],
+        }
+      ],
       "return": {
         "node": "tuple",
         "name": null,

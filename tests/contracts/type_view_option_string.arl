@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_option_string
 
-variable res : option<string> = none
-
-view get_value() : option<string> {
-  return res
+view get_value(i : option<string>) : option<string> {
+  return i
 }

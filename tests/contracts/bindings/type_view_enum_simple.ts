@@ -43,8 +43,8 @@ export const mich_to_e_enum = (m: any): e_enum => {
         default: throw new Error("mich_to_asset_type : invalid value " + v);
     }
 };
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: e_enum): att.Micheline => {
+    return i.to_mich();
 }
 export class Type_view_enum_simple {
     address: string | undefined;
@@ -67,27 +67,13 @@ export class Type_view_enum_simple {
         const address = await ex.deploy("./tests/contracts/type_view_enum_simple.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<e_enum> {
+    async view_get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             if (mich == "2" || (mich.toNumber ? mich.toNumber() == 2 : false)) {
                 return new e_3();
             }
             else if (mich == "1" || (mich.toNumber ? mich.toNumber() == 1 : false)) {
-                return new e_2();
-            }
-            else
-                return new e_1();
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<e_enum> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            if (storage == "2" || (storage.toNumber ? storage.toNumber() == 2 : false)) {
-                return new e_3();
-            }
-            else if (storage == "1" || (storage.toNumber ? storage.toNumber() == 1 : false)) {
                 return new e_2();
             }
             else

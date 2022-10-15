@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: att.Nat): att.Micheline => {
+    return i.to_mich();
 }
 export class Type_view_nat {
     address: string | undefined;
@@ -24,17 +24,10 @@ export class Type_view_nat {
         const address = await ex.deploy("./tests/contracts/type_view_nat.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<att.Nat> {
+    async view_get_value(i: att.Nat, params: Partial<ex.Parameters>): Promise<att.Nat> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return new att.Nat(mich);
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<att.Nat> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Nat(storage);
         }
         throw new Error("Contract not initialised");
     }

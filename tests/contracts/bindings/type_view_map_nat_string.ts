@@ -1,7 +1,14 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: Array<[
+    att.Nat,
+    string
+]>): att.Micheline => {
+    return att.list_to_mich(i, x => {
+        const x_key = x[0];
+        const x_value = x[1];
+        return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
+    });
 }
 export class Type_view_map_nat_string {
     address: string | undefined;
@@ -24,34 +31,20 @@ export class Type_view_map_nat_string {
         const address = await ex.deploy("./tests/contracts/type_view_map_nat_string.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<Array<[
+    async view_get_value(i: Array<[
+        att.Nat,
+        string
+    ]>, params: Partial<ex.Parameters>): Promise<Array<[
         att.Nat,
         string
     ]>> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             let res: Array<[
                 att.Nat,
                 string
             ]> = [];
             for (let e of mich.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-            }
-            return res;
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<Array<[
-        att.Nat,
-        string
-    ]>> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                string
-            ]> = [];
-            for (let e of storage.entries()) {
                 res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;

@@ -3,8 +3,6 @@ archetype type_view_enum_simple
 
 enum e_enum = | e_1 | e_2 | e_3
 
-variable res : e_enum = e_1
-
-view get_value() : e_enum {
-  return res
+view get_value(i : e_enum) : e_enum {
+  return i
 }

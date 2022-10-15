@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_rational
 
-variable res : rational = 0.1
-
-view get_value() : rational {
-  return res
+view get_value(i : rational) : rational {
+  return i
 }

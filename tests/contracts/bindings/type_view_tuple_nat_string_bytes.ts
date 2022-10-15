@@ -1,7 +1,11 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const view_get_value_arg_to_mich = (): att.Micheline => {
-    return att.unit_mich;
+const view_get_value_arg_to_mich = (i: [
+    att.Nat,
+    string,
+    att.Bytes
+]): att.Micheline => {
+    return att.pair_to_mich([i[0].to_mich(), att.string_to_mich(i[1]), i[2].to_mich()]);
 }
 export class Type_view_tuple_nat_string_bytes {
     address: string | undefined;
@@ -24,25 +28,18 @@ export class Type_view_tuple_nat_string_bytes {
         const address = await ex.deploy("./tests/contracts/type_view_tuple_nat_string_bytes.arl", {}, params);
         this.address = address;
     }
-    async view_get_value(params: Partial<ex.Parameters>): Promise<[
+    async view_get_value(i: [
+        att.Nat,
+        string,
+        att.Bytes
+    ], params: Partial<ex.Parameters>): Promise<[
         att.Nat,
         string,
         att.Bytes
     ]> {
         if (this.address != undefined) {
-            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(), params);
+            const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return [(x => { return new att.Nat(x); })(mich[Object.keys(mich)[0]]), (x => { return x; })(mich[Object.keys(mich)[1]]), (x => { return new att.Bytes(x); })(mich[Object.keys(mich)[2]])];
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_res(): Promise<[
-        att.Nat,
-        string,
-        att.Bytes
-    ]> {
-        if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return x; })(storage[Object.keys(storage)[1]]), (x => { return new att.Bytes(x); })(storage[Object.keys(storage)[2]])];
         }
         throw new Error("Contract not initialised");
     }

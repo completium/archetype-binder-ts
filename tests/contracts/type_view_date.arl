@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_date
 
-variable res : date = 2020-01-01
-
-view get_value() : date {
-  return res
+view get_value(i : date) : date {
+  return i
 }

@@ -7,24 +7,23 @@
     "records": [],
     "events": []
   },
-  "storage": [
-    {
-      "name": "res",
-      "type": {
-        "node": "rational",
-        "name": null,
-        "args": []
-      },
-      "const": false
-    }
-  ],
+  "storage": [],
   "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "rational",
+            "name": null,
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "rational",
         "name": null,

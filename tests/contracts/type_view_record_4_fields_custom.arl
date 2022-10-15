@@ -3,8 +3,6 @@ archetype type_view_record_4_fields_custom
 
 record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))
 
-variable res : r_record = {f_a = 0; f_b = ""; f_c = 0x; f_d = false}
-
-view get_value() : r_record {
-  return res
+view get_value(i : r_record) : r_record {
+  return i
 }

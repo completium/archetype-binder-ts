@@ -7,46 +7,45 @@
     "records": [],
     "events": []
   },
-  "storage": [
-    {
-      "name": "res",
-      "type": {
-        "node": "tuple",
-        "name": null,
-        "args": [
-          {
-            "node": "tuple",
-            "name": null,
-            "args": [
-              {
-                "node": "nat",
-                "name": null,
-                "args": []
-              },
-              {
-                "node": "string",
-                "name": null,
-                "args": []
-              }
-            ]
-          },
-          {
-            "node": "bytes",
-            "name": null,
-            "args": []
-          }
-        ]
-      },
-      "const": false
-    }
-  ],
+  "storage": [],
   "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "tuple",
+            "name": null,
+            "args": [
+              {
+                "node": "tuple",
+                "name": null,
+                "args": [
+                  {
+                    "node": "nat",
+                    "name": null,
+                    "args": []
+                  },
+                  {
+                    "node": "string",
+                    "name": null,
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "node": "bytes",
+                "name": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ],
       "return": {
         "node": "tuple",
         "name": null,

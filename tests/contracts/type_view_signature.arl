@@ -1,8 +1,6 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_view_signature
 
-variable res : signature = "edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"
-
-view get_value() : signature {
-  return res
+view get_value(i : signature) : signature {
+  return i
 }

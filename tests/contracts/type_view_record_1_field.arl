@@ -3,8 +3,6 @@ archetype type_view_record_1_field
 
 record r_record {f_a : nat}
 
-variable res : r_record = {f_a = 0}
-
-view get_value() : r_record {
-  return res
+view get_value(i : r_record) : r_record {
+  return i
 }

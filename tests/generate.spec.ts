@@ -971,10 +971,8 @@ describe('Generate binding type view', async () => {
       `/* DO NOT EDIT, GENERATED FILE */
 archetype type_${kind}_${item.get_name()}
 ${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
-variable res : ${item.type} = ${item.value}
-
-view get_value() : ${item.type} {
-  return res
+view get_value(i : ${item.type}) : ${item.type} {
+  return i
 }
 `
     await generate_type_gen(kind, content_arl, item);
@@ -988,7 +986,7 @@ view get_value() : ${item.type} {
 
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
-    const res = await ${prefix}.${prefix}.view_get_value({ as: alice });
+    const res = await ${prefix}.${prefix}.view_get_value(v, { as: alice });
     assert(${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_view, new iter_settings(gen_it))

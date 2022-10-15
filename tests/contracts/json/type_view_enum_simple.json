@@ -36,24 +36,23 @@
     "records": [],
     "events": []
   },
-  "storage": [
-    {
-      "name": "res",
-      "type": {
-        "node": "enum",
-        "name": "e_enum",
-        "args": []
-      },
-      "const": false
-    }
-  ],
+  "storage": [],
   "storage_type": null,
   "entrypoints": [],
   "getters": [],
   "views": [
     {
       "name": "get_value",
-      "args": [],
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "enum",
+            "name": "e_enum",
+            "args": []
+          }
+        }
+      ],
       "return": {
         "node": "enum",
         "name": "e_enum",
