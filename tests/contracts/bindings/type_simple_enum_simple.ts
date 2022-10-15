@@ -82,10 +82,10 @@ export class Type_simple_enum_simple {
     async get_res(): Promise<e_enum> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            if (storage.toNumber() == 2) {
+            if (storage == "2" || (storage.toNumber ? storage.toNumber() == 2 : false)) {
                 return new e_3();
             }
-            else if (storage.toNumber() == 1) {
+            else if (storage == "1" || (storage.toNumber ? storage.toNumber() == 1 : false)) {
                 return new e_2();
             }
             else

@@ -1009,17 +1009,34 @@ const make_enum_simple_return_body = (elt : ts.Expression, e : Enum, ci : Contra
   return tmp.slice(1).reduce(
     (acc, c) => {
       return factory.createIfStatement(
+         factory.createBinaryExpression(
           factory.createBinaryExpression(
-            factory.createCallExpression(
+            elt,
+            factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+            factory.createStringLiteral(`${c[1]}`)
+          ),
+          factory.createToken(ts.SyntaxKind.BarBarToken),
+          factory.createParenthesizedExpression(factory.createConditionalExpression(
             factory.createPropertyAccessExpression(
               elt,
               factory.createIdentifier("toNumber")
             ),
-            undefined,
-            []
-          ),
-          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-          factory.createNumericLiteral(c[1])
+            factory.createToken(ts.SyntaxKind.QuestionToken),
+            factory.createBinaryExpression(
+              factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  elt,
+                  factory.createIdentifier("toNumber")
+                ),
+                undefined,
+                []
+              ),
+              factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+              factory.createNumericLiteral(c[1])
+            ),
+            factory.createToken(ts.SyntaxKind.ColonToken),
+            factory.createFalse()
+          ))
         ),
         factory.createBlock(
           [make_enum_type_case_body(elt, c[0], ci)],

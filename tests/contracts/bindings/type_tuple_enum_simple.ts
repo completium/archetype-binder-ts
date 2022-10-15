@@ -86,10 +86,10 @@ export class Type_tuple_enum_simple {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { if (x.toNumber() == 2) {
+            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
                     return new e_3();
                 }
-                else if (x.toNumber() == 1) {
+                else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
                     return new e_2();
                 }
                 else

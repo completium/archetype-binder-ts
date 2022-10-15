@@ -84,10 +84,10 @@ export class Type_big_map_value_enum_simple {
             const storage = await ex.get_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("enum", [])), collapsed = true;
             if (data != undefined) {
-                if (data.toNumber() == 2) {
+                if (data == "2" || (data.toNumber ? data.toNumber() == 2 : false)) {
                     return new e_3();
                 }
-                else if (data.toNumber() == 1) {
+                else if (data == "1" || (data.toNumber ? data.toNumber() == 1 : false)) {
                     return new e_2();
                 }
                 else

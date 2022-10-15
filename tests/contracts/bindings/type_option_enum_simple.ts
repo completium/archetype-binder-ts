@@ -82,10 +82,10 @@ export class Type_option_enum_simple {
     async get_res(): Promise<att.Option<e_enum>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new att.Option<e_enum>(storage == null ? null : (x => { if (x.toNumber() == 2) {
+            return new att.Option<e_enum>(storage == null ? null : (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
                 return new e_3();
             }
-            else if (x.toNumber() == 1) {
+            else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
                 return new e_2();
             }
             else
