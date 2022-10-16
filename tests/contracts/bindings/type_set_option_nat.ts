@@ -2,7 +2,7 @@ import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const set_value_arg_to_mich = (i: Array<att.Option<att.Nat>>): att.Micheline => {
     return att.list_to_mich(i, x => {
-        return x.to_mich();
+        return x.to_mich((x => { return x.to_mich(); }));
     });
 }
 export class Type_set_option_nat {

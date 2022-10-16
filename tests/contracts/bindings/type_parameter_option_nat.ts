@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const asset_add_arg_to_mich = (i: att.Option<att.Nat>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return x.to_mich(); }));
 }
 export class Type_parameter_option_nat {
     address: string | undefined;
@@ -22,7 +22,7 @@ export class Type_parameter_option_nat {
     }
     async deploy(res: att.Option<att.Nat>, params: Partial<ex.Parameters>) {
         const address = await ex.deploy("./tests/contracts/type_parameter_option_nat.arl", {
-            res: res.to_mich()
+            res: res.to_mich((x => { return x.to_mich(); }))
         }, params);
         this.address = address;
     }

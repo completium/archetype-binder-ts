@@ -6,7 +6,7 @@ export class my_asset_key implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.k.to_mich(), this.n.to_mich()]);
+        return att.pair_to_mich([this.k.to_mich((x => { return att.bool_to_mich(x); })), this.n.to_mich()]);
     }
     equals(v: my_asset_key): boolean {
         return (this.k.equals(v.k) && this.k.equals(v.k) && this.n.equals(v.n));
@@ -27,7 +27,7 @@ export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_
     att.prim_annot_to_mich_type("nat", ["%n"])
 ], []), att.prim_annot_to_mich_type("string", []));
 const asset_put_arg_to_mich = (i: att.Option<boolean>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.bool_to_mich(x); }));
 }
 export class Type_asset_key_2_option_bool {
     address: string | undefined;

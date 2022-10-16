@@ -6,7 +6,7 @@ export class my_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([this.v.to_mich(), att.string_to_mich(this.s)])]);
+        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([this.v.to_mich((x => { return x.to_mich(); })), att.string_to_mich(this.s)])]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && this.v.equals(v.v) && this.s == v.s);

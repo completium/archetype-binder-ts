@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const set_value_arg_to_mich = (i: att.Option<boolean>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.bool_to_mich(x); }));
 }
 export class Type_big_map_key_option_bool {
     address: string | undefined;
@@ -39,7 +39,7 @@ export class Type_big_map_key_option_bool {
     async get_res_value(key: att.Option<boolean>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return new att.Nat(data);
             }
@@ -52,7 +52,7 @@ export class Type_big_map_key_option_bool {
     async has_res_value(key: att.Option<boolean>): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

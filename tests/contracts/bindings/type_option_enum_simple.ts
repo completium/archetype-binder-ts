@@ -44,7 +44,7 @@ export const mich_to_e_enum = (m: any): e_enum => {
     }
 };
 const set_value_arg_to_mich = (i: att.Option<e_enum>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return x.to_mich(); }));
 }
 export class Type_option_enum_simple {
     address: string | undefined;

@@ -1,7 +1,9 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const set_value_arg_to_mich = (i: att.Option<Array<boolean>>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.list_to_mich(x, x => {
+        return att.bool_to_mich(x);
+    }); }));
 }
 export class Type_option_list_bool {
     address: string | undefined;

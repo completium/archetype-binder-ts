@@ -4,7 +4,11 @@ const set_value_arg_to_mich = (i: att.Option<Array<[
     att.Nat,
     string
 ]>>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.list_to_mich(x, x => {
+        const x_key = x[0];
+        const x_value = x[1];
+        return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
+    }); }));
 }
 export class Type_option_map_nat_string {
     address: string | undefined;

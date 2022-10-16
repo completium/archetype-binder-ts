@@ -42,7 +42,7 @@
     "build": "rm -rf ./build && npx tsc --outDir build",
     "exec": "rm -rf ./build && npx tsc --project tsconfig.json && node ./build/src/main.js",
     "unit": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/unit.ts",
-    "postpublish" : "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags"
+    "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "@completium/archetype": "0.4.8-rc1",
-    "@completium/archetype-ts-types": "^0.0.6",
-    "@completium/experiment-ts": "^0.0.90",
+    "@completium/archetype-ts-types": "^0.0.8",
+    "@completium/experiment-ts": "^0.0.92",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^10.0.0",
     "nyc": "^15.1.0",

@@ -10,7 +10,7 @@ export type my_asset_container = Array<[
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []));
 const asset_put_arg_to_mich = (i: att.Or<att.Nat, string>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
 }
 export class Type_asset_value_2_or_nat_string {
     address: string | undefined;

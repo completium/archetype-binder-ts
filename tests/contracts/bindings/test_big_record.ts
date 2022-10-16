@@ -52,7 +52,7 @@ export class all implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([att.pair_to_mich([this.a.to_mich(), att.pair_to_mich([this.b.to_mich(), this.c.to_mich()])]), att.pair_to_mich([att.pair_to_mich([this.d.to_mich(), att.bool_to_mich(this.e)]), att.pair_to_mich([this.f.to_mich(), att.pair_to_mich([att.string_to_mich(this.g), att.pair_to_mich([att.date_to_mich(this.h), att.pair_to_mich([this.i.to_mich(), att.pair_to_mich([this.j.to_mich(), att.pair_to_mich([this.k.to_mich(), att.pair_to_mich([att.list_to_mich(this.n, x => {
+        return att.pair_to_mich([att.pair_to_mich([this.a.to_mich(), att.pair_to_mich([this.b.to_mich(), this.c.to_mich()])]), att.pair_to_mich([att.pair_to_mich([this.d.to_mich(), att.bool_to_mich(this.e)]), att.pair_to_mich([this.f.to_mich(), att.pair_to_mich([att.string_to_mich(this.g), att.pair_to_mich([att.date_to_mich(this.h), att.pair_to_mich([this.i.to_mich(), att.pair_to_mich([this.j.to_mich(), att.pair_to_mich([this.k.to_mich((x => { return x.to_mich(); })), att.pair_to_mich([att.list_to_mich(this.n, x => {
                                                 return att.string_to_mich(x);
                                             }), att.list_to_mich(this.p, x => {
                                                 return att.pair_to_mich([att.string_to_mich(x[0]), x[1].to_mich(), x[2].to_mich()]);
@@ -192,7 +192,7 @@ export class Test_big_record {
     async deploy(owner: att.Address, oa: att.Option<att.Address>, params: Partial<ex.Parameters>) {
         const address = await ex.deploy("./tests/contracts/test_big_record.arl", {
             owner: owner.to_mich(),
-            oa: oa.to_mich()
+            oa: oa.to_mich((x => { return x.to_mich(); }))
         }, params);
         this.address = address;
         this.mygetter_callback_address = await deploy_mygetter_callback();

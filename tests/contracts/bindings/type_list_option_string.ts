@@ -2,7 +2,7 @@ import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const set_value_arg_to_mich = (i: Array<att.Option<string>>): att.Micheline => {
     return att.list_to_mich(i, x => {
-        return x.to_mich();
+        return x.to_mich((x => { return att.string_to_mich(x); }));
     });
 }
 export class Type_list_option_string {

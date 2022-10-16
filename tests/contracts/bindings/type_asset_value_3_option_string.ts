@@ -8,7 +8,7 @@ export class my_asset_value implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([att.string_to_mich(this.s), this.v.to_mich()]);
+        return att.pair_to_mich([att.string_to_mich(this.s), this.v.to_mich((x => { return att.string_to_mich(x); }))]);
     }
     equals(v: my_asset_value): boolean {
         return (this.s == v.s && this.s == v.s && this.v.equals(v.v));
@@ -27,7 +27,7 @@ export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_
     att.option_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), ["%v"])
 ], []));
 const asset_put_arg_to_mich = (i: att.Option<string>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.string_to_mich(x); }));
 }
 export class Type_asset_value_3_option_string {
     address: string | undefined;

@@ -20,7 +20,7 @@ export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type
     ], [])
 ], []);
 const set_value_arg_to_mich = (i: att.Option<r_record>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return x.to_mich(); }));
 }
 export class Type_option_record_3_fields {
     address: string | undefined;

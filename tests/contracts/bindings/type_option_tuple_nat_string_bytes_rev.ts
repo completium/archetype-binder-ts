@@ -7,7 +7,7 @@ const set_value_arg_to_mich = (i: att.Option<[
     ],
     att.Bytes
 ]>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.pair_to_mich([att.pair_to_mich([x[0][0].to_mich(), att.string_to_mich(x[0][1])]), x[1].to_mich()]); }));
 }
 export class Type_option_tuple_nat_string_bytes_rev {
     address: string | undefined;

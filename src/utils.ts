@@ -1755,6 +1755,84 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
   const throw_error = (ty : string) => {
     throw new Error("function_param_to_mich: unhandled type '" + ty + "'")
   }
+  const option_to_mich = (ty : ArchetypeType, x :ts.Expression) => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        x,
+        factory.createIdentifier("to_mich")
+      ),
+      undefined,
+      [ factory.createParenthesizedExpression(factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [ factory.createReturnStatement(function_param_to_mich({name: "x", type: ty}))],
+            false
+          )
+        ))]
+    )
+  }
+
+const or_to_mich = (ty_left : ArchetypeType, ty_right : ArchetypeType, x :ts.Expression) => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        x,
+        factory.createIdentifier("to_mich")
+      ),
+      undefined,
+      [ factory.createParenthesizedExpression(factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [ factory.createReturnStatement(function_param_to_mich({name: "x", type: ty_left}))],
+            false
+          )
+        )),
+        factory.createParenthesizedExpression(factory.createArrowFunction(
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
+          undefined,
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [ factory.createReturnStatement(function_param_to_mich({name: "x", type: ty_right}))],
+            false
+          )
+        ))
+        ]
+    )
+  }
+
   switch (fp.type.node) {
     case "address": return class_to_mich(factory.createIdentifier(fp.name));
     case "aggregate": throw_error(fp.type.node);
@@ -1789,8 +1867,8 @@ export const function_param_to_mich = (fp: FunctionParameter) : ts.CallExpressio
     case "nat": return class_to_mich(factory.createIdentifier(fp.name));
     case "never": throw_error(fp.type.node);
     case "operation": throw_error(fp.type.node);
-    case "option": return class_to_mich(factory.createIdentifier(fp.name));
-    case "or": return class_to_mich(factory.createIdentifier(fp.name));
+    case "option": return option_to_mich(fp.type.args[0], factory.createIdentifier(fp.name));
+    case "or": return or_to_mich(fp.type.args[0], fp.type.args[1], factory.createIdentifier(fp.name));
     case "partition": throw_error(fp.type.node);
     case "rational": return class_to_mich(factory.createIdentifier(fp.name));
     case "record": return class_to_mich(factory.createIdentifier(fp.name));

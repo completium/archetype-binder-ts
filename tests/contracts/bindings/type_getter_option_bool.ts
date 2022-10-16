@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Option<boolean>): att.Micheline => {
-    return i.to_mich();
+    return i.to_mich((x => { return att.bool_to_mich(x); }));
 }
 export const deploy_get_value_callback = async (): Promise<string> => {
     return await ex.deploy_callback("get_value", att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []));
