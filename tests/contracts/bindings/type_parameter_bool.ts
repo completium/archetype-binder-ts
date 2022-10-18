@@ -41,7 +41,7 @@ export class Type_parameter_bool {
     async get_res(): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return storage;
+            return storage.prim ? (storage.prim == "True" ? true : false) : storage;
         }
         throw new Error("Contract not initialised");
     }

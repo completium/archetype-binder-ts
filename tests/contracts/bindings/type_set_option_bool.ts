@@ -43,7 +43,7 @@ export class Type_set_option_bool {
             const storage = await ex.get_storage(this.address);
             const res: Array<att.Option<boolean>> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new att.Option<boolean>(x == null ? null : (x => { return x; })(x)); })(storage[i]));
+                res.push((x => { return new att.Option<boolean>(x == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x)); })(storage[i]));
             }
             return res;
         }

@@ -93,7 +93,7 @@ export class Type_asset_key_1_record_4_fields_custom {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x; })(x.f_d)); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new r_record((x => { return new att.Nat(x); })(x[0]), (x => { return x; })(x[1]), (x => { return new att.Bytes(x); })(x[2]), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[3])); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

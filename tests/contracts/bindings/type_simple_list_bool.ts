@@ -43,7 +43,7 @@ export class Type_simple_list_bool {
             const storage = await ex.get_storage(this.address);
             const res: Array<boolean> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return x; })(storage[i]));
+                res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[i]));
             }
             return res;
         }

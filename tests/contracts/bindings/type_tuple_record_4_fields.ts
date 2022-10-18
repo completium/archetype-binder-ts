@@ -65,7 +65,7 @@ export class Type_tuple_record_4_fields {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x; })(x.f_d)); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
+            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
         }
         throw new Error("Contract not initialised");
     }

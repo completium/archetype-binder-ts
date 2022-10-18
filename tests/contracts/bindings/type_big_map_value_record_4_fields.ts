@@ -63,7 +63,7 @@ export class Type_big_map_value_record_4_fields {
             const storage = await ex.get_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("record", [])), collapsed = true;
             if (data != undefined) {
-                return new r_record((x => { return new att.Nat(x); })(data.f_a), (x => { return x; })(data.f_b), (x => { return new att.Bytes(x); })(data.f_c), (x => { return x; })(data.f_d));
+                return new r_record((x => { return new att.Nat(x); })(data.f_a), (x => { return x; })(data.f_b), (x => { return new att.Bytes(x); })(data.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(data.f_d));
             }
             else {
                 return undefined;

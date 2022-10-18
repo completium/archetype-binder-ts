@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -661,7 +661,7 @@ const getter_to_method = (g : Getter, ci : ContractInterface) => {
                 )],
                 undefined,
                 factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci))
+                factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv()))
               )
             ]
           )))
@@ -711,7 +711,7 @@ const view_to_method = (v : View, ci : ContractInterface) => {
       ts.NodeFlags.Const
     )
   )],
-  ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci))
+  ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv()))
   ])
 }
 
@@ -821,7 +821,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    taquito_to_ts(elt, selt.type, ci)
+    taquito_to_ts(elt, selt.type, ci, makeTaquitoEnv())
   )
 }
 
@@ -951,7 +951,7 @@ const eventToRegister = (e : Event, ci : ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci),
+                              taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci, makeTaquitoEnv()),
                               true
                             )
                           )),
@@ -1065,7 +1065,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
               these types already have a michelson_type variable created for that purpose
             */
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type.args[1], ci),
+            taquito_to_ts(factory.createIdentifier("data"), selt.type.args[1], ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )
         ),
@@ -1127,7 +1127,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             factory.createIdentifier(selt.name+"_key_mich_type"),
             factory.createIdentifier(selt.name+"_value_mich_type"),
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type, ci),
+            taquito_to_ts(factory.createIdentifier("data"), selt.type, ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )),
           storage_elt_to_getter_skeleton(

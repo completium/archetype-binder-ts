@@ -31,7 +31,7 @@ export class Type_view_set_bool {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             const res: Array<boolean> = [];
             for (let i = 0; i < mich.length; i++) {
-                res.push((x => { return x; })(mich[i]));
+                res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(mich[i]));
             }
             return res;
         }

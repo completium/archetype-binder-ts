@@ -65,7 +65,7 @@ export class Type_getter_record_4_fields {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x; })(x.f_d)); });
+                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); });
             }
         }
         throw new Error("Contract not initialised");
@@ -73,7 +73,7 @@ export class Type_getter_record_4_fields {
     async get_res(): Promise<r_record> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new r_record((x => { return new att.Nat(x); })(storage.f_a), (x => { return x; })(storage.f_b), (x => { return new att.Bytes(x); })(storage.f_c), (x => { return x; })(storage.f_d));
+            return new r_record((x => { return new att.Nat(x); })(storage.f_a), (x => { return x; })(storage.f_b), (x => { return new att.Bytes(x); })(storage.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage.f_d));
         }
         throw new Error("Contract not initialised");
     }

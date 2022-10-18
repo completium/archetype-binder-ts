@@ -120,7 +120,7 @@ export class Type_asset_key_2_enum_simple {
                         return new e_2();
                     }
                     else
-                        return new e_1(); })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
+                        return new e_1(); })(x[0]), (x => { return new att.Nat(x); })(x[1])); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

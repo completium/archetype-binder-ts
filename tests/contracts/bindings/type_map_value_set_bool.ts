@@ -50,7 +50,7 @@ export class Type_map_value_set_bool {
             ]> = [];
             for (let e of storage.entries()) {
                 res.push([(x => { return new att.Nat(x); })(e[0]), (x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                        res.push((x => { return x; })(x[i]));
+                        res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
                     } return res; })(e[1])]);
             }
             return res;

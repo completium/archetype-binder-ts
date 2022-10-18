@@ -37,7 +37,7 @@ export class Type_getter_set_bool {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
                 return await ex.get_callback_value<Array<boolean>>(this.get_value_callback_address, x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return x; })(x[i]));
+                    res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
                 } return res; });
             }
         }
@@ -48,7 +48,7 @@ export class Type_getter_set_bool {
             const storage = await ex.get_storage(this.address);
             const res: Array<boolean> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return x; })(storage[i]));
+                res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[i]));
             }
             return res;
         }

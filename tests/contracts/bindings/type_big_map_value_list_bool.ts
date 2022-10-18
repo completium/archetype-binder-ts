@@ -45,7 +45,7 @@ export class Type_big_map_value_list_bool {
             if (data != undefined) {
                 const res: Array<boolean> = [];
                 for (let i = 0; i < data.length; i++) {
-                    res.push((x => { return x; })(data[i]));
+                    res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(data[i]));
                 }
                 return res;
             }

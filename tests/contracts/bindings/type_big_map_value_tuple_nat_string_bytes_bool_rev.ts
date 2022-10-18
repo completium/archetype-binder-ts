@@ -86,7 +86,7 @@ export class Type_big_map_value_tuple_nat_string_bytes_bool_rev {
                 att.prim_annot_to_mich_type("bool", [])
             ], [])), collapsed = true;
             if (data != undefined) {
-                return [[[(x => { return new att.Nat(x); })(data[Object.keys(data)[0]]), (x => { return x; })(data[Object.keys(data)[1]])], (x => { return new att.Bytes(x); })(data[Object.keys(data)[2]])], (x => { return x; })(data[Object.keys(data)[3]])];
+                return [[[(x => { return new att.Nat(x); })(data[Object.keys(data)[0]]), (x => { return x; })(data[Object.keys(data)[1]])], (x => { return new att.Bytes(x); })(data[Object.keys(data)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(data[Object.keys(data)[3]])];
             }
             else {
                 return undefined;

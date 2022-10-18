@@ -53,7 +53,7 @@ export class Type_asset_key_1_option_bool {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Option<boolean>(x == null ? null : (x => { return x; })(x)); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new att.Option<boolean>(x == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x)); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

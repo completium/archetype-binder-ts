@@ -61,7 +61,7 @@ export class Type_option_record_4_fields_custom {
     async get_res(): Promise<att.Option<r_record>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new att.Option<r_record>(storage == null ? null : (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x; })(x.f_d)); })(storage));
+            return new att.Option<r_record>(storage == null ? null : (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(storage));
         }
         throw new Error("Contract not initialised");
     }

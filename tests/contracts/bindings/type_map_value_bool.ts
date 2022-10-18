@@ -47,7 +47,7 @@ export class Type_map_value_bool {
                 boolean
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(e[1])]);
             }
             return res;
         }

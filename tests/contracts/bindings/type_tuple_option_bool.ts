@@ -43,7 +43,7 @@ export class Type_tuple_option_bool {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return new att.Option<boolean>(x == null ? null : (x => { return x; })(x)); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
+            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return new att.Option<boolean>(x == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x)); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
         }
         throw new Error("Contract not initialised");
     }

@@ -86,7 +86,7 @@ export class Type_parameter_tuple_nat_string_bytes_bool_rev {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return [[[(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return x; })(storage[Object.keys(storage)[1]])], (x => { return new att.Bytes(x); })(storage[Object.keys(storage)[2]])], (x => { return x; })(storage[Object.keys(storage)[3]])];
+            return [[[(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return x; })(storage[Object.keys(storage)[1]])], (x => { return new att.Bytes(x); })(storage[Object.keys(storage)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[Object.keys(storage)[3]])];
         }
         throw new Error("Contract not initialised");
     }

@@ -119,6 +119,14 @@ export type ContractInterface = {
   "errors": Array<Error>
 }
 
+type TaquitoEnv = {
+  in_map_key: boolean
+}
+
+export const makeTaquitoEnv = () : TaquitoEnv => {
+  return {in_map_key: false}
+}
+
 /* Archetype type to Michelson type ---------------------------------------- */
 
 
@@ -987,7 +995,7 @@ const make_enum_type_case_body = (elt : ts.Expression, c : EnumValue, ci : Contr
           archetype_type_to_ts_type(atype),
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createBlock(
-            taquito_to_ts(factory.createIdentifier("x"), atype, ci),
+            taquito_to_ts(factory.createIdentifier("x"), atype, ci, makeTaquitoEnv()),
             false
           )
         )),
@@ -1089,27 +1097,7 @@ const get_element_access = (elt : ts.Expression, idx : number) => {
   )
 }
 
-const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInterface, start_idx : number = 0) : [ts.Expression[], number] => {
-  const [array, idx] = t.args.reduce((acc, a) => {
-    const [acc_array, acc_idx ] = acc
-    switch (a.node) {
-      case "tuple" :
-        const [ tuple_array, tuple_idx ] = get_tuple_body(elt, a, ci, acc_idx)
-        return [
-          [ ...acc_array, factory.createArrayLiteralExpression(tuple_array) ],
-          tuple_idx
-        ]
-      default :
-        return [
-          [ ...acc_array, get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), a, ci), get_element_access(elt, acc_idx)) ],
-          acc_idx + 1
-        ]
-    }
-  }, [<ts.Expression[]>[], start_idx])
-  return [array, idx]
-}
-
-export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
+export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface, env : TaquitoEnv) : ts.Statement[] => {
   const make_class = (x : ts.Expression[]) => {
     return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
@@ -1167,7 +1155,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
               ),
               undefined,
               [ get_lambda_form(
-                  taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
+                  taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci, env),
                   factory.createElementAccessExpression(
                     elt,
                     factory.createIdentifier("i")
@@ -1181,6 +1169,26 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         factory.createReturnStatement(factory.createIdentifier("res"))
       ];
     }
+
+  const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInterface, start_idx : number = 0) : [ts.Expression[], number] => {
+    const [array, idx] = t.args.reduce((acc, a) => {
+      const [acc_array, acc_idx ] = acc
+      switch (a.node) {
+        case "tuple" :
+          const [ tuple_array, tuple_idx ] = get_tuple_body(elt, a, ci, acc_idx)
+          return [
+            [ ...acc_array, factory.createArrayLiteralExpression(tuple_array) ],
+            tuple_idx
+          ]
+        default :
+          return [
+            [ ...acc_array, get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), a, ci, env), get_element_access(elt, acc_idx)) ],
+            acc_idx + 1
+          ]
+      }
+    }, [<ts.Expression[]>[], start_idx])
+    return [array, idx]
+  }
 
   const throw_error = () => {
     throw new Error("taquito_to_ts: type '" + atype.node + "' not found")
@@ -1199,7 +1207,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         const fields_no_key = a.fields.filter(x => !x.is_key)
         if (fields_no_key.length == 1) {
           // asset value is assimiliated to the field
-          return taquito_to_ts(elt, fields_no_key[0].type, ci)
+          return taquito_to_ts(elt, fields_no_key[0].type, ci, env)
         } else {
           // create asset value record
           const asset_value_record_type : Record = {
@@ -1212,7 +1220,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
               records : [ ...ci.types.records, asset_value_record_type]
             }
           }
-          return taquito_to_ts(elt, { name: a.name + "_value", node : "record", args:[] }, augmented_ci)
+          return taquito_to_ts(elt, { name: a.name + "_value", node : "record", args:[] }, augmented_ci, env)
         }
       } else {
         // create asset container (not for asset to big_map)
@@ -1250,14 +1258,38 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
             args : [ key_type ]
           };
 
-        return taquito_to_ts(elt, container_type, augmented_ci)
+        return taquito_to_ts(elt, container_type, augmented_ci, env)
       }
     };
     case "big_map": throw_error();
     case "bls12_381_fr": return make_class([elt]);
     case "bls12_381_g1": return make_class([elt]);
     case "bls12_381_g2": return make_class([elt]);
-    case "bool": return [factory.createReturnStatement(elt)];
+    case "bool": return [factory.createReturnStatement(
+      factory.createConditionalExpression(
+        factory.createPropertyAccessExpression(
+          elt,
+          factory.createIdentifier("prim")
+        ),
+        factory.createToken(ts.SyntaxKind.QuestionToken),
+        factory.createParenthesizedExpression(factory.createConditionalExpression(
+          factory.createBinaryExpression(
+            factory.createPropertyAccessExpression(
+              elt,
+              factory.createIdentifier("prim")
+            ),
+            factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+            factory.createStringLiteral("True")
+          ),
+          factory.createToken(ts.SyntaxKind.QuestionToken),
+          factory.createTrue(),
+          factory.createToken(ts.SyntaxKind.ColonToken),
+          factory.createFalse()
+        )),
+        factory.createToken(ts.SyntaxKind.ColonToken),
+        elt
+      )
+    )];
     case "bytes": return make_class([elt]);
     case "chain_id": return make_class([elt]);
     case "chest_key": return make_class([elt]);
@@ -1336,31 +1368,14 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
               [factory.createArrayLiteralExpression(
                 [
                   get_lambda_form(
-                    atype.args[0].node == 'bool' ?
-                    [
-                      factory.createReturnStatement(factory.createParenthesizedExpression(factory.createConditionalExpression(
-                        factory.createBinaryExpression(
-                          factory.createPropertyAccessExpression(
-                            factory.createIdentifier("x"),
-                            factory.createIdentifier("prim")
-                          ),
-                          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-                          factory.createStringLiteral("True")
-                        ),
-                        factory.createToken(ts.SyntaxKind.QuestionToken),
-                        factory.createTrue(),
-                        factory.createToken(ts.SyntaxKind.ColonToken),
-                        factory.createFalse()
-                      )))
-                    ] :
-                    taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
+                    taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci, {...(env ?? {}), in_map_key: true}),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("0")
                     )
                   ),
                   get_lambda_form(
-                    taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci),
+                    taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci, env),
                     factory.createElementAccessExpression(
                       factory.createIdentifier("e"),
                       factory.createIdentifier("1")
@@ -1394,7 +1409,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         factory.createToken(ts.SyntaxKind.QuestionToken),
         factory.createNull(),
         factory.createToken(ts.SyntaxKind.ColonToken),
-        get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci), elt)
+        get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci, env), elt)
       )]
     ))];
     case "or": return [factory.createReturnStatement(factory.createCallExpression(
@@ -1459,7 +1474,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
                         undefined,
                         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                         factory.createBlock(
-                          taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci),
+                          taquito_to_ts(factory.createIdentifier("x"), atype.args[0], ci, env),
                           false
                         )
                       )),
@@ -1486,7 +1501,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
                         undefined,
                         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                         factory.createBlock(
-                          taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci),
+                          taquito_to_ts(factory.createIdentifier("x"), atype.args[1], ci, env),
                           false
                         )
                       )),
@@ -1542,17 +1557,20 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         const field_annot_names = get_field_annot_names(r)
         if (r.fields.length == 1) {
           const f = r.fields[0];
-          return [factory.createReturnStatement(get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), elt))];
+          return [factory.createReturnStatement(get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci, env), elt))];
         } else {
           return [factory.createReturnStatement(factory.createNewExpression(
             factory.createIdentifier(name),
             undefined,
-            r.fields.map(f => {
-              const field_value = factory.createPropertyAccessExpression(
+            r.fields.map((f, i) => {
+              const field_value = env.in_map_key ? factory.createElementAccessExpression(
+                elt,
+                factory.createNumericLiteral(i)
+              ) : factory.createPropertyAccessExpression(
                 elt,
                 factory.createIdentifier(field_annot_names[f.name])
               )
-              return get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci), field_value)
+              return get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci, env), field_value)
             })
           ))]
         }

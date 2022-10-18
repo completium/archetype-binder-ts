@@ -42,7 +42,7 @@ export class Type_option_set_bool {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return new att.Option<Array<boolean>>(storage == null ? null : (x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                res.push((x => { return x; })(x[i]));
+                res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
             } return res; })(storage));
         }
         throw new Error("Contract not initialised");

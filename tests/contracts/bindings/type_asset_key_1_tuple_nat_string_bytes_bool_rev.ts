@@ -116,7 +116,7 @@ export class Type_asset_key_1_tuple_nat_string_bytes_bool_rev {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [[[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x; })(x[Object.keys(x)[3]])]; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return [[[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

@@ -65,7 +65,7 @@ export class Type_set_record_4_fields_custom {
             const storage = await ex.get_storage(this.address);
             const res: Array<r_record> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x; })(x.f_d)); })(storage[i]));
+                res.push((x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(storage[i]));
             }
             return res;
         }

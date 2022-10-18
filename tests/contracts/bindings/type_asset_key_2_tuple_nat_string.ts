@@ -92,7 +92,7 @@ export class Type_asset_key_2_tuple_nat_string {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new my_asset_key((x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(x[0]), (x => { return new att.Nat(x); })(x[1])); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

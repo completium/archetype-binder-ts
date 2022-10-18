@@ -70,7 +70,7 @@ export class Type_asset_key_2_key {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new my_asset_key((x => { return new att.Key(x); })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { return new att.Key(x); })(x[0]), (x => { return new att.Nat(x); })(x[1])); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

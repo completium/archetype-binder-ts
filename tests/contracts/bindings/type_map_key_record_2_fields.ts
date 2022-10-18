@@ -63,7 +63,7 @@ export class Type_map_key_record_2_fields {
                 att.Nat
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b)); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
+                res.push([(x => { return new r_record((x => { return new att.Nat(x); })(x[0]), (x => { return x; })(x[1])); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
             }
             return res;
         }

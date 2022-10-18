@@ -41,7 +41,7 @@ export class Type_or_right_bool {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x["1"]);
                 return new att.Or<att.Nat, boolean>(value, is_left);
             })(storage);
         }

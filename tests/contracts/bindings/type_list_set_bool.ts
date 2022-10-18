@@ -46,7 +46,7 @@ export class Type_list_set_bool {
             const res: Array<Array<boolean>> = [];
             for (let i = 0; i < storage.length; i++) {
                 res.push((x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return x; })(x[i]));
+                    res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
                 } return res; })(storage[i]));
             }
             return res;

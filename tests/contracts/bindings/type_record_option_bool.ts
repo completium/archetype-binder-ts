@@ -58,7 +58,7 @@ export class Type_record_option_bool {
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { return new att.Option<boolean>(x == null ? null : (x => { return x; })(x)); })(storage.v), (x => { return x; })(storage.s));
+            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { return new att.Option<boolean>(x == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x)); })(storage.v), (x => { return x; })(storage.s));
         }
         throw new Error("Contract not initialised");
     }
