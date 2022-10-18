@@ -66,18 +66,15 @@ export class Type_asset_key_2_or_nat_string {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                [
-                    att.Or<att.Nat, string>,
-                    att.Nat
-                ],
+                my_asset_key,
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [(x => { return (x => {
-                            const is_left = x["0"] !== undefined;
-                            const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
-                            return new att.Or<att.Nat, string>(value, is_left);
-                        })(x); })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]])]; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { return (x => {
+                        const is_left = x["0"] !== undefined;
+                        const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
+                        return new att.Or<att.Nat, string>(value, is_left);
+                    })(x); })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

@@ -109,21 +109,18 @@ export class Type_asset_key_2_enum_simple {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                [
-                    e_enum,
-                    att.Nat
-                ],
+                my_asset_key,
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [(x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                            return new e_3();
-                        }
-                        else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                            return new e_2();
-                        }
-                        else
-                            return new e_1(); })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]])]; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
+                        return new e_3();
+                    }
+                    else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
+                        return new e_2();
+                    }
+                    else
+                        return new e_1(); })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

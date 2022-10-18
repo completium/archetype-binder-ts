@@ -72,14 +72,11 @@ export class Type_asset_key_2_rational {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                [
-                    att.Rational,
-                    att.Nat
-                ],
+                my_asset_key,
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [(x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]])]; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }

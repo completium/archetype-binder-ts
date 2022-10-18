@@ -1217,56 +1217,40 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
       } else {
         // create asset container (not for asset to big_map)
         const fields_no_key = a.fields.filter(x => !x.is_key)
-        const keys = a.fields.filter(x => x.is_key)
-        const key_type : ArchetypeType = keys.length > 1 ? {
-          node : "tuple",
-          name : null,
-          args : keys.map(x => x.type)
-        } : keys[0].type
-        if (fields_no_key.length > 1) {
-          // create a record type in Contract Interface corresponding to asset value
-          const asset_value_record_type : Record = {
-            name           : a.name + "_value",
-            fields         : fields_no_key,
-            type_michelson : a.value_type_michelson
-          }
-          const augmented_ci : ContractInterface = { ...ci,
-            types : { ...ci.types,
-              records : [ ...ci.types.records, asset_value_record_type]
-            }
-          }
-          const map_type : ArchetypeType = {
+        const fields_key = a.fields.filter(x => x.is_key)
+
+        const asset_name_key = a.name + "_key";
+        const asset_name_value = a.name + "_value";
+
+        const asset_key_record_type : Record = {
+          name           : asset_name_key,
+          fields         : fields_key,
+          type_michelson : a.key_type_michelson
+        }
+
+        const asset_value_record_type : Record = {
+          name           : asset_name_value,
+          fields         : fields_no_key,
+          type_michelson : a.value_type_michelson
+        }
+
+        const key_type : ArchetypeType = fields_key.length == 0 ? { node : "unit", name : null, args : [] } : (fields_key.length == 1 ? fields_key[0].type : { node : "record", name : asset_name_key, args : [] });
+        const value_type : ArchetypeType = fields_no_key.length == 0 ? { node : "unit", name : null, args : [] } : (fields_no_key.length == 1 ? fields_no_key[0].type : { node : "record", name : asset_name_value, args : [] });
+        const tmp_ci = fields_key.length > 1 ? { ...ci, types : { ...ci.types, records : [ ...ci.types.records, asset_key_record_type] } } : ci;
+        const augmented_ci = fields_no_key.length > 1 ? { ...tmp_ci, types : { ...tmp_ci.types, records : [ ...tmp_ci.types.records, asset_value_record_type] } } : tmp_ci;
+
+        const container_type : ArchetypeType = fields_no_key.length > 0 ?
+          {
             node : "map",
             name : a.name,
-            args : [
-              key_type,
-              {
-                node : "record",
-                name : a.name + "_value",
-                args : []
-              }
-            ]
-          }
-        return taquito_to_ts(elt, map_type, augmented_ci)
-        } else if (fields_no_key.length == 1) {
-          // create local equivalent type to map<key, value>
-          const map_type : ArchetypeType = {
-            node : "map",
-            name : a.name,
-            args : [
-              key_type,
-              fields_no_key[0].type
-            ]
-          }
-          return taquito_to_ts(elt, map_type, ci)
-        } else {
-          const list_type : ArchetypeType = {
-            node : "list",
+            args : [ key_type, value_type ]
+          } : {
+            node : "set",
             name : null,
             args : [ key_type ]
-          }
-          return taquito_to_ts(elt, list_type, ci)
-        }
+          };
+
+        return taquito_to_ts(elt, container_type, augmented_ci)
       }
     };
     case "big_map": throw_error();

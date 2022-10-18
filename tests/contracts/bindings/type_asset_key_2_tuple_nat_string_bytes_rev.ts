@@ -110,20 +110,11 @@ export class Type_asset_key_2_tuple_nat_string_bytes_rev {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             let res: Array<[
-                [
-                    [
-                        [
-                            att.Nat,
-                            string
-                        ],
-                        att.Bytes
-                    ],
-                    att.Nat
-                ],
+                my_asset_key,
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return [[[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return new att.Nat(x); })(x[Object.keys(x)[3]])]; })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new my_asset_key((x => { return [[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])]; })(x.k), (x => { return new att.Nat(x); })(x.n)); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }
