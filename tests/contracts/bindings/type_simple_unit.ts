@@ -39,7 +39,7 @@ export class Type_simple_unit {
     async get_res(): Promise<att.Unit> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            return new att.Unit(storage);
+            return new att.Unit();
         }
         throw new Error("Contract not initialised");
     }

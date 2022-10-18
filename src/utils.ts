@@ -1110,14 +1110,14 @@ const get_tuple_body = (elt : ts.Expression, t : ArchetypeType, ci : ContractInt
 }
 
 export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : ContractInterface) : ts.Statement[] => {
-  const make_class = () => {
+  const make_class = (x : ts.Expression[]) => {
     return [factory.createReturnStatement(factory.createNewExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
       ),
       undefined,
-      [ elt ]
+      x
     ))]
   }
   const make_list = () => {
@@ -1187,7 +1187,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
   }
 
   switch (atype.node) {
-    case "address": return make_class();
+    case "address": return make_class([elt]);
     case "aggregate": throw_error();
     case "asset_container": throw_error();
     case "asset_key": throw_error();
@@ -1270,14 +1270,14 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
       }
     };
     case "big_map": throw_error();
-    case "bls12_381_fr": return make_class();
-    case "bls12_381_g1": return make_class();
-    case "bls12_381_g2": return make_class();
+    case "bls12_381_fr": return make_class([elt]);
+    case "bls12_381_g1": return make_class([elt]);
+    case "bls12_381_g2": return make_class([elt]);
     case "bool": return [factory.createReturnStatement(elt)];
-    case "bytes": return make_class();
-    case "chain_id": return make_class();
-    case "chest_key": return make_class();
-    case "chest": return make_class();
+    case "bytes": return make_class([elt]);
+    case "chain_id": return make_class([elt]);
+    case "chest_key": return make_class([elt]);
+    case "chest": return make_class([elt]);
     case "collection": throw_error();
     case "contract": throw_error();
     case "currency": return [factory.createReturnStatement(factory.createNewExpression(
@@ -1293,16 +1293,16 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
       undefined,
       [ elt ]
     ))];
-    case "duration": return make_class();
+    case "duration": return make_class([elt]);
     case "enum": {
         const e = get_enum(atype.name, ci)
         const is_simple : boolean = e.type_michelson.prim != "or";
         return [(is_simple ? make_enum_simple_return_body : make_enum_return_body)(elt, e, ci)]
       };
-    case "int": return make_class();
+    case "int": return make_class([elt]);
     case "iterable_big_map": throw_error();
-    case "key_hash": return make_class();
-    case "key": return make_class();
+    case "key_hash": return make_class([elt]);
+    case "key": return make_class([elt]);
     case "lambda": throw_error();
     case "list": return make_list();
     case "map": {
@@ -1392,7 +1392,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         factory.createReturnStatement(factory.createIdentifier("res"))
       ]
     };
-    case "nat": return make_class();
+    case "nat": return make_class([elt]);
     case "never": throw_error();
     case "operation": throw_error();
     case "option": return [factory.createReturnStatement(factory.createNewExpression(
@@ -1574,10 +1574,10 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         }
       }
     };
-    case "sapling_state": return make_class();
-    case "sapling_transaction": return make_class();
+    case "sapling_state": return make_class([elt]);
+    case "sapling_transaction": return make_class([elt]);
     case "set": return make_list();
-    case "signature": return make_class();
+    case "signature": return make_class([elt]);
     case "state": throw_error();
     case "string": return [factory.createReturnStatement(elt)];
     case "ticket": throw_error();
@@ -1586,7 +1586,7 @@ export const taquito_to_ts = (elt : ts.Expression, atype: ArchetypeType, ci : Co
         const [ array, _ ] = get_tuple_body(elt, atype, ci)
         return [factory.createReturnStatement(factory.createArrayLiteralExpression(array))]
       };
-    case "unit": return make_class();
+    case "unit": return make_class([]);
   }
 }
 

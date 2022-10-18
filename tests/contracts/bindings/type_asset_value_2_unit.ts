@@ -53,7 +53,7 @@ export class Type_asset_value_2_unit {
                 att.Unit
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Unit(x); })(e[1])]);
+                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Unit(); })(e[1])]);
             }
             return res;
         }

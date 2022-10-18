@@ -41,7 +41,7 @@ export class Type_big_map_value_unit {
             const storage = await ex.get_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("unit", [])), collapsed = true;
             if (data != undefined) {
-                return new att.Unit(data);
+                return new att.Unit();
             }
             else {
                 return undefined;

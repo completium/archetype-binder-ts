@@ -43,7 +43,7 @@ export class Type_list_unit {
             const storage = await ex.get_storage(this.address);
             const res: Array<att.Unit> = [];
             for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new att.Unit(x); })(storage[i]));
+                res.push((x => { return new att.Unit(); })(storage[i]));
             }
             return res;
         }

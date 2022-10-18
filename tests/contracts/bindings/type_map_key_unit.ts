@@ -47,7 +47,7 @@ export class Type_map_key_unit {
                 att.Nat
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Unit(x); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
+                res.push([(x => { return new att.Unit(); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
             }
             return res;
         }

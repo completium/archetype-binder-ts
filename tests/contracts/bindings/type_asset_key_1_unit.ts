@@ -53,7 +53,7 @@ export class Type_asset_key_1_unit {
                 string
             ]> = [];
             for (let e of storage.entries()) {
-                res.push([(x => { return new att.Unit(x); })(e[0]), (x => { return x; })(e[1])]);
+                res.push([(x => { return new att.Unit(); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;
         }
