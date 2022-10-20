@@ -96,7 +96,8 @@
         "name": "my_asset",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": []
     }
   ],
   "storage_type": null,

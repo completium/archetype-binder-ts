@@ -9,7 +9,10 @@
         "args": []
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": [
+        0
+      ]
     },
     {
       "name": "oa",
@@ -25,7 +28,11 @@
         ]
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": [
+        1,
+        0
+      ]
     }
   ],
   "types": {
@@ -1009,7 +1016,12 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "o",
@@ -1024,7 +1036,13 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "l",
@@ -1039,7 +1057,14 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "m",
@@ -1070,7 +1095,15 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "s1",
@@ -1085,7 +1118,16 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "l1",
@@ -1100,7 +1142,17 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "l2",
@@ -1121,7 +1173,18 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "r",
@@ -1130,7 +1193,19 @@
         "name": "all",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "just_a_key",
@@ -1139,7 +1214,20 @@
         "name": "just_a_key",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "visitor",
@@ -1148,7 +1236,21 @@
         "name": "visitor",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "visitor_2",
@@ -1157,7 +1259,22 @@
         "name": "visitor_2",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "a_value",
@@ -1166,7 +1283,23 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "b_value",
@@ -1175,7 +1308,24 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ]
     },
     {
       "name": "c_value",
@@ -1184,7 +1334,24 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
     }
   ],
   "storage_type": null,

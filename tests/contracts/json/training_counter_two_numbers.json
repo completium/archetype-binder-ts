@@ -15,7 +15,10 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        0
+      ]
     },
     {
       "name": "v2",
@@ -24,7 +27,10 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1
+      ]
     }
   ],
   "storage_type": null,

@@ -142,7 +142,8 @@
         "name": "my_record",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": []
     }
   ],
   "storage_type": null,
