@@ -733,8 +733,8 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
     throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
   }
 
-  const TODO = () => {
-    throw new Error(`TODO`)
+  const TODO = (ty : string) => {
+    throw new Error(`TODO: ${ty}`)
   }
 
   const class_to_mich = (id : string, args : ts.Expression[]) : ts.Expression => {
@@ -748,43 +748,8 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
     )
   }
 
-    // case "bls12_381_fr" : return "mich_to_bls12_381_fr"
-
-  switch (atype.node) {
-    case "address": return class_to_mich("mich_to_address", [arg]);
-    case "aggregate": TODO();
-    case "asset_container": TODO();
-    case "asset_key": TODO();
-    case "asset_value": TODO();
-    case "asset_view": TODO();
-    case "asset": TODO();
-    case "big_map": TODO();
-    case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
-    case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
-    case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
-    case "bool": return class_to_mich("mich_to_bool", [arg]);
-    case "bytes": return class_to_mich("mich_to_bytes", [arg]);
-    case "chain_id": return class_to_mich("mich_to_chain_id", [arg]);
-    case "chest_key": return class_to_mich("mich_to_chest_key", [arg]);
-    case "chest":return class_to_mich("mich_to_chest", [arg]);
-    case "collection": TODO();
-    case "contract": TODO();
-    case "currency": return class_to_mich("mich_to_tez", [arg]);
-    case "date": return class_to_mich("mich_to_date", [arg]);
-    case "duration": return class_to_mich("mich_to_duration", [arg]);
-    case "enum": return factory.createCallExpression(
-        factory.createIdentifier("mich_to_" + atype.name),
-        undefined,
-        [arg]
-      );
-    case "event": TODO();
-    case "int": return class_to_mich("mich_to_int", [arg]);
-    case "iterable_big_map": TODO();
-    case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
-    case "key": return class_to_mich("mich_to_key", [arg]);
-    case "lambda": TODO();
-    case "list": return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
-    case "map": return factory.createCallExpression(
+  const map_mich_to_ts = () => {
+return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier("mich_to_map")
@@ -826,13 +791,52 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
           )
         )
       ]
-    );
+    )
+  }
+
+    // case "bls12_381_fr" : return "mich_to_bls12_381_fr"
+
+  switch (atype.node) {
+    case "address": return class_to_mich("mich_to_address", [arg]);
+    case "aggregate": TODO("aggregate");
+    case "asset_container": TODO("asset_container");
+    case "asset_key": TODO("asset_key");
+    case "asset_value": TODO("asset_value");
+    case "asset_view": TODO("asset_view");
+    case "asset": TODO("asset");
+    case "big_map": TODO("big_map");
+    case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
+    case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
+    case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
+    case "bool": return class_to_mich("mich_to_bool", [arg]);
+    case "bytes": return class_to_mich("mich_to_bytes", [arg]);
+    case "chain_id": return class_to_mich("mich_to_chain_id", [arg]);
+    case "chest_key": return class_to_mich("mich_to_chest_key", [arg]);
+    case "chest":return class_to_mich("mich_to_chest", [arg]);
+    case "collection": TODO("collection");
+    case "contract": TODO("contract");
+    case "currency": return class_to_mich("mich_to_tez", [arg]);
+    case "date": return class_to_mich("mich_to_date", [arg]);
+    case "duration": return class_to_mich("mich_to_duration", [arg]);
+    case "enum": return factory.createCallExpression(
+        factory.createIdentifier("mich_to_" + atype.name),
+        undefined,
+        [arg]
+      );
+    case "event": TODO("event");
+    case "int": return class_to_mich("mich_to_int", [arg]);
+    case "iterable_big_map": TODO("iterable_big_map");
+    case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
+    case "key": return class_to_mich("mich_to_key", [arg]);
+    case "lambda": TODO("lambda");
+    case "list": return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
+    case "map": return map_mich_to_ts();
     case "nat": return class_to_mich("mich_to_nat", [arg]);
-    case "never": TODO();
-    case "operation": TODO();
+    case "never": TODO("never");
+    case "operation": TODO("operation");
     case "option": return contained_type_to_field_decl("mich_to_option", arg, atype.args[0]);
-    case "or": TODO();
-    case "partition": TODO();
+    case "or": TODO("or");
+    case "partition": TODO("partition");
     case "rational": return class_to_mich("mich_to_rational", [arg]);
     case "record": {
       const larg = idx + 1 == len ? factory.createCallExpression(
@@ -863,14 +867,14 @@ export const mich_to_field_decl = (atype : ArchetypeType, arg : ts.Expression, i
         [arg, factory.createIdentifier("collapsed")])
       return larg
     };
-    case "sapling_state": TODO();
-    case "sapling_transaction": TODO();
+    case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
+    case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
     case "set": return contained_type_to_field_decl("mich_to_list", arg, atype.args[0])
     case "signature": return class_to_mich("mich_to_signature", [arg]);
-    case "state": TODO();
+    case "state": TODO("state");
     case "string": return class_to_mich("mich_to_string", [arg]);
-    case "ticket": TODO();
-    case "timestamp": TODO();
+    case "ticket": TODO("ticket");
+    case "timestamp": TODO("timestamp");
     case "tuple": return mich_to_tuple(atype.args, arg);
     case "unit": return class_to_mich("unit_to_mich", []);
   }
