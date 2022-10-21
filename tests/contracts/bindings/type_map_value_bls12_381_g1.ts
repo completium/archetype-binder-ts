@@ -42,14 +42,7 @@ export class Type_map_value_bls12_381_g1 {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                att.Bls12_381_g1
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Bls12_381_g1(x); })(e[1])]);
-            }
-            return res;
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_bls12_381_g1(y)]);
         }
         throw new Error("Contract not initialised");
     }

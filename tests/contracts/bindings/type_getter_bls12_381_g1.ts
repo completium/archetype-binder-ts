@@ -34,7 +34,7 @@ export class Type_getter_bls12_381_g1 {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<att.Bls12_381_g1>(this.get_value_callback_address, x => { return new att.Bls12_381_g1(x); });
+                return await ex.get_callback_value<att.Bls12_381_g1>(this.get_value_callback_address, x => { });
             }
         }
         throw new Error("Contract not initialised");
@@ -42,7 +42,7 @@ export class Type_getter_bls12_381_g1 {
     async get_res(): Promise<att.Bls12_381_g1> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return new att.Bls12_381_g1(storage);
+            return att.mich_to_bls12_381_g1(storage);
         }
         throw new Error("Contract not initialised");
     }

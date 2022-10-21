@@ -41,11 +41,7 @@ export class Type_list_unit {
     async get_res(): Promise<Array<att.Unit>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const res: Array<att.Unit> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new att.Unit(); })(storage[i]));
-            }
-            return res;
+            return att.mich_to_list(storage, x => { return att.unit_to_mich(); });
         }
         throw new Error("Contract not initialised");
     }

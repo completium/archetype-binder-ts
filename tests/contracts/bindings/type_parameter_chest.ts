@@ -41,7 +41,7 @@ export class Type_parameter_chest {
     async get_res(): Promise<att.Chest> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return new att.Chest(storage);
+            return att.mich_to_chest(storage);
         }
         throw new Error("Contract not initialised");
     }
