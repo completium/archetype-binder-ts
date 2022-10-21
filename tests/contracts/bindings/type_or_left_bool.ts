@@ -38,7 +38,7 @@ export class Type_or_left_bool {
     }
     async get_res(): Promise<att.Or<boolean, att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);

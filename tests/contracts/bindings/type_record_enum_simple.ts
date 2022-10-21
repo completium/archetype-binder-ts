@@ -100,15 +100,8 @@ export class Type_record_enum_simple {
     }
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                return new e_3();
-            }
-            else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                return new e_2();
-            }
-            else
-                return new e_1(); })(storage.v), (x => { return x; })(storage.s));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_my_record(storage, collapsed);
         }
         throw new Error("Contract not initialised");
     }

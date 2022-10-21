@@ -58,8 +58,12 @@ export class Type_simple_tuple_nat_string_bytes_bool {
         boolean
     ]> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return x; })(storage[Object.keys(storage)[1]]), (x => { return new att.Bytes(x); })(storage[Object.keys(storage)[2]]), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[Object.keys(storage)[3]])];
+            const storage = await ex.get_raw_storage(this.address);
+            return (p => {
+                const p0 = (p as att.Mpair);
+                const p1 = (p0.args[1] as att.Mpair);
+                return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1]), att.mich_to_bytes(p1.args[0]), att.mich_to_bool(p1.args[1])];
+            })(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -79,7 +79,7 @@ export class Type_getter_tuple_nat_string_bytes_bool_rev {
                         att.Bytes
                     ],
                     boolean
-                ]>(this.get_value_callback_address, x => { return [[[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; });
+                ]>(this.get_value_callback_address, x => { });
             }
         }
         throw new Error("Contract not initialised");
@@ -95,8 +95,17 @@ export class Type_getter_tuple_nat_string_bytes_bool_rev {
         boolean
     ]> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return [[[(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return x; })(storage[Object.keys(storage)[1]])], (x => { return new att.Bytes(x); })(storage[Object.keys(storage)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[Object.keys(storage)[3]])];
+            const storage = await ex.get_raw_storage(this.address);
+            return (p => {
+                const p0 = (p as att.Mpair);
+                return [(p => {
+                        const p0 = (p as att.Mpair);
+                        return [(p => {
+                                const p0 = (p as att.Mpair);
+                                return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
+                            })(p0.args[0]), att.mich_to_bytes(p0.args[1])];
+                    })(p0.args[0]), att.mich_to_bool(p0.args[1])];
+            })(storage);
         }
         throw new Error("Contract not initialised");
     }

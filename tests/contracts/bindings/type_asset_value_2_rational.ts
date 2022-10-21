@@ -53,7 +53,7 @@ export class Type_asset_value_2_rational {
     }
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 att.Nat,
                 att.Rational

@@ -66,7 +66,7 @@ export class Type_asset_key_2_record_1_field {
     }
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 my_asset_key,
                 string

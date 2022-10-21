@@ -41,15 +41,8 @@ export class Type_map_value_key {
         att.Key
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                att.Key
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Key(x); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_key(y)]);
         }
         throw new Error("Contract not initialised");
     }

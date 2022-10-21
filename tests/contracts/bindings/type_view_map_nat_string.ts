@@ -40,14 +40,6 @@ export class Type_view_map_nat_string {
     ]>> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            let res: Array<[
-                att.Nat,
-                string
-            ]> = [];
-            for (let e of mich.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-            }
-            return res;
         }
         throw new Error("Contract not initialised");
     }

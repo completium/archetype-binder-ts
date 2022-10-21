@@ -38,7 +38,7 @@ export class Type_or_right_chain_id {
     }
     async get_res(): Promise<att.Or<att.Nat, att.Chain_id>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Chain_id(x); })(x["1"]);

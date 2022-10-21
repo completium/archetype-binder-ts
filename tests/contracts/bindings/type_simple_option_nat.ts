@@ -38,8 +38,8 @@ export class Type_simple_option_nat {
     }
     async get_res(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<att.Nat>(storage == null ? null : (x => { return new att.Nat(x); })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }

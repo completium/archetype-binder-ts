@@ -40,12 +40,8 @@ export class Type_set_key {
     }
     async get_res(): Promise<Array<att.Key>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<att.Key> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new att.Key(x); })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return att.mich_to_key(x); });
         }
         throw new Error("Contract not initialised");
     }

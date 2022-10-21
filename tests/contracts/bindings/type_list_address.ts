@@ -40,12 +40,8 @@ export class Type_list_address {
     }
     async get_res(): Promise<Array<att.Address>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<att.Address> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new att.Address(x); })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return att.mich_to_address(x); });
         }
         throw new Error("Contract not initialised");
     }

@@ -27,7 +27,6 @@ export class Type_view_rational {
     async view_get_value(i: att.Rational, params: Partial<ex.Parameters>): Promise<att.Rational> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Rational(mich[Object.keys(mich)[0]], mich[Object.keys(mich)[1]]);
         }
         throw new Error("Contract not initialised");
     }

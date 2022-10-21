@@ -27,7 +27,6 @@ export class Type_view_key_hash {
     async view_get_value(i: att.Key_hash, params: Partial<ex.Parameters>): Promise<att.Key_hash> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Key_hash(mich);
         }
         throw new Error("Contract not initialised");
     }

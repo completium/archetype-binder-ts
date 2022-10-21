@@ -77,24 +77,17 @@ export class Type_map_value_tuple_nat_string_bytes_bool_rev {
         ]
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                [
-                    [
-                        [
-                            att.Nat,
-                            string
-                        ],
-                        att.Bytes
-                    ],
-                    boolean
-                ]
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return [[[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), (p => {
+                    const p0 = (p as att.Mpair);
+                    return [(p => {
+                            const p0 = (p as att.Mpair);
+                            return [(p => {
+                                    const p0 = (p as att.Mpair);
+                                    return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
+                                })(p0.args[0]), att.mich_to_bytes(p0.args[1])];
+                        })(p0.args[0]), att.mich_to_bool(p0.args[1])];
+                })(y)]);
         }
         throw new Error("Contract not initialised");
     }

@@ -42,14 +42,8 @@ export class Type_list_set_bool {
     }
     async get_res(): Promise<Array<Array<boolean>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<Array<boolean>> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
-                } return res; })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return att.mich_to_list(x, x => { return att.mich_to_bool(x); }); });
         }
         throw new Error("Contract not initialised");
     }

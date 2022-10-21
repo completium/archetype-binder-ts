@@ -40,8 +40,8 @@ export class Type_parameter_key {
     }
     async get_res(): Promise<att.Key> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Key(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_key(storage);
         }
         throw new Error("Contract not initialised");
     }

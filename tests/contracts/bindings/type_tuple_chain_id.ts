@@ -42,7 +42,7 @@ export class Type_tuple_chain_id {
         string
     ]> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { return new att.Chain_id(x); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
         }
         throw new Error("Contract not initialised");

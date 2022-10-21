@@ -57,10 +57,9 @@ export class Type_big_map_key_record_3_fields {
     }
     async get_res_value(key: r_record): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("record", []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
-                return new att.Nat(data);
             }
             else {
                 return undefined;
@@ -70,7 +69,7 @@ export class Type_big_map_key_record_3_fields {
     }
     async has_res_value(key: r_record): Promise<boolean> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("record", []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return true;

@@ -82,7 +82,7 @@ export class Training_visitors {
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 string,
                 visitor_value

@@ -81,7 +81,7 @@ export class Type_or_left_enum_simple {
     }
     async get_res(): Promise<att.Or<e_enum, att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {

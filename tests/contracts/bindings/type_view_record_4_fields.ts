@@ -49,7 +49,6 @@ export class Type_view_record_4_fields {
     async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new r_record((x => { return new att.Nat(x); })(mich.f_a), (x => { return x; })(mich.f_b), (x => { return new att.Bytes(x); })(mich.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(mich.f_d));
         }
         throw new Error("Contract not initialised");
     }

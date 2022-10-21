@@ -40,7 +40,7 @@ export class Type_list_chest_key {
     }
     async get_res(): Promise<Array<att.Chest_key>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Chest_key> = [];
             for (let i = 0; i < storage.length; i++) {
                 res.push((x => { return new att.Chest_key(x); })(storage[i]));

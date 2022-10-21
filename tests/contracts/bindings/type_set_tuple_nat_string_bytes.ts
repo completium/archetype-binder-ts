@@ -56,16 +56,12 @@ export class Type_set_tuple_nat_string_bytes {
         att.Bytes
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<[
-                att.Nat,
-                string,
-                att.Bytes
-            ]> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]]), (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])]; })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return (p => {
+                const p0 = (p as att.Mpair);
+                const p1 = (p0.args[1] as att.Mpair);
+                return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1]), att.mich_to_bytes(p1.args[0])];
+            })(x); });
         }
         throw new Error("Contract not initialised");
     }

@@ -27,7 +27,6 @@ export class Type_view_option_nat {
     async view_get_value(i: att.Option<att.Nat>, params: Partial<ex.Parameters>): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Option<att.Nat>(mich == null ? null : (x => { return new att.Nat(x); })(mich));
         }
         throw new Error("Contract not initialised");
     }

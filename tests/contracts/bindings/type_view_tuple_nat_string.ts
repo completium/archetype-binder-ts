@@ -36,7 +36,6 @@ export class Type_view_tuple_nat_string {
     ]> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return [(x => { return new att.Nat(x); })(mich[Object.keys(mich)[0]]), (x => { return x; })(mich[Object.keys(mich)[1]])];
         }
         throw new Error("Contract not initialised");
     }

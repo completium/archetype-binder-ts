@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -661,7 +661,7 @@ const getter_to_method = (g : Getter, ci : ContractInterface) => {
                 )],
                 undefined,
                 factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv()))
+                factory.createBlock([], /* TODO: taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv())*/)
               )
             ]
           )))
@@ -711,7 +711,7 @@ const view_to_method = (v : View, ci : ContractInterface) => {
       ts.NodeFlags.Const
     )
   )],
-  ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv()))
+  ...([] /* TODO taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv())*/)
   ])
 }
 
@@ -755,7 +755,7 @@ const make_method_skeleton = (
                     factory.createAwaitExpression(factory.createCallExpression(
                       factory.createPropertyAccessExpression(
                         factory.createIdentifier("ex"),
-                        factory.createIdentifier("get_storage")
+                        factory.createIdentifier("get_raw_storage")
                       ),
                       undefined,
                       [factory.createPropertyAccessExpression(
@@ -814,14 +814,30 @@ const get_storage_identifier = (selt: StorageElement, ci : ContractInterface) =>
     root
 }
 
+const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
+  const root : ts.Expression = factory.createIdentifier("storage")
+
+  const res = selt.path.reduce((acc, n) => {
+    return factory.createElementAccessExpression(
+      factory.createPropertyAccessExpression(
+        acc,
+        factory.createIdentifier("args")
+      ),
+      factory.createNumericLiteral(n)
+    ) }, root);
+  res;
+  return res
+}
+
 const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
-  const elt = get_storage_identifier(selt, ci);
+  const elt = get_data_storage_elt(selt);
   return storage_elt_to_getter_skeleton(
     "get_",
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    taquito_to_ts(elt, selt.type, ci, makeTaquitoEnv())
+    [ factory.createReturnStatement(mich_to_field_decl(selt.type, elt)) ]
+    // [] // TODO: taquito_to_ts(elt, selt.type, ci, makeTaquitoEnv())
   )
 }
 
@@ -951,7 +967,7 @@ const eventToRegister = (e : Event, ci : ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci, makeTaquitoEnv()),
+                              [], // TODO: taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci, makeTaquitoEnv()),
                               true
                             )
                           )),
@@ -1065,7 +1081,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
               these types already have a michelson_type variable created for that purpose
             */
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type.args[1], ci, makeTaquitoEnv()),
+            [], // TODO: (factory.createIdentifier("data"), selt.type.args[1], ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )
         ),
@@ -1127,7 +1143,7 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             factory.createIdentifier(selt.name+"_key_mich_type"),
             factory.createIdentifier(selt.name+"_value_mich_type"),
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type, ci, makeTaquitoEnv()),
+            [], // TODO: taquito_to_ts(factory.createIdentifier("data"), selt.type, ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )),
           storage_elt_to_getter_skeleton(
@@ -1854,7 +1870,7 @@ const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
                     factory.createAwaitExpression(factory.createCallExpression(
                       factory.createPropertyAccessExpression(
                         factory.createIdentifier("ex"),
-                        factory.createIdentifier("get_storage")
+                        factory.createIdentifier("get_raw_storage")
                       ),
                       undefined,
                       [factory.createPropertyAccessExpression(

@@ -40,7 +40,7 @@ export class Type_parameter_bls12_381_g1 {
     }
     async get_res(): Promise<att.Bls12_381_g1> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Bls12_381_g1(storage);
         }
         throw new Error("Contract not initialised");

@@ -38,8 +38,8 @@ export class Type_simple_string {
     }
     async get_res(): Promise<string> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return storage;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_string(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -55,8 +55,8 @@ export class Training_charity {
     }
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Address(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_address(storage);
         }
         throw new Error("Contract not initialised");
     }

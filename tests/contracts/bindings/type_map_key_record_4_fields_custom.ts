@@ -63,15 +63,8 @@ export class Type_map_key_record_4_fields_custom {
         att.Nat
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                r_record,
-                att.Nat
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new r_record((x => { return new att.Nat(x); })(x[0]), (x => { return x; })(x[1]), (x => { return new att.Bytes(x); })(x[2]), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[3])); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [mich_to_r_record(x, collapsed), att.mich_to_nat(y)]);
         }
         throw new Error("Contract not initialised");
     }

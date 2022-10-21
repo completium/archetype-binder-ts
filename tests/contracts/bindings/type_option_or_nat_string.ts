@@ -38,7 +38,7 @@ export class Type_option_or_nat_string {
     }
     async get_res(): Promise<att.Option<att.Or<att.Nat, string>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Option<att.Or<att.Nat, string>>(storage == null ? null : (x => { return (x => {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);

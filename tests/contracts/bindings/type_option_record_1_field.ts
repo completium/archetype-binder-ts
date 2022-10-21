@@ -40,8 +40,8 @@ export class Type_option_record_1_field {
     }
     async get_res(): Promise<att.Option<r_record>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<r_record>(storage == null ? null : (x => { return (x => { return new att.Nat(x); })(x); })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return mich_to_r_record(x, collapsed); });
         }
         throw new Error("Contract not initialised");
     }

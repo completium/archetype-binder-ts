@@ -40,7 +40,7 @@ export class Type_list_key_hash {
     }
     async get_res(): Promise<Array<att.Key_hash>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Key_hash> = [];
             for (let i = 0; i < storage.length; i++) {
                 res.push((x => { return new att.Key_hash(x); })(storage[i]));

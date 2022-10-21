@@ -38,7 +38,7 @@ export class Type_option_unit {
     }
     async get_res(): Promise<att.Option<att.Unit>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Option<att.Unit>(storage == null ? null : (x => { return new att.Unit(); })(storage));
         }
         throw new Error("Contract not initialised");

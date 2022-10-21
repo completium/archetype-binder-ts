@@ -41,7 +41,7 @@ export class Type_map_key_or_nat_string {
         att.Nat
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 att.Or<att.Nat, string>,
                 att.Nat

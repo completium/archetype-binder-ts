@@ -40,7 +40,7 @@ export class Type_list_bls12_381_g2 {
     }
     async get_res(): Promise<Array<att.Bls12_381_g2>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Bls12_381_g2> = [];
             for (let i = 0; i < storage.length; i++) {
                 res.push((x => { return new att.Bls12_381_g2(x); })(storage[i]));

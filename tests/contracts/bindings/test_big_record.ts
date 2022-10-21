@@ -278,35 +278,35 @@ export class Test_big_record {
     }
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Address(storage.owner);
         }
         throw new Error("Contract not initialised");
     }
     async get_oa(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Option<att.Address>(storage.oa == null ? null : (x => { return new att.Address(x); })(storage.oa));
         }
         throw new Error("Contract not initialised");
     }
     async get_s(): Promise<att.Int> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Int(storage.s);
         }
         throw new Error("Contract not initialised");
     }
     async get_o(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new att.Option<att.Nat>(storage.o == null ? null : (x => { return new att.Nat(x); })(storage.o));
         }
         throw new Error("Contract not initialised");
     }
     async get_l(): Promise<Array<att.Int>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Int> = [];
             for (let i = 0; i < storage.l.length; i++) {
                 res.push((x => { return new att.Int(x); })(storage.l[i]));
@@ -323,7 +323,7 @@ export class Test_big_record {
         ]
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 att.Nat,
                 [
@@ -340,7 +340,7 @@ export class Test_big_record {
     }
     async get_s1(): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Nat> = [];
             for (let i = 0; i < storage.s1.length; i++) {
                 res.push((x => { return new att.Nat(x); })(storage.s1[i]));
@@ -351,7 +351,7 @@ export class Test_big_record {
     }
     async get_l1(): Promise<Array<all>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<all> = [];
             for (let i = 0; i < storage.l1.length; i++) {
                 res.push((x => { return new all((x => { return new att.Nat(x); })(x.f1), (x => { return new att.Int(x); })(x.f2), (x => { return new att.Tez(x, "mutez"); })(x.f3), (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x.f4), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f5), (x => { return new att.Bytes(x); })(x.f6), (x => { return x; })(x.f7), (x => { return new Date(x); })(x.f8), (x => { return new att.Duration(x); })(x.f9), (x => { return new att.Address(x); })(x.f10), (x => { return new att.Option<att.Nat>(x == null ? null : (x => { return new att.Nat(x); })(x)); })(x.f11), (x => { const res: Array<string> = []; for (let i = 0; i < x.length; i++) {
@@ -370,7 +370,7 @@ export class Test_big_record {
     }
     async get_l2(): Promise<Array<Array<all>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<Array<all>> = [];
             for (let i = 0; i < storage.l2.length; i++) {
                 res.push((x => { const res: Array<all> = []; for (let i = 0; i < x.length; i++) {
@@ -391,7 +391,7 @@ export class Test_big_record {
     }
     async get_r(): Promise<all> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return new all((x => { return new att.Nat(x); })(storage.r.f1), (x => { return new att.Int(x); })(storage.r.f2), (x => { return new att.Tez(x, "mutez"); })(storage.r.f3), (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(storage.r.f4), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage.r.f5), (x => { return new att.Bytes(x); })(storage.r.f6), (x => { return x; })(storage.r.f7), (x => { return new Date(x); })(storage.r.f8), (x => { return new att.Duration(x); })(storage.r.f9), (x => { return new att.Address(x); })(storage.r.f10), (x => { return new att.Option<att.Nat>(x == null ? null : (x => { return new att.Nat(x); })(x)); })(storage.r.f11), (x => { const res: Array<string> = []; for (let i = 0; i < x.length; i++) {
                 res.push((x => { return x; })(x[i]));
             } return res; })(storage.r.f12), (x => { const res: Array<[
@@ -406,7 +406,7 @@ export class Test_big_record {
     }
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const res: Array<att.Address> = [];
             for (let i = 0; i < storage.just_a_key.length; i++) {
                 res.push((x => { return new att.Address(x); })(storage.just_a_key[i]));
@@ -417,7 +417,7 @@ export class Test_big_record {
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 att.Address,
                 att.Nat
@@ -431,7 +431,7 @@ export class Test_big_record {
     }
     async get_visitor_2(): Promise<visitor_2_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             let res: Array<[
                 att.Address,
                 visitor_2_value
@@ -445,7 +445,7 @@ export class Test_big_record {
     }
     async get_a_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             if (storage.a_value.C !== undefined) {
                 return new C();
             }
@@ -462,7 +462,7 @@ export class Test_big_record {
     }
     async get_b_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             if (storage.b_value.C !== undefined) {
                 return new C();
             }
@@ -479,7 +479,7 @@ export class Test_big_record {
     }
     async get_c_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             if (storage.c_value.C !== undefined) {
                 return new C();
             }

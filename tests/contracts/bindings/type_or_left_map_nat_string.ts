@@ -54,7 +54,7 @@ export class Type_or_left_map_nat_string {
         string
     ]>, att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { let res: Array<[

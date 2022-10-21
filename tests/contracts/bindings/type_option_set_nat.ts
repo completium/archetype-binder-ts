@@ -40,10 +40,8 @@ export class Type_option_set_nat {
     }
     async get_res(): Promise<att.Option<Array<att.Nat>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<Array<att.Nat>>(storage == null ? null : (x => { const res: Array<att.Nat> = []; for (let i = 0; i < x.length; i++) {
-                res.push((x => { return new att.Nat(x); })(x[i]));
-            } return res; })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return att.mich_to_list(x, x => { return att.mich_to_nat(x); }); });
         }
         throw new Error("Contract not initialised");
     }

@@ -50,12 +50,7 @@ export class Type_getter_map_nat_string {
                 return await ex.get_callback_value<Array<[
                     att.Nat,
                     string
-                ]>>(this.get_value_callback_address, x => { let res: Array<[
-                    att.Nat,
-                    string
-                ]> = []; for (let e of x.entries()) {
-                    res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                } return res; });
+                ]>>(this.get_value_callback_address, x => { });
             }
         }
         throw new Error("Contract not initialised");
@@ -65,15 +60,8 @@ export class Type_getter_map_nat_string {
         string
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                string
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]);
         }
         throw new Error("Contract not initialised");
     }

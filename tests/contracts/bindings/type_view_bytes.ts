@@ -27,7 +27,6 @@ export class Type_view_bytes {
     async view_get_value(i: att.Bytes, params: Partial<ex.Parameters>): Promise<att.Bytes> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Bytes(mich);
         }
         throw new Error("Contract not initialised");
     }

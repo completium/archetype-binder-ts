@@ -27,7 +27,6 @@ export class Type_view_string {
     async view_get_value(i: string, params: Partial<ex.Parameters>): Promise<string> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return mich;
         }
         throw new Error("Contract not initialised");
     }

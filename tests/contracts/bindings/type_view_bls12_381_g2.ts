@@ -27,7 +27,6 @@ export class Type_view_bls12_381_g2 {
     async view_get_value(i: att.Bls12_381_g2, params: Partial<ex.Parameters>): Promise<att.Bls12_381_g2> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Bls12_381_g2(mich);
         }
         throw new Error("Contract not initialised");
     }

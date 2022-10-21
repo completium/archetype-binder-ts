@@ -38,8 +38,8 @@ export class Type_simple_date {
     }
     async get_res(): Promise<Date> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new Date(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_date(storage);
         }
         throw new Error("Contract not initialised");
     }

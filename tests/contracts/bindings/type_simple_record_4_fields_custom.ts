@@ -60,8 +60,8 @@ export class Type_simple_record_4_fields_custom {
     }
     async get_res(): Promise<r_record> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new r_record((x => { return new att.Nat(x); })(storage.f_a), (x => { return x; })(storage.f_b), (x => { return new att.Bytes(x); })(storage.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage.f_d));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_r_record(storage, collapsed);
         }
         throw new Error("Contract not initialised");
     }
