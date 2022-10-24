@@ -82,18 +82,7 @@ export class Type_or_left_enum_simple {
     async get_res(): Promise<att.Or<e_enum, att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                    return new e_3();
-                }
-                else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                    return new e_2();
-                }
-                else
-                    return new e_1(); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<e_enum, att.Nat>(value, is_left);
-            })(storage);
+            return att.mich_to_or(storage);
         }
         throw new Error("Contract not initialised");
     }

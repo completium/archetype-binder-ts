@@ -41,15 +41,7 @@ export class Type_set_or_nat_string {
     async get_res(): Promise<Array<att.Or<att.Nat, string>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const res: Array<att.Or<att.Nat, string>> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return (x => {
-                    const is_left = x["0"] !== undefined;
-                    const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
-                    return new att.Or<att.Nat, string>(value, is_left);
-                })(x); })(storage[i]));
-            }
-            return res;
+            return att.mich_to_list(storage, x => { return att.mich_to_or(x); });
         }
         throw new Error("Contract not initialised");
     }

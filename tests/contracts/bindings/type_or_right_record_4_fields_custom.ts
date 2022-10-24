@@ -61,11 +61,7 @@ export class Type_or_right_record_4_fields_custom {
     async get_res(): Promise<att.Or<att.Nat, r_record>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(x["1"]);
-                return new att.Or<att.Nat, r_record>(value, is_left);
-            })(storage);
+            return att.mich_to_or(storage);
         }
         throw new Error("Contract not initialised");
     }

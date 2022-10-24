@@ -39,11 +39,7 @@ export class Type_or_right_bls12_381_g1 {
     async get_res(): Promise<att.Or<att.Nat, att.Bls12_381_g1>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Bls12_381_g1(x); })(x["1"]);
-                return new att.Or<att.Nat, att.Bls12_381_g1>(value, is_left);
-            })(storage);
+            return att.mich_to_or(storage);
         }
         throw new Error("Contract not initialised");
     }
