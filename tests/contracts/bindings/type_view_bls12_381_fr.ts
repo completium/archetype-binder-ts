@@ -21,8 +21,8 @@ export class Type_view_bls12_381_fr {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_bls12_381_fr.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_bls12_381_fr.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: att.Bls12_381_fr, params: Partial<ex.Parameters>): Promise<att.Bls12_381_fr> {
         if (this.address != undefined) {

@@ -36,8 +36,8 @@ export class Type_asset_value_2_rational {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_value_2_rational.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_asset_value_2_rational.arl", {}, params);
+        this.address = res.address;
     }
     async asset_put(i: att.Rational, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

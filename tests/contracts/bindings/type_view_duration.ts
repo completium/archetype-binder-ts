@@ -21,8 +21,8 @@ export class Type_view_duration {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_duration.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_duration.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: att.Duration, params: Partial<ex.Parameters>): Promise<att.Duration> {
         if (this.address != undefined) {

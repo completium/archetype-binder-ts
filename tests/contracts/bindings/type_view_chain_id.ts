@@ -21,8 +21,8 @@ export class Type_view_chain_id {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_chain_id.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_chain_id.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<att.Chain_id> {
         if (this.address != undefined) {

@@ -79,8 +79,8 @@ export class Type_asset_key_2_tuple_nat_string_bytes_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_key_2_tuple_nat_string_bytes_bool.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_asset_key_2_tuple_nat_string_bytes_bool.arl", {}, params);
+        this.address = res.address;
     }
     async asset_put(i: [
         att.Nat,

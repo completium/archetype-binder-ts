@@ -39,10 +39,10 @@ export class Type_parameter_tuple_nat_string_bytes_bool_rev {
         ],
         boolean
     ], params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string_bytes_bool_rev.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string_bytes_bool_rev.arl", {
             res: att.pair_to_mich([att.pair_to_mich([att.pair_to_mich([res[0][0][0].to_mich(), att.string_to_mich(res[0][0][1])]), res[0][1].to_mich()]), att.bool_to_mich(res[1])])
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: [
         [

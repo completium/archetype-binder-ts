@@ -27,10 +27,10 @@ export class Type_parameter_tuple_nat_string {
         att.Nat,
         string
     ], params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string.arl", {
             res: att.pair_to_mich([res[0].to_mich(), att.string_to_mich(res[1])])
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: [
         att.Nat,

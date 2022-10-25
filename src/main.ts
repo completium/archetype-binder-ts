@@ -1,60 +1,60 @@
 import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv, ATNamed } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 
 // https://ts-ast-viewer.com/#
 
-const make_mich_to_entity_decl = (name : string, body : ts.Statement[]) => {
+const make_mich_to_entity_decl = (name: string, body: ts.Statement[]) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
-    [factory.createVariableDeclaration(
-      factory.createIdentifier("mich_to_" + name),
-      undefined,
-      undefined,
-      factory.createArrowFunction(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("mich_to_" + name),
         undefined,
         undefined,
-        [factory.createParameterDeclaration(
+        factory.createArrowFunction(
           undefined,
           undefined,
-          undefined,
-          factory.createIdentifier("v"),
-          undefined,
-          factory.createTypeReferenceNode(
-            factory.createQualifiedName(
-              factory.createIdentifier("att"),
-              factory.createIdentifier("Micheline")
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("v"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("Micheline")
+              ),
+              undefined
             ),
             undefined
           ),
-          undefined
-        ),
-        factory.createParameterDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          factory.createIdentifier("collapsed"),
-          undefined,
-          factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
-          factory.createFalse()
-        )],
-        factory.createTypeReferenceNode(
-          factory.createIdentifier(name),
-          undefined
-        ),
-        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-        factory.createBlock(body, true)
-      )
-    )],
-    ts.NodeFlags.Const
-  ))
+          factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("collapsed"),
+            undefined,
+            factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+            factory.createFalse()
+          )],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(name),
+            undefined
+          ),
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(body, true)
+        )
+      )],
+      ts.NodeFlags.Const
+    ))
 }
 
-const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field, "is_key">>) => {
+const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>) => {
   return make_mich_to_entity_decl(name, [
     factory.createVariableStatement(
       undefined,
@@ -119,14 +119,14 @@ const fields_to_mich_to_entity_decl = (name : string, fields : Array<Omit<Field,
       fields.map((x, i) => {
         return mich_to_field_decl(x.type, factory.createElementAccessExpression(
           factory.createIdentifier("fields"),
-          factory.createIdentifier(""+i)
+          factory.createIdentifier(i.toString())
         ), i, fields.length)
       })
     ))
   ])
 }
 
-const mich_to_asset_value_decl = (a : Asset) => {
+const mich_to_asset_value_decl = (a: Asset) => {
   const fields_no_key = a.fields.filter(x => !x.is_key)
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
@@ -143,7 +143,7 @@ const mich_to_asset_value_decl = (a : Asset) => {
     ))])
   }
 }
-const mich_to_record_decl = (r : Record) => {
+const mich_to_record_decl = (r: Record) => {
   if (r.fields.length > 1) {
     return fields_to_mich_to_entity_decl(r.name, r.fields)
   } else {
@@ -154,7 +154,7 @@ const mich_to_record_decl = (r : Record) => {
     ))])
   }
 }
-const field_to_cmp_body = (field : Omit<Field, "is_key">, arg_a : ts.Expression, arg_b : ts.Expression) => {
+const field_to_cmp_body = (field: Omit<Field, "is_key">, arg_a: ts.Expression, arg_b: ts.Expression) => {
   const a = factory.createPropertyAccessExpression(
     arg_a,
     factory.createIdentifier(field.name)
@@ -166,7 +166,7 @@ const field_to_cmp_body = (field : Omit<Field, "is_key">, arg_a : ts.Expression,
   return make_cmp_body(a, b, field.type)
 }
 
-const entity_to_mich_type_decl = (name : string, mt : MichelsonType) => {
+const entity_to_mich_type_decl = (name: string, mt: MichelsonType) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -187,24 +187,24 @@ const entity_to_mich_type_decl = (name : string, mt : MichelsonType) => {
   )
 }
 
-const assetKeyToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_key_mich_type", a.key_type_michelson)
-const assetValueToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_value_mich_type", a.value_type_michelson)
-const assetContainerToMichTypeDecl = (a : Asset) => entity_to_mich_type_decl(a.name + "_container_mich_type", a.container_type_michelson)
-const recordToMichTypeDecl = (r : Record) => entity_to_mich_type_decl(r.name + "_mich_type", r.type_michelson)
+const assetKeyToMichTypeDecl = (a: Asset) => entity_to_mich_type_decl(a.name + "_key_mich_type", a.key_type_michelson)
+const assetValueToMichTypeDecl = (a: Asset) => entity_to_mich_type_decl(a.name + "_value_mich_type", a.value_type_michelson)
+const assetContainerToMichTypeDecl = (a: Asset) => entity_to_mich_type_decl(a.name + "_container_mich_type", a.container_type_michelson)
+const recordToMichTypeDecl = (r: Record) => entity_to_mich_type_decl(r.name + "_mich_type", r.type_michelson)
 
-const storage_to_entry = (ci : ContractInterface) : Entrypoint => {
+const storage_to_entry = (ci: ContractInterface): Entrypoint => {
   return {
-    name : "storage",
-    args : ci.storage.map(x => {
+    name: "storage",
+    args: ci.storage.map(x => {
       return {
-        name : x.name,
-        type : x.type
+        name: x.name,
+        type: x.type
       }
     })
   }
 }
 
-const generate_storage_utils = (ci : ContractInterface) => {
+const generate_storage_utils = (ci: ContractInterface) => {
   if (ci.storage_type?.value == undefined) return []
   return [
     // generate storage michelson type
@@ -214,7 +214,7 @@ const generate_storage_utils = (ci : ContractInterface) => {
   ]
 }
 
-const entity_to_mich_decl = (name :string, args : FunctionParameter[], body : ts.Expression) => {
+const entity_to_mich_decl = (name: string, args: FunctionParameter[], body: ts.Expression) => {
   return factory.createVariableDeclarationList(
     [factory.createVariableDeclaration(
       factory.createIdentifier(name + "_arg_to_mich"),
@@ -242,11 +242,11 @@ const entity_to_mich_decl = (name :string, args : FunctionParameter[], body : ts
   )
 }
 
-const entryToArgToMichDecl = (e: Entrypoint | Getter) : ts.VariableDeclarationList => {
+const entryToArgToMichDecl = (e: Entrypoint | Getter): ts.VariableDeclarationList => {
   return entity_to_mich_decl(e.name, e.args, function_params_to_mich(e.args))
 }
 
-const fieldToPropertyDecl = (f : Omit<Field, "is_key">) => {
+const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
   return factory.createPropertySignature(
     undefined,
     factory.createIdentifier(f.name),
@@ -255,7 +255,7 @@ const fieldToPropertyDecl = (f : Omit<Field, "is_key">) => {
   )
 }
 
-const entityToInterfaceDecl = (name : string, mt : MichelsonType, fields : Array<Omit<Field,"is_key">>) => {
+const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>) => {
   if (fields.length == 1) {
     const field = fields[0];
     return factory.createTypeAliasDeclaration(
@@ -342,7 +342,7 @@ const entityToInterfaceDecl = (name : string, mt : MichelsonType, fields : Array
                     field_to_cmp_body(f, factory.createThis(), factory.createIdentifier("v"))
                   )
                 }, field_to_cmp_body(fields[0], factory.createThis(), factory.createIdentifier("v")))
-            ))] : [ factory.createReturnStatement(factory.createTrue()) ],
+              ))] : [factory.createReturnStatement(factory.createTrue())],
             true
           )
         )
@@ -351,79 +351,79 @@ const entityToInterfaceDecl = (name : string, mt : MichelsonType, fields : Array
   }
 }
 
-const assetKeyToInterfaceDecl = (a : Asset) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key))
-const assetValueToInterfaceDecl = (a : Asset) => entityToInterfaceDecl(a.name + "_value", a.value_type_michelson, a.fields.filter(x => !x.is_key))
-const recordToInterfaceDecl = (r : Record) => entityToInterfaceDecl(r.name, r.type_michelson, r.fields)
+const assetKeyToInterfaceDecl = (a: Asset) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key))
+const assetValueToInterfaceDecl = (a: Asset) => entityToInterfaceDecl(a.name + "_value", a.value_type_michelson, a.fields.filter(x => !x.is_key))
+const recordToInterfaceDecl = (r: Record) => entityToInterfaceDecl(r.name, r.type_michelson, r.fields)
 
-const assetContainerToTypeDecl = (a : Asset) => {
+const assetContainerToTypeDecl = (a: Asset) => {
   return factory.createTypeAliasDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
-    factory.createIdentifier(a.name+"_container"),
+    factory.createIdentifier(a.name + "_container"),
     undefined,
     factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [not_a_set(a) ?
         factory.createTupleTypeNode([
           factory.createTypeReferenceNode(
-            factory.createIdentifier(a.name+"_key"),
+            factory.createIdentifier(a.name + "_key"),
             undefined
           ),
           factory.createTypeReferenceNode(
-            factory.createIdentifier(a.name+"_value"),
+            factory.createIdentifier(a.name + "_value"),
             undefined
           )
         ]) :
         factory.createTypeReferenceNode(
-          factory.createIdentifier(a.name+"_key"),
+          factory.createIdentifier(a.name + "_key"),
           undefined
         )
       ]
     ))
 }
 
-const entityToMichDecl = (entity_postfix : string, aname : string, mt : MichelsonType, fields : Array<Partial<Field>>) => {
+const entityToMichDecl = (entity_postfix: string, aname: string, mt: MichelsonType, fields: Array<Partial<Field>>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
-    [factory.createVariableDeclaration(
-      factory.createIdentifier(aname + entity_postfix + "_to_mich"),
-      undefined,
-      undefined,
-      factory.createArrowFunction(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier(aname + entity_postfix + "_to_mich"),
         undefined,
         undefined,
-        [factory.createParameterDeclaration(
+        factory.createArrowFunction(
           undefined,
           undefined,
-          undefined,
-          factory.createIdentifier("x"),
-          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createIdentifier(aname + entity_postfix),
+              undefined
+            ),
+            undefined
+          )],
           factory.createTypeReferenceNode(
-            factory.createIdentifier(aname + entity_postfix),
+            factory.createQualifiedName(
+              factory.createIdentifier("att"),
+              factory.createIdentifier("Micheline")
+            ),
             undefined
           ),
-          undefined
-        )],
-        factory.createTypeReferenceNode(
-          factory.createQualifiedName(
-            factory.createIdentifier("att"),
-            factory.createIdentifier("Micheline")
-          ),
-          undefined
-        ),
-        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-        factory.createBlock(
-          [factory.createReturnStatement((entity_to_mich("x", mt, fields))[1])],
-          true
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [factory.createReturnStatement((entity_to_mich("x", mt, fields))[1])],
+            true
+          )
         )
-      )
-    )],
-    ts.NodeFlags.Const
-  ))
+      )],
+      ts.NodeFlags.Const
+    ))
 }
 
-const contractParameterToParamDecl = (fp : FunctionParameter, pub : boolean = false) => {
+const contractParameterToParamDecl = (fp: FunctionParameter, pub = false) => {
   return factory.createParameterDeclaration(
     undefined,
     pub ? [factory.createModifier(ts.SyntaxKind.PublicKeyword)] : [],
@@ -435,7 +435,7 @@ const contractParameterToParamDecl = (fp : FunctionParameter, pub : boolean = fa
   )
 }
 
-const storageElementToParamDecl = (se : StorageElement) => {
+const storageElementToParamDecl = (se: StorageElement) => {
   return factory.createParameterDeclaration(
     undefined,
     undefined,
@@ -447,7 +447,7 @@ const storageElementToParamDecl = (se : StorageElement) => {
   )
 }
 
-const entry_to_method = (name : string, args : FunctionParameter[], ret : ts.TypeNode, body : ts.Statement[]) => {
+const entry_to_method = (name: string, args: FunctionParameter[], ret: ts.TypeNode, body: ts.Statement[]) => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.AsyncKeyword)],
@@ -505,7 +505,7 @@ const entry_to_method = (name : string, args : FunctionParameter[], ret : ts.Typ
   )
 }
 
-const entryToMethod = (e : Entrypoint) => {
+const entryToMethod = (e: Entrypoint) => {
   return entry_to_method(e.name, e.args, factory.createKeywordTypeNode(SyntaxKind.AnyKeyword), [
     factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -520,7 +520,7 @@ const entryToMethod = (e : Entrypoint) => {
         ),
         factory.createStringLiteral(e.name),
         factory.createCallExpression(
-          factory.createIdentifier(e.name+"_arg_to_mich"),
+          factory.createIdentifier(e.name + "_arg_to_mich"),
           undefined,
           e.args.map(x => x.name).map(x => factory.createIdentifier(x))
         ),
@@ -529,7 +529,7 @@ const entryToMethod = (e : Entrypoint) => {
     )))])
 }
 
-const entryToGetParam = (e : Entrypoint) => {
+const entryToGetParam = (e: Entrypoint) => {
   return entry_to_method("get_" + e.name + "_param", e.args,
     factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -551,7 +551,7 @@ const entryToGetParam = (e : Entrypoint) => {
         ),
         factory.createStringLiteral(e.name),
         factory.createCallExpression(
-          factory.createIdentifier(e.name+"_arg_to_mich"),
+          factory.createIdentifier(e.name + "_arg_to_mich"),
           undefined,
           e.args.map(x => x.name).map(x => factory.createIdentifier(x))
         ),
@@ -560,169 +560,169 @@ const entryToGetParam = (e : Entrypoint) => {
     )))])
 }
 
-const getter_to_method = (g : Getter, ci : ContractInterface) => {
+const getter_to_method = (g: Getter, ci: ContractInterface) => {
   return entry_to_method(g.name, g.args, archetype_type_to_ts_type(g.return),
-  [
-    factory.createIfStatement(
-      factory.createBinaryExpression(
-        factory.createPropertyAccessExpression(
-          factory.createThis(),
-          factory.createIdentifier(g.name + "_callback_address")
+    [
+      factory.createIfStatement(
+        factory.createBinaryExpression(
+          factory.createPropertyAccessExpression(
+            factory.createThis(),
+            factory.createIdentifier(g.name + "_callback_address")
+          ),
+          factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
+          factory.createIdentifier("undefined")
         ),
-        factory.createToken(ts.SyntaxKind.ExclamationEqualsToken),
-        factory.createIdentifier("undefined")
-      ),
-      factory.createBlock(
-        [
-          factory.createVariableStatement(
-            undefined,
-            factory.createVariableDeclarationList(
-              [factory.createVariableDeclaration(
-                factory.createIdentifier("entrypoint"),
-                undefined,
-                undefined,
-                factory.createNewExpression(
+        factory.createBlock(
+          [
+            factory.createVariableStatement(
+              undefined,
+              factory.createVariableDeclarationList(
+                [factory.createVariableDeclaration(
+                  factory.createIdentifier("entrypoint"),
+                  undefined,
+                  undefined,
+                  factory.createNewExpression(
+                    factory.createPropertyAccessExpression(
+                      factory.createIdentifier("att"),
+                      factory.createIdentifier("Entrypoint")
+                    ),
+                    undefined,
+                    [
+                      factory.createNewExpression(
+                        factory.createPropertyAccessExpression(
+                          factory.createIdentifier("att"),
+                          factory.createIdentifier("Address")
+                        ),
+                        undefined,
+                        [factory.createPropertyAccessExpression(
+                          factory.createThis(),
+                          factory.createIdentifier(g.name + "_callback_address")
+                        )]
+                      ),
+                      factory.createStringLiteral("callback")
+                    ]
+                  )
+                )],
+                ts.NodeFlags.Const
+              )
+            ),
+            factory.createExpressionStatement(factory.createAwaitExpression(factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("call")
+              ),
+              undefined,
+              [
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("address")
+                ),
+                factory.createStringLiteral(g.name),
+                factory.createCallExpression(
                   factory.createPropertyAccessExpression(
                     factory.createIdentifier("att"),
-                    factory.createIdentifier("Entrypoint")
+                    factory.createIdentifier("getter_args_to_mich")
                   ),
                   undefined,
                   [
-                    factory.createNewExpression(
-                      factory.createPropertyAccessExpression(
-                        factory.createIdentifier("att"),
-                        factory.createIdentifier("Address")
-                      ),
+                    factory.createCallExpression(
+                      factory.createIdentifier(g.name + "_arg_to_mich"),
                       undefined,
-                      [factory.createPropertyAccessExpression(
-                        factory.createThis(),
-                        factory.createIdentifier(g.name + "_callback_address")
-                      )]
+                      g.args.map(x => x.name).map(x => factory.createIdentifier(x))
                     ),
-                    factory.createStringLiteral("callback")
+                    factory.createIdentifier("entrypoint")
                   ]
-                )
-              )],
-              ts.NodeFlags.Const
-            )
-          ),
-          factory.createExpressionStatement(factory.createAwaitExpression(factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
-              factory.createIdentifier("call")
-            ),
-            undefined,
-            [
-              factory.createPropertyAccessExpression(
-                factory.createThis(),
-                factory.createIdentifier("address")
-              ),
-              factory.createStringLiteral(g.name),
-              factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier("att"),
-                  factory.createIdentifier("getter_args_to_mich")
                 ),
-                undefined,
-                [
-                  factory.createCallExpression(
-                    factory.createIdentifier(g.name+"_arg_to_mich"),
-                    undefined,
-                    g.args.map(x => x.name).map(x => factory.createIdentifier(x))
-                  ),
-                  factory.createIdentifier("entrypoint")
-                ]
-              ),
-              factory.createIdentifier("params")
-            ]
-          ))),
-          factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
-              factory.createIdentifier("get_callback_value")
-            ),
-            [archetype_type_to_ts_type(g.return)],
-            [
+                factory.createIdentifier("params")
+              ]
+            ))),
+            factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
               factory.createPropertyAccessExpression(
-                factory.createThis(),
-                factory.createIdentifier(g.name + "_callback_address")
+                factory.createIdentifier("ex"),
+                factory.createIdentifier("get_callback_value")
               ),
-              factory.createArrowFunction(
-                undefined,
-                undefined,
-                [factory.createParameterDeclaration(
+              [archetype_type_to_ts_type(g.return)],
+              [
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier(g.name + "_callback_address")
+                ),
+                factory.createArrowFunction(
                   undefined,
                   undefined,
+                  [factory.createParameterDeclaration(
+                    undefined,
+                    undefined,
+                    undefined,
+                    factory.createIdentifier("x"),
+                    undefined,
+                    undefined,
+                    undefined
+                  )],
                   undefined,
-                  factory.createIdentifier("x"),
-                  undefined,
-                  undefined,
-                  undefined
-                )],
-                undefined,
-                factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv()))
-              )
-            ]
-          )))
-        ],
-        true
-      ),
-      undefined
-    )
-  ]
+                  factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                  factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv()))
+                )
+              ]
+            )))
+          ],
+          true
+        ),
+        undefined
+      )
+    ]
   )
 }
 
-const view_to_method = (v : View, ci : ContractInterface) => {
+const view_to_method = (v: View, ci: ContractInterface) => {
   return entry_to_method("view_" + v.name, v.args, archetype_type_to_ts_type(v.return),
-  [ ...[factory.createVariableStatement(
-    undefined,
-    factory.createVariableDeclarationList(
-      [factory.createVariableDeclaration(
-        factory.createIdentifier("mich"),
-        undefined,
-        undefined,
-        factory.createAwaitExpression(factory.createCallExpression(
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier("ex"),
-            factory.createIdentifier("exec_view")
-          ),
+    [...[factory.createVariableStatement(
+      undefined,
+      factory.createVariableDeclarationList(
+        [factory.createVariableDeclaration(
+          factory.createIdentifier("mich"),
           undefined,
-          [
-            factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createThis(),
-                factory.createIdentifier("get_address")
+          undefined,
+          factory.createAwaitExpression(factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("exec_view")
+            ),
+            undefined,
+            [
+              factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createThis(),
+                  factory.createIdentifier("get_address")
+                ),
+                undefined,
+                []
               ),
-              undefined,
-              []
-            ),
-            factory.createStringLiteral(v.name),
-            factory.createCallExpression(
-              factory.createIdentifier("view_" + v.name + "_arg_to_mich"),
-              undefined,
-              v.args.map(x => x.name).map(x => factory.createIdentifier(x))
-            ),
-            factory.createIdentifier("params")
-          ]
-        ))
-      )],
-      ts.NodeFlags.Const
-    )
-  )],
-  ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv()))
-  ])
+              factory.createStringLiteral(v.name),
+              factory.createCallExpression(
+                factory.createIdentifier("view_" + v.name + "_arg_to_mich"),
+                undefined,
+                v.args.map(x => x.name).map(x => factory.createIdentifier(x))
+              ),
+              factory.createIdentifier("params")
+            ]
+          ))
+        )],
+        ts.NodeFlags.Const
+      )
+    )],
+    ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv()))
+    ])
 }
 
 const make_method_skeleton = (
-  is_async     : boolean,
-  name         : string,
-  args         : ts.ParameterDeclaration[],
-  return_type  : ts.TypeReferenceNode | undefined,
-  with_storage : boolean,
-  body         : ts.Statement[]
-  ) => {
+  is_async: boolean,
+  name: string,
+  args: ts.ParameterDeclaration[],
+  return_type: ts.TypeReferenceNode | undefined,
+  with_storage: boolean,
+  body: ts.Statement[]
+) => {
   return factory.createMethodDeclaration(
     undefined,
     is_async ? [factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : [],
@@ -766,7 +766,7 @@ const make_method_skeleton = (
                   )],
                   ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
                 )
-              ) ] : []),
+              )] : []),
               ...(body)
             ])
             ,
@@ -786,25 +786,25 @@ const make_method_skeleton = (
 }
 
 const storage_elt_to_getter_skeleton = (
-  prefix : string,
-  elt_name : string,
-  args : ts.ParameterDeclaration[],
-  return_type : ts.KeywordTypeNode<any>,
-  body : ts.Statement[]) => {
+  prefix: string,
+  elt_name: string,
+  args: ts.ParameterDeclaration[],
+  return_type: ts.KeywordTypeNode<any>,
+  body: ts.Statement[]) => {
   return make_method_skeleton(
     true,
     prefix + elt_name,
     args,
     factory.createTypeReferenceNode(
       factory.createIdentifier("Promise"),
-      [ return_type ]
+      [return_type]
     ),
     true,
     body
   )
 }
 
-const get_storage_identifier = (selt: StorageElement, ci : ContractInterface) => {
+const get_storage_identifier = (selt: StorageElement, ci: ContractInterface) => {
   const root = factory.createIdentifier("storage")
   return ci.storage.length + ci.parameters.length > 1 ?
     factory.createPropertyAccessExpression(
@@ -814,7 +814,7 @@ const get_storage_identifier = (selt: StorageElement, ci : ContractInterface) =>
     root
 }
 
-const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
+const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
   const elt = get_storage_identifier(selt, ci);
   return storage_elt_to_getter_skeleton(
     "get_",
@@ -825,7 +825,7 @@ const storage_elt_to_class = (selt: StorageElement, ci : ContractInterface) => {
   )
 }
 
-const eventToRegister = (e : Event, ci : ContractInterface) => {
+const eventToRegister = (e: Event, ci: ContractInterface) => {
   return make_method_skeleton(
     false,  // not async
     "register_" + e.name,
@@ -951,7 +951,7 @@ const eventToRegister = (e : Event, ci : ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              taquito_to_ts(factory.createIdentifier("x"), { node : "event", name : e.name, args : [] }, ci, makeTaquitoEnv()),
+                              taquito_to_ts(factory.createIdentifier("x"), { node: "event", name: e.name }, ci, makeTaquitoEnv()),
                               true
                             )
                           )),
@@ -978,11 +978,11 @@ const eventToRegister = (e : Event, ci : ContractInterface) => {
         ],
         false
       )]
-    )), factory.createReturnStatement(undefined) ],
+    )), factory.createReturnStatement(undefined)],
   )
 }
 
-const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, key_mich_type : ts.Expression, value_mich_type : ts.Expression, selt : ts.Expression, return_statement_found : ts.Statement[], ret_value_not_found : ts.Expression) : ts.Statement[] => {
+const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression): ts.Statement[] => {
   return [
     factory.createVariableStatement(
       undefined,
@@ -1003,7 +1003,7 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
                 undefined,
                 [selt]
               ),
-              function_param_to_mich({ name : "key", type : key_type }),
+              function_param_to_mich({ name: "key", type: key_type }),
               key_mich_type,
               value_mich_type
             ]
@@ -1036,9 +1036,9 @@ const get_big_map_value_getter_body = (name : string, key_type : ArchetypeType, 
   ]
 }
 
-const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
+const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
   switch (selt.type.node) {
-    case "big_map" : // special treatment
+    case "big_map": // special treatment
       return [
         storage_elt_to_getter_skeleton(
           "get_",
@@ -1049,23 +1049,23 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             undefined,
             factory.createIdentifier("key"),
             undefined,
-            archetype_type_to_ts_type(selt.type.args[0]),
+            archetype_type_to_ts_type(selt.type.key_type),
             undefined
           )],
           factory.createUnionTypeNode([
-            archetype_type_to_ts_type(selt.type.args[1]),
+            archetype_type_to_ts_type(selt.type.value_type),
             factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
           ]),
           get_big_map_value_getter_body(
             selt.name,
-            selt.type.args[0],
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            selt.type.key_type,
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type)),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type.args[1], ci, makeTaquitoEnv()),
+            taquito_to_ts(factory.createIdentifier("data"), selt.type.value_type, ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )
         ),
@@ -1078,25 +1078,25 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             undefined,
             factory.createIdentifier("key"),
             undefined,
-            archetype_type_to_ts_type(selt.type.args[0]),
+            archetype_type_to_ts_type(selt.type.key_type),
             undefined
           )],
           factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
           get_big_map_value_getter_body(
             selt.name,
-            selt.type.args[0],
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[0])),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.args[1])),
+            selt.type.key_type,
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type)),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-           get_storage_identifier(selt, ci),
-           [factory.createReturnStatement(factory.createTrue())],
+            get_storage_identifier(selt, ci),
+            [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse()
           )
         )
       ]
-    case "asset"   : // Special treatment for big map assets
+    case "asset": { // Special treatment for big map assets
       const assetType = ci.types.assets.find(x => x.name == selt.name)
       if (assetType != undefined && assetType.container_kind == "big_map") {
         return [storage_elt_to_getter_skeleton(
@@ -1109,14 +1109,14 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
             factory.createIdentifier("key"),
             undefined,
             factory.createTypeReferenceNode(
-              factory.createIdentifier(selt.name+"_key"),
+              factory.createIdentifier(selt.name + "_key"),
               undefined
             ),
             undefined
           )],
           factory.createUnionTypeNode([
             factory.createTypeReferenceNode(
-              factory.createIdentifier(selt.name+"_value"),
+              factory.createIdentifier(selt.name + "_value"),
               undefined
             ),
             factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)
@@ -1124,47 +1124,47 @@ const storageToGetters = (selt: StorageElement, ci : ContractInterface) => {
           get_big_map_value_getter_body(
             selt.name,
             get_asset_key_archetype_type(selt.type, ci),
-            factory.createIdentifier(selt.name+"_key_mich_type"),
-            factory.createIdentifier(selt.name+"_value_mich_type"),
+            factory.createIdentifier(selt.name + "_key_mich_type"),
+            factory.createIdentifier(selt.name + "_value_mich_type"),
             get_storage_identifier(selt, ci),
             taquito_to_ts(factory.createIdentifier("data"), selt.type, ci, makeTaquitoEnv()),
             factory.createIdentifier("undefined")
           )),
-          storage_elt_to_getter_skeleton(
-            "has_",
-            selt.name + "_value",
-            [factory.createParameterDeclaration(
-              undefined,
-              undefined,
-              undefined,
-              factory.createIdentifier("key"),
-              undefined,
-              factory.createTypeReferenceNode(
-                factory.createIdentifier(selt.name+"_key"),
-                undefined
-              ),
+        storage_elt_to_getter_skeleton(
+          "has_",
+          selt.name + "_value",
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("key"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createIdentifier(selt.name + "_key"),
               undefined
-            )],
-            factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
-            get_big_map_value_getter_body(
-              selt.name,
-              get_asset_key_archetype_type(selt.type, ci),
-              factory.createIdentifier(selt.name+"_key_mich_type"),
-              factory.createIdentifier(selt.name+"_value_mich_type"),
-              get_storage_identifier(selt, ci),
-              [factory.createReturnStatement(factory.createTrue())],
-              factory.createFalse()
-            )
+            ),
+            undefined
+          )],
+          factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+          get_big_map_value_getter_body(
+            selt.name,
+            get_asset_key_archetype_type(selt.type, ci),
+            factory.createIdentifier(selt.name + "_key_mich_type"),
+            factory.createIdentifier(selt.name + "_value_mich_type"),
+            get_storage_identifier(selt, ci),
+            [factory.createReturnStatement(factory.createTrue())],
+            factory.createFalse()
           )
+        )
         ]
-        //return [assetValueToBigMapGetter(assetType)]
       }
-    default : return storage_elt_to_class(selt, ci)
+    }
   }
+  return storage_elt_to_class(selt, ci)
 }
 
-const decl_callback_deploy = (g : Getter) => {
-  return  factory.createVariableStatement(
+const decl_callback_deploy = (g: Getter) => {
+  return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
       [factory.createVariableDeclaration(
@@ -1201,7 +1201,7 @@ const decl_callback_deploy = (g : Getter) => {
   )
 }
 
-const get_addr_decl = (name : string) => {
+const get_addr_decl = (name: string) => {
   return factory.createPropertyDeclaration(
     undefined,
     undefined,
@@ -1215,7 +1215,7 @@ const get_addr_decl = (name : string) => {
   )
 }
 
-const get_addr_assignement = (name : string) => {
+const get_addr_assignement = (name: string) => {
   return factory.createExpressionStatement(factory.createBinaryExpression(
     factory.createPropertyAccessExpression(
       factory.createThis(),
@@ -1230,7 +1230,7 @@ const get_addr_assignement = (name : string) => {
   ))
 }
 
-const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface) : ArchetypeType => {
+const get_asset_key_archetype_type = (a: ATNamed, ci: ContractInterface): ArchetypeType => {
   const assetType = ci.types.assets.find(x => x.name == a.name)
   if (assetType != undefined) {
     const fields = assetType.fields.filter(x => x.is_key)
@@ -1238,13 +1238,13 @@ const get_asset_key_archetype_type = (a : ArchetypeType, ci : ContractInterface)
       return fields[0].type
     }
     else {
-      return { node: "record", name: assetType.name + "_key", args: [] }
+      return { node: "record", name: assetType.name + "_key" }
     }
   }
-  throw new Error("get_asset_key_archetype_type: asset " + a.name + " not found")
+  throw new Error("get_asset_key_archetype_type: asset " + (a.name ? a.name : "null") + " not found")
 }
 
-const get_asset_value_archetype_type = (a : ArchetypeType, ci : ContractInterface) : ArchetypeType => {
+const get_asset_value_archetype_type = (a: ATNamed, ci: ContractInterface): ArchetypeType => {
   const assetType = ci.types.assets.find(x => x.name == a.name)
   if (assetType != undefined) {
     const fields = assetType.fields.filter(x => !x.is_key)
@@ -1252,13 +1252,13 @@ const get_asset_value_archetype_type = (a : ArchetypeType, ci : ContractInterfac
       return fields[0].type
     }
     else {
-      return { node: "record", name: assetType.name + "_value", args: [] }
+      return { node: "record", name: assetType.name + "_value" }
     }
   }
-  throw new Error("get_asset_value_archetype_type: asset " + a.name + " not found")
+  throw new Error("get_asset_value_archetype_type: asset " + (a.name ? a.name : "null") + " not found")
 }
 
-const storage_elt_to_param = (selt : StorageElement) : ContractParameter => {
+const storage_elt_to_param = (selt: StorageElement): ContractParameter => {
   return {
     name: selt.name,
     type: selt.type,
@@ -1267,36 +1267,36 @@ const storage_elt_to_param = (selt : StorageElement) : ContractParameter => {
   }
 }
 
-const language_to_deploy_name = (l : Language) : string => {
-  switch(l) {
-    case(Language.Archetype) : return "deploy"
-    case(Language.Michelson) : return "originate"
+const language_to_deploy_name = (l: Language): string => {
+  switch (l) {
+    case (Language.Archetype): return "deploy"
+    case (Language.Michelson): return "originate"
   }
 }
 
-const language_to_extension = (l : Language) : ".arl" | ".tz" => {
-  switch(l) {
-    case(Language.Archetype) : return ".arl"
-    case(Language.Michelson) : return ".tz"
+const language_to_extension = (l: Language): ".arl" | ".tz" => {
+  switch (l) {
+    case (Language.Archetype): return ".arl"
+    case (Language.Michelson): return ".tz"
   }
 }
 
-const language_to_storage_literal = (ci : ContractInterface, l : Language) => {
-  switch(l) {
-    case(Language.Archetype) : return factory.createObjectLiteralExpression(ci.parameters.map(x =>
+const language_to_storage_literal = (ci: ContractInterface, l: Language) => {
+  switch (l) {
+    case (Language.Archetype): return factory.createObjectLiteralExpression(ci.parameters.map(x =>
       factory.createPropertyAssignment(
         factory.createIdentifier(x.name),
-        function_param_to_mich({ name : x.name, type : x.type })
+        function_param_to_mich({ name: x.name, type: x.type })
       )
     ), true)
-    case(Language.Michelson) : return factory.createCallExpression(
+    case (Language.Michelson): return factory.createCallExpression(
       factory.createIdentifier("storage_arg_to_mich"),
       undefined, ci.storage.map(x => factory.createIdentifier(x.name))
     )
   }
 }
 
-const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
+const get_deploy = (ci: ContractInterface, settings: BindingSettings) => {
   const name = language_to_deploy_name(settings.language)
   const params = settings.language == Language.Archetype ? ci.parameters : ci.storage.map(storage_elt_to_param)
   const extension = language_to_extension(settings.language)
@@ -1335,7 +1335,7 @@ const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
           undefined,
           factory.createVariableDeclarationList(
             [factory.createVariableDeclaration(
-              factory.createIdentifier("address"),
+              factory.createIdentifier("res"),
               undefined,
               undefined,
               factory.createAwaitExpression(factory.createCallExpression(
@@ -1360,7 +1360,10 @@ const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
             factory.createIdentifier("address")
           ),
           factory.createToken(SyntaxKind.EqualsToken),
-          factory.createIdentifier("address")
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("res"),
+            factory.createIdentifier("address")
+          )
         ))
       ].concat(ci.getters.map(x => get_addr_assignement(x.name))),
       true
@@ -1368,7 +1371,7 @@ const get_deploy = (ci : ContractInterface, settings : BindingSettings) => {
   )
 }
 
-const get_contract_class_node = (ci : ContractInterface, settings : BindingSettings) => {
+const get_contract_class_node = (ci: ContractInterface, settings: BindingSettings) => {
   return factory.createClassDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.ExportKeyword)],
@@ -1384,20 +1387,20 @@ const get_contract_class_node = (ci : ContractInterface, settings : BindingSetti
         get_get_balance_decl(),
         get_deploy(ci, settings)
       ]
-    ),
-    ...(ci.entrypoints.map(entryToMethod)),
-    ...(ci.entrypoints.map(entryToGetParam)),
-    ...(ci.getters.map(x => getter_to_method(x, ci))),
-    ...(ci.views.map(x => view_to_method(x, ci))),
-    ...(ci.parameters.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[])),
-    ...(ci.storage.filter(x => !x.const).reduce((acc,x) => acc.concat(storageToGetters(x, ci)),<ts.MethodDeclaration[]>[])),
-    ...(ci.types.enums.filter(x => x.name == "state").map(getStateDecl)),
-    ...(ci.types.events.reduce((acc,x) => acc.concat(eventToRegister(x, ci)), <ts.MethodDeclaration[]>[])),
-    ...([errors_to_decl(ci)])
-  ])
+      ),
+      ...(ci.entrypoints.map(entryToMethod)),
+      ...(ci.entrypoints.map(entryToGetParam)),
+      ...(ci.getters.map(x => getter_to_method(x, ci))),
+      ...(ci.views.map(x => view_to_method(x, ci))),
+      ...(ci.parameters.filter(x => !x.const).reduce((acc, x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[])),
+      ...(ci.storage.filter(x => !x.const).reduce((acc, x) => acc.concat(storageToGetters(x, ci)), <ts.MethodDeclaration[]>[])),
+      ...(ci.types.enums.filter(x => x.name == "state").map(getStateDecl)),
+      ...(ci.types.events.reduce((acc, x) => acc.concat(eventToRegister(x, ci)), <ts.MethodDeclaration[]>[])),
+      ...([errors_to_decl(ci)])
+    ])
 }
 
-const get_import = (namespace : string, name : string) => {
+const get_import = (namespace: string, name: string) => {
   return factory.createImportDeclaration(
     undefined,
     undefined,
@@ -1411,21 +1414,21 @@ const get_import = (namespace : string, name : string) => {
   )
 }
 
-const get_execution_import = (target : Target) : string => {
+const get_execution_import = (target: Target): string => {
   switch (target) {
-    case Target.Dapp : return "@completium/dapp-ts"
-    case Target.Experiment : return "@completium/experiment-ts"
+    case Target.Dapp: return "@completium/dapp-ts"
+    case Target.Experiment: return "@completium/experiment-ts"
   }
 }
 
-const get_imports = (ci : ContractInterface, settings : BindingSettings) : ts.ImportDeclaration[] => {
+const get_imports = (ci: ContractInterface, settings: BindingSettings): ts.ImportDeclaration[] => {
   return [
-    get_import("ex",  get_execution_import(settings.target)),
+    get_import("ex", get_execution_import(settings.target)),
     get_import("att", "@completium/archetype-ts-types"),
   ].concat(ci.types.events.length > 0 ? [get_import("el", "@completium/event-listener")] : [])
 }
 
-const get_contract_decl = (ci : ContractInterface) => {
+const get_contract_decl = (ci: ContractInterface) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -1444,7 +1447,7 @@ const get_contract_decl = (ci : ContractInterface) => {
   )
 }
 
-const make_enum_type_decl = (e : Enum) => {
+const make_enum_type_decl = (e: Enum) => {
   return factory.createEnumDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -1458,7 +1461,7 @@ const make_enum_type_decl = (e : Enum) => {
   )
 }
 
-const make_enum_class_decl = (e : Enum) => {
+const make_enum_class_decl = (e: Enum) => {
   return factory.createClassDeclaration(
     undefined,
     [
@@ -1484,29 +1487,26 @@ const make_enum_class_decl = (e : Enum) => {
   )
 }
 
-const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Expression => {
-  var mich_value : ts.Expression = factory.createPropertyAccessExpression(
+const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number): ts.Expression => {
+  let mich_value: ts.Expression = factory.createPropertyAccessExpression(
     factory.createIdentifier("att"),
     factory.createIdentifier("unit_mich")
   )
   if (c.types.length > 0) {
-    var atype : ArchetypeType = {
-      node: "unit",
-      name: null,
-      args: []
+    let atype: ArchetypeType = {
+      node: "unit"
     }
     if (c.types.length > 1) {
       atype = {
         node: "tuple",
-        name: null,
         args: c.types
       }
     } else {
       atype = c.types[0]
     }
-    const param : FunctionParameter = {
-      name : "this.content",
-      type : atype
+    const param: FunctionParameter = {
+      name: "this.content",
+      type: atype
     }
     mich_value = function_param_to_mich(param)
   }
@@ -1528,8 +1528,8 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
       undefined,
       [mich_value]
     )
-    var res = last
-    for (var i = 0; i < Math.floor((idx + 1) / 2); i++) {
+    let res = last
+    for (let i = 0; i < Math.floor((idx + 1) / 2); i++) {
       res = factory.createCallExpression(
         factory.createPropertyAccessExpression(
           factory.createIdentifier("att"),
@@ -1543,7 +1543,7 @@ const make_enum_type_to_mich_return_stt = (c : EnumValue, idx : number) : ts.Exp
   }
 }
 
-const make_simple_enum_type_to_mich_return_stt = (idx : number) : ts.Expression => {
+const make_simple_enum_type_to_mich_return_stt = (idx: number): ts.Expression => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
       factory.createNewExpression(
@@ -1552,7 +1552,7 @@ const make_simple_enum_type_to_mich_return_stt = (idx : number) : ts.Expression 
           factory.createIdentifier("Nat")
         ),
         undefined,
-        [factory.createIdentifier("" + idx)]
+        [factory.createIdentifier(idx.toString())]
       ),
       factory.createIdentifier("to_mich")
     ),
@@ -1561,15 +1561,14 @@ const make_simple_enum_type_to_mich_return_stt = (idx : number) : ts.Expression 
   )
 }
 
-const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number, complex : boolean) : ts.ClassDeclaration => {
-  let args : ts.ParameterDeclaration[] = []
+const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, complex: boolean): ts.ClassDeclaration => {
+  let args: ts.ParameterDeclaration[] = []
   if (c.types.length > 0) {
     let atype = c.types[0]
     if (c.types.length > 1) {
       atype = {
-        node : "tuple",
-        name : null,
-        args : c.types
+        node: "tuple",
+        args: c.types
       }
     }
     args = [factory.createParameterDeclaration(
@@ -1593,7 +1592,7 @@ const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number, c
         factory.createIdentifier(name),
         undefined
       )]
-    )],[
+    )], [
     ...([
       factory.createConstructorDeclaration(
         undefined,
@@ -1646,32 +1645,32 @@ const make_enum_type_class_decl = (name : string, c : EnumValue, idx : number, c
           false
         )
       )
-    ]: [])
-    ]
+    ] : [])
+  ]
   )
 }
 
-const enum_to_decl = (e : Enum) : Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
+const enum_to_decl = (e: Enum): Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
   switch (e.name) {
-    case "state" : return [factory.createEnumDeclaration(
+    case "state": return [factory.createEnumDeclaration(
       undefined,
       [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
       factory.createIdentifier("states"),
-      e.constructors.map((x,i) => {
+      e.constructors.map((x, i) => {
         return factory.createEnumMember(
           factory.createIdentifier(x.name),
           i == 0 ? factory.createNumericLiteral("1") : undefined
         )
       })
     )];
-    default : return [
+    default: return [
       ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
-      ...(e.constructors.map((x,i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or")))
+      ...(e.constructors.map((x, i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or")))
     ]
   }
 }
 
-const mich_to_simple_enum_decl = (e : Enum) => {
+const mich_to_simple_enum_decl = (e: Enum) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -1736,24 +1735,24 @@ const mich_to_simple_enum_decl = (e : Enum) => {
                 factory.createCaseBlock(
                   [
                     ...(e.constructors.map((c, i) => {
-                    return factory.createCaseClause(
-                      factory.createNumericLiteral(""+i),
-                      [factory.createReturnStatement(factory.createNewExpression(
-                        factory.createIdentifier(c.name),
-                        undefined,
-                        []
-                      ))]
-                    )
+                      return factory.createCaseClause(
+                        factory.createNumericLiteral(i),
+                        [factory.createReturnStatement(factory.createNewExpression(
+                          factory.createIdentifier(c.name),
+                          undefined,
+                          []
+                        ))]
+                      )
                     })),
                     ...([factory.createDefaultClause([factory.createThrowStatement(factory.createNewExpression(
                       factory.createIdentifier("Error"),
                       undefined,
                       [factory.createBinaryExpression(
                         factory.createStringLiteral("mich_to_asset_type : invalid value "),
-                       factory.createToken(ts.SyntaxKind.PlusToken),
+                        factory.createToken(ts.SyntaxKind.PlusToken),
                         factory.createIdentifier("v")
                       )]
-                      ))])])
+                    ))])])
                   ]
                 )
               )
@@ -1767,7 +1766,7 @@ const mich_to_simple_enum_decl = (e : Enum) => {
   )
 }
 
-const mich_to_complex_enum_decl = (e : Enum) => {
+const mich_to_complex_enum_decl = (e: Enum) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -1807,7 +1806,7 @@ const mich_to_complex_enum_decl = (e : Enum) => {
   )
 }
 
-const mich_to_enum_decl = (e : Enum) => {
+const mich_to_enum_decl = (e: Enum) => {
   if (e.type_michelson.prim == "or") {
     return mich_to_complex_enum_decl(e)
   } else {
@@ -1815,7 +1814,7 @@ const mich_to_enum_decl = (e : Enum) => {
   }
 }
 
-const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
+const getStateDecl = (e: Enum): ts.MethodDeclaration => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
@@ -1891,15 +1890,15 @@ const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
                   []
                 ),
                 factory.createCaseBlock(
-                e.constructors.map((x, i) => {
-                  return factory.createCaseClause(
-                    factory.createNumericLiteral(i),
-                    [factory.createReturnStatement(factory.createPropertyAccessExpression(
-                      factory.createIdentifier("states"),
-                      factory.createIdentifier(x.name)
-                    ))]
-                  )
-                }))
+                  e.constructors.map((x, i) => {
+                    return factory.createCaseClause(
+                      factory.createNumericLiteral(i),
+                      [factory.createReturnStatement(factory.createPropertyAccessExpression(
+                        factory.createIdentifier("states"),
+                        factory.createIdentifier(x.name)
+                      ))]
+                    )
+                  }))
               )
             ],
             true
@@ -1916,7 +1915,7 @@ const getStateDecl = (e : Enum) : ts.MethodDeclaration => {
   )
 }
 
-const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
+const errors_to_decl = (ci: ContractInterface): ts.PropertyDeclaration => {
   return factory.createPropertyDeclaration(
     undefined,
     undefined,
@@ -1924,9 +1923,9 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
     undefined,
     undefined,
     factory.createObjectLiteralExpression(
-      ci.errors.map(make_error).reduce((acc,x) => {
+      ci.errors.map(make_error).reduce((acc, x) => {
         const [label, expr] = x
-        if (!acc.reduce((a,p) => {
+        if (!acc.reduce((a, p) => {
           const [l, _] = p
           if (!a) {
             return label == l
@@ -1949,20 +1948,21 @@ const errors_to_decl = (ci : ContractInterface) : ts.PropertyDeclaration => {
   )
 }
 
-const not_a_set = (a : Asset) => {
+const not_a_set = (a: Asset) => {
   return a.container_type_michelson.prim != "set"
 }
 
-const view_to_getter = (v : View) : Getter => {
-  return { ...v, name : "view_" + v.name,
-    return_michelson : {
-      value : { prim : "int", int : null, args : [], annots : [], array: [], bytes: null, string : null },
-      is_storable : true
+const view_to_getter = (v: View): Getter => {
+  return {
+    ...v, name: "view_" + v.name,
+    return_michelson: {
+      value: { prim: "int", int: null, args: [], annots: [], array: [], bytes: null, string: null },
+      is_storable: true
     }
   }
 }
 
-const get_nodes = (contract_interface : ContractInterface, settings : BindingSettings) : (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
+const get_nodes = (contract_interface: ContractInterface, settings: BindingSettings): (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
     ...(get_imports(contract_interface, settings)),
     // storage
@@ -1993,9 +1993,9 @@ const get_nodes = (contract_interface : ContractInterface, settings : BindingSet
     ...(contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl)),
     ...(contract_interface.getters.map(decl_callback_deploy)),
     ...([
-    // contract class
+      // contract class
       get_contract_class_node(contract_interface, settings),
-    // contract instance
+      // contract instance
       get_contract_decl(contract_interface)
     ]),
   ]
@@ -2012,12 +2012,12 @@ export enum Language {
 }
 
 export type BindingSettings = {
-  target   : Target
-  language : Language
-  path     : string
+  target: Target
+  language: Language
+  path: string
 }
 
-export const generate_binding = (contract_interface : ContractInterface, settings : BindingSettings) : string => {
+export const generate_binding = (contract_interface: ContractInterface, settings: BindingSettings): string => {
   const nodeArr = factory.createNodeArray(get_nodes(contract_interface, settings));
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result

@@ -23,7 +23,7 @@ const path_contracts = './tests/contracts/';
 /* Functions --------------------------------------------------------------- */
 
 
-describe('Fails', async () => {
+describe('Fails', () => {
   it('Simple fail', async () => {
     await simple_fail.deploy({ as: alice })
 

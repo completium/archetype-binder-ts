@@ -1,4 +1,5 @@
-/* DO NOT EDIT, GENERATED FILE */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+  /* DO NOT EDIT, GENERATED FILE */
 import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
@@ -48,7 +49,7 @@ import * as type_big_map_value_record_4_fields from './contracts/bindings/type_b
 import * as type_big_map_value_record_4_fields_custom from './contracts/bindings/type_big_map_value_record_4_fields_custom'
 
 
-const assert = require('assert')
+import assert from 'assert'
 
 const alice = get_account('alice')
 
@@ -62,7 +63,7 @@ set_mockup()
 
 /* Tests-------------------------------------------------------------------- */
 
-describe('Type big_map_value', async () => {
+describe('Type big_map_value', () => {
   // address
   it('address', async () => {
     const v : Address = new Address("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb");

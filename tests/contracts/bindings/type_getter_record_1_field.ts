@@ -27,8 +27,8 @@ export class Type_getter_record_1_field {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_getter_record_1_field.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_getter_record_1_field.arl", {}, params);
+        this.address = res.address;
         this.get_value_callback_address = await deploy_get_value_callback();
     }
     async get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {

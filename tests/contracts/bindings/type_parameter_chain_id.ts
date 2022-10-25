@@ -21,10 +21,10 @@ export class Type_parameter_chain_id {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Chain_id, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_chain_id.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_chain_id.arl", {
             res: res.to_mich()
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

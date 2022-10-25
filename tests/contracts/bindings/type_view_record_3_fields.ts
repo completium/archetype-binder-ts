@@ -40,8 +40,8 @@ export class Type_view_record_3_fields {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_record_3_fields.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_record_3_fields.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {

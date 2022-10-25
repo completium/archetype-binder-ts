@@ -21,10 +21,10 @@ export class Type_parameter_key_hash {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Key_hash, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_key_hash.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_key_hash.arl", {
             res: res.to_mich()
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: att.Key_hash, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

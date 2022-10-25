@@ -83,8 +83,8 @@ export class Type_asset_value_3_tuple_nat_string_bytes_bool_custom {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_asset_value_3_tuple_nat_string_bytes_bool_custom.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_asset_value_3_tuple_nat_string_bytes_bool_custom.arl", {}, params);
+        this.address = res.address;
     }
     async asset_put(i: [
         att.Nat,
