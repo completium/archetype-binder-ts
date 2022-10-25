@@ -21,8 +21,8 @@ export class Type_big_map_key_bytes {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_big_map_key_bytes.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_big_map_key_bytes.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

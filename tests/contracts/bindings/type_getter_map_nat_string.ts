@@ -10,7 +10,7 @@ const get_value_arg_to_mich = (i: Array<[
         return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
     });
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", [])));
 };
 export class Type_getter_map_nat_string {
@@ -32,9 +32,9 @@ export class Type_getter_map_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_getter_map_nat_string.arl", {}, params);
-        this.address = address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        const res = await ex.deploy("./tests/contracts/type_getter_map_nat_string.arl", {}, params);
+        this.address = res.address;
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: Array<[
         att.Nat,

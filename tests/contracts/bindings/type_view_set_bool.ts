@@ -23,8 +23,8 @@ export class Type_view_set_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_set_bool.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_set_bool.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: Array<boolean>, params: Partial<ex.Parameters>): Promise<Array<boolean>> {
         if (this.address != undefined) {

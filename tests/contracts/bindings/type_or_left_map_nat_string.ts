@@ -28,8 +28,8 @@ export class Type_or_left_map_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_left_map_nat_string.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_left_map_nat_string.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: Array<[
         att.Nat,
@@ -52,7 +52,10 @@ export class Type_or_left_map_nat_string {
     async get_res(): Promise<att.Or<Array<[
         att.Nat,
         string
-    ]>, att.Nat>> {
+    ]>, Array<[
+        att.Nat,
+        string
+    ]>>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
@@ -62,11 +65,19 @@ export class Type_or_left_map_nat_string {
                     string
                 ]> = []; for (let e of x.entries()) {
                     res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                } return res; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
+                } return res; })(x["0"]) : (x => { let res: Array<[
+                    att.Nat,
+                    string
+                ]> = []; for (let e of x.entries()) {
+                    res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
+                } return res; })(x["1"]);
                 return new att.Or<Array<[
                     att.Nat,
                     string
-                ]>, att.Nat>(value, is_left);
+                ]>, Array<[
+                    att.Nat,
+                    string
+                ]>>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const set_value_arg_to_mich = (i: att.Or<att.Nat, string>): att.Micheline => {
-    return i.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
+const set_value_arg_to_mich = (i: att.Or<att.Nat, att.Nat>): att.Micheline => {
+    return i.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); }));
 }
 export class Type_big_map_key_or_nat_string {
     address: string | undefined;
@@ -21,25 +21,25 @@ export class Type_big_map_key_or_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_big_map_key_or_nat_string.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_big_map_key_or_nat_string.arl", {}, params);
+        this.address = res.address;
     }
-    async set_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_set_value_param(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_set_value_param(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
             return await ex.get_call_param(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_res_value(key: att.Or<att.Nat, string>): Promise<att.Nat | undefined> {
+    async get_res_value(key: att.Or<att.Nat, att.Nat>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); })), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("nat", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return new att.Nat(data);
             }
@@ -49,10 +49,10 @@ export class Type_big_map_key_or_nat_string {
         }
         throw new Error("Contract not initialised");
     }
-    async has_res_value(key: att.Or<att.Nat, string>): Promise<boolean> {
+    async has_res_value(key: att.Or<att.Nat, att.Nat>): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); })), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("nat", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

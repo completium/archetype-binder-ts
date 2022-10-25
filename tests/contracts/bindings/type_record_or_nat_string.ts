@@ -1,12 +1,12 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 export class my_record implements att.ArchetypeType {
-    constructor(public n: att.Nat, public v: att.Or<att.Nat, string>, public s: string) { }
+    constructor(public n: att.Nat, public v: att.Or<att.Nat, att.Nat>, public s: string) { }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([this.v.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), att.string_to_mich(this.s)])]);
+        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([this.v.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); })), att.string_to_mich(this.s)])]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && this.v == v.v && this.s == v.s);
@@ -40,8 +40,8 @@ export class Type_record_or_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_record_or_nat_string.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_record_or_nat_string.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: my_record, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
@@ -60,8 +60,8 @@ export class Type_record_or_nat_string {
             const storage = await ex.get_storage(this.address);
             return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
-                return new att.Or<att.Nat, string>(value, is_left);
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
+                return new att.Or<att.Nat, att.Nat>(value, is_left);
             })(x); })(storage.v), (x => { return x; })(storage.s));
         }
         throw new Error("Contract not initialised");

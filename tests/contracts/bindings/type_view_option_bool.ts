@@ -21,8 +21,8 @@ export class Type_view_option_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_option_bool.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_option_bool.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: att.Option<boolean>, params: Partial<ex.Parameters>): Promise<att.Option<boolean>> {
         if (this.address != undefined) {

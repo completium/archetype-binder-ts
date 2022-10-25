@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Option<string>): att.Micheline => {
     return i.to_mich((x => { return att.string_to_mich(x); }));
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.option_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []));
 };
 export class Type_getter_option_string {
@@ -25,9 +25,9 @@ export class Type_getter_option_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_getter_option_string.arl", {}, params);
-        this.address = address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        const res = await ex.deploy("./tests/contracts/type_getter_option_string.arl", {}, params);
+        this.address = res.address;
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: att.Option<string>, params: Partial<ex.Parameters>): Promise<att.Option<string>> {
         if (this.address != undefined) {

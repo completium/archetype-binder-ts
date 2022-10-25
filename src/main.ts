@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv, ATNamed } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv, ATNamed, RawContractInterface, raw_to_contract_interface } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -1177,7 +1177,13 @@ const decl_callback_deploy = (g: Getter) => {
           [],
           factory.createTypeReferenceNode(
             factory.createIdentifier("Promise"),
-            [factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)]
+            [factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("DeployResult")
+              ),
+              undefined
+            )]
           ),
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createBlock(
@@ -1222,11 +1228,14 @@ const get_addr_assignement = (name: string) => {
       factory.createIdentifier(name + "_callback_address")
     ),
     factory.createToken(ts.SyntaxKind.EqualsToken),
-    factory.createAwaitExpression(factory.createCallExpression(
-      factory.createIdentifier("deploy_" + name + "_callback"),
-      undefined,
-      []
-    ))
+    factory.createPropertyAccessExpression(
+      factory.createParenthesizedExpression(factory.createAwaitExpression(factory.createCallExpression(
+        factory.createIdentifier("deploy_" + name + "_callback"),
+        undefined,
+        []
+      ))),
+      factory.createIdentifier("address")
+    )
   ))
 }
 
@@ -2017,7 +2026,8 @@ export type BindingSettings = {
   path: string
 }
 
-export const generate_binding = (contract_interface: ContractInterface, settings: BindingSettings): string => {
+export const generate_binding = (raw_contract_interface: RawContractInterface, settings: BindingSettings): string => {
+  const contract_interface = raw_to_contract_interface(raw_contract_interface);
   const nodeArr = factory.createNodeArray(get_nodes(contract_interface, settings));
   const result = printer.printList(ListFormat.MultiLine, nodeArr, file);
   return result

@@ -23,8 +23,8 @@ export class Type_set_unit {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_set_unit.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_set_unit.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: Array<att.Unit>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

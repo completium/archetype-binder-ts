@@ -27,8 +27,8 @@ export class Type_or_right_tuple_nat_string_bytes_rev {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_right_tuple_nat_string_bytes_rev.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_right_tuple_nat_string_bytes_rev.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: [
         [
@@ -54,25 +54,13 @@ export class Type_or_right_tuple_nat_string_bytes_rev {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res(): Promise<att.Or<att.Nat, [
-        [
-            att.Nat,
-            string
-        ],
-        att.Bytes
-    ]>> {
+    async get_res(): Promise<att.Or<att.Nat, att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return [[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])]; })(x["1"]);
-                return new att.Or<att.Nat, [
-                    [
-                        att.Nat,
-                        string
-                    ],
-                    att.Bytes
-                ]>(value, is_left);
+                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
+                return new att.Or<att.Nat, att.Nat>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

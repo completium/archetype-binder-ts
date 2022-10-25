@@ -23,12 +23,12 @@ export class Type_parameter_set_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Array<boolean>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_set_bool.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_set_bool.arl", {
             res: att.list_to_mich(res, x => {
                 return att.bool_to_mich(x);
             })
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: Array<boolean>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

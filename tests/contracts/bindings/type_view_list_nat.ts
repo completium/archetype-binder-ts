@@ -23,8 +23,8 @@ export class Type_view_list_nat {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_view_list_nat.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_view_list_nat.arl", {}, params);
+        this.address = res.address;
     }
     async view_get_value(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<Array<att.Nat>> {
         if (this.address != undefined) {

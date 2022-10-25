@@ -21,8 +21,8 @@ export class Type_or_left_chain_id {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_left_chain_id.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_left_chain_id.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
@@ -36,13 +36,13 @@ export class Type_or_left_chain_id {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res(): Promise<att.Or<att.Chain_id, att.Nat>> {
+    async get_res(): Promise<att.Or<att.Chain_id, att.Chain_id>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Chain_id(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<att.Chain_id, att.Nat>(value, is_left);
+                const value = is_left ? (x => { return new att.Chain_id(x); })(x["0"]) : (x => { return new att.Chain_id(x); })(x["1"]);
+                return new att.Or<att.Chain_id, att.Chain_id>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

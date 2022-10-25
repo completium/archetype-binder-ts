@@ -43,8 +43,8 @@ export class Type_or_left_record_4_fields_custom {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_left_record_4_fields_custom.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_left_record_4_fields_custom.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: r_record, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
@@ -58,13 +58,13 @@ export class Type_or_left_record_4_fields_custom {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res(): Promise<att.Or<r_record, att.Nat>> {
+    async get_res(): Promise<att.Or<r_record, r_record>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<r_record, att.Nat>(value, is_left);
+                const value = is_left ? (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(x["0"]) : (x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f_d)); })(x["1"]);
+                return new att.Or<r_record, r_record>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

@@ -10,7 +10,7 @@ const get_value_arg_to_mich = (i: [
 ]): att.Micheline => {
     return att.pair_to_mich([i[0].to_mich(), att.pair_to_mich([att.string_to_mich(i[1][0]), i[1][1].to_mich()]), att.bool_to_mich(i[2])]);
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
         att.pair_array_to_mich_type([
@@ -43,7 +43,7 @@ export class Type_getter_tuple_nat_string_bytes_bool_custom {
     async deploy(params: Partial<ex.Parameters>) {
         const res = await ex.deploy("./tests/contracts/type_getter_tuple_nat_string_bytes_bool_custom.arl", {}, params);
         this.address = res.address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: [
         att.Nat,

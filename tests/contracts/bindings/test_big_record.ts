@@ -165,7 +165,7 @@ const mygetter_arg_to_mich = (): att.Micheline => {
 const view_myview_arg_to_mich = (): att.Micheline => {
     return att.unit_mich;
 }
-export const deploy_mygetter_callback = async (): Promise<string> => {
+export const deploy_mygetter_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("mygetter", att.or_to_mich_type(att.prim_annot_to_mich_type("int", ["%A"]), att.or_to_mich_type(att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
         att.prim_annot_to_mich_type("string", [])
@@ -190,12 +190,12 @@ export class Test_big_record {
         throw new Error("Contract not initialised");
     }
     async deploy(owner: att.Address, oa: att.Option<att.Address>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/test_big_record.arl", {
+        const res = await ex.deploy("./tests/contracts/test_big_record.arl", {
             owner: owner.to_mich(),
             oa: oa.to_mich((x => { return x.to_mich(); }))
         }, params);
-        this.address = address;
-        this.mygetter_callback_address = await deploy_mygetter_callback();
+        this.address = res.address;
+        this.mygetter_callback_address = (await deploy_mygetter_callback()).address;
     }
     async myentry(arg: all, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

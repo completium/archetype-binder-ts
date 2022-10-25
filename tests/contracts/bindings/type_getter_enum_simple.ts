@@ -46,7 +46,7 @@ export const mich_to_e_enum = (m: any): e_enum => {
 const get_value_arg_to_mich = (i: e_enum): att.Micheline => {
     return i.to_mich();
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("int", []));
 };
 export class Type_getter_enum_simple {
@@ -70,7 +70,7 @@ export class Type_getter_enum_simple {
     async deploy(params: Partial<ex.Parameters>) {
         const res = await ex.deploy("./tests/contracts/type_getter_enum_simple.arl", {}, params);
         this.address = res.address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum> {
         if (this.address != undefined) {

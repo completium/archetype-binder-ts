@@ -21,8 +21,8 @@ export class Type_map_value_rational {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_map_value_rational.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_map_value_rational.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: att.Rational, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

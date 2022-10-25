@@ -39,6 +39,12 @@ export type ATTuple = {
 
 export type ArchetypeType = ATSimple | ATNamed | ATSingle | ATMap | ATOr | ATLambda | ATTuple
 
+export type RawArchetypeType = {
+  node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "unit"
+  name: string | null
+  args: Array<RawArchetypeType>
+}
+
 export type MichelsonType = {
   "prim": string | null
   "int": string | null
@@ -49,82 +55,95 @@ export type MichelsonType = {
   "array": Array<MichelsonType>
 }
 
-export type ContractParameter = {
+type ContractParameterGen<T> = {
   "name": string
-  "type": ArchetypeType
+  "type": T
   "const": boolean
   "default": string | null
 }
+export type ContractParameter = ContractParameterGen<ArchetypeType>
 
-export type FunctionParameter = {
+type FunctionParameterGen<T> = {
   "name": string
-  "type": ArchetypeType
+  "type": T
 }
+export type FunctionParameter = FunctionParameterGen<ArchetypeType>
 
-export type Entrypoint = {
+type EntrypointGen<T> = {
   "name": string
-  "args": Array<FunctionParameter>
+  "args": Array<FunctionParameterGen<T>>
 }
+export type Entrypoint = EntrypointGen<ArchetypeType>
 
-export type Field = {
+type FieldGen<T> = {
   "name": string
-  "type": ArchetypeType
+  "type": T
   "is_key": boolean
 }
+export type Field = FieldGen<ArchetypeType>
 
-export type Asset = {
+
+type AssetGen<T> = {
   "name": string
   "container_kind": "map" | "big_map" | "iterable_big_map"
-  "fields": Array<Field>
+  "fields": Array<FieldGen<T>>
   "container_type_michelson": MichelsonType
   "key_type_michelson": MichelsonType
   "value_type_michelson": MichelsonType
 }
+export type Asset = AssetGen<ArchetypeType>
 
-export type EnumValue = {
+type EnumValueGen<T> = {
   "name": string,
-  "types": Array<ArchetypeType>
+  "types": Array<T>
 }
+export type EnumValue = EnumValueGen<ArchetypeType>
 
-export type Enum = {
+type EnumGen<T> = {
   "name": string
-  "constructors": Array<EnumValue>
+  "constructors": Array<EnumValueGen<T>>
   "type_michelson": MichelsonType
 }
+export type Enum = EnumGen<ArchetypeType>
 
-export type StorageElement = {
+type StorageElementGen<T> = {
   "name": string
-  "type": ArchetypeType
+  "type": T
   "const": boolean
 }
+export type StorageElement = StorageElementGen<ArchetypeType>
 
-export type Record = {
+type RecordGen<T> = {
   "name": string
-  "fields": Array<Omit<Field, "is_key">>
+  "fields": Array<Omit<FieldGen<T>, "is_key">>
   "type_michelson": MichelsonType
 }
+export type Record = RecordGen<ArchetypeType>
 
-export type Getter = {
+type GetterGen<T> = {
   "name": string
-  "args": Array<FunctionParameter>
-  "return": ArchetypeType
+  "args": Array<FunctionParameterGen<T>>
+  "return": T
   "return_michelson": {
     "value": MichelsonType
     "is_storable": boolean
   }
 }
+export type Getter = GetterGen<ArchetypeType>
 
-export type View = {
+type ViewGen<T> = {
   "name": string
-  "args": Array<FunctionParameter>
-  "return": ArchetypeType
+  "args": Array<FunctionParameterGen<T>>
+  "return": T
 }
+export type View = ViewGen<ArchetypeType>
 
-export type Event = {
+type EventGen<T> = {
   "name": string
-  "fields": Array<Omit<Field, "is_key">>
+  "fields": Array<Omit<FieldGen<T>, "is_key">>
   "type_michelson": MichelsonType
 }
+export type Event = EventGen<ArchetypeType>
 
 export type Error = {
   "kind": string
@@ -132,25 +151,28 @@ export type Error = {
   "expr": MichelsonType
 }
 
-export type ContractInterface = {
+export type ContractInterfaceGen<T> = {
   "name": string,
-  "parameters": Array<ContractParameter>
+  "parameters": Array<ContractParameterGen<T>>
   "types": {
-    "assets": Array<Asset>
-    "enums": Array<Enum>
-    "records": Array<Record>
-    "events": Array<Event>
+    "assets": Array<AssetGen<T>>
+    "enums": Array<EnumGen<T>>
+    "records": Array<RecordGen<T>>
+    "events": Array<EventGen<T>>
   }
-  "storage": Array<StorageElement>
+  "storage": Array<StorageElementGen<T>>
   "storage_type": null | {
     "value": MichelsonType
     "is_storable": boolean
   }
-  "entrypoints": Array<Entrypoint>
-  "getters": Array<Getter>
-  "views": Array<View>
+  "entrypoints": Array<EntrypointGen<T>>
+  "getters": Array<GetterGen<T>>
+  "views": Array<ViewGen<T>>
   "errors": Array<Error>
 }
+
+export type RawContractInterface = ContractInterfaceGen<RawArchetypeType>
+export type ContractInterface = ContractInterfaceGen<ArchetypeType>
 
 type TaquitoEnv = {
   in_map_key: boolean
@@ -2418,4 +2440,99 @@ export const get_get_balance_decl = () => {
       true
     )
   )
+}
+
+
+export const raw_to_contract_interface = (rci: RawContractInterface): ContractInterface => {
+  const to_archetype_type = (rty: RawArchetypeType): ArchetypeType => {
+    const force_name = (i: string | null): string => {
+      if (i == null) {
+        throw new Error("Invalid name")
+      } else {
+        return i
+      }
+    };
+    switch (rty.node) {
+      case "address": return { node: rty.node }
+      case "aggregate": return { node: rty.node, name: force_name(rty.name) }
+      case "asset_container": return { node: rty.node, name: force_name(rty.name) }
+      case "asset_key": return { node: rty.node, name: force_name(rty.name) }
+      case "asset_value": return { node: rty.node, name: force_name(rty.name) }
+      case "asset_view": return { node: rty.node, name: force_name(rty.name) }
+      case "asset": return { node: rty.node, name: force_name(rty.name) }
+      case "big_map": return { node: rty.node, key_type: to_archetype_type(rty.args[0]), value_type: to_archetype_type(rty.args[1]) }
+      case "bls12_381_fr": return { node: rty.node }
+      case "bls12_381_g1": return { node: rty.node }
+      case "bls12_381_g2": return { node: rty.node }
+      case "bool": return { node: rty.node }
+      case "bytes": return { node: rty.node }
+      case "chain_id": return { node: rty.node }
+      case "chest_key": return { node: rty.node }
+      case "chest": return { node: rty.node }
+      case "collection": return { node: rty.node, name: force_name(rty.name) }
+      case "contract": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
+      case "currency": return { node: rty.node }
+      case "date": return { node: rty.node }
+      case "duration": return { node: rty.node }
+      case "enum": return { node: rty.node, name: force_name(rty.name) }
+      case "event": return { node: rty.node, name: force_name(rty.name) }
+      case "int": return { node: rty.node }
+      case "iterable_big_map": return { node: rty.node, key_type: to_archetype_type(rty.args[0]), value_type: to_archetype_type(rty.args[1]) }
+      case "key_hash": return { node: rty.node }
+      case "key": return { node: rty.node }
+      case "lambda": return { node: rty.node, arg_type: to_archetype_type(rty.args[0]), ret_type: to_archetype_type(rty.args[1]) }
+      case "list": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
+      case "map": return { node: rty.node, key_type: to_archetype_type(rty.args[0]), value_type: to_archetype_type(rty.args[1]) }
+      case "nat": return { node: rty.node }
+      case "never": return { node: rty.node }
+      case "operation": return { node: rty.node }
+      case "option": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
+      case "or": return { node: rty.node, left_type: to_archetype_type(rty.args[0]), right_type: to_archetype_type(rty.args[0]) }
+      case "partition": return { node: rty.node, name: force_name(rty.name) }
+      case "rational": return { node: rty.node }
+      case "record": return { node: rty.node, name: force_name(rty.name) }
+      case "sapling_state": return { node: rty.node }
+      case "sapling_transaction": return { node: rty.node }
+      case "set": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
+      case "signature": return { node: rty.node }
+      case "state": return { node: rty.node }
+      case "string": return { node: rty.node }
+      case "ticket": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
+      case "timestamp": return { node: rty.node }
+      case "tuple": return { node: rty.node, args: rty.args.map(to_archetype_type) }
+      case "unit": return { node: rty.node }
+    }
+  }
+
+  const for_field = (i: FieldGen<RawArchetypeType>): Field => {
+    return { ...i, "type": to_archetype_type(i.type) }
+  };
+
+  const for_field_omit = (i: Omit<FieldGen<RawArchetypeType>, "is_key">): Omit<Field, "is_key"> => {
+    return { ...i, "type": to_archetype_type(i.type) }
+  };
+
+  const for_function_parameter = (i: FunctionParameterGen<RawArchetypeType>): FunctionParameter => {
+    return { ...i, "type": to_archetype_type(i.type) }
+  };
+
+  return {
+    "name": rci.name,
+    "parameters": rci.parameters.map((i: ContractParameterGen<RawArchetypeType>): ContractParameter => { return { ...i, "type": to_archetype_type(i.type) } }),
+    "types": {
+      assets: rci.types.assets.map((i: AssetGen<RawArchetypeType>): Asset => { return { ...i, "fields": i.fields.map(for_field) } }),
+      enums: rci.types.enums.map((i: EnumGen<RawArchetypeType>): Enum => { return { ...i, "constructors": i.constructors.map((i: EnumValueGen<RawArchetypeType>): EnumValue => { return { ...i, "types": i.types.map(to_archetype_type) } }) } }),
+      records: rci.types.records.map((i: RecordGen<RawArchetypeType>): Record => { return { ...i, "fields": i.fields.map(for_field_omit) } }),
+      events: rci.types.events.map((i: RecordGen<RawArchetypeType>): Record => { return { ...i, "fields": i.fields.map(for_field_omit) } }),
+    },
+    storage: rci.storage.map((i: StorageElementGen<RawArchetypeType>): StorageElement => {
+      return { ...i, "type": to_archetype_type(i.type) }
+    }),
+    storage_type: rci.storage_type,
+    entrypoints: rci.entrypoints.map((i: EntrypointGen<RawArchetypeType>): Entrypoint => { return { ...i, "args": i.args.map(for_function_parameter) } }),
+    getters: rci.getters.map((i: GetterGen<RawArchetypeType>): Getter => { return { ...i, "args": i.args.map(for_function_parameter), "return": to_archetype_type(i.return) } }),
+    views: rci.views.map((i: ViewGen<RawArchetypeType>): View => { return { ...i, "args": i.args.map(for_function_parameter), "return": to_archetype_type(i.return) } }),
+    errors: rci.errors
+  }
+
 }

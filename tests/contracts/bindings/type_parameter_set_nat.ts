@@ -23,12 +23,12 @@ export class Type_parameter_set_nat {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Array<att.Nat>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_set_nat.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_set_nat.arl", {
             res: att.list_to_mich(res, x => {
                 return x.to_mich();
             })
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

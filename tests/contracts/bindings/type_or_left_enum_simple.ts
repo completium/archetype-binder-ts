@@ -64,8 +64,8 @@ export class Type_or_left_enum_simple {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_left_enum_simple.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_left_enum_simple.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: e_enum, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
@@ -79,7 +79,7 @@ export class Type_or_left_enum_simple {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res(): Promise<att.Or<e_enum, att.Nat>> {
+    async get_res(): Promise<att.Or<e_enum, e_enum>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
@@ -91,8 +91,15 @@ export class Type_or_left_enum_simple {
                     return new e_2();
                 }
                 else
-                    return new e_1(); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<e_enum, att.Nat>(value, is_left);
+                    return new e_1(); })(x["0"]) : (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
+                    return new e_3();
+                }
+                else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
+                    return new e_2();
+                }
+                else
+                    return new e_1(); })(x["1"]);
+                return new att.Or<e_enum, e_enum>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

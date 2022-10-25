@@ -23,8 +23,8 @@ export class Type_option_set_bool {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_option_set_bool.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_option_set_bool.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: att.Option<Array<boolean>>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

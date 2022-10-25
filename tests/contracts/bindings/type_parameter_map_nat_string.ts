@@ -31,14 +31,14 @@ export class Type_parameter_map_nat_string {
         att.Nat,
         string
     ]>, params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_parameter_map_nat_string.arl", {
+        const res = await ex.deploy("./tests/contracts/type_parameter_map_nat_string.arl", {
             res: att.list_to_mich(res, x => {
                 const x_key = x[0];
                 const x_value = x[1];
                 return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
             })
         }, params);
-        this.address = address;
+        this.address = res.address;
     }
     async asset_add(i: Array<[
         att.Nat,

@@ -23,8 +23,8 @@ export class Type_set_key_hash {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_set_key_hash.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_set_key_hash.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: Array<att.Key_hash>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

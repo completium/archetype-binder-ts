@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Key_hash): att.Micheline => {
     return i.to_mich();
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("key_hash", []));
 };
 export class Type_getter_key_hash {
@@ -27,7 +27,7 @@ export class Type_getter_key_hash {
     async deploy(params: Partial<ex.Parameters>) {
         const res = await ex.deploy("./tests/contracts/type_getter_key_hash.arl", {}, params);
         this.address = res.address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: att.Key_hash, params: Partial<ex.Parameters>): Promise<att.Key_hash> {
         if (this.address != undefined) {

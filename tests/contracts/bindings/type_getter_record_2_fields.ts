@@ -19,7 +19,7 @@ export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type
 const get_value_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
 }
-export const deploy_get_value_callback = async (): Promise<string> => {
+export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", ["%f_a"]),
         att.prim_annot_to_mich_type("string", ["%f_b"])
@@ -46,7 +46,7 @@ export class Type_getter_record_2_fields {
     async deploy(params: Partial<ex.Parameters>) {
         const res = await ex.deploy("./tests/contracts/type_getter_record_2_fields.arl", {}, params);
         this.address = res.address;
-        this.get_value_callback_address = await deploy_get_value_callback();
+        this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {

@@ -21,8 +21,8 @@ export class Type_option_tez {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_option_tez.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_option_tez.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: att.Option<att.Tez>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

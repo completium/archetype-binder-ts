@@ -25,8 +25,8 @@ export class Type_list_list_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_list_list_string.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_list_list_string.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: Array<Array<string>>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

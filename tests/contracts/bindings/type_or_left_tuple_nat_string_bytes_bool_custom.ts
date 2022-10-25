@@ -28,8 +28,8 @@ export class Type_or_left_tuple_nat_string_bytes_bool_custom {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = await ex.deploy("./tests/contracts/type_or_left_tuple_nat_string_bytes_bool_custom.arl", {}, params);
-        this.address = address;
+        const res = await ex.deploy("./tests/contracts/type_or_left_tuple_nat_string_bytes_bool_custom.arl", {}, params);
+        this.address = res.address;
     }
     async set_value(i: [
         att.Nat,
@@ -64,12 +64,19 @@ export class Type_or_left_tuple_nat_string_bytes_bool_custom {
             att.Bytes
         ],
         boolean
-    ], att.Nat>> {
+    ], [
+        att.Nat,
+        [
+            string,
+            att.Bytes
+        ],
+        boolean
+    ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), [(x => { return x; })(x[Object.keys(x)[1]]), (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
+                const value = is_left ? (x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), [(x => { return x; })(x[Object.keys(x)[1]]), (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; })(x["0"]) : (x => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), [(x => { return x; })(x[Object.keys(x)[1]]), (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])], (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[Object.keys(x)[3]])]; })(x["1"]);
                 return new att.Or<[
                     att.Nat,
                     [
@@ -77,7 +84,14 @@ export class Type_or_left_tuple_nat_string_bytes_bool_custom {
                         att.Bytes
                     ],
                     boolean
-                ], att.Nat>(value, is_left);
+                ], [
+                    att.Nat,
+                    [
+                        string,
+                        att.Bytes
+                    ],
+                    boolean
+                ]>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

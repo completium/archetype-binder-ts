@@ -33,9 +33,12 @@
           "name": "i",
           "type": {
             "node": "list",
-            "arg": [
+            "name": null,
+            "args": [
               {
-                "node": "nat"
+                "node": "nat",
+                "name": null,
+                "args": []
               }
             ]
           }
