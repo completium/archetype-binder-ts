@@ -44,7 +44,7 @@ export class Type_view_map_nat_string {
                 att.Nat,
                 string
             ]> = [];
-            for (let e of mich.entries()) {
+            for (let e of mich.value.entries()) {
                 res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;

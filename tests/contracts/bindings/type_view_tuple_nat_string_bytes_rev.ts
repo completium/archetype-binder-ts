@@ -45,7 +45,7 @@ export class Type_view_tuple_nat_string_bytes_rev {
     ]> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return [[(x => { return new att.Nat(x); })(mich[Object.keys(mich)[0]]), (x => { return x; })(mich[Object.keys(mich)[1]])], (x => { return new att.Bytes(x); })(mich[Object.keys(mich)[2]])];
+            return [[(x => { return new att.Nat(x); })(mich.value[Object.keys(mich.value)[0]]), (x => { return x; })(mich.value[Object.keys(mich.value)[1]])], (x => { return new att.Bytes(x); })(mich.value[Object.keys(mich.value)[2]])];
         }
         throw new Error("Contract not initialised");
     }

@@ -31,7 +31,7 @@ export class Type_view_or_nat_string {
                 const is_left = x["0"] !== undefined;
                 const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
                 return new att.Or<att.Nat, string>(value, is_left);
-            })(mich);
+            })(mich.value);
         }
         throw new Error("Contract not initialised");
     }

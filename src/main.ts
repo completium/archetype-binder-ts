@@ -711,7 +711,10 @@ const view_to_method = (v: View, ci: ContractInterface) => {
         ts.NodeFlags.Const
       )
     )],
-    ...(taquito_to_ts(factory.createIdentifier("mich"), v.return, ci, makeTaquitoEnv()))
+    ...(taquito_to_ts(factory.createPropertyAccessExpression(
+      factory.createIdentifier("mich"),
+      factory.createIdentifier("value")
+    ), v.return, ci, makeTaquitoEnv()))
     ])
 }
 

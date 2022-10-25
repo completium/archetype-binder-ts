@@ -70,10 +70,10 @@ export class Type_view_enum_simple {
     async view_get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            if (mich == "2" || (mich.toNumber ? mich.toNumber() == 2 : false)) {
+            if (mich.value == "2" || (mich.value.toNumber ? mich.value.toNumber() == 2 : false)) {
                 return new e_3();
             }
-            else if (mich == "1" || (mich.toNumber ? mich.toNumber() == 1 : false)) {
+            else if (mich.value == "1" || (mich.value.toNumber ? mich.value.toNumber() == 1 : false)) {
                 return new e_2();
             }
             else

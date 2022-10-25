@@ -27,7 +27,7 @@ export class Type_view_option_bool {
     async view_get_value(i: att.Option<boolean>, params: Partial<ex.Parameters>): Promise<att.Option<boolean>> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Option<boolean>(mich == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(mich));
+            return new att.Option<boolean>(mich.value == null ? null : (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(mich.value));
         }
         throw new Error("Contract not initialised");
     }

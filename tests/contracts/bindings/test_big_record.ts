@@ -262,17 +262,17 @@ export class Test_big_record {
     async view_myview(params: Partial<ex.Parameters>): Promise<anenum> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "myview", view_myview_arg_to_mich(), params);
-            if (mich.C !== undefined) {
+            if (mich.value.C !== undefined) {
                 return new C();
             }
-            else if (mich.B !== undefined) {
+            else if (mich.value.B !== undefined) {
                 return new B(((x): [
                     att.Nat,
                     string
-                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(mich.B));
+                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(mich.value.B));
             }
             else
-                return new A(((x): att.Int => { return new att.Int(x); })(mich.A));
+                return new A(((x): att.Int => { return new att.Int(x); })(mich.value.A));
         }
         throw new Error("Contract not initialised");
     }
