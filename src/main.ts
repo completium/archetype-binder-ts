@@ -1344,22 +1344,24 @@ const get_deploy = (ci: ContractInterface, settings: BindingSettings) => {
           undefined,
           factory.createVariableDeclarationList(
             [factory.createVariableDeclaration(
-              factory.createIdentifier("res"),
+              factory.createIdentifier("address"),
               undefined,
               undefined,
-              factory.createAwaitExpression(factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier("ex"),
-                  factory.createIdentifier(name)
-                ),
-                undefined,
-                [
-                  factory.createStringLiteral(settings.path + ci.name + extension),
-                  storage,
-                  factory.createIdentifier("params")
-                ]
-              ))
-            )],
+              factory.createPropertyAccessExpression(
+                factory.createParenthesizedExpression(factory.createAwaitExpression(factory.createCallExpression(
+                  factory.createPropertyAccessExpression(
+                    factory.createIdentifier("ex"),
+                    factory.createIdentifier(name)
+                  ),
+                  undefined,
+                  [
+                    factory.createStringLiteral(settings.path + ci.name + extension),
+                    storage,
+                    factory.createIdentifier("params")
+                  ]
+                ))),
+                factory.createIdentifier("address")
+              ))],
             NodeFlags.Const | NodeFlags.AwaitContext | NodeFlags.ContextFlags | NodeFlags.TypeExcludesFlags
           )
         ),
@@ -1369,10 +1371,7 @@ const get_deploy = (ci: ContractInterface, settings: BindingSettings) => {
             factory.createIdentifier("address")
           ),
           factory.createToken(SyntaxKind.EqualsToken),
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier("res"),
-            factory.createIdentifier("address")
-          )
+          factory.createIdentifier("address")
         ))
       ].concat(ci.getters.map(x => get_addr_assignement(x.name))),
       true

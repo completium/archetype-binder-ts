@@ -2487,7 +2487,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       case "never": return { node: rty.node }
       case "operation": return { node: rty.node }
       case "option": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
-      case "or": return { node: rty.node, left_type: to_archetype_type(rty.args[0]), right_type: to_archetype_type(rty.args[0]) }
+      case "or": return { node: rty.node, left_type: to_archetype_type(rty.args[0]), right_type: to_archetype_type(rty.args[1]) }
       case "partition": return { node: rty.node, name: force_name(rty.name) }
       case "rational": return { node: rty.node }
       case "record": return { node: rty.node, name: force_name(rty.name) }

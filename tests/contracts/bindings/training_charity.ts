@@ -24,10 +24,10 @@ export class Training_charity {
         throw new Error("Contract not initialised");
     }
     async deploy(owner: att.Address, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/training_charity.arl", {
+        const address = (await ex.deploy("./tests/contracts/training_charity.arl", {
             owner: owner.to_mich()
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async collect(requestedAmount: att.Tez, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

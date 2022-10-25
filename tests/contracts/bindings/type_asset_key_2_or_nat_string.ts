@@ -1,12 +1,12 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: att.Or<att.Nat, att.Nat>, public n: att.Nat) { }
+    constructor(public k: att.Or<att.Nat, string>, public n: att.Nat) { }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.k.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); })), this.n.to_mich()]);
+        return att.pair_to_mich([this.k.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), this.n.to_mich()]);
     }
     equals(v: my_asset_key): boolean {
         return (this.k == v.k && this.k == v.k && this.n.equals(v.n));
@@ -26,8 +26,8 @@ export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_
     att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), ["%k"]),
     att.prim_annot_to_mich_type("nat", ["%n"])
 ], []), att.prim_annot_to_mich_type("string", []));
-const asset_put_arg_to_mich = (i: att.Or<att.Nat, att.Nat>): att.Micheline => {
-    return i.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); }));
+const asset_put_arg_to_mich = (i: att.Or<att.Nat, string>): att.Micheline => {
+    return i.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
 }
 export class Type_asset_key_2_or_nat_string {
     address: string | undefined;
@@ -47,16 +47,16 @@ export class Type_asset_key_2_or_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_asset_key_2_or_nat_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_key_2_or_nat_string.arl", {}, params)).address;
+        this.address = address;
     }
-    async asset_put(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_asset_put_param(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_asset_put_param(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
             return await ex.get_call_param(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }
@@ -72,8 +72,8 @@ export class Type_asset_key_2_or_nat_string {
             for (let e of storage.entries()) {
                 res.push([(x => { return new my_asset_key((x => { return (x => {
                         const is_left = x["0"] !== undefined;
-                        const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                        return new att.Or<att.Nat, att.Nat>(value, is_left);
+                        const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
+                        return new att.Or<att.Nat, string>(value, is_left);
                     })(x); })(x[0]), (x => { return new att.Nat(x); })(x[1])); })(e[0]), (x => { return x; })(e[1])]);
             }
             return res;

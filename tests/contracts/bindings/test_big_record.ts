@@ -190,11 +190,11 @@ export class Test_big_record {
         throw new Error("Contract not initialised");
     }
     async deploy(owner: att.Address, oa: att.Option<att.Address>, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/test_big_record.arl", {
+        const address = (await ex.deploy("./tests/contracts/test_big_record.arl", {
             owner: owner.to_mich(),
             oa: oa.to_mich((x => { return x.to_mich(); }))
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
         this.mygetter_callback_address = (await deploy_mygetter_callback()).address;
     }
     async myentry(arg: all, params: Partial<ex.Parameters>): Promise<any> {

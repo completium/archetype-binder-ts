@@ -21,8 +21,8 @@ export class Type_simple_chest_key {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_simple_chest_key.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_simple_chest_key.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: att.Chest_key, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

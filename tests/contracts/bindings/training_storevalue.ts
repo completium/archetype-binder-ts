@@ -24,10 +24,10 @@ export class Training_storevalue {
         throw new Error("Contract not initialised");
     }
     async deploy(counter: att.Nat, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/training_storevalue.arl", {
+        const address = (await ex.deploy("./tests/contracts/training_storevalue.arl", {
             counter: counter.to_mich()
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async replace(v: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

@@ -27,8 +27,8 @@ export class Type_list_tuple_nat_string_bytes {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_list_tuple_nat_string_bytes.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_list_tuple_nat_string_bytes.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: Array<[
         att.Nat,

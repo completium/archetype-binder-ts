@@ -33,10 +33,10 @@ export class Type_parameter_tuple_nat_string_bytes_rev {
         ],
         att.Bytes
     ], params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string_bytes_rev.arl", {
+        const address = (await ex.deploy("./tests/contracts/type_parameter_tuple_nat_string_bytes_rev.arl", {
             res: att.pair_to_mich([att.pair_to_mich([res[0][0].to_mich(), att.string_to_mich(res[0][1])]), res[1].to_mich()])
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async asset_add(i: [
         [

@@ -30,8 +30,8 @@ export class Type_list_map_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_list_map_nat_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_list_map_nat_string.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: Array<Array<[
         att.Nat,

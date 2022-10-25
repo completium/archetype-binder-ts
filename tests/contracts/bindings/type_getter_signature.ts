@@ -25,8 +25,8 @@ export class Type_getter_signature {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_getter_signature.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_getter_signature.arl", {}, params)).address;
+        this.address = address;
         this.get_value_callback_address = (await deploy_get_value_callback()).address;
     }
     async get_value(i: att.Signature, params: Partial<ex.Parameters>): Promise<att.Signature> {

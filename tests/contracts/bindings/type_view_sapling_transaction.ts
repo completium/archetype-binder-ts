@@ -21,8 +21,8 @@ export class Type_view_sapling_transaction {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_view_sapling_transaction.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_view_sapling_transaction.arl", {}, params)).address;
+        this.address = address;
     }
     async view_get_value(i: att.Sapling_transaction, params: Partial<ex.Parameters>): Promise<att.Sapling_transaction> {
         if (this.address != undefined) {

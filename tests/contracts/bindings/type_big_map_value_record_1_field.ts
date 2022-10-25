@@ -23,8 +23,8 @@ export class Type_big_map_value_record_1_field {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_big_map_value_record_1_field.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_big_map_value_record_1_field.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: r_record, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

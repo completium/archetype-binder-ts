@@ -1,7 +1,7 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const set_value_arg_to_mich = (i: att.Or<att.Nat, att.Nat>): att.Micheline => {
-    return i.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich(); }));
+const set_value_arg_to_mich = (i: att.Or<att.Nat, string>): att.Micheline => {
+    return i.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
 }
 export class Type_big_map_value_or_nat_string {
     address: string | undefined;
@@ -21,30 +21,30 @@ export class Type_big_map_value_or_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_big_map_value_or_nat_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_big_map_value_or_nat_string.arl", {}, params)).address;
+        this.address = address;
     }
-    async set_value(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_set_value_param(i: att.Or<att.Nat, att.Nat>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_set_value_param(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
             return await ex.get_call_param(this.address, "set_value", set_value_arg_to_mich(i), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_res_value(key: att.Nat): Promise<att.Or<att.Nat, att.Nat> | undefined> {
+    async get_res_value(key: att.Nat): Promise<att.Or<att.Nat, string> | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("nat", []), [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), [])), collapsed = true;
             if (data != undefined) {
                 return (x => {
                     const is_left = x["0"] !== undefined;
-                    const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                    return new att.Or<att.Nat, att.Nat>(value, is_left);
+                    const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
+                    return new att.Or<att.Nat, string>(value, is_left);
                 })(data);
             }
             else {
@@ -56,7 +56,7 @@ export class Type_big_map_value_or_nat_string {
     async has_res_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("nat", []), [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

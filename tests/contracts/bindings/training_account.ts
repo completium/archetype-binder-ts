@@ -24,10 +24,10 @@ export class Training_account {
         throw new Error("Contract not initialised");
     }
     async deploy(owner: att.Address, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/training_account.arl", {
+        const address = (await ex.deploy("./tests/contracts/training_account.arl", {
             owner: owner.to_mich()
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async add(value: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

@@ -51,8 +51,8 @@ export class Type_asset_value_3_set_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_asset_value_3_set_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_value_3_set_string.arl", {}, params)).address;
+        this.address = address;
     }
     async asset_put(i: Array<string>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

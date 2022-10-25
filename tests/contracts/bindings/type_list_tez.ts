@@ -23,8 +23,8 @@ export class Type_list_tez {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_list_tez.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_list_tez.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: Array<att.Tez>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

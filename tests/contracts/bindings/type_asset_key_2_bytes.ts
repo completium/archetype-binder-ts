@@ -47,8 +47,8 @@ export class Type_asset_key_2_bytes {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_asset_key_2_bytes.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_key_2_bytes.arl", {}, params)).address;
+        this.address = address;
     }
     async asset_put(i: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

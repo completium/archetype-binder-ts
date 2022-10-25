@@ -66,8 +66,8 @@ export class Type_set_enum_simple {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_set_enum_simple.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_set_enum_simple.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: Array<e_enum>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

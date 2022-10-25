@@ -23,8 +23,8 @@ export class Type_list_bls12_381_g2 {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_list_bls12_381_g2.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_list_bls12_381_g2.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: Array<att.Bls12_381_g2>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

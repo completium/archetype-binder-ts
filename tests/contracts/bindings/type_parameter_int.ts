@@ -21,10 +21,10 @@ export class Type_parameter_int {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Int, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_parameter_int.arl", {
+        const address = (await ex.deploy("./tests/contracts/type_parameter_int.arl", {
             res: res.to_mich()
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async asset_add(i: att.Int, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

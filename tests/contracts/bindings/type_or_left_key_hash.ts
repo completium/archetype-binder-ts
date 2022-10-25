@@ -21,8 +21,8 @@ export class Type_or_left_key_hash {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_or_left_key_hash.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_or_left_key_hash.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: att.Key_hash, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
@@ -36,13 +36,13 @@ export class Type_or_left_key_hash {
         }
         throw new Error("Contract not initialised");
     }
-    async get_res(): Promise<att.Or<att.Key_hash, att.Key_hash>> {
+    async get_res(): Promise<att.Or<att.Key_hash, att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_storage(this.address);
             return (x => {
                 const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Key_hash(x); })(x["0"]) : (x => { return new att.Key_hash(x); })(x["1"]);
-                return new att.Or<att.Key_hash, att.Key_hash>(value, is_left);
+                const value = is_left ? (x => { return new att.Key_hash(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
+                return new att.Or<att.Key_hash, att.Nat>(value, is_left);
             })(storage);
         }
         throw new Error("Contract not initialised");

@@ -21,8 +21,8 @@ export class Type_view_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_view_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_view_string.arl", {}, params)).address;
+        this.address = address;
     }
     async view_get_value(i: string, params: Partial<ex.Parameters>): Promise<string> {
         if (this.address != undefined) {

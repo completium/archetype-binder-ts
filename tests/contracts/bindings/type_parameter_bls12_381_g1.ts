@@ -21,10 +21,10 @@ export class Type_parameter_bls12_381_g1 {
         throw new Error("Contract not initialised");
     }
     async deploy(res: att.Bls12_381_g1, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_parameter_bls12_381_g1.arl", {
+        const address = (await ex.deploy("./tests/contracts/type_parameter_bls12_381_g1.arl", {
             res: res.to_mich()
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async asset_add(i: att.Bls12_381_g1, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

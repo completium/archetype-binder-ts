@@ -21,8 +21,8 @@ export class Training_counter {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/training_counter.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/training_counter.arl", {}, params)).address;
+        this.address = address;
     }
     async increment(params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

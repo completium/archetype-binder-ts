@@ -21,8 +21,8 @@ export class Type_simple_signature {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_simple_signature.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_simple_signature.arl", {}, params)).address;
+        this.address = address;
     }
     async set_value(i: att.Signature, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

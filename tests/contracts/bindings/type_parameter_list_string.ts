@@ -23,12 +23,12 @@ export class Type_parameter_list_string {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Array<string>, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_parameter_list_string.arl", {
+        const address = (await ex.deploy("./tests/contracts/type_parameter_list_string.arl", {
             res: att.list_to_mich(res, x => {
                 return att.string_to_mich(x);
             })
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async asset_add(i: Array<string>, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

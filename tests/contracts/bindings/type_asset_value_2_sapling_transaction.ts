@@ -30,8 +30,8 @@ export class Type_asset_value_2_sapling_transaction {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_asset_value_2_sapling_transaction.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_value_2_sapling_transaction.arl", {}, params)).address;
+        this.address = address;
     }
     async asset_put(i: att.Sapling_transaction, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

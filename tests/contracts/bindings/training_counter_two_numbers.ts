@@ -24,8 +24,8 @@ export class Training_counter_two_numbers {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/training_counter_two_numbers.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/training_counter_two_numbers.arl", {}, params)).address;
+        this.address = address;
     }
     async incrementBoth(inc1: att.Nat, inc2: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

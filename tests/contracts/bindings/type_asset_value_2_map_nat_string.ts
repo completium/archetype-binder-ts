@@ -40,8 +40,8 @@ export class Type_asset_value_2_map_nat_string {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_asset_value_2_map_nat_string.arl", {}, params);
-        this.address = res.address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_value_2_map_nat_string.arl", {}, params)).address;
+        this.address = address;
     }
     async asset_put(i: Array<[
         att.Nat,

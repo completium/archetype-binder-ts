@@ -21,10 +21,10 @@ export class Type_parameter_date {
         throw new Error("Contract not initialised");
     }
     async deploy(res: Date, params: Partial<ex.Parameters>) {
-        const res = await ex.deploy("./tests/contracts/type_parameter_date.arl", {
+        const address = (await ex.deploy("./tests/contracts/type_parameter_date.arl", {
             res: att.date_to_mich(res)
-        }, params);
-        this.address = res.address;
+        }, params)).address;
+        this.address = address;
     }
     async asset_add(i: Date, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
