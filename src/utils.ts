@@ -735,8 +735,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
   }
 
   const TODO = (ty: string, x : ts.Expression): ts.Expression => {
-    return x;
-    // throw new Error(`TODO: ${ty}`)
+    throw new Error(`TODO: ${ty}`)
   }
 
   const class_to_mich = (id: string, args: ts.Expression[]): ts.Expression => {
