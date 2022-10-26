@@ -8,7 +8,20 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "unit",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [],
   "getters": [],
   "views": [
@@ -20,25 +33,30 @@
           "type": {
             "node": "tuple",
             "name": null,
+            "int_value": null,
             "args": [
               {
                 "node": "nat",
                 "name": null,
+                "int_value": null,
                 "args": []
               },
               {
                 "node": "string",
                 "name": null,
+                "int_value": null,
                 "args": []
               },
               {
                 "node": "bytes",
                 "name": null,
+                "int_value": null,
                 "args": []
               },
               {
                 "node": "bool",
                 "name": null,
+                "int_value": null,
                 "args": []
               }
             ]
@@ -48,25 +66,30 @@
       "return": {
         "node": "tuple",
         "name": null,
+        "int_value": null,
         "args": [
           {
             "node": "nat",
             "name": null,
+            "int_value": null,
             "args": []
           },
           {
             "node": "string",
             "name": null,
+            "int_value": null,
             "args": []
           },
           {
             "node": "bytes",
             "name": null,
+            "int_value": null,
             "args": []
           },
           {
             "node": "bool",
             "name": null,
+            "int_value": null,
             "args": []
           }
         ]

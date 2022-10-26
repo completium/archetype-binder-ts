@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "set", args: [{ prim: "unit", annots: [] }], annots: [] };
 const set_value_arg_to_mich = (i: Array<att.Unit>): att.Micheline => {
     return att.list_to_mich(i, x => {
         return att.unit_to_mich();

@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "or", args: [{ prim: "nat", annots: [] }, { prim: "nat", annots: [] }], annots: [] };
 export type r_record = att.Nat;
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 const set_value_arg_to_mich = (i: r_record): att.Micheline => {

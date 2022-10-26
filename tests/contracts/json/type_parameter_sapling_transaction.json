@@ -6,6 +6,7 @@
       "type": {
         "node": "sapling_transaction",
         "name": null,
+        "int_value": 8,
         "args": []
       },
       "const": false,
@@ -20,7 +21,32 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "sapling_transaction",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": null,
+          "int": "8",
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "asset_add",
@@ -30,6 +56,7 @@
           "type": {
             "node": "sapling_transaction",
             "name": null,
+            "int_value": 8,
             "args": []
           }
         }

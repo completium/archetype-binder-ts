@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "bool", annots: [] };
 const get_value_arg_to_mich = (i: boolean): att.Micheline => {
     return att.bool_to_mich(i);
 }

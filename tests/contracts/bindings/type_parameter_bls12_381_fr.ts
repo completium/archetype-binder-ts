@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "bls12_381_fr", annots: [] };
 const asset_add_arg_to_mich = (i: att.Bls12_381_fr): att.Micheline => {
     return i.to_mich();
 }

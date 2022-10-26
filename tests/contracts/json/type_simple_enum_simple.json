@@ -42,13 +42,27 @@
       "type": {
         "node": "enum",
         "name": "e_enum",
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "int",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "set_value",
@@ -58,6 +72,7 @@
           "type": {
             "node": "enum",
             "name": "e_enum",
+            "int_value": null,
             "args": []
           }
         }

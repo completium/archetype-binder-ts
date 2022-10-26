@@ -12,6 +12,7 @@
             "type": {
               "node": "string",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": true
@@ -21,6 +22,7 @@
             "type": {
               "node": "string",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": false
@@ -30,6 +32,7 @@
             "type": {
               "node": "nat",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": false
@@ -157,13 +160,77 @@
       "type": {
         "node": "asset",
         "name": "visitor",
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "map",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%name"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%nbvisits"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "register",
@@ -173,6 +240,7 @@
           "type": {
             "node": "string",
             "name": null,
+            "int_value": null,
             "args": []
           }
         },
@@ -181,6 +249,7 @@
           "type": {
             "node": "string",
             "name": null,
+            "int_value": null,
             "args": []
           }
         }
@@ -194,6 +263,7 @@
           "type": {
             "node": "string",
             "name": null,
+            "int_value": null,
             "args": []
           }
         }

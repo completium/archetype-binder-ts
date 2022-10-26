@@ -1,10 +1,11 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "sapling_transaction", args: [{ int: "8" }], annots: [] };
 const get_value_arg_to_mich = (i: att.Sapling_transaction): att.Micheline => {
     return i.to_mich();
 }
 export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("sapling_transaction(8)", []));
+    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("sapling_transaction", []));
 };
 export class Type_getter_sapling_transaction {
     address: string | undefined;

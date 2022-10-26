@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "nat", annots: ["%v1"] }, { prim: "nat", annots: ["%v2"] }], annots: [] };
 const incrementBoth_arg_to_mich = (inc1: att.Nat, inc2: att.Nat): att.Micheline => {
     return att.pair_to_mich([
         inc1.to_mich(),

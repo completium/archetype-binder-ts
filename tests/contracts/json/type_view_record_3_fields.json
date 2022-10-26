@@ -13,6 +13,7 @@
             "type": {
               "node": "nat",
               "name": null,
+              "int_value": null,
               "args": []
             }
           },
@@ -21,6 +22,7 @@
             "type": {
               "node": "string",
               "name": null,
+              "int_value": null,
               "args": []
             }
           },
@@ -29,6 +31,7 @@
             "type": {
               "node": "bytes",
               "name": null,
+              "int_value": null,
               "args": []
             }
           }
@@ -101,7 +104,20 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "unit",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [],
   "getters": [],
   "views": [
@@ -113,6 +129,7 @@
           "type": {
             "node": "record",
             "name": "r_record",
+            "int_value": null,
             "args": []
           }
         }
@@ -120,6 +137,7 @@
       "return": {
         "node": "record",
         "name": "r_record",
+        "int_value": null,
         "args": []
       },
       "return_michelson": {

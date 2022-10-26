@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "chain_id", annots: [] };
 const get_value_arg_to_mich = (i: att.Chain_id): att.Micheline => {
     return i.to_mich();
 }

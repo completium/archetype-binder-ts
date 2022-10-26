@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "pair", args: [{ prim: "timestamp", annots: [] }, { prim: "string", annots: [] }], annots: [] }], annots: [] };
 const set_value_arg_to_mich = (i: Date): att.Micheline => {
     return att.date_to_mich(i);
 }

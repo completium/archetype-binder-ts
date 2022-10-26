@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "map", args: [{ prim: "nat", annots: [] }, { prim: "pair", args: [{ prim: "string", annots: ["%s"] }, { prim: "int", annots: ["%v"] }], annots: [] }], annots: [] };
 export enum e_enum_types {
     e_1 = "e_1",
     e_2 = "e_2",
@@ -108,7 +109,7 @@ export class Type_asset_value_3_enum_simple {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage;
         }
         throw new Error("Contract not initialised");
     }

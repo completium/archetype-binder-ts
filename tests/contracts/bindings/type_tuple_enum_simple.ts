@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "pair", args: [{ prim: "int", annots: [] }, { prim: "string", annots: [] }], annots: [] }], annots: [] };
 export enum e_enum_types {
     e_1 = "e_1",
     e_2 = "e_2",

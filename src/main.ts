@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, MichelsonType, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMichelsonType, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, to_michelson_type, MTPrimSimple, MTPrimSingle, MTPrimSingleInt, MTPrimPair, MTPrimMulti, MTInt } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -54,7 +54,7 @@ const make_mich_to_entity_decl = (name: string, body: ts.Statement[]) => {
     ))
 }
 
-const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>, ci : ContractInterface) => {
+const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
   return make_mich_to_entity_decl(name, [
     factory.createVariableStatement(
       undefined,
@@ -126,7 +126,7 @@ const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "
   ])
 }
 
-const mich_to_asset_value_decl = (a: Asset, ci : ContractInterface) => {
+const mich_to_asset_value_decl = (a: Asset, ci: ContractInterface) => {
   const fields_no_key = a.fields.filter(x => !x.is_key)
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
@@ -143,7 +143,7 @@ const mich_to_asset_value_decl = (a: Asset, ci : ContractInterface) => {
     ))])
   }
 }
-const mich_to_record_decl = (r: Record, ci : ContractInterface) => {
+const mich_to_record_decl = (r: Record, ci: ContractInterface) => {
   if (r.fields.length > 1) {
     return fields_to_mich_to_entity_decl(r.name, r.fields, ci)
   } else {
@@ -166,7 +166,7 @@ const field_to_cmp_body = (field: Omit<Field, "is_key">, arg_a: ts.Expression, a
   return make_cmp_body(a, b, field.type)
 }
 
-const entity_to_mich_type_decl = (name: string, mt: MichelsonType) => {
+const entity_to_mich_type_decl = (name: string, mt: RawMichelsonType) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -204,11 +204,159 @@ const storage_to_entry = (ci: ContractInterface): Entrypoint => {
   }
 }
 
+const generate_storage_type = (ci: ContractInterface) => {
+  const storage_type: MichelsonType = to_michelson_type(ci.storage_type.value);
+  const mk_simple = (i: MTPrimSimple): ts.Expression => {
+    return factory.createObjectLiteralExpression(
+      [factory.createPropertyAssignment(
+        factory.createIdentifier("prim"),
+        factory.createStringLiteral(i.prim)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("annots"),
+        factory.createArrayLiteralExpression(
+          i.annots.map(x => factory.createStringLiteral(x)),
+          false
+        )
+      )],
+      false
+    )
+  }
+
+  const mk_single = (i: MTPrimSingle | MTPrimSingleInt, arg: ts.Expression): ts.Expression => {
+    return factory.createObjectLiteralExpression(
+      [factory.createPropertyAssignment(
+        factory.createIdentifier("prim"),
+        factory.createStringLiteral(i.prim)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("args"),
+        factory.createArrayLiteralExpression([arg], false)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("annots"),
+        factory.createArrayLiteralExpression(
+          i.annots.map(x => factory.createStringLiteral(x)),
+          false
+        )
+      )],
+      false
+    )
+  }
+
+  const mk_pair = (i: MTPrimPair, arg1: ts.Expression, arg2: ts.Expression): ts.Expression => {
+    return factory.createObjectLiteralExpression(
+      [factory.createPropertyAssignment(
+        factory.createIdentifier("prim"),
+        factory.createStringLiteral(i.prim)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("args"),
+        factory.createArrayLiteralExpression([arg1, arg2], false)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("annots"),
+        factory.createArrayLiteralExpression(
+          i.annots.map(x => factory.createStringLiteral(x)),
+          false
+        )
+      )],
+      false
+    )
+  }
+
+  const mk_multi = (i: MTPrimMulti, args: ts.Expression[]): ts.Expression => {
+    return factory.createObjectLiteralExpression(
+      [factory.createPropertyAssignment(
+        factory.createIdentifier("prim"),
+        factory.createStringLiteral(i.prim)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("args"),
+        factory.createArrayLiteralExpression(args, false)
+      ),
+      factory.createPropertyAssignment(
+        factory.createIdentifier("annots"),
+        factory.createArrayLiteralExpression(
+          i.annots.map(x => factory.createStringLiteral(x)),
+          false
+        )
+      )],
+      false
+    )
+  }
+
+  const mk_int = (i: MTInt): ts.Expression => {
+    return factory.createObjectLiteralExpression(
+      [factory.createPropertyAssignment(
+        factory.createIdentifier("int"),
+        factory.createStringLiteral(i.int)
+      )],
+      false
+    )
+  }
+
+  const mk_type_expression = (mt: MichelsonType) : ts.Expression => {
+    switch (mt.prim) {
+      case "address": return mk_simple(mt)
+      case "big_map": return mk_pair(mt, mk_type_expression(mt.args[0]), mk_type_expression(mt.args[1]))
+      case "bls12_381_fr": return mk_simple(mt)
+      case "bls12_381_g1": return mk_simple(mt)
+      case "bls12_381_g2": return mk_simple(mt)
+      case "bool": return mk_simple(mt)
+      case "bytes": return mk_simple(mt)
+      case "chain_id": return mk_simple(mt)
+      case "chest_key": return mk_simple(mt)
+      case "chest": return mk_simple(mt)
+      case "contract": return mk_single(mt, mk_type_expression(mt.args[0]))
+      case "int": return mk_simple(mt)
+      case "key_hash": return mk_simple(mt)
+      case "key": return mk_simple(mt)
+      case "lambda": return mk_pair(mt, mk_type_expression(mt.args[0]), mk_type_expression(mt.args[1]))
+      case "list": return mk_single(mt, mk_type_expression(mt.args[0]))
+      case "map": return mk_pair(mt, mk_type_expression(mt.args[0]), mk_type_expression(mt.args[1]))
+      case "mutez": return mk_simple(mt)
+      case "nat": return mk_simple(mt)
+      case "never": return mk_simple(mt)
+      case "operation": return mk_simple(mt)
+      case "option": return mk_single(mt, mk_type_expression(mt.args[0]))
+      case "or": return mk_pair(mt, mk_type_expression(mt.args[0]), mk_type_expression(mt.args[1]))
+      case "pair": return mk_multi(mt, mt.args.map(mk_type_expression))
+      case "sapling_state": return mk_single(mt, mk_int(mt.args[0]))
+      case "sapling_transaction": return mk_single(mt, mk_int(mt.args[0]))
+      case "set": return mk_single(mt, mk_type_expression(mt.args[0]))
+      case "signature": return mk_simple(mt)
+      case "string": return mk_simple(mt)
+      case "ticket": return mk_single(mt, mk_type_expression(mt.args[0]))
+      case "timestamp": return mk_simple(mt)
+      case "tx_rollup_l2_address": return mk_simple(mt)
+      case "unit": return mk_simple(mt)
+    }
+  }
+  return [factory.createVariableStatement(
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(
+        factory.createIdentifier("storage_type"),
+        undefined,
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("att"),
+            factory.createIdentifier("MichelineType")
+          ),
+          undefined
+        ),
+        mk_type_expression(storage_type)
+      )],
+      ts.NodeFlags.Const
+    )
+  )]
+}
+
 const generate_storage_utils = (ci: ContractInterface) => {
-  if (ci.storage_type?.value == undefined) return []
   return [
     // generate storage michelson type
-    entity_to_mich_type_decl("storage_mich_stype", ci.storage_type?.value),
+    entity_to_mich_type_decl("storage_mich_stype", ci.storage_type.value),
     // generate storage literal maker
     entity_to_mich_decl("storage", ci.storage, storage_to_mich(ci.storage_type.value, ci.storage))
   ]
@@ -255,7 +403,7 @@ const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
   )
 }
 
-const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>) => {
+const entityToInterfaceDecl = (name: string, mt: RawMichelsonType, fields: Array<Omit<Field, "is_key">>) => {
   if (fields.length == 1) {
     const field = fields[0];
     return factory.createTypeAliasDeclaration(
@@ -382,7 +530,7 @@ const assetContainerToTypeDecl = (a: Asset) => {
     ))
 }
 
-const entityToMichDecl = (entity_postfix: string, aname: string, mt: MichelsonType, fields: Array<Partial<Field>>) => {
+const entityToMichDecl = (entity_postfix: string, aname: string, mt: RawMichelsonType, fields: Array<Partial<Field>>) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -818,8 +966,8 @@ const get_storage_identifier = (selt: StorageElement, ci: ContractInterface) => 
     root
 }
 
-const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
-  const root : ts.Expression = factory.createIdentifier("storage")
+const get_data_storage_elt = (selt: StorageElement): ts.Expression => {
+  const root: ts.Expression = factory.createIdentifier("storage")
 
   const res = selt.path.reduce((acc, n) => {
     return factory.createElementAccessExpression(
@@ -828,7 +976,8 @@ const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
         factory.createIdentifier("args")
       ),
       factory.createNumericLiteral(n)
-    ) }, root);
+    )
+  }, root);
   res;
   return res
 }
@@ -1993,6 +2142,8 @@ const view_to_getter = (v: View): Getter => {
 const get_nodes = (contract_interface: ContractInterface, settings: BindingSettings): (ts.ImportDeclaration | ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeAliasDeclaration | ts.VariableDeclarationList | ts.VariableStatement | ts.EnumDeclaration)[] => {
   return [
     ...(get_imports(contract_interface, settings)),
+    // storage_type
+    ...(generate_storage_type(contract_interface)),
     // storage
     ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
     // events

@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "map", args: [{ prim: "pair", args: [{ prim: "key_hash", annots: [] }, { prim: "nat", annots: [] }], annots: [] }, { prim: "string", annots: [] }], annots: [] };
 export class my_asset_key implements att.ArchetypeType {
     constructor(public k: att.Key_hash, public n: att.Nat) { }
     toString(): string {
@@ -65,7 +66,7 @@ export class Type_asset_key_2_key_hash {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage;
         }
         throw new Error("Contract not initialised");
     }

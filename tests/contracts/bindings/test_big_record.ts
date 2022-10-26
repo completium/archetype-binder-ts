@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "address", annots: ["%owner"] }, { prim: "pair", args: [{ prim: "option", args: [{ prim: "address", annots: [] }], annots: ["%oa"] }, { prim: "pair", args: [{ prim: "int", annots: ["%s"] }, { prim: "pair", args: [{ prim: "option", args: [{ prim: "nat", annots: [] }], annots: ["%o"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "int", annots: [] }], annots: ["%l"] }, { prim: "pair", args: [{ prim: "map", args: [{ prim: "nat", annots: [] }, { prim: "pair", args: [{ prim: "string", annots: [] }, { prim: "int", annots: [] }], annots: [] }], annots: ["%m"] }, { prim: "pair", args: [{ prim: "set", args: [{ prim: "nat", annots: [] }], annots: ["%s1"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "nat", annots: ["%f1"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f2"] }, { prim: "mutez", annots: ["%f3"] }], annots: [] }], annots: [] }, { prim: "pair", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "int", annots: [] }, { prim: "nat", annots: [] }], annots: ["%f4"] }, { prim: "bool", annots: ["%f5"] }], annots: [] }, { prim: "pair", args: [{ prim: "bytes", annots: ["%f6"] }, { prim: "pair", args: [{ prim: "string", annots: ["%f7"] }, { prim: "pair", args: [{ prim: "timestamp", annots: ["%f8"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f9"] }, { prim: "pair", args: [{ prim: "address", annots: ["%f10"] }, { prim: "pair", args: [{ prim: "option", args: [{ prim: "nat", annots: [] }], annots: ["%f11"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "string", annots: [] }], annots: ["%f12"] }, { prim: "set", args: [{ prim: "pair", args: [{ prim: "string", annots: [] }, { prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "int", annots: [] }], annots: [] }], annots: [] }], annots: ["%f13"] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: ["%l1"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "list", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "nat", annots: ["%f1"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f2"] }, { prim: "mutez", annots: ["%f3"] }], annots: [] }], annots: [] }, { prim: "pair", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "int", annots: [] }, { prim: "nat", annots: [] }], annots: ["%f4"] }, { prim: "bool", annots: ["%f5"] }], annots: [] }, { prim: "pair", args: [{ prim: "bytes", annots: ["%f6"] }, { prim: "pair", args: [{ prim: "string", annots: ["%f7"] }, { prim: "pair", args: [{ prim: "timestamp", annots: ["%f8"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f9"] }, { prim: "pair", args: [{ prim: "address", annots: ["%f10"] }, { prim: "pair", args: [{ prim: "option", args: [{ prim: "nat", annots: [] }], annots: ["%f11"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "string", annots: [] }], annots: ["%f12"] }, { prim: "set", args: [{ prim: "pair", args: [{ prim: "string", annots: [] }, { prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "int", annots: [] }], annots: [] }], annots: [] }], annots: ["%f13"] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: ["%l2"] }, { prim: "pair", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "nat", annots: ["%f1"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f2"] }, { prim: "mutez", annots: ["%f3"] }], annots: [] }], annots: [] }, { prim: "pair", args: [{ prim: "pair", args: [{ prim: "pair", args: [{ prim: "int", annots: [] }, { prim: "nat", annots: [] }], annots: ["%f4"] }, { prim: "bool", annots: ["%f5"] }], annots: [] }, { prim: "pair", args: [{ prim: "bytes", annots: ["%f6"] }, { prim: "pair", args: [{ prim: "string", annots: ["%f7"] }, { prim: "pair", args: [{ prim: "timestamp", annots: ["%f8"] }, { prim: "pair", args: [{ prim: "int", annots: ["%f9"] }, { prim: "pair", args: [{ prim: "address", annots: ["%f10"] }, { prim: "pair", args: [{ prim: "option", args: [{ prim: "nat", annots: [] }], annots: ["%f11"] }, { prim: "pair", args: [{ prim: "list", args: [{ prim: "string", annots: [] }], annots: ["%f12"] }, { prim: "set", args: [{ prim: "pair", args: [{ prim: "string", annots: [] }, { prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "int", annots: [] }], annots: [] }], annots: [] }], annots: ["%f13"] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: ["%r"] }, { prim: "pair", args: [{ prim: "set", args: [{ prim: "address", annots: [] }], annots: ["%just_a_key"] }, { prim: "pair", args: [{ prim: "map", args: [{ prim: "address", annots: [] }, { prim: "nat", annots: [] }], annots: ["%visitor"] }, { prim: "pair", args: [{ prim: "map", args: [{ prim: "address", annots: [] }, { prim: "pair", args: [{ prim: "nat", annots: ["%nb_visits2"] }, { prim: "timestamp", annots: ["%last"] }], annots: [] }], annots: ["%visitor_2"] }, { prim: "pair", args: [{ prim: "or", args: [{ prim: "int", annots: ["%A"] }, { prim: "or", args: [{ prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "string", annots: [] }], annots: ["%B"] }, { prim: "unit", annots: ["%C"] }], annots: [] }], annots: ["%a_value"] }, { prim: "pair", args: [{ prim: "or", args: [{ prim: "int", annots: ["%A"] }, { prim: "or", args: [{ prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "string", annots: [] }], annots: ["%B"] }, { prim: "unit", annots: ["%C"] }], annots: [] }], annots: ["%b_value"] }, { prim: "or", args: [{ prim: "int", annots: ["%A"] }, { prim: "or", args: [{ prim: "pair", args: [{ prim: "nat", annots: [] }, { prim: "string", annots: [] }], annots: ["%B"] }, { prim: "unit", annots: ["%C"] }], annots: [] }], annots: ["%c_value"] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] }], annots: [] };
 export enum anenum_types {
     A = "A",
     B = "B",
@@ -266,28 +267,28 @@ export class Test_big_record {
     async get_oa(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage.args[1], x => { return att.mich_to_address(x); });
+            return att.mich_to_option(storage.args[1].args[0], x => { return att.mich_to_address(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_s(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int(storage.args[2]);
+            return att.mich_to_int(storage.args[1].args[1].args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_o(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage.args[3], x => { return att.mich_to_nat(x); });
+            return att.mich_to_option(storage.args[1].args[1].args[1].args[0], x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l(): Promise<Array<att.Int>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage.args[4], x => { return att.mich_to_int(x); });
+            return att.mich_to_list(storage.args[1].args[1].args[1].args[1].args[0], x => { return att.mich_to_int(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -300,7 +301,7 @@ export class Test_big_record {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage.args[5], (x, y) => [att.mich_to_nat(x), (p => {
+            return att.mich_to_map(storage.args[1].args[1].args[1].args[1].args[1].args[0], (x, y) => [att.mich_to_nat(x), (p => {
                     const p0 = (p as att.Mpair);
                     return [att.mich_to_string(p0.args[0]), att.mich_to_int(p0.args[1])];
                 })(y)]);
@@ -310,70 +311,70 @@ export class Test_big_record {
     async get_s1(): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage.args[6], x => { return att.mich_to_nat(x); });
+            return att.mich_to_list(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[0], x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l1(): Promise<Array<all>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage.args[7], x => { return mich_to_all(x, collapsed); });
+            return att.mich_to_list(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0], x => { return mich_to_all(x, collapsed); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l2(): Promise<Array<Array<all>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage.args[8], x => { return att.mich_to_list(x, x => { return mich_to_all(x, collapsed); }); });
+            return att.mich_to_list(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0], x => { return att.mich_to_list(x, x => { return mich_to_all(x, collapsed); }); });
         }
         throw new Error("Contract not initialised");
     }
     async get_r(): Promise<all> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_all(storage.args[9], collapsed);
+            return mich_to_all(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0], collapsed);
         }
         throw new Error("Contract not initialised");
     }
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0];
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0];
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor_2(): Promise<visitor_2_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0];
         }
         throw new Error("Contract not initialised");
     }
     async get_a_value(): Promise<anenum> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_anenum(storage.args[13]);
+            return mich_to_anenum(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_b_value(): Promise<anenum> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_anenum(storage.args[14]);
+            return mich_to_anenum(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_c_value(): Promise<anenum> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_anenum(storage.args[15]);
+            return mich_to_anenum(storage.args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1].args[1]);
         }
         throw new Error("Contract not initialised");
     }

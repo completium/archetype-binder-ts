@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "address", annots: ["%owner"] }, { prim: "pair", args: [{ prim: "int", annots: ["%total"] }, { prim: "timestamp", annots: ["%lastSubDate"] }], annots: [] }], annots: [] };
 const add_arg_to_mich = (value: att.Nat): att.Micheline => {
     return value.to_mich();
 }
@@ -63,14 +64,14 @@ export class Training_account {
     async get_total(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int(storage.args[1]);
+            return att.mich_to_int(storage.args[1].args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_lastSubDate(): Promise<Date> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_date(storage.args[2]);
+            return att.mich_to_date(storage.args[1].args[1]);
         }
         throw new Error("Contract not initialised");
     }

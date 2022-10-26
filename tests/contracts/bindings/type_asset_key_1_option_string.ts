@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "map", args: [{ prim: "option", args: [{ prim: "string", annots: [] }], annots: [] }, { prim: "string", annots: [] }], annots: [] };
 export type my_asset_key = att.Option<string>;
 export const my_asset_key_mich_type: att.MichelineType = att.option_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []);
 export type my_asset_value = string;
@@ -48,7 +49,7 @@ export class Type_asset_key_1_option_string {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage;
         }
         throw new Error("Contract not initialised");
     }

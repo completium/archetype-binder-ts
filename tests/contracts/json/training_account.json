@@ -6,6 +6,7 @@
       "type": {
         "node": "address",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "const": false,
@@ -27,11 +28,13 @@
       "type": {
         "node": "int",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": [
-        1
+        1,
+        0
       ]
     },
     {
@@ -39,15 +42,82 @@
       "type": {
         "node": "date",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": [
-        2
+        1,
+        1
       ]
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "pair",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%owner"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "int",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%total"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "timestamp",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%lastSubDate"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "add",
@@ -57,6 +127,7 @@
           "type": {
             "node": "nat",
             "name": null,
+            "int_value": null,
             "args": []
           }
         }

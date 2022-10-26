@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "sapling_transaction", args: [{ int: "8" }], annots: [] };
 const asset_add_arg_to_mich = (i: att.Sapling_transaction): att.Micheline => {
     return i.to_mich();
 }

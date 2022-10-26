@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "map", args: [{ prim: "string", annots: [] }, { prim: "pair", args: [{ prim: "string", annots: ["%name"] }, { prim: "nat", annots: ["%nbvisits"] }], annots: [] }], annots: [] };
 export type visitor_key = string;
 export const visitor_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("string", []);
 export class visitor_value implements att.ArchetypeType {
@@ -83,7 +84,7 @@ export class Training_visitors {
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.TODO_asset();
+            return storage;
         }
         throw new Error("Contract not initialised");
     }

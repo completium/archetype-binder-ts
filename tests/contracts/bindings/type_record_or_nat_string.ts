@@ -1,5 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
+export const storage_type: att.MichelineType = { prim: "pair", args: [{ prim: "nat", annots: ["%n"] }, { prim: "pair", args: [{ prim: "or", args: [{ prim: "nat", annots: [] }, { prim: "string", annots: [] }], annots: ["%v"] }, { prim: "string", annots: ["%s"] }], annots: [] }], annots: [] };
 export class my_record implements att.ArchetypeType {
     constructor(public n: att.Nat, public v: att.Or<att.Nat, string>, public s: string) { }
     toString(): string {
