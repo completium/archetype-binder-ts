@@ -1,7 +1,6 @@
-import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
-import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
+import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 import { BindingSettings, Language, Target, generate_binding } from '../src/main'
-import { ContractInterface } from '../src/utils'
+import { RawContractInterface } from '../src/utils'
 
 const archetype = require('@completium/archetype');
 const assert = require('assert')
@@ -204,14 +203,14 @@ const get_binding = async (filename: string) => {
   const json = await archetype.compile(path_contract, {
     contract_interface: true
   });
-  let ci: ContractInterface = JSON.parse(json);
-  fs.writeFileSync(path_contracts + 'json/' + filename.replace('.arl', '.json'), JSON.stringify(ci, null, 2))
+  let rci: RawContractInterface = JSON.parse(json);
+  fs.writeFileSync(path_contracts + 'json/' + filename.replace('.arl', '.json'), JSON.stringify(rci, null, 2))
   const settings: BindingSettings = {
     language: Language.Archetype,
     target: Target.Experiment,
     path: path_contracts
   }
-  const output = generate_binding(ci, settings);
+  const output = generate_binding(rci, settings);
   fs.writeFileSync(path_contracts + 'bindings/' + filename.replace('.arl', '.ts'), output)
 }
 
@@ -220,14 +219,14 @@ const get_binding_michelson = async (filename: string) => {
   const json = await archetype.compile(path_contract, {
     contract_interface_michelson: true
   });
-  let ci: ContractInterface = JSON.parse(json);
-  fs.writeFileSync(path_contracts + 'json/' + filename.replace('.tz', '.json'), JSON.stringify(ci, null, 2))
+  const rci: RawContractInterface = JSON.parse(json);
+  fs.writeFileSync(path_contracts + 'json/' + filename.replace('.tz', '.json'), JSON.stringify(rci, null, 2))
   const settings: BindingSettings = {
     language: Language.Michelson,
     target: Target.Experiment,
     path: path_contracts
   }
-  const output = generate_binding(ci, settings);
+  const output = generate_binding(rci, settings);
   fs.writeFileSync(path_contracts + 'bindings/' + filename.replace('.tz', '.ts'), output)
 }
 
