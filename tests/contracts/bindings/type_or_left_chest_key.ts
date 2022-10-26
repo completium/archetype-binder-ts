@@ -38,12 +38,8 @@ export class Type_or_left_chest_key {
     }
     async get_res(): Promise<att.Or<att.Chest_key, att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Chest_key(x); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<att.Chest_key, att.Nat>(value, is_left);
-            })(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_or(storage, x => { return att.mich_to_chest_key(x); }, x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }

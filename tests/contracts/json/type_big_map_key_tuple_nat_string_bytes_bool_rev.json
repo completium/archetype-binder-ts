@@ -59,7 +59,8 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": []
     }
   ],
   "storage_type": null,

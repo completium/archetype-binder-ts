@@ -62,18 +62,14 @@ export class Type_or_left_tuple_nat_string_bytes_rev {
         att.Bytes
     ], att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return [[(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])], (x => { return new att.Bytes(x); })(x[Object.keys(x)[2]])]; })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<[
-                    [
-                        att.Nat,
-                        string
-                    ],
-                    att.Bytes
-                ], att.Nat>(value, is_left);
-            })(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_or(storage, x => { return (p => {
+                const p0 = (p as att.Mpair);
+                return [(p => {
+                        const p0 = (p as att.Mpair);
+                        return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
+                    })(p0.args[0]), att.mich_to_bytes(p0.args[1])];
+            })(x); }, x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }

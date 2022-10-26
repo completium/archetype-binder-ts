@@ -56,21 +56,21 @@ export class Training_account {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address(storage.owner);
+            return att.mich_to_address(storage.args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_total(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int(storage.total);
+            return att.mich_to_int(storage.args[1]);
         }
         throw new Error("Contract not initialised");
     }
     async get_lastSubDate(): Promise<Date> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_date(storage.lastSubDate);
+            return att.mich_to_date(storage.args[2]);
         }
         throw new Error("Contract not initialised");
     }

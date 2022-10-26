@@ -54,20 +54,8 @@ export class Type_or_right_map_nat_string {
         string
     ]>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { let res: Array<[
-                    att.Nat,
-                    string
-                ]> = []; for (let e of x.entries()) {
-                    res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                } return res; })(x["1"]);
-                return new att.Or<att.Nat, Array<[
-                    att.Nat,
-                    string
-                ]>>(value, is_left);
-            })(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_map(x, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]); });
         }
         throw new Error("Contract not initialised");
     }

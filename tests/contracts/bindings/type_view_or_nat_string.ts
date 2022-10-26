@@ -27,11 +27,7 @@ export class Type_view_or_nat_string {
     async view_get_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.Or<att.Nat, string>> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Nat(x); })(x["0"]) : (x => { return x; })(x["1"]);
-                return new att.Or<att.Nat, string>(value, is_left);
-            })(mich.value);
+            return att.mich_to_or(mich.value, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_string(x); });
         }
         throw new Error("Contract not initialised");
     }

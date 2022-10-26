@@ -818,8 +818,23 @@ const get_storage_identifier = (selt: StorageElement, ci: ContractInterface) => 
     root
 }
 
+const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
+  const root : ts.Expression = factory.createIdentifier("storage")
+
+  const res = selt.path.reduce((acc, n) => {
+    return factory.createElementAccessExpression(
+      factory.createPropertyAccessExpression(
+        acc,
+        factory.createIdentifier("args")
+      ),
+      factory.createNumericLiteral(n)
+    ) }, root);
+  res;
+  return res
+}
+
 const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
-  const elt = get_storage_identifier(selt, ci);
+  const elt = get_data_storage_elt(selt);
   return storage_elt_to_getter_skeleton(
     "get_",
     selt.name,
@@ -1276,7 +1291,8 @@ const storage_elt_to_param = (selt: StorageElement): ContractParameter => {
     name: selt.name,
     type: selt.type,
     const: false,
-    default: null
+    default: null,
+    path: selt.path
   }
 }
 

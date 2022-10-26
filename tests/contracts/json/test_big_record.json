@@ -9,7 +9,10 @@
         "args": []
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": [
+        0
+      ]
     },
     {
       "name": "oa",
@@ -25,7 +28,10 @@
         ]
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": [
+        1
+      ]
     }
   ],
   "types": {
@@ -1009,7 +1015,10 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        2
+      ]
     },
     {
       "name": "o",
@@ -1024,7 +1033,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        3
+      ]
     },
     {
       "name": "l",
@@ -1039,7 +1051,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        4
+      ]
     },
     {
       "name": "m",
@@ -1070,7 +1085,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        5
+      ]
     },
     {
       "name": "s1",
@@ -1085,7 +1103,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        6
+      ]
     },
     {
       "name": "l1",
@@ -1100,7 +1121,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        7
+      ]
     },
     {
       "name": "l2",
@@ -1121,7 +1145,10 @@
           }
         ]
       },
-      "const": false
+      "const": false,
+      "path": [
+        8
+      ]
     },
     {
       "name": "r",
@@ -1130,7 +1157,10 @@
         "name": "all",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        9
+      ]
     },
     {
       "name": "just_a_key",
@@ -1139,7 +1169,10 @@
         "name": "just_a_key",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        10
+      ]
     },
     {
       "name": "visitor",
@@ -1148,7 +1181,10 @@
         "name": "visitor",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        11
+      ]
     },
     {
       "name": "visitor_2",
@@ -1157,7 +1193,10 @@
         "name": "visitor_2",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        12
+      ]
     },
     {
       "name": "a_value",
@@ -1166,7 +1205,10 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        13
+      ]
     },
     {
       "name": "b_value",
@@ -1175,7 +1217,10 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        14
+      ]
     },
     {
       "name": "c_value",
@@ -1184,7 +1229,10 @@
         "name": "anenum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        15
+      ]
     }
   ],
   "storage_type": null,

@@ -38,12 +38,8 @@ export class Type_or_left_rational {
     }
     async get_res(): Promise<att.Or<att.Rational, att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return (x => {
-                const is_left = x["0"] !== undefined;
-                const value = is_left ? (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x["0"]) : (x => { return new att.Nat(x); })(x["1"]);
-                return new att.Or<att.Rational, att.Nat>(value, is_left);
-            })(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_or(storage, x => { return att.mich_to_rational(x); }, x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }

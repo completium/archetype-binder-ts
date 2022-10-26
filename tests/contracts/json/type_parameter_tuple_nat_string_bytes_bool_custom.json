@@ -36,7 +36,8 @@
         ]
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": []
     }
   ],
   "types": {

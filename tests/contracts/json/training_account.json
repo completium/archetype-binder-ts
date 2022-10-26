@@ -9,7 +9,10 @@
         "args": []
       },
       "const": false,
-      "default": null
+      "default": null,
+      "path": [
+        0
+      ]
     }
   ],
   "types": {
@@ -26,7 +29,10 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        1
+      ]
     },
     {
       "name": "lastSubDate",
@@ -35,7 +41,10 @@
         "name": null,
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": [
+        2
+      ]
     }
   ],
   "storage_type": null,

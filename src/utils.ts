@@ -60,6 +60,7 @@ type ContractParameterGen<T> = {
   "type": T
   "const": boolean
   "default": string | null
+  "path": Array<number>
 }
 export type ContractParameter = ContractParameterGen<ArchetypeType>
 
@@ -110,6 +111,7 @@ type StorageElementGen<T> = {
   "name": string
   "type": T
   "const": boolean
+  "path": Array<number>
 }
 export type StorageElement = StorageElementGen<ArchetypeType>
 
@@ -763,35 +765,35 @@ const mich_to_tuple = (types: Array<ArchetypeType>, arg: ts.Expression) => {
   )
 }
 
-const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atype: ArchetypeType) => {
+const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atypes: ArchetypeType[]) => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
       factory.createIdentifier("att"),
       factory.createIdentifier(fname)
     ),
     undefined,
-    [
-      arg,
-      factory.createArrowFunction(
-        undefined,
-        undefined,
-        [factory.createParameterDeclaration(
+    [arg].concat(
+      atypes.map(atype => {
+        return factory.createArrowFunction(
           undefined,
           undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("x"),
+            undefined,
+            undefined,
+            undefined
+          )],
           undefined,
-          factory.createIdentifier("x"),
-          undefined,
-          undefined,
-          undefined
-        )],
-        undefined,
-        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-        factory.createBlock(
-          [factory.createReturnStatement(mich_to_field_decl(atype, factory.createIdentifier("x"), 0, 0))],
-          false
+          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+          factory.createBlock(
+            [factory.createReturnStatement(mich_to_field_decl(atype, factory.createIdentifier("x"), 0, 0))],
+            false
+          )
         )
-      )
-    ]
+      }))
   )
 }
 
@@ -894,13 +896,13 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
     case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
     case "key": return class_to_mich("mich_to_key", [arg]);
     case "lambda": return TODO("lambda");
-    case "list": return contained_type_to_field_decl("mich_to_list", arg, atype.arg)
+    case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
     case "map": return map_mich_to_ts(atype);
     case "nat": return class_to_mich("mich_to_nat", [arg]);
     case "never": return TODO("never");
     case "operation": return TODO("operation");
-    case "option": return contained_type_to_field_decl("mich_to_option", arg, atype.arg);
-    case "or": return TODO("or");
+    case "option": return contained_type_to_field_decl("mich_to_option", arg, [atype.arg]);
+    case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
     case "partition": return TODO("partition");
     case "rational": return class_to_mich("mich_to_rational", [arg]);
     case "record": {
@@ -934,7 +936,7 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
     }
     case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
     case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
-    case "set": return contained_type_to_field_decl("mich_to_list", arg, atype.arg)
+    case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
     case "signature": return class_to_mich("mich_to_signature", [arg]);
     case "state": return TODO("state");
     case "string": return class_to_mich("mich_to_string", [arg]);

@@ -44,7 +44,8 @@
         "name": "e_enum",
         "args": []
       },
-      "const": false
+      "const": false,
+      "path": []
     }
   ],
   "storage_type": null,
