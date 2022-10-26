@@ -82,15 +82,8 @@ export class Training_visitors {
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                string,
-                visitor_value
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return x; })(e[0]), (x => { return new visitor_value((x => { return x; })(x.name), (x => { return new att.Nat(x); })(x.nbvisits)); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.TODO_asset();
         }
         throw new Error("Contract not initialised");
     }

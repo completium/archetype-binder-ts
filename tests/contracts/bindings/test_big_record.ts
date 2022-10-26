@@ -244,17 +244,7 @@ export class Test_big_record {
             if (this.mygetter_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.mygetter_callback_address), "callback");
                 await ex.call(this.address, "mygetter", att.getter_args_to_mich(mygetter_arg_to_mich(), entrypoint), params);
-                return await ex.get_callback_value<anenum>(this.mygetter_callback_address, x => { if (x.C !== undefined) {
-                    return new C();
-                }
-                else if (x.B !== undefined) {
-                    return new B(((x): [
-                        att.Nat,
-                        string
-                    ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(x.B));
-                }
-                else
-                    return new A(((x): att.Int => { return new att.Int(x); })(x.A)); });
+                return await ex.get_callback_value<anenum>(this.mygetter_callback_address, x => { return mich_to_anenum(x); });
             }
         }
         throw new Error("Contract not initialised");
@@ -262,56 +252,42 @@ export class Test_big_record {
     async view_myview(params: Partial<ex.Parameters>): Promise<anenum> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "myview", view_myview_arg_to_mich(), params);
-            if (mich.value.C !== undefined) {
-                return new C();
-            }
-            else if (mich.value.B !== undefined) {
-                return new B(((x): [
-                    att.Nat,
-                    string
-                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(mich.value.B));
-            }
-            else
-                return new A(((x): att.Int => { return new att.Int(x); })(mich.value.A));
+            return mich_to_anenum(mich.value);
         }
         throw new Error("Contract not initialised");
     }
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Address(storage.owner);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_address(storage.args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_oa(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<att.Address>(storage.oa == null ? null : (x => { return new att.Address(x); })(storage.oa));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage.args[1], x => { return att.mich_to_address(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_s(): Promise<att.Int> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Int(storage.s);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_int(storage.args[2]);
         }
         throw new Error("Contract not initialised");
     }
     async get_o(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<att.Nat>(storage.o == null ? null : (x => { return new att.Nat(x); })(storage.o));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage.args[3], x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l(): Promise<Array<att.Int>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<att.Int> = [];
-            for (let i = 0; i < storage.l.length; i++) {
-                res.push((x => { return new att.Int(x); })(storage.l[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage.args[4], x => { return att.mich_to_int(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -323,174 +299,81 @@ export class Test_big_record {
         ]
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                [
-                    string,
-                    att.Int
-                ]
-            ]> = [];
-            for (let e of storage.m.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return [(x => { return x; })(x[Object.keys(x)[0]]), (x => { return new att.Int(x); })(x[Object.keys(x)[1]])]; })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage.args[5], (x, y) => [att.mich_to_nat(x), (p => {
+                    const p0 = (p as att.Mpair);
+                    return [att.mich_to_string(p0.args[0]), att.mich_to_int(p0.args[1])];
+                })(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_s1(): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<att.Nat> = [];
-            for (let i = 0; i < storage.s1.length; i++) {
-                res.push((x => { return new att.Nat(x); })(storage.s1[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage.args[6], x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l1(): Promise<Array<all>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<all> = [];
-            for (let i = 0; i < storage.l1.length; i++) {
-                res.push((x => { return new all((x => { return new att.Nat(x); })(x.f1), (x => { return new att.Int(x); })(x.f2), (x => { return new att.Tez(x, "mutez"); })(x.f3), (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x.f4), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f5), (x => { return new att.Bytes(x); })(x.f6), (x => { return x; })(x.f7), (x => { return new Date(x); })(x.f8), (x => { return new att.Duration(x); })(x.f9), (x => { return new att.Address(x); })(x.f10), (x => { return new att.Option<att.Nat>(x == null ? null : (x => { return new att.Nat(x); })(x)); })(x.f11), (x => { const res: Array<string> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return x; })(x[i]));
-                } return res; })(x.f12), (x => { const res: Array<[
-                    string,
-                    att.Nat,
-                    att.Int
-                ]> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return [(x => { return x; })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]]), (x => { return new att.Int(x); })(x[Object.keys(x)[2]])]; })(x[i]));
-                } return res; })(x.f13)); })(storage.l1[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage.args[7], x => { return mich_to_all(x, collapsed); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l2(): Promise<Array<Array<all>>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<Array<all>> = [];
-            for (let i = 0; i < storage.l2.length; i++) {
-                res.push((x => { const res: Array<all> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return new all((x => { return new att.Nat(x); })(x.f1), (x => { return new att.Int(x); })(x.f2), (x => { return new att.Tez(x, "mutez"); })(x.f3), (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(x.f4), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x.f5), (x => { return new att.Bytes(x); })(x.f6), (x => { return x; })(x.f7), (x => { return new Date(x); })(x.f8), (x => { return new att.Duration(x); })(x.f9), (x => { return new att.Address(x); })(x.f10), (x => { return new att.Option<att.Nat>(x == null ? null : (x => { return new att.Nat(x); })(x)); })(x.f11), (x => { const res: Array<string> = []; for (let i = 0; i < x.length; i++) {
-                        res.push((x => { return x; })(x[i]));
-                    } return res; })(x.f12), (x => { const res: Array<[
-                        string,
-                        att.Nat,
-                        att.Int
-                    ]> = []; for (let i = 0; i < x.length; i++) {
-                        res.push((x => { return [(x => { return x; })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]]), (x => { return new att.Int(x); })(x[Object.keys(x)[2]])]; })(x[i]));
-                    } return res; })(x.f13)); })(x[i]));
-                } return res; })(storage.l2[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage.args[8], x => { return att.mich_to_list(x, x => { return mich_to_all(x, collapsed); }); });
         }
         throw new Error("Contract not initialised");
     }
     async get_r(): Promise<all> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new all((x => { return new att.Nat(x); })(storage.r.f1), (x => { return new att.Int(x); })(storage.r.f2), (x => { return new att.Tez(x, "mutez"); })(storage.r.f3), (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(storage.r.f4), (x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage.r.f5), (x => { return new att.Bytes(x); })(storage.r.f6), (x => { return x; })(storage.r.f7), (x => { return new Date(x); })(storage.r.f8), (x => { return new att.Duration(x); })(storage.r.f9), (x => { return new att.Address(x); })(storage.r.f10), (x => { return new att.Option<att.Nat>(x == null ? null : (x => { return new att.Nat(x); })(x)); })(storage.r.f11), (x => { const res: Array<string> = []; for (let i = 0; i < x.length; i++) {
-                res.push((x => { return x; })(x[i]));
-            } return res; })(storage.r.f12), (x => { const res: Array<[
-                string,
-                att.Nat,
-                att.Int
-            ]> = []; for (let i = 0; i < x.length; i++) {
-                res.push((x => { return [(x => { return x; })(x[Object.keys(x)[0]]), (x => { return new att.Nat(x); })(x[Object.keys(x)[1]]), (x => { return new att.Int(x); })(x[Object.keys(x)[2]])]; })(x[i]));
-            } return res; })(storage.r.f13));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_all(storage.args[9], collapsed);
         }
         throw new Error("Contract not initialised");
     }
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<att.Address> = [];
-            for (let i = 0; i < storage.just_a_key.length; i++) {
-                res.push((x => { return new att.Address(x); })(storage.just_a_key[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.TODO_asset();
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Address,
-                att.Nat
-            ]> = [];
-            for (let e of storage.visitor.entries()) {
-                res.push([(x => { return new att.Address(x); })(e[0]), (x => { return new att.Nat(x); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.TODO_asset();
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor_2(): Promise<visitor_2_container> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Address,
-                visitor_2_value
-            ]> = [];
-            for (let e of storage.visitor_2.entries()) {
-                res.push([(x => { return new att.Address(x); })(e[0]), (x => { return new visitor_2_value((x => { return new att.Nat(x); })(x.nb_visits2), (x => { return new Date(x); })(x.last)); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.TODO_asset();
         }
         throw new Error("Contract not initialised");
     }
     async get_a_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            if (storage.a_value.C !== undefined) {
-                return new C();
-            }
-            else if (storage.a_value.B !== undefined) {
-                return new B(((x): [
-                    att.Nat,
-                    string
-                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(storage.a_value.B));
-            }
-            else
-                return new A(((x): att.Int => { return new att.Int(x); })(storage.a_value.A));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_anenum(storage.args[13]);
         }
         throw new Error("Contract not initialised");
     }
     async get_b_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            if (storage.b_value.C !== undefined) {
-                return new C();
-            }
-            else if (storage.b_value.B !== undefined) {
-                return new B(((x): [
-                    att.Nat,
-                    string
-                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(storage.b_value.B));
-            }
-            else
-                return new A(((x): att.Int => { return new att.Int(x); })(storage.b_value.A));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_anenum(storage.args[14]);
         }
         throw new Error("Contract not initialised");
     }
     async get_c_value(): Promise<anenum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            if (storage.c_value.C !== undefined) {
-                return new C();
-            }
-            else if (storage.c_value.B !== undefined) {
-                return new B(((x): [
-                    att.Nat,
-                    string
-                ] => { return [(x => { return new att.Nat(x); })(x[Object.keys(x)[0]]), (x => { return x; })(x[Object.keys(x)[1]])]; })(storage.c_value.B));
-            }
-            else
-                return new A(((x): att.Int => { return new att.Int(x); })(storage.c_value.A));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_anenum(storage.args[15]);
         }
         throw new Error("Contract not initialised");
     }

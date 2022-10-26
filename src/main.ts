@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, value_to_mich_type, View, makeTaquitoEnv, ATNamed, RawContractInterface, raw_to_contract_interface } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, MichelsonType, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -54,7 +54,7 @@ const make_mich_to_entity_decl = (name: string, body: ts.Statement[]) => {
     ))
 }
 
-const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>) => {
+const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>, ci : ContractInterface) => {
   return make_mich_to_entity_decl(name, [
     factory.createVariableStatement(
       undefined,
@@ -117,23 +117,23 @@ const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "
       factory.createIdentifier(name),
       undefined,
       fields.map((x, i) => {
-        return mich_to_field_decl(x.type, factory.createElementAccessExpression(
+        return mich_to_archetype_type(x.type, factory.createElementAccessExpression(
           factory.createIdentifier("fields"),
           factory.createIdentifier(i.toString())
-        ), i, fields.length)
+        ), ci, i, fields.length)
       })
     ))
   ])
 }
 
-const mich_to_asset_value_decl = (a: Asset) => {
+const mich_to_asset_value_decl = (a: Asset, ci : ContractInterface) => {
   const fields_no_key = a.fields.filter(x => !x.is_key)
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
-    return fields_to_mich_to_entity_decl(a.name + "_value", a.fields.filter(x => !x.is_key))
+    return fields_to_mich_to_entity_decl(a.name + "_value", a.fields.filter(x => !x.is_key), ci)
   } else if (fields_no_key.length == 1) {
     return make_mich_to_entity_decl(name, [
-      factory.createReturnStatement(mich_to_field_decl(fields_no_key[0].type, factory.createIdentifier("v")))
+      factory.createReturnStatement(mich_to_archetype_type(fields_no_key[0].type, factory.createIdentifier("v"), ci))
     ])
   } else {
     return make_mich_to_entity_decl(name, [factory.createThrowStatement(factory.createNewExpression(
@@ -143,9 +143,9 @@ const mich_to_asset_value_decl = (a: Asset) => {
     ))])
   }
 }
-const mich_to_record_decl = (r: Record) => {
+const mich_to_record_decl = (r: Record, ci : ContractInterface) => {
   if (r.fields.length > 1) {
-    return fields_to_mich_to_entity_decl(r.name, r.fields)
+    return fields_to_mich_to_entity_decl(r.name, r.fields, ci)
   } else {
     return make_mich_to_entity_decl(r.name, [factory.createThrowStatement(factory.createNewExpression(
       factory.createIdentifier("Error"),
@@ -661,7 +661,7 @@ const getter_to_method = (g: Getter, ci: ContractInterface) => {
                   )],
                   undefined,
                   factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                  factory.createBlock([factory.createReturnStatement(mich_to_field_decl(g.return, factory.createIdentifier("x")))])
+                  factory.createBlock([factory.createReturnStatement(mich_to_archetype_type(g.return, factory.createIdentifier("x"), ci))])
                 )
               ]
             )))
@@ -712,10 +712,10 @@ const view_to_method = (v: View, ci: ContractInterface) => {
       )
     )],
     ...(
-      [factory.createReturnStatement(mich_to_field_decl(v.return, factory.createPropertyAccessExpression(
+      [factory.createReturnStatement(mich_to_archetype_type(v.return, factory.createPropertyAccessExpression(
         factory.createIdentifier("mich"),
         factory.createIdentifier("value")
-      )))])
+      ), ci))])
     ])
 }
 
@@ -840,7 +840,7 @@ const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    [factory.createReturnStatement(mich_to_field_decl(selt.type, elt))]
+    [factory.createReturnStatement(mich_to_archetype_type(selt.type, elt, ci))]
   )
 }
 
@@ -970,7 +970,7 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              [factory.createReturnStatement(mich_to_field_decl({ node: "event", name: e.name }, factory.createIdentifier("x")))],
+                              [factory.createReturnStatement(mich_to_archetype_type({ node: "event", name: e.name }, factory.createIdentifier("x"), ci))],
                               true
                             )
                           )),
@@ -1084,7 +1084,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
               these types already have a michelson_type variable created for that purpose
             */
             get_storage_identifier(selt, ci),
-            [factory.createReturnStatement(mich_to_field_decl(selt.type.value_type, factory.createIdentifier("data")))],
+            [factory.createReturnStatement(mich_to_archetype_type(selt.type.value_type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined")
           )
         ),
@@ -1146,7 +1146,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
             get_storage_identifier(selt, ci),
-            [factory.createReturnStatement(mich_to_field_decl(selt.type, factory.createIdentifier("data")))],
+            [factory.createReturnStatement(mich_to_archetype_type(selt.type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined")
           )),
         storage_elt_to_getter_skeleton(

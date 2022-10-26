@@ -729,81 +729,14 @@ const make_pair_decl = (arg: ts.Expression, i: number) => {
   }
 }
 
-const mich_to_tuple = (types: Array<ArchetypeType>, arg: ts.Expression) => {
-  const decls: Array<ts.Statement> = []
-  const args: Array<ts.Expression> = []
-  for (let i = 0; i < types.length; i++) {
-    if (i % 2 == 0) {
-      // create declaration
-      decls.push(make_pair_decl(factory.createIdentifier("p"), i))
-    }
-    args.push(mich_to_field_decl(types[i], make_arg(i)))
-  }
-  const body = [...decls, factory.createReturnStatement(factory.createArrayLiteralExpression(args))]
-  return factory.createCallExpression(
-    factory.createParenthesizedExpression(factory.createArrowFunction(
-      undefined,
-      undefined,
-      [factory.createParameterDeclaration(
-        undefined,
-        undefined,
-        undefined,
-        factory.createIdentifier("p"),
-        undefined,
-        undefined,
-        undefined
-      )],
-      undefined,
-      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-      factory.createBlock(
-        body,
-        true
-      )
-    )),
-    undefined,
-    [arg]
-  )
-}
-
-const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atypes: ArchetypeType[]) => {
-  return factory.createCallExpression(
-    factory.createPropertyAccessExpression(
-      factory.createIdentifier("att"),
-      factory.createIdentifier(fname)
-    ),
-    undefined,
-    [arg].concat(
-      atypes.map(atype => {
-        return factory.createArrowFunction(
-          undefined,
-          undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("x"),
-            undefined,
-            undefined,
-            undefined
-          )],
-          undefined,
-          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createBlock(
-            [factory.createReturnStatement(mich_to_field_decl(atype, factory.createIdentifier("x"), 0, 0))],
-            false
-          )
-        )
-      }))
-  )
-}
-
-export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx = 0, len = 0): ts.Expression => {
+export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression, ci: ContractInterface, idx = 0, len = 0): ts.Expression => {
   const throw_error = (ty: string) => {
     throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
   }
 
-  const TODO = (ty: string): ts.Expression => {
-    throw new Error(`TODO: ${ty}`)
+  const TODO = (ty: string, x : ts.Expression): ts.Expression => {
+    return x;
+    // throw new Error(`TODO: ${ty}`)
   }
 
   const class_to_mich = (id: string, args: ts.Expression[]): ts.Expression => {
@@ -853,8 +786,8 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createArrayLiteralExpression(
             [
-              mich_to_field_decl(atype.key_type, factory.createIdentifier("x"), 0, 0),
-              mich_to_field_decl(atype.value_type, factory.createIdentifier("y"), 0, 0)
+              mich_to_archetype_type(atype.key_type, factory.createIdentifier("x"), ci),
+              mich_to_archetype_type(atype.value_type, factory.createIdentifier("y"), ci)
             ],
             false
           )
@@ -863,15 +796,83 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
     )
   }
 
+  const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atypes: ArchetypeType[]) => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier(fname)
+      ),
+      undefined,
+      [arg].concat(
+        atypes.map(atype => {
+          return factory.createArrowFunction(
+            undefined,
+            undefined,
+            [factory.createParameterDeclaration(
+              undefined,
+              undefined,
+              undefined,
+              factory.createIdentifier("x"),
+              undefined,
+              undefined,
+              undefined
+            )],
+            undefined,
+            factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+            factory.createBlock(
+              [factory.createReturnStatement(mich_to_archetype_type(atype, factory.createIdentifier("x"), ci))],
+              false
+            )
+          )
+        }))
+    )
+  }
+
+  const mich_to_tuple = (types: Array<ArchetypeType>, arg: ts.Expression) => {
+    const decls: Array<ts.Statement> = []
+    const args: Array<ts.Expression> = []
+    for (let i = 0; i < types.length; i++) {
+      if (i % 2 == 0) {
+        // create declaration
+        decls.push(make_pair_decl(factory.createIdentifier("p"), i))
+      }
+      args.push(mich_to_archetype_type(types[i], make_arg(i), ci))
+    }
+    const body = [...decls, factory.createReturnStatement(factory.createArrayLiteralExpression(args))]
+    return factory.createCallExpression(
+      factory.createParenthesizedExpression(factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("p"),
+          undefined,
+          undefined,
+          undefined
+        )],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          body,
+          true
+        )
+      )),
+      undefined,
+      [arg]
+    )
+  }
+
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
-    case "aggregate": return TODO("aggregate");
-    case "asset_container": return TODO("asset_container");
-    case "asset_key": return TODO("asset_key");
-    case "asset_value": return TODO("asset_value");
-    case "asset_view": return TODO("asset_view");
-    case "asset": return TODO("asset");
-    case "big_map": return TODO("big_map");
+    case "aggregate": return TODO("aggregate", arg);
+    case "asset_container": return TODO("asset_container", arg);
+    case "asset_key": return TODO("asset_key", arg);
+    case "asset_value": return TODO("asset_value", arg);
+    case "asset_view": return TODO("asset_view", arg);
+    case "asset": return TODO("asset", arg);
+    case "big_map": return TODO("big_map", arg);
     case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
     case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
     case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
@@ -880,8 +881,8 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
     case "chain_id": return class_to_mich("mich_to_chain_id", [arg]);
     case "chest_key": return class_to_mich("mich_to_chest_key", [arg]);
     case "chest": return class_to_mich("mich_to_chest", [arg]);
-    case "collection": return TODO("collection");
-    case "contract": return TODO("contract");
+    case "collection": return TODO("collection", arg);
+    case "contract": return TODO("contract", arg);
     case "currency": return class_to_mich("mich_to_tez", [arg]);
     case "date": return class_to_mich("mich_to_date", [arg]);
     case "duration": return class_to_mich("mich_to_duration", [arg]);
@@ -890,20 +891,20 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
       undefined,
       [arg]
     );
-    case "event": return TODO("event");
+    case "event": return TODO("event", arg);
     case "int": return class_to_mich("mich_to_int", [arg]);
-    case "iterable_big_map": return TODO("iterable_big_map");
+    case "iterable_big_map": return TODO("iterable_big_map", arg);
     case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
     case "key": return class_to_mich("mich_to_key", [arg]);
-    case "lambda": return TODO("lambda");
+    case "lambda": return TODO("lambda", arg);
     case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
     case "map": return map_mich_to_ts(atype);
     case "nat": return class_to_mich("mich_to_nat", [arg]);
-    case "never": return TODO("never");
-    case "operation": return TODO("operation");
+    case "never": return TODO("never", arg);
+    case "operation": return TODO("operation", arg);
     case "option": return contained_type_to_field_decl("mich_to_option", arg, [atype.arg]);
     case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
-    case "partition": return TODO("partition");
+    case "partition": return TODO("partition", arg);
     case "rational": return class_to_mich("mich_to_rational", [arg]);
     case "record": {
       const larg = idx + 1 == len ? factory.createCallExpression(
@@ -938,10 +939,10 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
     case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
     case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
     case "signature": return class_to_mich("mich_to_signature", [arg]);
-    case "state": return TODO("state");
+    case "state": return TODO("state", arg);
     case "string": return class_to_mich("mich_to_string", [arg]);
-    case "ticket": return TODO("ticket");
-    case "timestamp": return TODO("timestamp");
+    case "ticket": return TODO("ticket", arg);
+    case "timestamp": return TODO("timestamp", arg);
     case "tuple": return mich_to_tuple(atype.args, arg);
     case "unit": return class_to_mich("unit_to_mich", []);
   }
