@@ -70,14 +70,7 @@ export class Type_view_enum_simple {
     async view_get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            if (mich.value == "2" || (mich.value.toNumber ? mich.value.toNumber() == 2 : false)) {
-                return new e_3();
-            }
-            else if (mich.value == "1" || (mich.value.toNumber ? mich.value.toNumber() == 1 : false)) {
-                return new e_2();
-            }
-            else
-                return new e_1();
+            return mich_to_e_enum(mich.value);
         }
         throw new Error("Contract not initialised");
     }

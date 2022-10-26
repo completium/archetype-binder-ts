@@ -54,17 +54,10 @@ export class Type_big_map_value_map_nat_string {
         string
     ]> | undefined> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []))), collapsed = true;
             if (data != undefined) {
-                let res: Array<[
-                    att.Nat,
-                    string
-                ]> = [];
-                for (let e of data.entries()) {
-                    res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                }
-                return res;
+                return att.mich_to_map(data, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]);
             }
             else {
                 return undefined;
@@ -74,7 +67,7 @@ export class Type_big_map_value_map_nat_string {
     }
     async has_res_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []))), collapsed = true;
             if (data != undefined) {
                 return true;

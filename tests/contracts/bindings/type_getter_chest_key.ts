@@ -34,15 +34,15 @@ export class Type_getter_chest_key {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<att.Chest_key>(this.get_value_callback_address, x => { return new att.Chest_key(x); });
+                return await ex.get_callback_value<att.Chest_key>(this.get_value_callback_address, x => { return att.mich_to_chest_key(x); });
             }
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<att.Chest_key> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Chest_key(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_chest_key(storage);
         }
         throw new Error("Contract not initialised");
     }

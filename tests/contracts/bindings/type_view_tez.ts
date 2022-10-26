@@ -27,7 +27,7 @@ export class Type_view_tez {
     async view_get_value(i: att.Tez, params: Partial<ex.Parameters>): Promise<att.Tez> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Tez(mich.value, "mutez");
+            return att.mich_to_tez(mich.value);
         }
         throw new Error("Contract not initialised");
     }

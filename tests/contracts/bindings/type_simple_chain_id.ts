@@ -38,8 +38,8 @@ export class Type_simple_chain_id {
     }
     async get_res(): Promise<att.Chain_id> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Chain_id(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_chain_id(storage);
         }
         throw new Error("Contract not initialised");
     }

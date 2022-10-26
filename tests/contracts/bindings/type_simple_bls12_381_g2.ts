@@ -38,8 +38,8 @@ export class Type_simple_bls12_381_g2 {
     }
     async get_res(): Promise<att.Bls12_381_g2> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Bls12_381_g2(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_bls12_381_g2(storage);
         }
         throw new Error("Contract not initialised");
     }

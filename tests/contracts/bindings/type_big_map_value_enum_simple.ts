@@ -81,17 +81,10 @@ export class Type_big_map_value_enum_simple {
     }
     async get_res_value(key: att.Nat): Promise<e_enum | undefined> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("enum", [])), collapsed = true;
             if (data != undefined) {
-                if (data == "2" || (data.toNumber ? data.toNumber() == 2 : false)) {
-                    return new e_3();
-                }
-                else if (data == "1" || (data.toNumber ? data.toNumber() == 1 : false)) {
-                    return new e_2();
-                }
-                else
-                    return new e_1();
+                return mich_to_e_enum(data);
             }
             else {
                 return undefined;
@@ -101,7 +94,7 @@ export class Type_big_map_value_enum_simple {
     }
     async has_res_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("enum", [])), collapsed = true;
             if (data != undefined) {
                 return true;

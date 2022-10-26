@@ -36,21 +36,15 @@ export class Type_getter_set_bool {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<Array<boolean>>(this.get_value_callback_address, x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                    res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
-                } return res; });
+                return await ex.get_callback_value<Array<boolean>>(this.get_value_callback_address, x => { return att.mich_to_list(x, x => { return att.mich_to_bool(x); }); });
             }
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<Array<boolean>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<boolean> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return att.mich_to_bool(x); });
         }
         throw new Error("Contract not initialised");
     }

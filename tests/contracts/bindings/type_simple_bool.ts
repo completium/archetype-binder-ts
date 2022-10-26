@@ -38,8 +38,8 @@ export class Type_simple_bool {
     }
     async get_res(): Promise<boolean> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return storage.prim ? (storage.prim == "True" ? true : false) : storage;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_bool(storage);
         }
         throw new Error("Contract not initialised");
     }

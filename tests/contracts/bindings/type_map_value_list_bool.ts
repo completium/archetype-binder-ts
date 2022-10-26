@@ -43,17 +43,8 @@ export class Type_map_value_list_bool {
         Array<boolean>
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                Array<boolean>
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { const res: Array<boolean> = []; for (let i = 0; i < x.length; i++) {
-                        res.push((x => { return x.prim ? (x.prim == "True" ? true : false) : x; })(x[i]));
-                    } return res; })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_list(y, x => { return att.mich_to_bool(x); })]);
         }
         throw new Error("Contract not initialised");
     }

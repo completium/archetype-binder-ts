@@ -40,8 +40,8 @@ export class Type_parameter_signature {
     }
     async get_res(): Promise<att.Signature> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Signature(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_signature(storage);
         }
         throw new Error("Contract not initialised");
     }

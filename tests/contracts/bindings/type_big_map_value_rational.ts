@@ -38,13 +38,13 @@ export class Type_big_map_value_rational {
     }
     async get_res_value(key: att.Nat): Promise<att.Rational | undefined> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("int", []),
                 att.prim_annot_to_mich_type("nat", [])
             ], [])), collapsed = true;
             if (data != undefined) {
-                return new att.Rational(data[Object.keys(data)[0]], data[Object.keys(data)[1]]);
+                return att.mich_to_rational(data);
             }
             else {
                 return undefined;
@@ -54,7 +54,7 @@ export class Type_big_map_value_rational {
     }
     async has_res_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
+            const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(storage), key.to_mich(), att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("int", []),
                 att.prim_annot_to_mich_type("nat", [])

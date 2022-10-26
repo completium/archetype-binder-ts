@@ -43,7 +43,7 @@ export class Type_view_record_2_fields {
     async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new r_record((x => { return new att.Nat(x); })(mich.value.f_a), (x => { return x; })(mich.value.f_b));
+            return mich_to_r_record(mich.value, collapsed);
         }
         throw new Error("Contract not initialised");
     }

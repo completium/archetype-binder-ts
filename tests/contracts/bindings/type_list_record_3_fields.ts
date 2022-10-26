@@ -59,12 +59,8 @@ export class Type_list_record_3_fields {
     }
     async get_res(): Promise<Array<r_record>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<r_record> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b), (x => { return new att.Bytes(x); })(x.f_c)); })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return mich_to_r_record(x, collapsed); });
         }
         throw new Error("Contract not initialised");
     }

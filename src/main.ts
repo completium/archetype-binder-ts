@@ -1,6 +1,6 @@
-import ts, { createPrinter, createSourceFile, factory, isAccessor, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind, TsConfigSourceFile } from 'typescript';
+import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, taquito_to_ts, unit_to_mich, value_to_mich_type, View, makeTaquitoEnv, ATNamed, RawContractInterface, raw_to_contract_interface } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, mich_to_field_decl, MichelsonType, Record, storage_to_mich, StorageElement, value_to_mich_type, View, makeTaquitoEnv, ATNamed, RawContractInterface, raw_to_contract_interface } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -661,7 +661,7 @@ const getter_to_method = (g: Getter, ci: ContractInterface) => {
                   )],
                   undefined,
                   factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                  factory.createBlock(taquito_to_ts(factory.createIdentifier("x"), g.return, ci, makeTaquitoEnv()))
+                  factory.createBlock([factory.createReturnStatement(mich_to_field_decl(g.return, factory.createIdentifier("x")))])
                 )
               ]
             )))
@@ -711,10 +711,11 @@ const view_to_method = (v: View, ci: ContractInterface) => {
         ts.NodeFlags.Const
       )
     )],
-    ...(taquito_to_ts(factory.createPropertyAccessExpression(
-      factory.createIdentifier("mich"),
-      factory.createIdentifier("value")
-    ), v.return, ci, makeTaquitoEnv()))
+    ...(
+      [factory.createReturnStatement(mich_to_field_decl(v.return, factory.createPropertyAccessExpression(
+        factory.createIdentifier("mich"),
+        factory.createIdentifier("value")
+      )))])
     ])
 }
 
@@ -758,7 +759,7 @@ const make_method_skeleton = (
                     factory.createAwaitExpression(factory.createCallExpression(
                       factory.createPropertyAccessExpression(
                         factory.createIdentifier("ex"),
-                        factory.createIdentifier("get_storage")
+                        factory.createIdentifier("get_raw_storage")
                       ),
                       undefined,
                       [factory.createPropertyAccessExpression(
@@ -824,7 +825,7 @@ const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
     selt.name,
     [],
     archetype_type_to_ts_type(selt.type),
-    taquito_to_ts(elt, selt.type, ci, makeTaquitoEnv())
+    [factory.createReturnStatement(mich_to_field_decl(selt.type, elt))]
   )
 }
 
@@ -954,7 +955,7 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              taquito_to_ts(factory.createIdentifier("x"), { node: "event", name: e.name }, ci, makeTaquitoEnv()),
+                              [factory.createReturnStatement(mich_to_field_decl({ node: "event", name: e.name }, factory.createIdentifier("x")))],
                               true
                             )
                           )),
@@ -1068,7 +1069,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
               these types already have a michelson_type variable created for that purpose
             */
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type.value_type, ci, makeTaquitoEnv()),
+            [factory.createReturnStatement(mich_to_field_decl(selt.type.value_type, factory.createIdentifier("data")))],
             factory.createIdentifier("undefined")
           )
         ),
@@ -1130,7 +1131,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
             get_storage_identifier(selt, ci),
-            taquito_to_ts(factory.createIdentifier("data"), selt.type, ci, makeTaquitoEnv()),
+            [factory.createReturnStatement(mich_to_field_decl(selt.type, factory.createIdentifier("data")))],
             factory.createIdentifier("undefined")
           )),
         storage_elt_to_getter_skeleton(
@@ -1864,7 +1865,7 @@ const getStateDecl = (e: Enum): ts.MethodDeclaration => {
                     factory.createAwaitExpression(factory.createCallExpression(
                       factory.createPropertyAccessExpression(
                         factory.createIdentifier("ex"),
-                        factory.createIdentifier("get_storage")
+                        factory.createIdentifier("get_raw_storage")
                       ),
                       undefined,
                       [factory.createPropertyAccessExpression(

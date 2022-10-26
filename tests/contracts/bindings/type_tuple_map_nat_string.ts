@@ -58,13 +58,12 @@ export class Type_tuple_map_nat_string {
         string
     ]> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { let res: Array<[
-                    att.Nat,
-                    string
-                ]> = []; for (let e of x.entries()) {
-                    res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return x; })(e[1])]);
-                } return res; })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
+            const storage = await ex.get_raw_storage(this.address);
+            return (p => {
+                const p0 = (p as att.Mpair);
+                const p1 = (p0.args[1] as att.Mpair);
+                return [att.mich_to_nat(p0.args[0]), att.mich_to_map(p0.args[1], (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]), att.mich_to_string(p1.args[0])];
+            })(storage);
         }
         throw new Error("Contract not initialised");
     }

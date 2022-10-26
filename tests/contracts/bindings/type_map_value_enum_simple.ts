@@ -84,22 +84,8 @@ export class Type_map_value_enum_simple {
         e_enum
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                e_enum
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                        return new e_3();
-                    }
-                    else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                        return new e_2();
-                    }
-                    else
-                        return new e_1(); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), mich_to_e_enum(y)]);
         }
         throw new Error("Contract not initialised");
     }

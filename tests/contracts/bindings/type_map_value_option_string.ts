@@ -41,15 +41,8 @@ export class Type_map_value_option_string {
         att.Option<string>
     ]>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            let res: Array<[
-                att.Nat,
-                att.Option<string>
-            ]> = [];
-            for (let e of storage.entries()) {
-                res.push([(x => { return new att.Nat(x); })(e[0]), (x => { return new att.Option<string>(x == null ? null : (x => { return x; })(x)); })(e[1])]);
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_option(y, x => { return att.mich_to_string(x); })]);
         }
         throw new Error("Contract not initialised");
     }

@@ -27,7 +27,7 @@ export class Type_view_signature {
     async view_get_value(i: att.Signature, params: Partial<ex.Parameters>): Promise<att.Signature> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Signature(mich.value);
+            return att.mich_to_signature(mich.value);
         }
         throw new Error("Contract not initialised");
     }

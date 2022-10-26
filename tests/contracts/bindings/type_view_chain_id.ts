@@ -27,7 +27,7 @@ export class Type_view_chain_id {
     async view_get_value(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<att.Chain_id> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Chain_id(mich.value);
+            return att.mich_to_chain_id(mich.value);
         }
         throw new Error("Contract not initialised");
     }

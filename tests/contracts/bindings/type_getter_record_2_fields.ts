@@ -53,15 +53,15 @@ export class Type_getter_record_2_fields {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return new r_record((x => { return new att.Nat(x); })(x.f_a), (x => { return x; })(x.f_b)); });
+                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return mich_to_r_record(x, collapsed); });
             }
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<r_record> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new r_record((x => { return new att.Nat(x); })(storage.f_a), (x => { return x; })(storage.f_b));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_r_record(storage, collapsed);
         }
         throw new Error("Contract not initialised");
     }

@@ -81,15 +81,8 @@ export class Type_option_enum_simple {
     }
     async get_res(): Promise<att.Option<e_enum>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<e_enum>(storage == null ? null : (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                return new e_3();
-            }
-            else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                return new e_2();
-            }
-            else
-                return new e_1(); })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return mich_to_e_enum(x); });
         }
         throw new Error("Contract not initialised");
     }

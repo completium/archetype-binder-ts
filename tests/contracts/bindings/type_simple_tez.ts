@@ -38,8 +38,8 @@ export class Type_simple_tez {
     }
     async get_res(): Promise<att.Tez> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Tez(storage, "mutez");
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_tez(storage);
         }
         throw new Error("Contract not initialised");
     }

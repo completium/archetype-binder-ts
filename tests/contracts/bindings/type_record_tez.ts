@@ -57,8 +57,8 @@ export class Type_record_tez {
     }
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new my_record((x => { return new att.Nat(x); })(storage.n), (x => { return new att.Tez(x, "mutez"); })(storage.v), (x => { return x; })(storage.s));
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_my_record(storage, collapsed);
         }
         throw new Error("Contract not initialised");
     }

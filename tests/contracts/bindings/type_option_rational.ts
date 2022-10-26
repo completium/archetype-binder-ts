@@ -38,8 +38,8 @@ export class Type_option_rational {
     }
     async get_res(): Promise<att.Option<att.Rational>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<att.Rational>(storage == null ? null : (x => { return new att.Rational(x[Object.keys(x)[0]], x[Object.keys(x)[1]]); })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return att.mich_to_rational(x); });
         }
         throw new Error("Contract not initialised");
     }

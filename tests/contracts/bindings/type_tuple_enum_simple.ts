@@ -85,15 +85,12 @@ export class Type_tuple_enum_simple {
         string
     ]> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return [(x => { return new att.Nat(x); })(storage[Object.keys(storage)[0]]), (x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                    return new e_3();
-                }
-                else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                    return new e_2();
-                }
-                else
-                    return new e_1(); })(storage[Object.keys(storage)[1]]), (x => { return x; })(storage[Object.keys(storage)[2]])];
+            const storage = await ex.get_raw_storage(this.address);
+            return (p => {
+                const p0 = (p as att.Mpair);
+                const p1 = (p0.args[1] as att.Mpair);
+                return [att.mich_to_nat(p0.args[0]), mich_to_e_enum(p0.args[1]), att.mich_to_string(p1.args[0])];
+            })(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -29,11 +29,7 @@ export class Type_view_list_nat {
     async view_get_value(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            const res: Array<att.Nat> = [];
-            for (let i = 0; i < mich.value.length; i++) {
-                res.push((x => { return new att.Nat(x); })(mich.value[i]));
-            }
-            return res;
+            return att.mich_to_list(mich.value, x => { return att.mich_to_nat(x); });
         }
         throw new Error("Contract not initialised");
     }

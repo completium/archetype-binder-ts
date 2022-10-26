@@ -796,8 +796,27 @@ const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atype: 
 }
 
 export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx = 0, len = 0): ts.Expression => {
-  switch (atype.node) {
-    case "map": return factory.createCallExpression(
+  const throw_error = (ty: string) => {
+    throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
+  }
+
+  const TODO = (ty: string): ts.Expression => {
+    throw new Error(`TODO: ${ty}`)
+  }
+
+  const class_to_mich = (id: string, args: ts.Expression[]): ts.Expression => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier(id)
+      ),
+      undefined,
+      args
+    )
+  }
+
+  const map_mich_to_ts = (atype: ATMap) => {
+    return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier("mich_to_map")
@@ -840,6 +859,50 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
         )
       ]
     )
+  }
+
+  switch (atype.node) {
+    case "address": return class_to_mich("mich_to_address", [arg]);
+    case "aggregate": return TODO("aggregate");
+    case "asset_container": return TODO("asset_container");
+    case "asset_key": return TODO("asset_key");
+    case "asset_value": return TODO("asset_value");
+    case "asset_view": return TODO("asset_view");
+    case "asset": return TODO("asset");
+    case "big_map": return TODO("big_map");
+    case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
+    case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
+    case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
+    case "bool": return class_to_mich("mich_to_bool", [arg]);
+    case "bytes": return class_to_mich("mich_to_bytes", [arg]);
+    case "chain_id": return class_to_mich("mich_to_chain_id", [arg]);
+    case "chest_key": return class_to_mich("mich_to_chest_key", [arg]);
+    case "chest": return class_to_mich("mich_to_chest", [arg]);
+    case "collection": return TODO("collection");
+    case "contract": return TODO("contract");
+    case "currency": return class_to_mich("mich_to_tez", [arg]);
+    case "date": return class_to_mich("mich_to_date", [arg]);
+    case "duration": return class_to_mich("mich_to_duration", [arg]);
+    case "enum": return factory.createCallExpression(
+      factory.createIdentifier("mich_to_" + atype.name),
+      undefined,
+      [arg]
+    );
+    case "event": return TODO("event");
+    case "int": return class_to_mich("mich_to_int", [arg]);
+    case "iterable_big_map": return TODO("iterable_big_map");
+    case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
+    case "key": return class_to_mich("mich_to_key", [arg]);
+    case "lambda": return TODO("lambda");
+    case "list": return contained_type_to_field_decl("mich_to_list", arg, atype.arg)
+    case "map": return map_mich_to_ts(atype);
+    case "nat": return class_to_mich("mich_to_nat", [arg]);
+    case "never": return TODO("never");
+    case "operation": return TODO("operation");
+    case "option": return contained_type_to_field_decl("mich_to_option", arg, atype.arg);
+    case "or": return TODO("or");
+    case "partition": return TODO("partition");
+    case "rational": return class_to_mich("mich_to_rational", [arg]);
     case "record": {
       const larg = idx + 1 == len ? factory.createCallExpression(
         factory.createIdentifier("mich_to_" + atype.name),
@@ -869,47 +932,16 @@ export const mich_to_field_decl = (atype: ArchetypeType, arg: ts.Expression, idx
           [arg, factory.createIdentifier("collapsed")])
       return larg
     }
-    case "option":
-      return contained_type_to_field_decl("mich_to_option", arg, atype.arg)
-    case "set":
-    case "list":
-      return contained_type_to_field_decl("mich_to_list", arg, atype.arg)
-    case "tuple":
-      return mich_to_tuple(atype.args, arg)
-    case "enum":
-      return factory.createCallExpression(
-        factory.createIdentifier("mich_to_" + atype.name),
-        undefined,
-        [arg]
-      )
-    default:
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier(archetype_type_to_mich_to_name(atype))
-        ),
-        undefined,
-        [arg]
-      )
-  }
-}
-
-export const archetype_type_to_mich_to_name = (atype: ArchetypeType): string => {
-  switch (atype.node) {
-    case "date": return "mich_to_date"
-    case "nat": return "mich_to_nat"
-    case "int": return "mich_to_int"
-    case "currency": return "mich_to_tez"
-    case "duration": return "mich_to_duration"
-    case "bool": return "mich_to_bool"
-    case "string": return "mich_to_string"
-    case "rational": return "mich_to_rational"
-    case "address": return "mich_to_address"
-    case "bytes": return "mich_to_bytes"
-    case "signature": return "mich_to_signature"
-    case "key": return "mich_to_key"
-    case "bls12_381_fr": return "mich_to_bls12_381_fr"
-    default: throw new Error("archetype_type_to_mich_to_name: unknown type '" + atype.node + "'")
+    case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
+    case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
+    case "set": return contained_type_to_field_decl("mich_to_list", arg, atype.arg)
+    case "signature": return class_to_mich("mich_to_signature", [arg]);
+    case "state": return TODO("state");
+    case "string": return class_to_mich("mich_to_string", [arg]);
+    case "ticket": return TODO("ticket");
+    case "timestamp": return TODO("timestamp");
+    case "tuple": return mich_to_tuple(atype.args, arg);
+    case "unit": return class_to_mich("unit_to_mich", []);
   }
 }
 
@@ -1014,654 +1046,6 @@ const get_lambda_form = (body: ts.Statement[], arg: ts.Expression): ts.Expressio
     undefined,
     [arg]
   )
-}
-
-const get_enum = (name: string, ci: ContractInterface) => {
-  if (name != null) {
-    for (let i = 0; i < ci.types.enums.length; i++) {
-      if (ci.types.enums[i].name == name) {
-        return ci.types.enums[i]
-      }
-    }
-  }
-  throw new Error("get_enum_type: '" + name + "' not found")
-}
-
-const make_enum_type_case_body = (elt: ts.Expression, c: EnumValue, ci: ContractInterface) => {
-  if (c.types.length == 0) {
-    return factory.createReturnStatement(factory.createNewExpression(
-      factory.createIdentifier(c.name),
-      undefined,
-      []
-    ))
-  } else {
-    let atype: ArchetypeType
-    if (c.types.length == 1) {
-      atype = c.types[0]
-    } else {
-      atype = {
-        node: "tuple",
-        args: c.types
-      }
-    }
-    return factory.createReturnStatement(factory.createNewExpression(
-      factory.createIdentifier(c.name),
-      undefined,
-      [factory.createCallExpression(
-        factory.createParenthesizedExpression(factory.createArrowFunction(
-          undefined,
-          undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("x"),
-            undefined,
-            undefined,
-            undefined
-          )],
-          archetype_type_to_ts_type(atype),
-          factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createBlock(
-            taquito_to_ts(factory.createIdentifier("x"), atype, ci, makeTaquitoEnv()),
-            false
-          )
-        )),
-        undefined,
-        [factory.createPropertyAccessExpression(
-          elt,
-          factory.createIdentifier(c.name)
-        )]
-      )]
-    ))
-  }
-}
-
-const make_enum_simple_return_body = (elt: ts.Expression, e: Enum, ci: ContractInterface): ts.Statement => {
-  const tmp = e.constructors.map((x, i) => {
-    return <[EnumValue, number]>[x, i]
-  });
-
-  return tmp.slice(1).reduce(
-    (acc, c) => {
-      return factory.createIfStatement(
-        factory.createBinaryExpression(
-          factory.createBinaryExpression(
-            elt,
-            factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-            factory.createStringLiteral(`${c[1]}`)
-          ),
-          factory.createToken(ts.SyntaxKind.BarBarToken),
-          factory.createParenthesizedExpression(factory.createConditionalExpression(
-            factory.createPropertyAccessExpression(
-              elt,
-              factory.createIdentifier("toNumber")
-            ),
-            factory.createToken(ts.SyntaxKind.QuestionToken),
-            factory.createBinaryExpression(
-              factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  elt,
-                  factory.createIdentifier("toNumber")
-                ),
-                undefined,
-                []
-              ),
-              factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-              factory.createNumericLiteral(c[1])
-            ),
-            factory.createToken(ts.SyntaxKind.ColonToken),
-            factory.createFalse()
-          ))
-        ),
-        factory.createBlock(
-          [make_enum_type_case_body(elt, c[0], ci)],
-          true
-        ),
-        acc
-      )
-    },
-    <ts.Statement>make_enum_type_case_body(elt, e.constructors[0], ci)
-  )
-}
-
-const make_enum_return_body = (elt: ts.Expression, e: Enum, ci: ContractInterface): ts.Statement => {
-  return e.constructors.slice(1).reduce(
-    (acc, c) => {
-      return factory.createIfStatement(
-        factory.createBinaryExpression(
-          factory.createPropertyAccessExpression(
-            elt,
-            factory.createIdentifier(c.name)
-          ),
-          factory.createToken(ts.SyntaxKind.ExclamationEqualsEqualsToken),
-          factory.createIdentifier("undefined")
-        ),
-        factory.createBlock(
-          [make_enum_type_case_body(elt, c, ci)],
-          true
-        ),
-        acc
-      )
-    },
-    <ts.Statement>make_enum_type_case_body(elt, e.constructors[0], ci)
-  )
-}
-
-const get_element_access = (elt: ts.Expression, idx: number) => {
-  return factory.createElementAccessExpression(
-    elt,
-    factory.createElementAccessExpression(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("Object"),
-          factory.createIdentifier("keys")
-        ),
-        undefined,
-        [elt]
-      ),
-      factory.createNumericLiteral(idx)
-    )
-  )
-}
-
-export const taquito_to_ts = (elt: ts.Expression, atype: ArchetypeType, ci: ContractInterface, env: TaquitoEnv): ts.Statement[] => {
-  const make_class = (x: ts.Expression[]) => {
-    return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier(atype.node.charAt(0).toUpperCase() + atype.node.slice(1))
-      ),
-      undefined,
-      x
-    ))]
-  }
-  const make_list = (atype: ATSingle) => {
-    return [
-      factory.createVariableStatement(
-        undefined,
-        factory.createVariableDeclarationList(
-          [factory.createVariableDeclaration(
-            factory.createIdentifier("res"),
-            undefined,
-            archetype_type_to_ts_type(atype),
-            factory.createArrayLiteralExpression(
-              [],
-              false
-            )
-          )],
-          ts.NodeFlags.Const
-        )
-      ),
-      factory.createForStatement(
-        factory.createVariableDeclarationList(
-          [factory.createVariableDeclaration(
-            factory.createIdentifier("i"),
-            undefined,
-            undefined,
-            factory.createNumericLiteral("0")
-          )],
-          ts.NodeFlags.Let
-        ),
-        factory.createBinaryExpression(
-          factory.createIdentifier("i"),
-          factory.createToken(ts.SyntaxKind.LessThanToken),
-          factory.createPropertyAccessExpression(
-            elt,
-            factory.createIdentifier("length")
-          )
-        ),
-        factory.createPostfixUnaryExpression(
-          factory.createIdentifier("i"),
-          ts.SyntaxKind.PlusPlusToken
-        ),
-        factory.createBlock(
-          [factory.createExpressionStatement(factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("res"),
-              factory.createIdentifier("push")
-            ),
-            undefined,
-            [get_lambda_form(
-              taquito_to_ts(factory.createIdentifier("x"), atype.arg, ci, env),
-              factory.createElementAccessExpression(
-                elt,
-                factory.createIdentifier("i")
-              )
-            )
-            ]
-          ))],
-          true
-        )
-      ),
-      factory.createReturnStatement(factory.createIdentifier("res"))
-    ];
-  }
-
-  const get_tuple_body = (elt: ts.Expression, t: ATTuple, ci: ContractInterface, start_idx = 0): [ts.Expression[], number] => {
-    const [array, idx] = t.args.reduce((acc, a) => {
-      const [acc_array, acc_idx] = acc
-      switch (a.node) {
-        case "tuple": {
-          const [tuple_array, tuple_idx] = get_tuple_body(elt, a, ci, acc_idx)
-          return [
-            [...acc_array, factory.createArrayLiteralExpression(tuple_array)],
-            tuple_idx
-          ]
-        }
-        default:
-          return [
-            [...acc_array, get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), a, ci, env), get_element_access(elt, acc_idx))],
-            acc_idx + 1
-          ]
-      }
-    }, [<ts.Expression[]>[], start_idx])
-    return [array, idx]
-  }
-
-  const throw_error = (): ts.Statement[] => {
-    throw new Error("taquito_to_ts: type '" + atype.node + "' not found")
-  }
-
-  switch (atype.node) {
-    case "address": return make_class([elt]);
-    case "aggregate": return throw_error();
-    case "asset_container": return throw_error();
-    case "asset_key": return throw_error();
-    case "asset_value": return throw_error();
-    case "asset_view": return throw_error();
-    case "asset": {
-      const a = get_asset_type(atype.name, ci)
-      switch (a.container_kind) {
-        case "map": {
-          // create asset container (not for asset to big_map)
-          const fields_no_key = a.fields.filter(x => !x.is_key)
-          const fields_key = a.fields.filter(x => x.is_key)
-
-          const asset_name_key = a.name + "_key";
-          const asset_name_value = a.name + "_value";
-
-          const asset_key_record_type: Record = {
-            name: asset_name_key,
-            fields: fields_key,
-            type_michelson: a.key_type_michelson
-          }
-
-          const asset_value_record_type: Record = {
-            name: asset_name_value,
-            fields: fields_no_key,
-            type_michelson: a.value_type_michelson
-          }
-
-          const key_type: ArchetypeType = fields_key.length == 0 ? { node: "unit" } : (fields_key.length == 1 ? fields_key[0].type : { node: "record", name: asset_name_key });
-          const value_type: ArchetypeType = fields_no_key.length == 0 ? { node: "unit" } : (fields_no_key.length == 1 ? fields_no_key[0].type : { node: "record", name: asset_name_value });
-          const tmp_ci = fields_key.length > 1 ? { ...ci, types: { ...ci.types, records: [...ci.types.records, asset_key_record_type] } } : ci;
-          const augmented_ci = fields_no_key.length > 1 ? { ...tmp_ci, types: { ...tmp_ci.types, records: [...tmp_ci.types.records, asset_value_record_type] } } : tmp_ci;
-
-          const container_type: ArchetypeType = fields_no_key.length > 0 ?
-            {
-              node: "map",
-              key_type: key_type,
-              value_type: value_type
-            } : {
-              node: "set",
-              arg: key_type
-            };
-
-          return taquito_to_ts(elt, container_type, augmented_ci, env)
-        }
-        case "big_map": {
-          const fields_no_key = a.fields.filter(x => !x.is_key)
-          if (fields_no_key.length == 1) {
-            // asset value is assimiliated to the field
-            return taquito_to_ts(elt, fields_no_key[0].type, ci, env)
-          } else {
-            // create asset value record
-            const asset_value_record_type: Record = {
-              name: a.name + "_value",
-              fields: fields_no_key,
-              type_michelson: a.value_type_michelson
-            }
-            const augmented_ci: ContractInterface = {
-              ...ci,
-              types: {
-                ...ci.types,
-                records: [...ci.types.records, asset_value_record_type]
-              }
-            }
-            return taquito_to_ts(elt, { name: a.name + "_value", node: "record" }, augmented_ci, env)
-          }
-        }
-        case "iterable_big_map": return throw_error();
-      }
-      break;
-    }
-    case "big_map": return throw_error();
-    case "bls12_381_fr": return make_class([elt]);
-    case "bls12_381_g1": return make_class([elt]);
-    case "bls12_381_g2": return make_class([elt]);
-    case "bool": return [factory.createReturnStatement(
-      factory.createConditionalExpression(
-        factory.createPropertyAccessExpression(
-          elt,
-          factory.createIdentifier("prim")
-        ),
-        factory.createToken(ts.SyntaxKind.QuestionToken),
-        factory.createParenthesizedExpression(factory.createConditionalExpression(
-          factory.createBinaryExpression(
-            factory.createPropertyAccessExpression(
-              elt,
-              factory.createIdentifier("prim")
-            ),
-            factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-            factory.createStringLiteral("True")
-          ),
-          factory.createToken(ts.SyntaxKind.QuestionToken),
-          factory.createTrue(),
-          factory.createToken(ts.SyntaxKind.ColonToken),
-          factory.createFalse()
-        )),
-        factory.createToken(ts.SyntaxKind.ColonToken),
-        elt
-      )
-    )];
-    case "bytes": return make_class([elt]);
-    case "chain_id": return make_class([elt]);
-    case "chest_key": return make_class([elt]);
-    case "chest": return make_class([elt]);
-    case "collection": return throw_error();
-    case "contract": return throw_error();
-    case "currency": return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Tez")
-      ),
-      undefined,
-      [elt, factory.createStringLiteral("mutez")]
-    ))];
-    case "date": return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createIdentifier("Date"),
-      undefined,
-      [elt]
-    ))];
-    case "duration": return make_class([elt]);
-    case "enum": {
-      const e = get_enum(atype.name, ci)
-      const is_simple: boolean = e.type_michelson.prim != "or";
-      return [(is_simple ? make_enum_simple_return_body : make_enum_return_body)(elt, e, ci)]
-    }
-    case "int": return make_class([elt]);
-    case "iterable_big_map": return throw_error();
-    case "key_hash": return make_class([elt]);
-    case "key": return make_class([elt]);
-    case "lambda": return throw_error();
-    case "list": return make_list(atype);
-    case "map": {
-      return [
-        factory.createVariableStatement(
-          undefined,
-          factory.createVariableDeclarationList(
-            [factory.createVariableDeclaration(
-              factory.createIdentifier("res"),
-              undefined,
-              archetype_type_to_ts_type(atype)
-              ,
-              factory.createArrayLiteralExpression(
-                [],
-                false
-              )
-            )],
-            ts.NodeFlags.Let
-          )
-        ),
-        factory.createForOfStatement(
-          undefined,
-          factory.createVariableDeclarationList(
-            [factory.createVariableDeclaration(
-              factory.createIdentifier("e"),
-              undefined,
-              undefined,
-              undefined
-            )],
-            ts.NodeFlags.Let
-          ),
-          factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              elt,
-              factory.createIdentifier("entries")
-            ),
-            undefined,
-            []
-          ),
-          factory.createBlock(
-            [factory.createExpressionStatement(factory.createCallExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier("res"),
-                factory.createIdentifier("push")
-              ),
-              undefined,
-              [factory.createArrayLiteralExpression(
-                [
-                  get_lambda_form(
-                    taquito_to_ts(factory.createIdentifier("x"), atype.key_type, ci, { ...(env ?? {}), in_map_key: true }),
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("e"),
-                      factory.createIdentifier("0")
-                    )
-                  ),
-                  get_lambda_form(
-                    taquito_to_ts(factory.createIdentifier("x"), atype.value_type, ci, env),
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("e"),
-                      factory.createIdentifier("1")
-                    )
-                  )
-                ],
-                false
-              )]
-            ))],
-            true
-          )
-        ),
-        factory.createReturnStatement(factory.createIdentifier("res"))
-      ]
-    }
-    case "nat": return make_class([elt]);
-    case "never": return throw_error();
-    case "operation": return throw_error();
-    case "option": return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Option")
-      ),
-      [archetype_type_to_ts_type(atype.arg)],
-      [factory.createConditionalExpression(
-        factory.createBinaryExpression(
-          elt,
-          factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
-          factory.createNull()
-        ),
-        factory.createToken(ts.SyntaxKind.QuestionToken),
-        factory.createNull(),
-        factory.createToken(ts.SyntaxKind.ColonToken),
-        get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), atype.arg, ci, env), elt)
-      )]
-    ))];
-    case "or": return [factory.createReturnStatement(factory.createCallExpression(
-      factory.createParenthesizedExpression(factory.createArrowFunction(
-        undefined,
-        undefined,
-        [factory.createParameterDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          factory.createIdentifier("x"),
-          undefined,
-          undefined,
-          undefined
-        )],
-        undefined,
-        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-        factory.createBlock(
-          [
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("is_left"),
-                  undefined,
-                  undefined,
-                  factory.createBinaryExpression(
-                    factory.createElementAccessExpression(
-                      factory.createIdentifier("x"),
-                      factory.createStringLiteral("0")
-                    ),
-                    factory.createToken(ts.SyntaxKind.ExclamationEqualsEqualsToken),
-                    factory.createIdentifier("undefined")
-                  )
-                )],
-                ts.NodeFlags.Const
-              )
-            ),
-            factory.createVariableStatement(
-              undefined,
-              factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(
-                  factory.createIdentifier("value"),
-                  undefined,
-                  undefined,
-                  factory.createConditionalExpression(
-                    factory.createIdentifier("is_left"),
-                    factory.createToken(ts.SyntaxKind.QuestionToken),
-                    factory.createCallExpression(
-                      factory.createParenthesizedExpression(factory.createArrowFunction(
-                        undefined,
-                        undefined,
-                        [factory.createParameterDeclaration(
-                          undefined,
-                          undefined,
-                          undefined,
-                          factory.createIdentifier("x"),
-                          undefined,
-                          undefined,
-                          undefined
-                        )],
-                        undefined,
-                        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                        factory.createBlock(
-                          taquito_to_ts(factory.createIdentifier("x"), atype.left_type, ci, env),
-                          false
-                        )
-                      )),
-                      undefined,
-                      [factory.createElementAccessExpression(
-                        factory.createIdentifier("x"),
-                        factory.createStringLiteral("0")
-                      )]
-                    ),
-                    factory.createToken(ts.SyntaxKind.ColonToken),
-                    factory.createCallExpression(
-                      factory.createParenthesizedExpression(factory.createArrowFunction(
-                        undefined,
-                        undefined,
-                        [factory.createParameterDeclaration(
-                          undefined,
-                          undefined,
-                          undefined,
-                          factory.createIdentifier("x"),
-                          undefined,
-                          undefined,
-                          undefined
-                        )],
-                        undefined,
-                        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                        factory.createBlock(
-                          taquito_to_ts(factory.createIdentifier("x"), atype.right_type, ci, env),
-                          false
-                        )
-                      )),
-                      undefined,
-                      [factory.createElementAccessExpression(
-                        factory.createIdentifier("x"),
-                        factory.createStringLiteral("1")
-                      )]
-                    )
-                  )
-                )],
-                ts.NodeFlags.Const
-              )
-            ),
-            factory.createReturnStatement(factory.createNewExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier("att"),
-                factory.createIdentifier("Or")
-              ),
-              [
-                archetype_type_to_ts_type(atype.left_type),
-                archetype_type_to_ts_type(atype.right_type)
-              ],
-              [
-                factory.createIdentifier("value"),
-                factory.createIdentifier("is_left")
-              ]
-            ))
-          ],
-          true
-        )
-      )),
-      undefined,
-      [elt]
-    ))];
-    case "partition": return throw_error();
-    case "rational": return [factory.createReturnStatement(factory.createNewExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Rational")
-      ),
-      undefined,
-      [
-        access_nth_field(elt, 0),
-        access_nth_field(elt, 1)
-      ]
-    ))];
-    case "event":
-    case "record": {
-      const r = get_record_or_event_type(atype.name, ci)
-      const field_annot_names = get_field_annot_names(r)
-      if (r.fields.length == 1) {
-        const f = r.fields[0];
-        return [factory.createReturnStatement(get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci, env), elt))];
-      } else {
-        return [factory.createReturnStatement(factory.createNewExpression(
-          factory.createIdentifier(atype.name),
-          undefined,
-          r.fields.map((f, i) => {
-            const field_value = env.in_map_key ? factory.createElementAccessExpression(
-              elt,
-              factory.createNumericLiteral(i)
-            ) : factory.createPropertyAccessExpression(
-              elt,
-              factory.createIdentifier(field_annot_names[f.name])
-            )
-            return get_lambda_form(taquito_to_ts(factory.createIdentifier("x"), f.type, ci, env), field_value)
-          })
-        ))]
-      }
-    }
-    case "sapling_state": return make_class([elt]);
-    case "sapling_transaction": return make_class([elt]);
-    case "set": return make_list(atype);
-    case "signature": return make_class([elt]);
-    case "state": return throw_error();
-    case "string": return [factory.createReturnStatement(elt)];
-    case "ticket": return throw_error();
-    case "timestamp": return throw_error();
-    case "tuple": {
-      const array = get_tuple_body(elt, atype, ci)[0]
-      return [factory.createReturnStatement(factory.createArrayLiteralExpression(array))]
-    }
-    case "unit": return make_class([]);
-  }
 }
 
 /* Typescript To Micheline utils ------------------------------------------------------ */

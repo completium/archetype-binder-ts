@@ -38,8 +38,8 @@ export class Type_simple_bytes {
     }
     async get_res(): Promise<att.Bytes> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Bytes(storage);
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_bytes(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -34,15 +34,15 @@ export class Type_getter_string {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<string>(this.get_value_callback_address, x => { return x; });
+                return await ex.get_callback_value<string>(this.get_value_callback_address, x => { return att.mich_to_string(x); });
             }
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<string> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return storage;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_string(storage);
         }
         throw new Error("Contract not initialised");
     }

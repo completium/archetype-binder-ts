@@ -38,8 +38,8 @@ export class Type_simple_option_string {
     }
     async get_res(): Promise<att.Option<string>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            return new att.Option<string>(storage == null ? null : (x => { return x; })(storage));
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_option(storage, x => { return att.mich_to_string(x); });
         }
         throw new Error("Contract not initialised");
     }

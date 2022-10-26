@@ -81,15 +81,8 @@ export class Type_simple_enum_simple {
     }
     async get_res(): Promise<e_enum> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            if (storage == "2" || (storage.toNumber ? storage.toNumber() == 2 : false)) {
-                return new e_3();
-            }
-            else if (storage == "1" || (storage.toNumber ? storage.toNumber() == 1 : false)) {
-                return new e_2();
-            }
-            else
-                return new e_1();
+            const storage = await ex.get_raw_storage(this.address);
+            return mich_to_e_enum(storage);
         }
         throw new Error("Contract not initialised");
     }

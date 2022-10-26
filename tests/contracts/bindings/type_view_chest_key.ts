@@ -27,7 +27,7 @@ export class Type_view_chest_key {
     async view_get_value(i: att.Chest_key, params: Partial<ex.Parameters>): Promise<att.Chest_key> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return new att.Chest_key(mich.value);
+            return att.mich_to_chest_key(mich.value);
         }
         throw new Error("Contract not initialised");
     }

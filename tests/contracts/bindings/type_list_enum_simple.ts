@@ -83,19 +83,8 @@ export class Type_list_enum_simple {
     }
     async get_res(): Promise<Array<e_enum>> {
         if (this.address != undefined) {
-            const storage = await ex.get_storage(this.address);
-            const res: Array<e_enum> = [];
-            for (let i = 0; i < storage.length; i++) {
-                res.push((x => { if (x == "2" || (x.toNumber ? x.toNumber() == 2 : false)) {
-                    return new e_3();
-                }
-                else if (x == "1" || (x.toNumber ? x.toNumber() == 1 : false)) {
-                    return new e_2();
-                }
-                else
-                    return new e_1(); })(storage[i]));
-            }
-            return res;
+            const storage = await ex.get_raw_storage(this.address);
+            return att.mich_to_list(storage, x => { return mich_to_e_enum(x); });
         }
         throw new Error("Contract not initialised");
     }
