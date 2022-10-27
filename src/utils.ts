@@ -86,14 +86,49 @@ export type MTInt = {
 
 export type MichelsonType = MTPrimSimple | MTPrimSingle | MTPrimSingleInt | MTPrimPair | MTPrimMulti
 
-export type RawMichelsonType = {
+export type MDPrimSimple = {
+  prim: "False" | "None" | "True" | "Unit"
+}
+
+export type MDPrimSingle = {
+  prim: "Left" | "Right" | "Some"
+  args: [MichelsonData]
+}
+
+export type MDPrimPair = {
+  prim: "Elt"
+  args: [MichelsonData, MichelsonData]
+}
+
+export type MDPrimMulti = {
+  prim: "Pair"
+  args: Array<MichelsonData>
+}
+
+export type MDString = {
+  string: string
+}
+
+export type MDInt = {
+  int: string
+}
+
+export type MDBytes = {
+  bytes: string
+}
+
+export type MDArray = Array<MichelsonData>
+
+export type MichelsonData = MDString | MDInt | MDBytes | MDArray | MDPrimSimple | MDPrimSingle | MDPrimPair | MDPrimMulti
+
+export type RawMicheline = {
   "prim": string | null
   "int": string | null
   "bytes": string | null
   "string": string | null
-  "args": Array<RawMichelsonType>
+  "args": Array<RawMicheline>
   "annots": Array<string>
-  "array": Array<RawMichelsonType>
+  "array": Array<RawMicheline>
 }
 
 type ContractParameterGen<AT> = {
@@ -188,14 +223,14 @@ type EventGen<AT, MT> = {
 }
 export type Event = EventGen<ArchetypeType, MichelsonType>
 
-type ErrorGen = {
+type ErrorGen<MD> = {
   "kind": string
   "args": Array<string>
-  "expr": RawMichelsonType
+  "expr": MD
 }
-export type Error = ErrorGen
+export type Error = ErrorGen<MichelsonData>
 
-export type ContractInterfaceGen<AT, MT> = {
+export type ContractInterfaceGen<AT, MT, MD> = {
   "name": string,
   "parameters": Array<ContractParameterGen<AT>>
   "types": {
@@ -212,11 +247,11 @@ export type ContractInterfaceGen<AT, MT> = {
   "entrypoints": Array<EntrypointGen<AT>>
   "getters": Array<GetterGen<AT, MT>>
   "views": Array<ViewGen<AT>>
-  "errors": Array<ErrorGen>
+  "errors": Array<ErrorGen<MD>>
 }
 
-export type RawContractInterface = ContractInterfaceGen<RawArchetypeType, RawMichelsonType>
-export type ContractInterface = ContractInterfaceGen<ArchetypeType, MichelsonType>
+export type RawContractInterface = ContractInterfaceGen<RawArchetypeType, RawMicheline, RawMicheline>
+export type ContractInterface = ContractInterfaceGen<ArchetypeType, MichelsonType, MichelsonData>
 
 type TaquitoEnv = {
   in_map_key: boolean
@@ -1662,18 +1697,18 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
 
 /* Errors ------------------------------------------------------------------ */
 
-export const mich_type_to_error = (expr: RawMichelsonType): [string, ts.Expression] => {
-  if (expr.string != null) {
-    return [expr.string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
+export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression] => {
+  if ((expr as MDString) && (expr as MDString).string) {
+    return [(expr as MDString).string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier("string_to_mich")
       ),
       undefined,
-      [factory.createStringLiteral("\"" + expr.string + "\"")]
+      [factory.createStringLiteral("\"" + (expr as MDString).string + "\"")]
     )]
-  } else if (expr.prim == "Pair") {
-    const args = expr.args.map(mich_type_to_error)
+  } else if ((expr as MDPrimMulti) && (expr as MDPrimMulti).prim == "Pair") {
+    const args = (expr as MDPrimMulti).args.map(mich_type_to_error)
     const label = args.reduce((acc, n) => {
       return (acc == "" ? "" : acc + "_") + n[0].toUpperCase()
     }, "")
@@ -1685,15 +1720,15 @@ export const mich_type_to_error = (expr: RawMichelsonType): [string, ts.Expressi
       undefined,
       [factory.createArrayLiteralExpression(args.map(p => p[1]))]
     )]
-  } else if (expr.string) {
-    return ["NOT_HANDLED", factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("string_to_mich")
-      ),
-      undefined,
-      [factory.createStringLiteral(expr.string)]
-    )]
+    // } else if (expr.string) {
+    //   return ["NOT_HANDLED", factory.createCallExpression(
+    //     factory.createPropertyAccessExpression(
+    //       factory.createIdentifier("att"),
+    //       factory.createIdentifier("string_to_mich")
+    //     ),
+    //     undefined,
+    //     [factory.createStringLiteral(expr.string)]
+    //   )]
   } else {
     throw new Error("mich_type_to_error: invalid error")
   }
@@ -1957,7 +1992,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
     }
   }
 
-  const to_michelson_type = (rty: RawMichelsonType): MichelsonType => {
+  const to_michelson_type = (rty: RawMicheline): MichelsonType => {
     switch (rty.prim) {
       case "address": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
       case "big_map": return <MTPrimPair>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0]), to_michelson_type(rty.args[1])] }
@@ -1996,7 +2031,32 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
     }
   }
 
-  const to_michelson_type_is_storable = (i: { value: RawMichelsonType, is_storable: boolean }): { value: MichelsonType, is_storable: boolean } => {
+  const to_michelson_data = (rd: RawMicheline): MichelsonData => {
+    if (rd.string) {
+      return <MDString>{ string: rd.string }
+    } else if (rd.int) {
+      return <MDInt>{ int: rd.int }
+    } else if (rd.bytes) {
+      return <MDBytes>{ bytes: rd.bytes }
+    } else if (rd.prim) {
+      switch (rd.prim) {
+        case "Elt": return <MDPrimPair>{ prim: rd.prim, args: [to_michelson_data(rd.args[0]), to_michelson_data(rd.args[1])] }
+        case "False": return <MDPrimSimple>{ prim: rd.prim }
+        case "Left": return <MDPrimSingle>{ prim: rd.prim, args: [to_michelson_data(rd.args[0])] }
+        case "None": return <MDPrimSimple>{ prim: rd.prim }
+        case "Pair": return <MDPrimMulti>{ prim: rd.prim, args: rd.args.map(to_michelson_data) }
+        case "Right": return <MDPrimSingle>{ prim: rd.prim, args: [to_michelson_data(rd.args[0])] }
+        case "Some": return <MDPrimSingle>{ prim: rd.prim, args: [to_michelson_data(rd.args[0])] }
+        case "True": return <MDPrimSimple>{ prim: rd.prim }
+        case "Unit": return <MDPrimSimple>{ prim: rd.prim }
+        default: throw new Error(`to_michelson_data: Invalid data ${rd.prim ?? "null"}`)
+      }
+    } else {
+      return <MDArray>(rd.array.map(to_michelson_data))
+    }
+  }
+
+  const to_michelson_type_is_storable = (i: { value: RawMicheline, is_storable: boolean }): { value: MichelsonType, is_storable: boolean } => {
     return { value: to_michelson_type(i.value), is_storable: i.is_storable }
   }
 
@@ -2016,7 +2076,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
     "name": rci.name,
     "parameters": rci.parameters.map((i: ContractParameterGen<RawArchetypeType>): ContractParameter => { return { ...i, "type": to_archetype_type(i.type) } }),
     "types": {
-      assets: rci.types.assets.map((i: AssetGen<RawArchetypeType, RawMichelsonType>): Asset => {
+      assets: rci.types.assets.map((i: AssetGen<RawArchetypeType, RawMicheline>): Asset => {
         return {
           ...i,
           "fields": i.fields.map(for_field),
@@ -2025,21 +2085,21 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
           "value_type_michelson": to_michelson_type(i.value_type_michelson),
         }
       }),
-      enums: rci.types.enums.map((i: EnumGen<RawArchetypeType, RawMichelsonType>): Enum => {
+      enums: rci.types.enums.map((i: EnumGen<RawArchetypeType, RawMicheline>): Enum => {
         return {
           ...i,
           "constructors": i.constructors.map((i: EnumValueGen<RawArchetypeType>): EnumValue => { return { ...i, "types": i.types.map(to_archetype_type) } }),
           "type_michelson": to_michelson_type(i.type_michelson),
         }
       }),
-      records: rci.types.records.map((i: RecordGen<RawArchetypeType, RawMichelsonType>): Record => {
+      records: rci.types.records.map((i: RecordGen<RawArchetypeType, RawMicheline>): Record => {
         return {
           ...i,
           "fields": i.fields.map(for_field_omit),
           "type_michelson": to_michelson_type(i.type_michelson)
         }
       }),
-      events: rci.types.events.map((i: RecordGen<RawArchetypeType, RawMichelsonType>): Record => {
+      events: rci.types.events.map((i: RecordGen<RawArchetypeType, RawMicheline>): Record => {
         return {
           ...i,
           "fields": i.fields.map(for_field_omit),
@@ -2057,7 +2117,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
         "args": i.args.map(for_function_parameter)
       }
     }),
-    getters: rci.getters.map((i: GetterGen<RawArchetypeType, RawMichelsonType>): Getter => {
+    getters: rci.getters.map((i: GetterGen<RawArchetypeType, RawMicheline>): Getter => {
       return {
         ...i,
         "args": i.args.map(for_function_parameter),
@@ -2066,11 +2126,11 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       }
     }),
     views: rci.views.map((i: ViewGen<RawArchetypeType>): View => { return { ...i, "args": i.args.map(for_function_parameter), "return": to_archetype_type(i.return) } }),
-    errors: rci.errors
+    errors: rci.errors.map(x => { return { ...x, expr: to_michelson_data(x.expr) } })
   }
 }
 
-export const to_michelson_type = (rmt: RawMichelsonType): MichelsonType => {
+export const to_michelson_type = (rmt: RawMicheline): MichelsonType => {
   switch (rmt.prim) {
     case "address": return { prim: rmt.prim, annots: rmt.annots }
     case "big_map": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0]), to_michelson_type(rmt.args[1])] }
@@ -2105,7 +2165,7 @@ export const to_michelson_type = (rmt: RawMichelsonType): MichelsonType => {
     case "timestamp": return { prim: rmt.prim, annots: rmt.annots }
     case "tx_rollup_l2_address": return { prim: rmt.prim, annots: rmt.annots }
     case "unit": return { prim: rmt.prim, annots: rmt.annots }
-    default: throw new Error("to_michelson_type: Invalid type")
+    default: throw new Error(`to_michelson_type: Invalid type ${rmt.prim ?? "null"}`)
   }
 }
 
