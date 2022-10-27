@@ -51,54 +51,89 @@ export type RawArchetypeType = {
   args: Array<RawArchetypeType>
 }
 
-export type MichelsonType = {
+export type MTPrimSimple = {
+  prim: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "int" | "key_hash" | "key" | "mutez" | "nat" | "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
+  annots?: Array<string>
+}
+
+export type MTPrimSingle = {
+  prim: "contract" | "list" | "option" | "set" | "ticket"
+  annots?: Array<string>
+  args: [MichelsonType]
+}
+
+export type MTPrimSingleInt = {
+  prim: "sapling_state" | "sapling_transaction"
+  annots?: Array<string>
+  args: [MTInt]
+}
+
+export type MTPrimPair = {
+  prim: "big_map" | "lambda" | "map" | "or"
+  annots?: Array<string>
+  args: [MichelsonType, MichelsonType]
+}
+
+export type MTPrimMulti = {
+  prim: "pair"
+  annots?: Array<string>
+  args: Array<MichelsonType>
+}
+
+export type MTInt = {
+  int: string
+}
+
+export type MichelsonType = MTPrimSimple | MTPrimSingle | MTPrimSingleInt | MTPrimPair | MTPrimMulti
+
+export type RawMichelsonType = {
   "prim": string | null
   "int": string | null
   "bytes": string | null
   "string": string | null
-  "args": Array<MichelsonType>
+  "args": Array<RawMichelsonType>
   "annots": Array<string>
-  "array": Array<MichelsonType>
+  "array": Array<RawMichelsonType>
 }
 
-type ContractParameterGen<T> = {
+type ContractParameterGen<AT> = {
   "name": string
-  "type": T
+  "type": AT
   "const": boolean
   "default": string | null
   "path": Array<number>
 }
 export type ContractParameter = ContractParameterGen<ArchetypeType>
 
-type FunctionParameterGen<T> = {
+type FunctionParameterGen<AT> = {
   "name": string
-  "type": T
+  "type": AT
 }
 export type FunctionParameter = FunctionParameterGen<ArchetypeType>
 
-type EntrypointGen<T> = {
+type EntrypointGen<AT> = {
   "name": string
-  "args": Array<FunctionParameterGen<T>>
+  "args": Array<FunctionParameterGen<AT>>
 }
 export type Entrypoint = EntrypointGen<ArchetypeType>
 
-type FieldGen<T> = {
+type FieldGen<AT> = {
   "name": string
-  "type": T
+  "type": AT
   "is_key": boolean
 }
 export type Field = FieldGen<ArchetypeType>
 
 
-type AssetGen<T> = {
+type AssetGen<AT, MT> = {
   "name": string
   "container_kind": "map" | "big_map" | "iterable_big_map"
-  "fields": Array<FieldGen<T>>
-  "container_type_michelson": MichelsonType
-  "key_type_michelson": MichelsonType
-  "value_type_michelson": MichelsonType
+  "fields": Array<FieldGen<AT>>
+  "container_type_michelson": MT
+  "key_type_michelson": MT
+  "value_type_michelson": MT
 }
-export type Asset = AssetGen<ArchetypeType>
+export type Asset = AssetGen<ArchetypeType, MichelsonType>
 
 type EnumValueGen<T> = {
   "name": string,
@@ -106,81 +141,82 @@ type EnumValueGen<T> = {
 }
 export type EnumValue = EnumValueGen<ArchetypeType>
 
-type EnumGen<T> = {
+type EnumGen<AT, MT> = {
   "name": string
-  "constructors": Array<EnumValueGen<T>>
-  "type_michelson": MichelsonType
+  "constructors": Array<EnumValueGen<AT>>
+  "type_michelson": MT
 }
-export type Enum = EnumGen<ArchetypeType>
+export type Enum = EnumGen<ArchetypeType, MichelsonType>
 
-type StorageElementGen<T> = {
+type StorageElementGen<AT> = {
   "name": string
-  "type": T
+  "type": AT
   "const": boolean
   "path": Array<number>
 }
 export type StorageElement = StorageElementGen<ArchetypeType>
 
-type RecordGen<T> = {
+type RecordGen<AT, MT> = {
   "name": string
-  "fields": Array<Omit<FieldGen<T>, "is_key">>
-  "type_michelson": MichelsonType
+  "fields": Array<Omit<FieldGen<AT>, "is_key">>
+  "type_michelson": MT
 }
-export type Record = RecordGen<ArchetypeType>
+export type Record = RecordGen<ArchetypeType, MichelsonType>
 
-type GetterGen<T> = {
+type GetterGen<AT, MT> = {
   "name": string
-  "args": Array<FunctionParameterGen<T>>
-  "return": T
+  "args": Array<FunctionParameterGen<AT>>
+  "return": AT
   "return_michelson": {
-    "value": MichelsonType
+    "value": MT
     "is_storable": boolean
   }
 }
-export type Getter = GetterGen<ArchetypeType>
+export type Getter = GetterGen<ArchetypeType, MichelsonType>
 
-type ViewGen<T> = {
+type ViewGen<AT> = {
   "name": string
-  "args": Array<FunctionParameterGen<T>>
-  "return": T
+  "args": Array<FunctionParameterGen<AT>>
+  "return": AT
 }
 export type View = ViewGen<ArchetypeType>
 
-type EventGen<T> = {
+type EventGen<AT, MT> = {
   "name": string
-  "fields": Array<Omit<FieldGen<T>, "is_key">>
-  "type_michelson": MichelsonType
+  "fields": Array<Omit<FieldGen<AT>, "is_key">>
+  "type_michelson": MT
 }
-export type Event = EventGen<ArchetypeType>
+export type Event = EventGen<ArchetypeType, MichelsonType>
 
-export type Error = {
+type ErrorGen = {
   "kind": string
   "args": Array<string>
-  "expr": MichelsonType
+  "expr": RawMichelsonType
 }
+export type Error = ErrorGen
 
-export type ContractInterfaceGen<T> = {
+export type ContractInterfaceGen<AT, MT> = {
   "name": string,
-  "parameters": Array<ContractParameterGen<T>>
+  "parameters": Array<ContractParameterGen<AT>>
   "types": {
-    "assets": Array<AssetGen<T>>
-    "enums": Array<EnumGen<T>>
-    "records": Array<RecordGen<T>>
-    "events": Array<EventGen<T>>
+    "assets": Array<AssetGen<AT, MT>>
+    "enums": Array<EnumGen<AT, MT>>
+    "records": Array<RecordGen<AT, MT>>
+    "events": Array<EventGen<AT, MT>>
   }
-  "storage": Array<StorageElementGen<T>>
-  "storage_type": null | {
-    "value": MichelsonType
+  "storage": Array<StorageElementGen<AT>>
+  "storage_type": {
+    "value": MT
     "is_storable": boolean
   }
-  "entrypoints": Array<EntrypointGen<T>>
-  "getters": Array<GetterGen<T>>
-  "views": Array<ViewGen<T>>
-  "errors": Array<Error>
+  "entrypoints": Array<EntrypointGen<AT>>
+  "getters": Array<GetterGen<AT, MT>>
+  "views": Array<ViewGen<AT>>
+  "errors": Array<ErrorGen>
 }
 
-export type RawContractInterface = ContractInterfaceGen<RawArchetypeType>
-export type ContractInterface = ContractInterfaceGen<ArchetypeType>
+export type RawContractInterface = ContractInterfaceGen<RawArchetypeType, RawMichelsonType>
+export type ContractInterface = ContractInterfaceGen<ArchetypeType, MichelsonType>
 
 type TaquitoEnv = {
   in_map_key: boolean
@@ -194,78 +230,57 @@ export const makeTaquitoEnv = (): TaquitoEnv => {
 
 
 export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType => {
-  const generate_int = (value: string) => {
-    return {
-      prim: null,
-      int: value,
-      bytes: null,
-      string: null,
-      args: [],
-      annots: [],
-      array: [],
-    }
-  }
-  const generate_mich = (prim: string, args?: Array<MichelsonType>) => {
-    return {
-      prim: prim,
-      int: null,
-      bytes: null,
-      string: null,
-      args: args ?? [],
-      annots: [],
-      array: [],
-    }
-  }
   switch (at.node) {
     /* TODO record asset tuple enum option or ... */
-    case "address": return generate_mich(at.node)
-    case "aggregate": return generate_mich(at.node)
-    case "asset_container": return generate_mich(at.node)
-    case "asset_key": return generate_mich(at.node)
-    case "asset_value": return generate_mich(at.node)
-    case "asset_view": return generate_mich(at.node)
-    case "asset": return generate_mich(at.node)
-    case "big_map": return generate_mich(at.node, [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)])
-    case "bls12_381_fr": return generate_mich(at.node)
-    case "bls12_381_g1": return generate_mich(at.node)
-    case "bls12_381_g2": return generate_mich(at.node)
-    case "bool": return generate_mich(at.node)
-    case "bytes": return generate_mich(at.node)
-    case "chain_id": return generate_mich(at.node)
-    case "chest_key": return generate_mich(at.node)
-    case "chest": return generate_mich(at.node)
-    case "collection": return generate_mich(at.node)
-    case "contract": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
-    case "currency": return generate_mich("mutez")
-    case "date": return generate_mich(at.node)
-    case "duration": return generate_mich(at.node)
-    case "enum": return generate_mich(at.node)
-    case "event": return generate_mich(at.node)
-    case "int": return generate_mich(at.node)
-    case "iterable_big_map": return generate_mich(at.node)
-    case "key_hash": return generate_mich(at.node)
-    case "key": return generate_mich(at.node)
-    case "lambda": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg_type), archetype_type_to_mich_type(at.ret_type)])
-    case "list": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
-    case "map": return generate_mich(at.node, [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)])
-    case "nat": return generate_mich(at.node)
-    case "never": return generate_mich(at.node)
-    case "operation": return generate_mich(at.node)
-    case "option": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
-    case "or": return generate_mich(at.node, [archetype_type_to_mich_type(at.left_type), archetype_type_to_mich_type(at.right_type)])
-    case "partition": return generate_mich(at.node)
-    case "rational": return generate_mich("pair", [generate_mich("int"), generate_mich("nat")])
-    case "record": return generate_mich(at.node)
-    case "sapling_state": return generate_mich(at.node, [generate_int(at.memo_size.toString())])
-    case "sapling_transaction": return generate_mich(at.node, [generate_int(at.memo_size.toString())])
-    case "set": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
-    case "signature": return generate_mich(at.node)
-    case "state": return generate_mich(at.node)
-    case "string": return generate_mich(at.node)
-    case "ticket": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
-    case "timestamp": return generate_mich(at.node)
-    case "tuple": return generate_mich("pair", at.args.map(x => { return archetype_type_to_mich_type(x) }))
-    case "unit": return generate_mich(at.node)
+    case "address": return <MTPrimSimple>{ prim: at.node }
+    case "aggregate": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "asset_container": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "asset_key": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "asset_value": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "asset_view": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "asset": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "big_map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)] }
+    case "bls12_381_fr": return <MTPrimSimple>{ prim: at.node }
+    case "bls12_381_g1": return <MTPrimSimple>{ prim: at.node }
+    case "bls12_381_g2": return <MTPrimSimple>{ prim: at.node }
+    case "bool": return <MTPrimSimple>{ prim: at.node }
+    case "bytes": return <MTPrimSimple>{ prim: at.node }
+    case "chain_id": return <MTPrimSimple>{ prim: at.node }
+    case "chest_key": return <MTPrimSimple>{ prim: at.node }
+    case "chest": return <MTPrimSimple>{ prim: at.node }
+    case "collection": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "contract": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "currency": return <MTPrimSimple>{ prim: "mutez" }
+    case "date": return <MTPrimSimple>{ prim: "timestamp" }
+    case "duration": return <MTPrimSimple>{ prim: "nat" }
+    case "enum": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "event": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "int": return <MTPrimSimple>{ prim: at.node }
+    case "iterable_big_map": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "key_hash": return <MTPrimSimple>{ prim: at.node }
+    case "key": return <MTPrimSimple>{ prim: at.node }
+    case "lambda": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg_type), archetype_type_to_mich_type(at.ret_type)] }
+    case "list": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)] }
+    case "nat": return <MTPrimSimple>{ prim: at.node }
+    case "never": return <MTPrimSimple>{ prim: at.node }
+    case "operation": return <MTPrimSimple>{ prim: at.node }
+    case "option": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "or": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.left_type), archetype_type_to_mich_type(at.right_type)] }
+    case "partition": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "rational": return <MTPrimMulti>{ prim: "pair", args: [<MTPrimSimple>{ prim: "int" }, <MTPrimSimple>{ prim: "nat" }] }
+    case "record": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "sapling_state": return <MTPrimSingleInt>{ prim: at.node, args: [<MTInt>{ int: at.memo_size.toString() }] }
+    case "sapling_transaction": return <MTPrimSingleInt>{ prim: at.node, args: [<MTInt>{ int: at.memo_size.toString() }] }
+    case "set": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "signature": return <MTPrimSimple>{ prim: at.node }
+    case "state": return <MTPrimSimple>{ prim: "int" }
+    case "string": return <MTPrimSimple>{ prim: at.node }
+    case "ticket": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "timestamp": return <MTPrimSimple>{ prim: at.node }
+    case "tuple": return <MTPrimMulti>{ prim: "pair", args: at.args.map(x => { return archetype_type_to_mich_type(x) }) }
+    case "unit": return <MTPrimSimple>{ prim: at.node }
+    default: throw new Error("error")
   }
 }
 
@@ -751,7 +766,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
   }
 
-  const TODO = (ty: string, x : ts.Expression): ts.Expression => {
+  const TODO = (ty: string, x: ts.Expression): ts.Expression => {
     throw new Error(`TODO: ${ty}`)
   }
 
@@ -1013,7 +1028,7 @@ const get_asset_type = (name: string, ci: ContractInterface) => {
 const get_field_annot_names = (r: Record): { [key: string]: string } => {
   const internal_get_fan =
     (mt: MichelsonType, idx: number, acc: { [key: string]: string }): [number, { [key: string]: string }] => {
-      if (mt.annots.length > 0) {
+      if (mt.annots && mt.annots.length > 0) {
         const annot = mt.annots[0].slice(1)
         acc[r.fields[idx].name] = annot
         return [idx + 1, acc]
@@ -1386,7 +1401,7 @@ export const function_params_to_mich = (a: Array<FunctionParameter>) => {
 }
 
 export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>): ts.Expression => {
-  if (mt.prim == "pair" && mt.annots.length == 0) {
+  if (mt.prim == "pair" && mt.annots && mt.annots.length == 0) {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
@@ -1400,7 +1415,7 @@ export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>)
     )
   } else {
     let selt = selts[0]
-    if (mt.annots.length > 0) {
+    if (mt.annots && mt.annots.length > 0) {
       const annot = mt.annots[0]
       for (let i = 0; i < selts.length; i++) {
         if (annot == "%" + selts[i].name) {
@@ -1453,7 +1468,7 @@ const mich_type_to_archetype = (mt: MichelsonType): ArchetypeType => {
  * @returns pair of number of fields looked up so far and 'to_mich' expression
  */
 export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Partial<Field>>, fidx = 0): [number, ts.CallExpression] => {
-  if (mt.annots.length > 0) {
+  if (mt.annots && mt.annots.length > 0) {
     //const name = mt.annots[0].slice(1)
     const name = get_field_name_from_idx(fidx, fields)
 
@@ -1511,7 +1526,43 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
 
 
 export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
+  const for_composite_type = (arg: MichelsonType) => {
+    const annots = mt.annots ? (mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []) : []
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("list_annot_to_mich_type")
+      ),
+      undefined,
+      [
+        value_to_mich_type(arg),
+        factory.createArrayLiteralExpression(
+          annots,
+          false
+        )
+      ])
+  }
+
+  const for_simple_type = (prim: string, annots: Array<string>) => {
+    const exprAnnots = annots.length >= 1 ? [factory.createStringLiteral(annots[0])] : []
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("prim_annot_to_mich_type")
+      ),
+      undefined,
+      [
+        factory.createStringLiteral(prim),
+        factory.createArrayLiteralExpression(
+          exprAnnots,
+          false
+        )
+      ]
+    )
+  }
+
   switch (mt.prim) {
+    case "address": return for_simple_type(mt.prim, mt.annots ?? [])
     case "big_map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
@@ -1520,6 +1571,20 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
       undefined,
       [factory.createStringLiteral("big_map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])]
     )
+    case "bls12_381_fr": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "bls12_381_g1": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "bls12_381_g2": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "bool": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "bytes": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "chain_id": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "chest_key": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "chest": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "contract": throw new Error(`value_to_mich_type: TODO: ${mt.prim}`)
+    case "int": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "key_hash": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "key": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "lambda": throw new Error(`value_to_mich_type: TODO: ${mt.prim}`)
+    case "list": return for_composite_type(mt.args[0])
     case "map": return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
@@ -1528,8 +1593,43 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
       undefined,
       [factory.createStringLiteral("map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])]
     )
+    case "mutez": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "nat": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "never": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "operation": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "option": {
+      const annots = mt.annots ? (mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []) : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("option_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          value_to_mich_type(mt.args[0]),
+          factory.createArrayLiteralExpression(
+            annots,
+            false
+          )
+        ])
+    }
+    case "or": return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("or_to_mich_type")
+      ),
+      undefined,
+      [
+        value_to_mich_type(mt.args[0]),
+        value_to_mich_type(mt.args[1]),
+
+        factory.createArrayLiteralExpression(
+          mt.annots ? mt.annots.map(a => factory.createStringLiteral(a, false)) : []
+        )
+      ]
+    )
     case "pair": {
-      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      const annots = mt.annots ? (mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []) : []
       return factory.createCallExpression(
         factory.createPropertyAccessExpression(
           factory.createIdentifier("att"),
@@ -1548,78 +1648,21 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
         ]
       )
     }
-    case "option": {
-      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("option_annot_to_mich_type")
-        ),
-        undefined,
-        [
-          value_to_mich_type(mt.args[0]),
-          factory.createArrayLiteralExpression(
-            annots,
-            false
-          )
-        ])
-    }
-    case "set":
-    case "list": {
-      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("list_annot_to_mich_type")
-        ),
-        undefined,
-        [
-          value_to_mich_type(mt.args[0]),
-          factory.createArrayLiteralExpression(
-            annots,
-            false
-          )
-        ])
-    }
-    case "or":
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("or_to_mich_type")
-        ),
-        undefined,
-        [
-          value_to_mich_type(mt.args[0]),
-          value_to_mich_type(mt.args[1]),
-          factory.createArrayLiteralExpression(
-            mt.annots.map(a => factory.createStringLiteral(a, false))
-          )
-        ]
-      )
-    default: {
-      const prim = mt.prim == null ? "string" : mt.prim
-      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("prim_annot_to_mich_type")
-        ),
-        undefined,
-        [
-          factory.createStringLiteral(prim),
-          factory.createArrayLiteralExpression(
-            annots,
-            false
-          )
-        ]
-      )
-    }
+    case "sapling_state": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "sapling_transaction": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "set": return for_composite_type(mt.args[0])
+    case "signature": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "string": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "ticket": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "timestamp": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "tx_rollup_l2_address": return for_simple_type(mt.prim, mt.annots ?? [])
+    case "unit": return for_simple_type(mt.prim, mt.annots ?? [])
   }
 }
 
 /* Errors ------------------------------------------------------------------ */
 
-export const mich_type_to_error = (expr: MichelsonType): [string, ts.Expression] => {
+export const mich_type_to_error = (expr: RawMichelsonType): [string, ts.Expression] => {
   if (expr.string != null) {
     return [expr.string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1914,6 +1957,49 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
     }
   }
 
+  const to_michelson_type = (rty: RawMichelsonType): MichelsonType => {
+    switch (rty.prim) {
+      case "address": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "big_map": return <MTPrimPair>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0]), to_michelson_type(rty.args[1])] }
+      case "bls12_381_fr": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "bls12_381_g1": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "bls12_381_g2": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "bool": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "bytes": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "chain_id": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "chest_key": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "chest": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "contract": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
+      case "int": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "key_hash": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "key": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "lambda": return <MTPrimPair>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0]), to_michelson_type(rty.args[1])] }
+      case "list": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
+      case "map": return <MTPrimPair>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0]), to_michelson_type(rty.args[1])] }
+      case "mutez": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "nat": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "never": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "operation": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "option": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
+      case "or": return <MTPrimPair>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0]), to_michelson_type(rty.args[1])] }
+      case "pair": return <MTPrimMulti>{ prim: rty.prim, annots: rty.annots, args: rty.args.map(to_michelson_type) }
+      case "sapling_state": return <MTPrimSingleInt>{ prim: rty.prim, annots: rty.annots, args: [{ int: rty.args[0].int }] }
+      case "sapling_transaction": return <MTPrimSingleInt>{ prim: rty.prim, annots: rty.annots, args: [{ int: rty.args[0].int }] }
+      case "set": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
+      case "signature": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "string": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "ticket": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
+      case "timestamp": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "tx_rollup_l2_address": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      case "unit": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
+      default: throw new Error(`to_michelson_type: Invalid type ${rty.prim ?? "null"}`)
+    }
+  }
+
+  const to_michelson_type_is_storable = (i: { value: RawMichelsonType, is_storable: boolean }): { value: MichelsonType, is_storable: boolean } => {
+    return { value: to_michelson_type(i.value), is_storable: i.is_storable }
+  }
+
   const for_field = (i: FieldGen<RawArchetypeType>): Field => {
     return { ...i, "type": to_archetype_type(i.type) }
   };
@@ -1930,19 +2016,96 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
     "name": rci.name,
     "parameters": rci.parameters.map((i: ContractParameterGen<RawArchetypeType>): ContractParameter => { return { ...i, "type": to_archetype_type(i.type) } }),
     "types": {
-      assets: rci.types.assets.map((i: AssetGen<RawArchetypeType>): Asset => { return { ...i, "fields": i.fields.map(for_field) } }),
-      enums: rci.types.enums.map((i: EnumGen<RawArchetypeType>): Enum => { return { ...i, "constructors": i.constructors.map((i: EnumValueGen<RawArchetypeType>): EnumValue => { return { ...i, "types": i.types.map(to_archetype_type) } }) } }),
-      records: rci.types.records.map((i: RecordGen<RawArchetypeType>): Record => { return { ...i, "fields": i.fields.map(for_field_omit) } }),
-      events: rci.types.events.map((i: RecordGen<RawArchetypeType>): Record => { return { ...i, "fields": i.fields.map(for_field_omit) } }),
+      assets: rci.types.assets.map((i: AssetGen<RawArchetypeType, RawMichelsonType>): Asset => {
+        return {
+          ...i,
+          "fields": i.fields.map(for_field),
+          "container_type_michelson": to_michelson_type(i.container_type_michelson),
+          "key_type_michelson": to_michelson_type(i.key_type_michelson),
+          "value_type_michelson": to_michelson_type(i.value_type_michelson),
+        }
+      }),
+      enums: rci.types.enums.map((i: EnumGen<RawArchetypeType, RawMichelsonType>): Enum => {
+        return {
+          ...i,
+          "constructors": i.constructors.map((i: EnumValueGen<RawArchetypeType>): EnumValue => { return { ...i, "types": i.types.map(to_archetype_type) } }),
+          "type_michelson": to_michelson_type(i.type_michelson),
+        }
+      }),
+      records: rci.types.records.map((i: RecordGen<RawArchetypeType, RawMichelsonType>): Record => {
+        return {
+          ...i,
+          "fields": i.fields.map(for_field_omit),
+          "type_michelson": to_michelson_type(i.type_michelson)
+        }
+      }),
+      events: rci.types.events.map((i: RecordGen<RawArchetypeType, RawMichelsonType>): Record => {
+        return {
+          ...i,
+          "fields": i.fields.map(for_field_omit),
+          "type_michelson": to_michelson_type(i.type_michelson)
+        }
+      }),
     },
     storage: rci.storage.map((i: StorageElementGen<RawArchetypeType>): StorageElement => {
       return { ...i, "type": to_archetype_type(i.type) }
     }),
-    storage_type: rci.storage_type,
-    entrypoints: rci.entrypoints.map((i: EntrypointGen<RawArchetypeType>): Entrypoint => { return { ...i, "args": i.args.map(for_function_parameter) } }),
-    getters: rci.getters.map((i: GetterGen<RawArchetypeType>): Getter => { return { ...i, "args": i.args.map(for_function_parameter), "return": to_archetype_type(i.return) } }),
+    storage_type: to_michelson_type_is_storable(rci.storage_type),
+    entrypoints: rci.entrypoints.map((i: EntrypointGen<RawArchetypeType>): Entrypoint => {
+      return {
+        ...i,
+        "args": i.args.map(for_function_parameter)
+      }
+    }),
+    getters: rci.getters.map((i: GetterGen<RawArchetypeType, RawMichelsonType>): Getter => {
+      return {
+        ...i,
+        "args": i.args.map(for_function_parameter),
+        "return": to_archetype_type(i.return),
+        "return_michelson": to_michelson_type_is_storable(i.return_michelson)
+      }
+    }),
     views: rci.views.map((i: ViewGen<RawArchetypeType>): View => { return { ...i, "args": i.args.map(for_function_parameter), "return": to_archetype_type(i.return) } }),
     errors: rci.errors
   }
-
 }
+
+export const to_michelson_type = (rmt: RawMichelsonType): MichelsonType => {
+  switch (rmt.prim) {
+    case "address": return { prim: rmt.prim, annots: rmt.annots }
+    case "big_map": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0]), to_michelson_type(rmt.args[1])] }
+    case "bls12_381_fr": return { prim: rmt.prim, annots: rmt.annots }
+    case "bls12_381_g1": return { prim: rmt.prim, annots: rmt.annots }
+    case "bls12_381_g2": return { prim: rmt.prim, annots: rmt.annots }
+    case "bool": return { prim: rmt.prim, annots: rmt.annots }
+    case "bytes": return { prim: rmt.prim, annots: rmt.annots }
+    case "chain_id": return { prim: rmt.prim, annots: rmt.annots }
+    case "chest_key": return { prim: rmt.prim, annots: rmt.annots }
+    case "chest": return { prim: rmt.prim, annots: rmt.annots }
+    case "contract": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
+    case "int": return { prim: rmt.prim, annots: rmt.annots }
+    case "key_hash": return { prim: rmt.prim, annots: rmt.annots }
+    case "key": return { prim: rmt.prim, annots: rmt.annots }
+    case "lambda": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0]), to_michelson_type(rmt.args[1])] }
+    case "list": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
+    case "map": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0]), to_michelson_type(rmt.args[1])] }
+    case "mutez": return { prim: rmt.prim, annots: rmt.annots }
+    case "nat": return { prim: rmt.prim, annots: rmt.annots }
+    case "never": return { prim: rmt.prim, annots: rmt.annots }
+    case "operation": return { prim: rmt.prim, annots: rmt.annots }
+    case "option": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
+    case "or": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0]), to_michelson_type(rmt.args[1])] }
+    case "pair": return { prim: rmt.prim, annots: rmt.annots, args: rmt.args.map(to_michelson_type) }
+    case "sapling_state": { if (rmt.args[0].int == null) { throw new Error("to_michelson_type: Invalid sapling_state") } return { prim: rmt.prim, annots: rmt.annots, args: [{ int: rmt.args[0].int }] } }
+    case "sapling_transaction": { if (rmt.args[0].int == null) { throw new Error("to_michelson_type: Invalid sapling_transaction") } return { prim: rmt.prim, annots: rmt.annots, args: [{ int: rmt.args[0].int }] } }
+    case "set": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
+    case "signature": return { prim: rmt.prim, annots: rmt.annots }
+    case "string": return { prim: rmt.prim, annots: rmt.annots }
+    case "ticket": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
+    case "timestamp": return { prim: rmt.prim, annots: rmt.annots }
+    case "tx_rollup_l2_address": return { prim: rmt.prim, annots: rmt.annots }
+    case "unit": return { prim: rmt.prim, annots: rmt.annots }
+    default: throw new Error("to_michelson_type: Invalid type")
+  }
+}
+
