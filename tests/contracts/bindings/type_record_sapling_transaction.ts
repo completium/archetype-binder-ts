@@ -15,7 +15,7 @@ export class my_record implements att.ArchetypeType {
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
     att.pair_array_to_mich_type([
-        att.prim_annot_to_mich_type("sapling_transaction(8)", ["%v"]),
+        att.prim_annot_to_mich_type("sapling_transaction", ["%v"]),
         att.prim_annot_to_mich_type("string", ["%s"])
     ], [])
 ], []);

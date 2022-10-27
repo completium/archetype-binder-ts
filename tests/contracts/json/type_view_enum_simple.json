@@ -37,7 +37,20 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "unit",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [],
   "getters": [],
   "views": [
@@ -49,6 +62,7 @@
           "type": {
             "node": "enum",
             "name": "e_enum",
+            "int_value": null,
             "args": []
           }
         }
@@ -56,6 +70,7 @@
       "return": {
         "node": "enum",
         "name": "e_enum",
+        "int_value": null,
         "args": []
       },
       "return_michelson": {

@@ -12,15 +12,18 @@
             "type": {
               "node": "tuple",
               "name": null,
+              "int_value": null,
               "args": [
                 {
                   "node": "nat",
                   "name": null,
+                  "int_value": null,
                   "args": []
                 },
                 {
                   "node": "string",
                   "name": null,
+                  "int_value": null,
                   "args": []
                 }
               ]
@@ -32,6 +35,7 @@
             "type": {
               "node": "nat",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": true
@@ -41,6 +45,7 @@
             "type": {
               "node": "string",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": false
@@ -214,13 +219,96 @@
       "type": {
         "node": "asset",
         "name": "my_asset",
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "map",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "nat",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "string",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "nat",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "asset_put",
@@ -230,15 +318,18 @@
           "type": {
             "node": "tuple",
             "name": null,
+            "int_value": null,
             "args": [
               {
                 "node": "nat",
                 "name": null,
+                "int_value": null,
                 "args": []
               },
               {
                 "node": "string",
                 "name": null,
+                "int_value": null,
                 "args": []
               }
             ]

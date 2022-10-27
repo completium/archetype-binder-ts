@@ -6,6 +6,7 @@
       "type": {
         "node": "signature",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "const": false,
@@ -20,7 +21,20 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "signature",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "asset_add",
@@ -30,6 +44,7 @@
           "type": {
             "node": "signature",
             "name": null,
+            "int_value": null,
             "args": []
           }
         }

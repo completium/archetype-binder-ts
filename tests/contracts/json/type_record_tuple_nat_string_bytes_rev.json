@@ -13,6 +13,7 @@
             "type": {
               "node": "nat",
               "name": null,
+              "int_value": null,
               "args": []
             }
           },
@@ -21,19 +22,23 @@
             "type": {
               "node": "tuple",
               "name": null,
+              "int_value": null,
               "args": [
                 {
                   "node": "tuple",
                   "name": null,
+                  "int_value": null,
                   "args": [
                     {
                       "node": "nat",
                       "name": null,
+                      "int_value": null,
                       "args": []
                     },
                     {
                       "node": "string",
                       "name": null,
+                      "int_value": null,
                       "args": []
                     }
                   ]
@@ -41,6 +46,7 @@
                 {
                   "node": "bytes",
                   "name": null,
+                  "int_value": null,
                   "args": []
                 }
               ]
@@ -51,6 +57,7 @@
             "type": {
               "node": "string",
               "name": null,
+              "int_value": null,
               "args": []
             }
           }
@@ -174,13 +181,125 @@
       "type": {
         "node": "record",
         "name": "my_record",
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "pair",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%n"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "pair",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": "pair",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [
+                {
+                  "prim": "pair",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [
+                    {
+                      "prim": "nat",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    },
+                    {
+                      "prim": "string",
+                      "int": null,
+                      "bytes": null,
+                      "string": null,
+                      "args": [],
+                      "annots": [],
+                      "array": [],
+                      "var_id": null,
+                      "var_type": null
+                    }
+                  ],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                },
+                {
+                  "prim": "bytes",
+                  "int": null,
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
+              "annots": [
+                "%v"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%s"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "set_value",
@@ -190,6 +309,7 @@
           "type": {
             "node": "record",
             "name": "my_record",
+            "int_value": null,
             "args": []
           }
         }

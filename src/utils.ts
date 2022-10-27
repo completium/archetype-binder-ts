@@ -1,7 +1,12 @@
 import ts, { factory, KeywordTypeNode, SyntaxKind } from "typescript";
 
 export type ATSimple = {
-  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "sapling_state" | "sapling_transaction" | "signature" | "state" | "string" | "timestamp" | "unit"
+  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "unit"
+}
+
+export type ATSapling = {
+  node: "sapling_state" | "sapling_transaction"
+  memo_size: number
 }
 
 export type ATNamed = {
@@ -37,11 +42,12 @@ export type ATTuple = {
   "args": Array<ArchetypeType>
 }
 
-export type ArchetypeType = ATSimple | ATNamed | ATSingle | ATMap | ATOr | ATLambda | ATTuple
+export type ArchetypeType = ATSimple | ATSapling | ATNamed | ATSingle | ATMap | ATOr | ATLambda | ATTuple
 
 export type RawArchetypeType = {
   node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "unit"
   name: string | null
+  int_value: number | null
   args: Array<RawArchetypeType>
 }
 
@@ -188,6 +194,17 @@ export const makeTaquitoEnv = (): TaquitoEnv => {
 
 
 export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType => {
+  const generate_int = (value: string) => {
+    return {
+      prim: null,
+      int: value,
+      bytes: null,
+      string: null,
+      args: [],
+      annots: [],
+      array: [],
+    }
+  }
   const generate_mich = (prim: string, args?: Array<MichelsonType>) => {
     return {
       prim: prim,
@@ -239,8 +256,8 @@ export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType =>
     case "partition": return generate_mich(at.node)
     case "rational": return generate_mich("pair", [generate_mich("int"), generate_mich("nat")])
     case "record": return generate_mich(at.node)
-    case "sapling_state": return generate_mich(at.node)
-    case "sapling_transaction": return generate_mich(at.node)
+    case "sapling_state": return generate_mich(at.node, [generate_int(at.memo_size.toString())])
+    case "sapling_transaction": return generate_mich(at.node, [generate_int(at.memo_size.toString())])
     case "set": return generate_mich(at.node, [archetype_type_to_mich_type(at.arg)])
     case "signature": return generate_mich(at.node)
     case "state": return generate_mich(at.node)
@@ -1838,6 +1855,13 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
         return i
       }
     };
+    const force_int_value = (i: number | null): number => {
+      if (i == null) {
+        throw new Error("Invalid int_value")
+      } else {
+        return i
+      }
+    };
     switch (rty.node) {
       case "address": return { node: rty.node }
       case "aggregate": return { node: rty.node, name: force_name(rty.name) }
@@ -1877,8 +1901,8 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       case "partition": return { node: rty.node, name: force_name(rty.name) }
       case "rational": return { node: rty.node }
       case "record": return { node: rty.node, name: force_name(rty.name) }
-      case "sapling_state": return { node: rty.node }
-      case "sapling_transaction": return { node: rty.node }
+      case "sapling_state": return { node: rty.node, memo_size: force_int_value(rty.int_value) }
+      case "sapling_transaction": return { node: rty.node, memo_size: force_int_value(rty.int_value) }
       case "set": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
       case "signature": return { node: rty.node }
       case "state": return { node: rty.node }

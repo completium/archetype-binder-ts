@@ -13,13 +13,27 @@
       "type": {
         "node": "bls12_381_g1",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "bls12_381_g1",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [],
   "getters": [
     {
@@ -30,6 +44,7 @@
           "type": {
             "node": "bls12_381_g1",
             "name": null,
+            "int_value": null,
             "args": []
           }
         }
@@ -37,6 +52,7 @@
       "return": {
         "node": "bls12_381_g1",
         "name": null,
+        "int_value": null,
         "args": []
       },
       "return_michelson": {

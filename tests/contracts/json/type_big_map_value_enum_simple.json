@@ -42,15 +42,18 @@
       "type": {
         "node": "big_map",
         "name": null,
+        "int_value": null,
         "args": [
           {
             "node": "nat",
             "name": null,
+            "int_value": null,
             "args": []
           },
           {
             "node": "enum",
             "name": "e_enum",
+            "int_value": null,
             "args": []
           }
         ]
@@ -59,7 +62,43 @@
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "big_map",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "int",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "set_value",
@@ -69,6 +108,7 @@
           "type": {
             "node": "enum",
             "name": "e_enum",
+            "int_value": null,
             "args": []
           }
         }

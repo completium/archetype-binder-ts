@@ -8,7 +8,20 @@
     "events": []
   },
   "storage": [],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "unit",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "f",

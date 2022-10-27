@@ -12,6 +12,7 @@
             "type": {
               "node": "nat",
               "name": null,
+              "int_value": null,
               "args": []
             },
             "is_key": true
@@ -21,6 +22,7 @@
             "type": {
               "node": "sapling_transaction",
               "name": null,
+              "int_value": 8,
               "args": []
             },
             "is_key": false
@@ -44,11 +46,23 @@
               "var_type": null
             },
             {
-              "prim": "sapling_transaction(8)",
+              "prim": "sapling_transaction",
               "int": null,
               "bytes": null,
               "string": null,
-              "args": [],
+              "args": [
+                {
+                  "prim": null,
+                  "int": "8",
+                  "bytes": null,
+                  "string": null,
+                  "args": [],
+                  "annots": [],
+                  "array": [],
+                  "var_id": null,
+                  "var_type": null
+                }
+              ],
               "annots": [],
               "array": [],
               "var_id": null,
@@ -72,11 +86,23 @@
           "var_type": null
         },
         "value_type_michelson": {
-          "prim": "sapling_transaction(8)",
+          "prim": "sapling_transaction",
           "int": null,
           "bytes": null,
           "string": null,
-          "args": [],
+          "args": [
+            {
+              "prim": null,
+              "int": "8",
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
           "annots": [],
           "array": [],
           "var_id": null,
@@ -94,13 +120,62 @@
       "type": {
         "node": "asset",
         "name": "my_asset",
+        "int_value": null,
         "args": []
       },
       "const": false,
       "path": []
     }
   ],
-  "storage_type": null,
+  "storage_type": {
+    "value": {
+      "prim": "map",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "nat",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "sapling_transaction",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [
+            {
+              "prim": null,
+              "int": "8",
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            }
+          ],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
   "entrypoints": [
     {
       "name": "asset_put",
@@ -110,6 +185,7 @@
           "type": {
             "node": "sapling_transaction",
             "name": null,
+            "int_value": 8,
             "args": []
           }
         }
