@@ -1,7 +1,7 @@
 import ts, { factory, KeywordTypeNode, SyntaxKind } from "typescript";
 
 export type ATSimple = {
-  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "unit"
+  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
 }
 
 export type ATSapling = {
@@ -45,7 +45,7 @@ export type ATTuple = {
 export type ArchetypeType = ATSimple | ATSapling | ATNamed | ATSingle | ATMap | ATOr | ATLambda | ATTuple
 
 export type RawArchetypeType = {
-  node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "unit"
+  node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "tx_rollup_l2_address" | "unit"
   name: string | null
   int_value: number | null
   args: Array<RawArchetypeType>
@@ -314,6 +314,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType =>
     case "ticket": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
     case "timestamp": return <MTPrimSimple>{ prim: at.node }
     case "tuple": return <MTPrimMulti>{ prim: "pair", args: at.args.map(x => { return archetype_type_to_mich_type(x) }) }
+    case "tx_rollup_l2_address": return <MTPrimSimple>{ prim: at.node }
     case "unit": return <MTPrimSimple>{ prim: at.node }
     default: throw new Error("error")
   }
@@ -546,6 +547,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     case "tuple": return factory.createTupleTypeNode(
       at.args.map(t => archetype_type_to_ts_type(t))
     );
+    case "tx_rollup_l2_address": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Address")
+      ),
+      undefined
+    );
     case "unit": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -723,6 +731,7 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
     case "ticket": return make_cmp_equals(a, b);
     case "timestamp": return make_cmp_equals_default(a, b);
     case "tuple": return make_tuple_cmp_body(a, b, atype.args);
+    case "tx_rollup_l2_address": return make_cmp_equals(a, b);
     case "unit": return make_cmp_equals(a, b);
   }
 }
@@ -1010,6 +1019,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "ticket": return TODO("ticket", arg);
     case "timestamp": return TODO("timestamp", arg);
     case "tuple": return mich_to_tuple(atype.args, arg);
+    case "tx_rollup_l2_address": return class_to_mich("mich_to_tx_rollup_l2_address", [arg]);
     case "unit": return class_to_mich("unit_to_mich", []);
   }
 }
@@ -1408,6 +1418,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
     case "ticket": return throw_error(fp.type.node);
     case "timestamp": return throw_error(fp.type.node);
     case "tuple": return tuple_to_mich(fp.name, fp.type.args);
+    case "tx_rollup_l2_address": return class_to_mich(factory.createIdentifier(fp.name))
     case "unit": return unit_to_mich()
   }
 }
@@ -1481,16 +1492,40 @@ const get_field_name_from_idx = (idx: number, fields: Array<Partial<Field>>) => 
 
 const mich_type_to_archetype = (mt: MichelsonType): ArchetypeType => {
   switch (mt.prim) {
-    case "string": return { node: "string" }
-    case "int": return { node: "int" }
-    case "nat": return { node: "nat" }
+    case "address": return { node: mt.prim }
+    case "big_map": return { node: mt.prim, key_type: mich_type_to_archetype(mt.args[0]), value_type: mich_type_to_archetype(mt.args[1]) }
+    case "bls12_381_fr": return { node: mt.prim }
+    case "bls12_381_g1": return { node: mt.prim }
+    case "bls12_381_g2": return { node: mt.prim }
+    case "bool": return { node: mt.prim }
+    case "bytes": return { node: mt.prim }
+    case "chain_id": return { node: mt.prim }
+    case "chest_key": return { node: mt.prim }
+    case "chest": return { node: mt.prim }
+    case "contract": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
+    case "int": return { node: mt.prim }
+    case "key_hash": return { node: mt.prim }
+    case "key": return { node: mt.prim }
+    case "lambda": return { node: mt.prim, arg_type: mich_type_to_archetype(mt.args[0]), ret_type: mich_type_to_archetype(mt.args[1]) }
+    case "list": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
+    case "map": return { node: mt.prim, key_type: mich_type_to_archetype(mt.args[0]), value_type: mich_type_to_archetype(mt.args[1]) }
+    case "mutez": return { node: "currency" }
+    case "nat": return { node: mt.prim }
+    case "never": return { node: mt.prim }
+    case "operation": return { node: mt.prim }
+    case "option": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
+    case "or": return { node: mt.prim, left_type: mich_type_to_archetype(mt.args[0]), right_type: mich_type_to_archetype(mt.args[1]) }
+    case "pair": return { node: "tuple", args: mt.args.map(mich_type_to_archetype) }
+    case "sapling_state": return { node: mt.prim, memo_size: parseInt(mt.args[0].int) }
+    case "sapling_transaction": return { node: mt.prim, memo_size: parseInt(mt.args[0].int) }
+    case "set": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
+    case "signature": return { node: mt.prim }
+    case "string": return { node: mt.prim }
+    case "ticket": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
     case "timestamp": return { node: "date" }
-    case "address": return { node: "address" }
-    case "bytes": return { node: "bytes" }
-    case "unit": return { node: "unit" }
-    case "list": return { node: "list", arg: mich_type_to_archetype(mt.args[0]) }
-    case "pair": return { node: "tuple", args: [mich_type_to_archetype(mt.args[0]), mich_type_to_archetype(mt.args[1])] }
-    default: throw new Error("mich_type_to_archetype: cannot convert prim '" + (mt.prim ?? "null") + "'")
+    case "tx_rollup_l2_address": return { node: mt.prim }
+    case "unit": return { node: mt.prim }
+    // default: throw new Error("mich_type_to_archetype: cannot convert prim '" + (mt.prim ?? "null") + "'")
   }
 }
 
@@ -1988,6 +2023,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       case "ticket": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
       case "timestamp": return { node: rty.node }
       case "tuple": return { node: rty.node, args: rty.args.map(to_archetype_type) }
+      case "tx_rollup_l2_address": return { node: rty.node }
       case "unit": return { node: rty.node }
     }
   }
