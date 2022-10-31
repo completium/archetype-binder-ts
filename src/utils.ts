@@ -1959,7 +1959,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "or": return or_to_mich(fp.type.left_type, fp.type.right_type, factory.createIdentifier(fp.name));
     case "partition": return throw_error(fp.type.node);
     case "rational": return class_to_mich(factory.createIdentifier(fp.name));
-    case "record": return record_to_mich(fp, ci);
+    case "record": return class_to_mich(factory.createIdentifier(fp.name));
     case "sapling_state": return class_to_mich(factory.createIdentifier(fp.name));
     case "sapling_transaction": return class_to_mich(factory.createIdentifier(fp.name));
     case "set": return list_to_mich(fp.name, fp.type.arg, ci);
