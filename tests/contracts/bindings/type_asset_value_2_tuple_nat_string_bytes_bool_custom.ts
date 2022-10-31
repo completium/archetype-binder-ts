@@ -24,7 +24,7 @@ export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value
 ]>;
-export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
+export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", []),
     att.pair_array_to_mich_type([
         att.pair_array_to_mich_type([
@@ -33,7 +33,7 @@ export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_
         ], []),
         att.prim_annot_to_mich_type("bool", [])
     ], [])
-], []));
+], []), []);
 const asset_put_arg_to_mich = (i: [
     att.Nat,
     [

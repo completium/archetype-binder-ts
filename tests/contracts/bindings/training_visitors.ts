@@ -22,10 +22,10 @@ export type visitor_container = Array<[
     visitor_key,
     visitor_value
 ]>;
-export const visitor_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("string", []), att.pair_array_to_mich_type([
+export const visitor_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("string", []), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("string", ["%name"]),
     att.prim_annot_to_mich_type("nat", ["%nbvisits"])
-], []));
+], []), []);
 const register_arg_to_mich = (l: string, n: string): att.Micheline => {
     return att.pair_to_mich([
         att.string_to_mich(l),

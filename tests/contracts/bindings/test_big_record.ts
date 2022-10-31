@@ -142,11 +142,11 @@ export type visitor_2_container = Array<[
     visitor_2_value
 ]>;
 export const just_a_key_container_mich_type: att.MichelineType = att.list_annot_to_mich_type(att.prim_annot_to_mich_type("address", []), []);
-export const visitor_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.prim_annot_to_mich_type("nat", []));
-export const visitor_2_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.pair_array_to_mich_type([
+export const visitor_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.prim_annot_to_mich_type("nat", []), []);
+export const visitor_2_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%nb_visits2"]),
     att.prim_annot_to_mich_type("timestamp", ["%last"])
-], []));
+], []), []);
 const myentry_arg_to_mich = (arg: all): att.Micheline => {
     return arg.to_mich();
 }

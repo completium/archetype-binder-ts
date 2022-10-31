@@ -8,7 +8,7 @@ export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value
 ]>;
-export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("string", []));
+export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("string", []), []);
 const asset_put_arg_to_mich = (i: att.Option<boolean>): att.Micheline => {
     return i.to_mich((x => { return att.bool_to_mich(x); }));
 }

@@ -27,10 +27,10 @@ export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value
 ]>;
-export const my_asset_container_mich_type: att.MichelineType = att.pair_to_mich_type("map", att.pair_array_to_mich_type([
+export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
     att.prim_annot_to_mich_type("string", ["%f_b"])
-], []), att.prim_annot_to_mich_type("string", []));
+], []), att.prim_annot_to_mich_type("string", []), []);
 const asset_put_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
 }

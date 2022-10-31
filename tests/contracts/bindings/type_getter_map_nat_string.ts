@@ -11,7 +11,7 @@ const get_value_arg_to_mich = (i: Array<[
     });
 }
 export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", [])));
+    return await ex.deploy_callback("get_value", att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []));
 };
 export class Type_getter_map_nat_string {
     address: string | undefined;

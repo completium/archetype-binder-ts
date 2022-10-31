@@ -936,7 +936,7 @@ const access_nth_field = (x: ts.Expression, i: number): ts.Expression => {
   )
 }
 
-const get_record_or_event_type = (name: string, ci: ContractInterface) => {
+const get_record_or_event_type = (name: string | null, ci: ContractInterface) => {
   if (name != null) {
     for (let i = 0; i < ci.types.records.length; i++) {
       if (ci.types.records[i].name == name) {
@@ -1725,7 +1725,7 @@ const date_to_mich = (x: ts.Expression): ts.CallExpression => {
   );
 }
 
-const tuple_to_mich = (name: string, types: ArchetypeType[]): ts.CallExpression => {
+const tuple_to_mich = (name: string, types: ArchetypeType[], ci: ContractInterface): ts.CallExpression => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
       factory.createIdentifier("att"),
@@ -1733,15 +1733,25 @@ const tuple_to_mich = (name: string, types: ArchetypeType[]): ts.CallExpression 
     ),
     undefined,
     [factory.createArrayLiteralExpression(
-      types.map((x, i) => function_param_to_mich({ name: name + "[" + i.toString() + "]", type: x })),
+      types.map((x, i) => function_param_to_mich({ name: name + "[" + i.toString() + "]", type: x }, ci)),
       false
     )]
   )
 }
 
-const list_to_mich = (name: string, atype: ArchetypeType): ts.CallExpression => {
+const record_to_mich = (fp: FunctionParameter, ci: ContractInterface): ts.CallExpression => {
+  const v = get_record_or_event_type((fp.type as ATNamed).name, ci);
+  if (v.fields.length == 1) {
+    const aty = v.fields[0].type;
+    return function_param_to_mich({ ...fp, type: aty }, ci);
+  } else {
+    return class_to_mich(factory.createIdentifier(fp.name))
+  }
+}
+
+const list_to_mich = (name: string, atype: ArchetypeType, ci: ContractInterface): ts.CallExpression => {
   return internal_list_to_mich(name, [
-    factory.createReturnStatement(function_param_to_mich({ name: "x", type: atype }))
+    factory.createReturnStatement(function_param_to_mich({ name: "x", type: atype }, ci))
   ])
 }
 
@@ -1820,16 +1830,16 @@ const internal_map_to_mich = (name: string, decls: ts.CallExpression[]): ts.Call
   ])
 }
 
-const map_to_mich = (name: string, key_type: ArchetypeType | null, value_type: ArchetypeType | null) => {
+const map_to_mich = (name: string, key_type: ArchetypeType | null, value_type: ArchetypeType | null, ci: ContractInterface) => {
   if (null == key_type) throw new Error("map_to_mich: null key type")
   if (null == value_type) throw new Error("map_to_mich: null value type")
   return internal_map_to_mich(name, [
-    function_param_to_mich({ name: "x_key", type: key_type }),
-    function_param_to_mich({ name: "x_value", type: value_type })
+    function_param_to_mich({ name: "x_key", type: key_type }, ci),
+    function_param_to_mich({ name: "x_value", type: value_type }, ci)
   ])
 }
 
-export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression => {
+export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterface): ts.CallExpression => {
   const throw_error = (ty: string): ts.CallExpression => {
     throw new Error("function_param_to_mich: unhandled type '" + ty + "'")
   }
@@ -1855,7 +1865,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty }))],
+          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty }, ci))],
           false
         )
       ))]
@@ -1884,7 +1894,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty_left }))],
+          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty_left }, ci))],
           false
         )
       )),
@@ -1903,7 +1913,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
         undefined,
         factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
         factory.createBlock(
-          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty_right }))],
+          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty_right }, ci))],
           false
         )
       ))
@@ -1919,7 +1929,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
     case "asset_value": return class_to_mich(factory.createIdentifier(fp.name));
     case "asset_view": return throw_error(fp.type.node);
     case "asset": return throw_error(fp.type.node);
-    case "big_map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type);
+    case "big_map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "bls12_381_fr": return class_to_mich(factory.createIdentifier(fp.name));
     case "bls12_381_g1": return class_to_mich(factory.createIdentifier(fp.name));
     case "bls12_381_g2": return class_to_mich(factory.createIdentifier(fp.name));
@@ -1934,14 +1944,14 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
     case "date": return date_to_mich(factory.createIdentifier(fp.name));
     case "duration": return class_to_mich(factory.createIdentifier(fp.name));
     case "enum": return class_to_mich(factory.createIdentifier(fp.name));
-    case "event": return class_to_mich(factory.createIdentifier(fp.name));
+    case "event": return record_to_mich(fp, ci);
     case "int": return class_to_mich(factory.createIdentifier(fp.name));
     case "iterable_big_map": return throw_error(fp.type.node);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
     case "key": return class_to_mich(factory.createIdentifier(fp.name));
     case "lambda": return throw_error(fp.type.node);
-    case "list": return list_to_mich(fp.name, fp.type.arg);
-    case "map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type);
+    case "list": return list_to_mich(fp.name, fp.type.arg, ci);
+    case "map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "nat": return class_to_mich(factory.createIdentifier(fp.name));
     case "never": return throw_error(fp.type.node);
     case "operation": return throw_error(fp.type.node);
@@ -1949,28 +1959,28 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
     case "or": return or_to_mich(fp.type.left_type, fp.type.right_type, factory.createIdentifier(fp.name));
     case "partition": return throw_error(fp.type.node);
     case "rational": return class_to_mich(factory.createIdentifier(fp.name));
-    case "record": return class_to_mich(factory.createIdentifier(fp.name));
+    case "record": return record_to_mich(fp, ci);
     case "sapling_state": return class_to_mich(factory.createIdentifier(fp.name));
     case "sapling_transaction": return class_to_mich(factory.createIdentifier(fp.name));
-    case "set": return list_to_mich(fp.name, fp.type.arg);
+    case "set": return list_to_mich(fp.name, fp.type.arg, ci);
     case "signature": return class_to_mich(factory.createIdentifier(fp.name));
     case "state": return throw_error(fp.type.node);
     case "string": return string_to_mich(factory.createIdentifier(fp.name));
     case "ticket": return throw_error(fp.type.node);
     case "timestamp": return throw_error(fp.type.node);
-    case "tuple": return tuple_to_mich(fp.name, fp.type.args);
+    case "tuple": return tuple_to_mich(fp.name, fp.type.args, ci);
     case "unit": return unit_to_mich()
   }
 }
 
-export const function_params_to_mich = (a: Array<FunctionParameter>) => {
+export const function_params_to_mich = (a: Array<FunctionParameter>, ci: ContractInterface) => {
   if (a.length == 0) {
     return factory.createPropertyAccessExpression(
       factory.createIdentifier("att"),
       factory.createIdentifier("unit_mich")
     )
   } else if (a.length == 1) {
-    return function_param_to_mich(a[0])
+    return function_param_to_mich(a[0], ci)
   } else {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1979,14 +1989,14 @@ export const function_params_to_mich = (a: Array<FunctionParameter>) => {
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        a.map((x, i) => function_param_to_mich(x)),
+        a.map((x, i) => function_param_to_mich(x, ci)),
         true
       )]
     )
   }
 }
 
-export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>): ts.Expression => {
+export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>, ci: ContractInterface): ts.Expression => {
   if (mt.prim == "pair" && mt.annots.length == 0) {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1995,7 +2005,7 @@ export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>)
       ),
       undefined,
       [factory.createArrayLiteralExpression(
-        mt.args.map(x => storage_to_mich(x, selts)),
+        mt.args.map(x => storage_to_mich(x, selts, ci)),
         false
       )]
     )
@@ -2009,7 +2019,7 @@ export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>)
         }
       }
     }
-    return function_param_to_mich(selt)
+    return function_param_to_mich(selt, ci)
   }
 }
 
@@ -2053,7 +2063,7 @@ const mich_type_to_archetype = (mt: MichelsonType): ArchetypeType => {
  * @param fidx field index
  * @returns pair of number of fields looked up so far and 'to_mich' expression
  */
-export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Partial<Field>>, fidx = 0): [number, ts.CallExpression] => {
+export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Partial<Field>>, fidx = 0, ci: ContractInterface): [number, ts.CallExpression] => {
   if (mt.annots.length > 0) {
     //const name = mt.annots[0].slice(1)
     const name = get_field_name_from_idx(fidx, fields)
@@ -2067,14 +2077,14 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
       throw new Error("entity_to_mich: field name is null")
     }
     const fp = { name: v + "." + name, type: atype }
-    return [fidx + 1, function_param_to_mich(fp)]
+    return [fidx + 1, function_param_to_mich(fp, ci)]
   } else {
     switch (mt.prim) {
       case "pair": {
         // left
-        const [fidx0, expr0] = entity_to_mich(v, mt.args[0], fields, fidx)
+        const [fidx0, expr0] = entity_to_mich(v, mt.args[0], fields, fidx, ci)
         // right
-        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx0)
+        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx0, ci)
         return [fidx1, factory.createCallExpression(
           factory.createPropertyAccessExpression(
             factory.createIdentifier("att"),
@@ -2090,22 +2100,22 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
       case "map":
       case "big_map": {
         // left
-        const [_, expr0] = entity_to_mich("x_key", mt.args[0], fields.filter(x => x.is_key), fidx)
+        const [_, expr0] = entity_to_mich("x_key", mt.args[0], fields.filter(x => x.is_key), fidx, ci)
         // right
-        const [fidx1, expr1] = entity_to_mich("x_value", mt.args[1], fields.filter(x => !x.is_key), fidx)
+        const [fidx1, expr1] = entity_to_mich("x_value", mt.args[1], fields.filter(x => !x.is_key), fidx, ci)
         return [fidx1, internal_map_to_mich(v, [
           expr0,
           expr1
         ])]
       }
       case "set": {
-        const [_, expr0] = entity_to_mich("x", mt.args[0], fields.filter(x => x.is_key), fidx)
+        const [_, expr0] = entity_to_mich("x", mt.args[0], fields.filter(x => x.is_key), fidx, ci)
         return [fidx, internal_list_to_mich(v, [
           factory.createReturnStatement(expr0)
         ])
         ]
       }
-      default: return [fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) })]
+      default: return [fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) }, ci)]
     }
   }
 }
