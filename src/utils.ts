@@ -377,7 +377,11 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
       factory.createIdentifier(at.name != null ? at.name : ""),
       undefined
     )
-    case "event": return throw_error(at.node)
+    case "event": {
+      return factory.createTypeReferenceNode(
+        factory.createIdentifier(at.name),
+        undefined)
+    }
     case "int": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -1930,7 +1934,7 @@ export const function_param_to_mich = (fp: FunctionParameter): ts.CallExpression
     case "date": return date_to_mich(factory.createIdentifier(fp.name));
     case "duration": return class_to_mich(factory.createIdentifier(fp.name));
     case "enum": return class_to_mich(factory.createIdentifier(fp.name));
-    case "event": return throw_error(fp.type.node);
+    case "event": return class_to_mich(factory.createIdentifier(fp.name));
     case "int": return class_to_mich(factory.createIdentifier(fp.name));
     case "iterable_big_map": return throw_error(fp.type.node);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
@@ -2109,22 +2113,34 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
 
 export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
   switch (mt.prim) {
-    case "big_map": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("pair_to_mich_type")
-      ),
-      undefined,
-      [factory.createStringLiteral("big_map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])]
-    )
-    case "map": return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("pair_to_mich_type")
-      ),
-      undefined,
-      [factory.createStringLiteral("map"), value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])]
-    )
+    case "big_map": {
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("pair_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          factory.createStringLiteral("big_map"),
+          value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]), factory.createArrayLiteralExpression(annots, false)
+        ]
+      )
+    }
+    case "map": {
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("pair_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          factory.createStringLiteral("map"),
+          value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1]), factory.createArrayLiteralExpression(annots, false)
+        ]
+      )
+    }
     case "pair": {
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
       return factory.createCallExpression(
