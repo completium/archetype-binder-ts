@@ -1,6 +1,6 @@
 {
   "name": "@completium/archetype-binder-ts",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "description": "Binds Archetype contract interface to Typescript",
   "main": "build/src/main.js",
   "types": "build/src/main.d.ts",
@@ -66,7 +66,7 @@
   "devDependencies": {
     "@completium/archetype": "0.4.8-rc1",
     "@completium/archetype-ts-types": "^0.0.11",
-    "@completium/experiment-ts": "^0.0.97",
+    "@completium/experiment-ts": "^0.0.98",
     "@completium/event-listener": "^0.0.4",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^10.0.0",

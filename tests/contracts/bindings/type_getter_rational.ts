@@ -3,11 +3,11 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Rational): att.Micheline => {
     return i.to_mich();
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("int", []),
         att.prim_annot_to_mich_type("nat", [])
-    ], []));
+    ], []), params);
 };
 export class Type_getter_rational {
     address: string | undefined;
@@ -30,7 +30,7 @@ export class Type_getter_rational {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_rational.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: att.Rational, params: Partial<ex.Parameters>): Promise<att.Rational> {
         if (this.address != undefined) {

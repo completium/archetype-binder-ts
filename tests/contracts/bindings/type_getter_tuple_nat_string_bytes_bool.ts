@@ -8,7 +8,7 @@ const get_value_arg_to_mich = (i: [
 ]): att.Micheline => {
     return att.pair_to_mich([i[0].to_mich(), att.string_to_mich(i[1]), i[2].to_mich(), att.bool_to_mich(i[3])]);
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
         att.pair_array_to_mich_type([
@@ -18,7 +18,7 @@ export const deploy_get_value_callback = async (): Promise<att.DeployResult> => 
                 att.prim_annot_to_mich_type("bool", [])
             ], [])
         ], [])
-    ], []));
+    ], []), params);
 };
 export class Type_getter_tuple_nat_string_bytes_bool {
     address: string | undefined;
@@ -41,7 +41,7 @@ export class Type_getter_tuple_nat_string_bytes_bool {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_tuple_nat_string_bytes_bool.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: [
         att.Nat,

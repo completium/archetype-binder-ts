@@ -165,11 +165,11 @@ const mygetter_arg_to_mich = (): att.Micheline => {
 const view_myview_arg_to_mich = (): att.Micheline => {
     return att.unit_mich;
 }
-export const deploy_mygetter_callback = async (): Promise<att.DeployResult> => {
+export const deploy_mygetter_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
     return await ex.deploy_callback("mygetter", att.or_to_mich_type(att.prim_annot_to_mich_type("int", ["%A"]), att.or_to_mich_type(att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
         att.prim_annot_to_mich_type("string", [])
-    ], ["%B"]), att.prim_annot_to_mich_type("unit", ["%C"]), []), []));
+    ], ["%B"]), att.prim_annot_to_mich_type("unit", ["%C"]), []), []), params);
 };
 export class Test_big_record {
     address: string | undefined;
@@ -195,7 +195,7 @@ export class Test_big_record {
             oa: oa.to_mich((x => { return x.to_mich(); }))
         }, params)).address;
         this.address = address;
-        this.mygetter_callback_address = (await deploy_mygetter_callback()).address;
+        this.mygetter_callback_address = (await deploy_mygetter_callback(params)).address;
     }
     async myentry(arg: all, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {

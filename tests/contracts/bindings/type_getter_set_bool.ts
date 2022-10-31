@@ -5,8 +5,8 @@ const get_value_arg_to_mich = (i: Array<boolean>): att.Micheline => {
         return att.bool_to_mich(x);
     });
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.list_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []));
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
+    return await ex.deploy_callback("get_value", att.list_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), params);
 };
 export class Type_getter_set_bool {
     address: string | undefined;
@@ -29,7 +29,7 @@ export class Type_getter_set_bool {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_set_bool.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: Array<boolean>, params: Partial<ex.Parameters>): Promise<Array<boolean>> {
         if (this.address != undefined) {

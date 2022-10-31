@@ -3,8 +3,8 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Or<att.Nat, string>): att.Micheline => {
     return i.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []));
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
+    return await ex.deploy_callback("get_value", att.or_to_mich_type(att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), []), params);
 };
 export class Type_getter_or_nat_string {
     address: string | undefined;
@@ -27,7 +27,7 @@ export class Type_getter_or_nat_string {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_or_nat_string.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.Or<att.Nat, string>> {
         if (this.address != undefined) {

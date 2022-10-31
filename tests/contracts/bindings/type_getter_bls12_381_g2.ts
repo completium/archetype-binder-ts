@@ -3,8 +3,8 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: att.Bls12_381_g2): att.Micheline => {
     return i.to_mich();
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("bls12_381_g2", []));
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
+    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("bls12_381_g2", []), params);
 };
 export class Type_getter_bls12_381_g2 {
     address: string | undefined;
@@ -27,7 +27,7 @@ export class Type_getter_bls12_381_g2 {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_bls12_381_g2.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: att.Bls12_381_g2, params: Partial<ex.Parameters>): Promise<att.Bls12_381_g2> {
         if (this.address != undefined) {
