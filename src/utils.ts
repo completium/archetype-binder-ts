@@ -476,7 +476,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     );
     case "state": return throw_error(at.node)
     case "string": return factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
-    case "ticket": return throw_error(at.node)
+    case "ticket": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Ticket")
+      ),
+      [archetype_type_to_ts_type(at.arg)]
+    );
     case "timestamp": return throw_error(at.node)
     case "tuple": return factory.createTupleTypeNode(
       at.args.map(t => archetype_type_to_ts_type(t))
@@ -1658,7 +1664,39 @@ export const taquito_to_ts = (elt: ts.Expression, atype: ArchetypeType, ci: Cont
     case "signature": return make_class([elt]);
     case "state": return throw_error();
     case "string": return [factory.createReturnStatement(elt)];
-    case "ticket": return throw_error();
+    case "ticket": return [factory.createReturnStatement(factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Ticket")
+      ),
+      [archetype_type_to_ts_type(atype.arg)],
+      [factory.createNewExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("Address")
+        ),
+        undefined,
+        [factory.createPropertyAccessExpression(
+          factory.createIdentifier("x"),
+          factory.createIdentifier("ticketer")
+        )]
+      ),
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("x"),
+        factory.createIdentifier("value")
+      ),
+      factory.createNewExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("Nat")
+        ),
+        undefined,
+        [factory.createPropertyAccessExpression(
+          factory.createIdentifier("x"),
+          factory.createIdentifier("amount")
+        )]
+      )]
+    ))];
     case "timestamp": return throw_error();
     case "tuple": {
       const array = get_tuple_body(elt, atype, ci)[0]
@@ -1921,6 +1959,35 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     )
   }
 
+  const ticket_to_mich = (ty: ArchetypeType, x: ts.Expression) => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        x,
+        factory.createIdentifier("to_mich")
+      ),
+      undefined,
+      [factory.createParenthesizedExpression(factory.createArrowFunction(
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          factory.createIdentifier("x"),
+          undefined,
+          undefined,
+          undefined
+        )],
+        undefined,
+        factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        factory.createBlock(
+          [factory.createReturnStatement(function_param_to_mich({ name: "x", type: ty }, ci))],
+          false
+        )
+      ))]
+    )
+  }
+
   switch (fp.type.node) {
     case "address": return class_to_mich(factory.createIdentifier(fp.name))
     case "aggregate": return throw_error(fp.type.node)
@@ -1966,7 +2033,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "signature": return class_to_mich(factory.createIdentifier(fp.name));
     case "state": return throw_error(fp.type.node);
     case "string": return string_to_mich(factory.createIdentifier(fp.name));
-    case "ticket": return throw_error(fp.type.node);
+    case "ticket": return ticket_to_mich(fp.type.arg, factory.createIdentifier(fp.name));
     case "timestamp": return throw_error(fp.type.node);
     case "tuple": return tuple_to_mich(fp.name, fp.type.args, ci);
     case "unit": return unit_to_mich()
@@ -2219,6 +2286,22 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
           )
         ]
       )
+    case "ticket": {
+      const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("ticket_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          value_to_mich_type(mt.args[0]),
+          factory.createArrayLiteralExpression(
+            annots,
+            false
+          )
+        ])
+    }
     default: {
       const prim = mt.prim == null ? "string" : mt.prim
       const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
@@ -2273,6 +2356,15 @@ export const mich_type_to_error = (expr: MichelsonType): [string, ts.Expression]
       ),
       undefined,
       [factory.createStringLiteral(expr.string)]
+    )]
+  }  else if (expr.int) {
+    return ["NOT_HANDLED", factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("string_to_mich")
+      ),
+      undefined,
+      [factory.createStringLiteral(expr.int.toString())]
     )]
   } else {
     throw new Error("mich_type_to_error: invalid error")
