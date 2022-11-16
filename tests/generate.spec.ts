@@ -335,6 +335,12 @@ describe('Generate binding test', async () => {
   });
 })
 
+describe('Generate binding cticket', async () => {
+  it('test_big_record', async () => {
+    await get_binding('cticket.arl');
+  });
+})
+
 // describe('Generate michelson test', async () => {
 //   it('contract_eq', async () => {
 //     await get_binding_michelson('contract_eq.tz');

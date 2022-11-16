@@ -22,7 +22,7 @@ export class my_record implements att.ArchetypeType {
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
     att.pair_array_to_mich_type([
-        att.pair_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", [])),
+        att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), ["%v"]),
         att.prim_annot_to_mich_type("string", ["%s"])
     ], [])
 ], []);

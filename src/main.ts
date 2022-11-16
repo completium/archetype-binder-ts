@@ -210,7 +210,7 @@ const generate_storage_utils = (ci: ContractInterface) => {
     // generate storage michelson type
     entity_to_mich_type_decl("storage_mich_stype", ci.storage_type?.value),
     // generate storage literal maker
-    entity_to_mich_decl("storage", ci.storage, storage_to_mich(ci.storage_type.value, ci.storage))
+    entity_to_mich_decl("storage", ci.storage, storage_to_mich(ci.storage_type.value, ci.storage, ci))
   ]
 }
 
@@ -242,8 +242,8 @@ const entity_to_mich_decl = (name: string, args: FunctionParameter[], body: ts.E
   )
 }
 
-const entryToArgToMichDecl = (e: Entrypoint | Getter): ts.VariableDeclarationList => {
-  return entity_to_mich_decl(e.name, e.args, function_params_to_mich(e.args))
+const entryToArgToMichDecl = (e: Entrypoint | Getter, ci: ContractInterface): ts.VariableDeclarationList => {
+  return entity_to_mich_decl(e.name, e.args, function_params_to_mich(e.args, ci))
 }
 
 const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
@@ -255,7 +255,7 @@ const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
   )
 }
 
-const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>) => {
+const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
   if (fields.length == 1) {
     const field = fields[0];
     return factory.createTypeAliasDeclaration(
@@ -308,7 +308,7 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
             undefined
           ),
           factory.createBlock(
-            [factory.createReturnStatement((entity_to_mich("this", mt, fields))[1])],
+            [factory.createReturnStatement((entity_to_mich("this", mt, fields, 0, ci))[1])],
             true
           )
         ),
@@ -351,9 +351,9 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
   }
 }
 
-const assetKeyToInterfaceDecl = (a: Asset) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key))
-const assetValueToInterfaceDecl = (a: Asset) => entityToInterfaceDecl(a.name + "_value", a.value_type_michelson, a.fields.filter(x => !x.is_key))
-const recordToInterfaceDecl = (r: Record) => entityToInterfaceDecl(r.name, r.type_michelson, r.fields)
+const assetKeyToInterfaceDecl = (a: Asset, ci: ContractInterface) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key), ci)
+const assetValueToInterfaceDecl = (a: Asset, ci: ContractInterface) => entityToInterfaceDecl(a.name + "_value", a.value_type_michelson, a.fields.filter(x => !x.is_key), ci)
+const recordToInterfaceDecl = (r: Record, ci: ContractInterface) => entityToInterfaceDecl(r.name, r.type_michelson, r.fields, ci)
 
 const assetContainerToTypeDecl = (a: Asset) => {
   return factory.createTypeAliasDeclaration(
@@ -382,7 +382,7 @@ const assetContainerToTypeDecl = (a: Asset) => {
     ))
 }
 
-const entityToMichDecl = (entity_postfix: string, aname: string, mt: MichelsonType, fields: Array<Partial<Field>>) => {
+const entityToMichDecl = (entity_postfix: string, aname: string, mt: MichelsonType, fields: Array<Partial<Field>>, ci: ContractInterface) => {
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -414,7 +414,7 @@ const entityToMichDecl = (entity_postfix: string, aname: string, mt: MichelsonTy
           ),
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createBlock(
-            [factory.createReturnStatement((entity_to_mich("x", mt, fields))[1])],
+            [factory.createReturnStatement((entity_to_mich("x", mt, fields, 0, ci))[1])],
             true
           )
         )
@@ -1001,7 +1001,7 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
   )
 }
 
-const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression): ts.Statement[] => {
+const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, ci: ContractInterface): ts.Statement[] => {
   return [
     factory.createVariableStatement(
       undefined,
@@ -1022,7 +1022,7 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
                 undefined,
                 [selt]
               ),
-              function_param_to_mich({ name: "key", type: key_type }),
+              function_param_to_mich({ name: "key", type: key_type }, ci),
               key_mich_type,
               value_mich_type
             ]
@@ -1085,7 +1085,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             */
             get_storage_identifier(selt, ci),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type.value_type, factory.createIdentifier("data"), ci))],
-            factory.createIdentifier("undefined")
+            factory.createIdentifier("undefined"),
+            ci
           )
         ),
         storage_elt_to_getter_skeleton(
@@ -1111,7 +1112,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             */
             get_storage_identifier(selt, ci),
             [factory.createReturnStatement(factory.createTrue())],
-            factory.createFalse()
+            factory.createFalse(),
+            ci
           )
         )
       ]
@@ -1147,7 +1149,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             factory.createIdentifier(selt.name + "_value_mich_type"),
             get_storage_identifier(selt, ci),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type, factory.createIdentifier("data"), ci))],
-            factory.createIdentifier("undefined")
+            factory.createIdentifier("undefined"),
+            ci
           )),
         storage_elt_to_getter_skeleton(
           "has_",
@@ -1172,7 +1175,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             factory.createIdentifier(selt.name + "_value_mich_type"),
             get_storage_identifier(selt, ci),
             [factory.createReturnStatement(factory.createTrue())],
-            factory.createFalse()
+            factory.createFalse(),
+            ci
           )
         )
         ]
@@ -1193,7 +1197,24 @@ const decl_callback_deploy = (g: Getter) => {
         factory.createArrowFunction(
           [factory.createModifier(ts.SyntaxKind.AsyncKeyword)],
           undefined,
-          [],
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("params"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createIdentifier("Partial"),
+              [factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("ex"),
+                  factory.createIdentifier("Parameters")
+                ),
+                undefined
+              )]
+            ),
+            undefined
+          )],
           factory.createTypeReferenceNode(
             factory.createIdentifier("Promise"),
             [factory.createTypeReferenceNode(
@@ -1214,7 +1235,8 @@ const decl_callback_deploy = (g: Getter) => {
               undefined,
               [
                 factory.createStringLiteral(g.name),
-                value_to_mich_type(g.return_michelson.value)
+                value_to_mich_type(g.return_michelson.value),
+                factory.createIdentifier("params"),
               ]
             )))],
             true
@@ -1251,7 +1273,7 @@ const get_addr_assignement = (name: string) => {
       factory.createParenthesizedExpression(factory.createAwaitExpression(factory.createCallExpression(
         factory.createIdentifier("deploy_" + name + "_callback"),
         undefined,
-        []
+        [factory.createIdentifier("params")]
       ))),
       factory.createIdentifier("address")
     )
@@ -1315,7 +1337,7 @@ const language_to_storage_literal = (ci: ContractInterface, l: Language) => {
     case (Language.Archetype): return factory.createObjectLiteralExpression(ci.parameters.map(x =>
       factory.createPropertyAssignment(
         factory.createIdentifier(x.name),
-        function_param_to_mich({ name: x.name, type: x.type })
+        function_param_to_mich({ name: x.name, type: x.type }, ci)
       )
     ), true)
     case (Language.Michelson): return factory.createCallExpression(
@@ -1515,7 +1537,7 @@ const make_enum_class_decl = (e: Enum) => {
   )
 }
 
-const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number): ts.Expression => {
+const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number, ci: ContractInterface): ts.Expression => {
   let mich_value: ts.Expression = factory.createPropertyAccessExpression(
     factory.createIdentifier("att"),
     factory.createIdentifier("unit_mich")
@@ -1536,7 +1558,7 @@ const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number): ts.Expres
       name: "this.content",
       type: atype
     }
-    mich_value = function_param_to_mich(param)
+    mich_value = function_param_to_mich(param, ci)
   }
   if (idx == 0) {
     return factory.createCallExpression(
@@ -1589,7 +1611,7 @@ const make_simple_enum_type_to_mich_return_stt = (idx: number): ts.Expression =>
   )
 }
 
-const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, complex: boolean): ts.ClassDeclaration => {
+const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, complex: boolean, ci: ContractInterface): ts.ClassDeclaration => {
   let args: ts.ParameterDeclaration[] = []
   if (c.types.length > 0) {
     let atype = c.types[0]
@@ -1649,7 +1671,7 @@ const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, comp
         undefined,
         factory.createBlock(
           [factory.createReturnStatement(
-            complex ? make_enum_type_to_mich_return_stt(c, idx) : make_simple_enum_type_to_mich_return_stt(idx))],
+            complex ? make_enum_type_to_mich_return_stt(c, idx, ci) : make_simple_enum_type_to_mich_return_stt(idx))],
           false
         )
       ),
@@ -1678,7 +1700,7 @@ const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, comp
   )
 }
 
-const enum_to_decl = (e: Enum): Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
+const enum_to_decl = (e: Enum, ci: ContractInterface): Array<ts.EnumDeclaration | ts.ClassDeclaration> => {
   switch (e.name) {
     case "state": return [factory.createEnumDeclaration(
       undefined,
@@ -1693,7 +1715,7 @@ const enum_to_decl = (e: Enum): Array<ts.EnumDeclaration | ts.ClassDeclaration> 
     )];
     default: return [
       ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
-      ...(e.constructors.map((x, i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or")))
+      ...(e.constructors.map((x, i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or", ci)))
     ]
   }
 }
@@ -1996,29 +2018,29 @@ const get_nodes = (contract_interface: ContractInterface, settings: BindingSetti
     // storage
     ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
     // events
-    ...(contract_interface.types.events.map(recordToInterfaceDecl)),
+    ...(contract_interface.types.events.map(x => recordToInterfaceDecl(x, contract_interface))),
     // enums
-    ...(contract_interface.types.enums.map(enum_to_decl)).flat(),
+    ...(contract_interface.types.enums.map(x => (enum_to_decl(x, contract_interface)))).flat(),
     ...(contract_interface.types.enums.map(mich_to_enum_decl)),
     // records
-    ...(contract_interface.types.records.map(recordToInterfaceDecl)),
+    ...(contract_interface.types.records.map(x => recordToInterfaceDecl(x, contract_interface))),
     ...(contract_interface.types.records.map(recordToMichTypeDecl)),
     // ...(contract_interface.types.records.map(mich_to_record_decl)),
     // asset keys
-    ...(contract_interface.types.assets.map(assetKeyToInterfaceDecl)),
+    ...(contract_interface.types.assets.map(x => assetKeyToInterfaceDecl(x, contract_interface))),
     ...(contract_interface.types.assets.map(assetKeyToMichTypeDecl)),
     // asset values
-    ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToInterfaceDecl)),
+    ...(contract_interface.types.assets.filter(not_a_set).map(x => assetValueToInterfaceDecl(x, contract_interface))),
     ...(contract_interface.types.assets.filter(not_a_set).map(assetValueToMichTypeDecl)),
     // ...(contract_interface.types.assets.filter(not_a_set).map(mich_to_asset_value_decl)),
     // asset containers
     ...(contract_interface.types.assets.map(assetContainerToTypeDecl)),
     ...(contract_interface.types.assets.map(assetContainerToMichTypeDecl)),
     // entrypoint argument to michelson
-    ...(contract_interface.entrypoints.map(entryToArgToMichDecl)),
+    ...(contract_interface.entrypoints.map(x => entryToArgToMichDecl(x, contract_interface))),
     // getter/view argument to michelson
-    ...(contract_interface.getters.map(entryToArgToMichDecl)),
-    ...(contract_interface.views.map(view_to_getter).map(entryToArgToMichDecl)),
+    ...(contract_interface.getters.map(x => entryToArgToMichDecl(x, contract_interface))),
+    ...(contract_interface.views.map(view_to_getter).map(x => entryToArgToMichDecl(x, contract_interface))),
     ...(contract_interface.getters.map(decl_callback_deploy)),
     ...([
       // contract class

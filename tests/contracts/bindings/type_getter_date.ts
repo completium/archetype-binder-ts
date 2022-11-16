@@ -3,8 +3,8 @@ import * as att from "@completium/archetype-ts-types";
 const get_value_arg_to_mich = (i: Date): att.Micheline => {
     return att.date_to_mich(i);
 }
-export const deploy_get_value_callback = async (): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("timestamp", []));
+export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
+    return await ex.deploy_callback("get_value", att.prim_annot_to_mich_type("timestamp", []), params);
 };
 export class Type_getter_date {
     address: string | undefined;
@@ -27,7 +27,7 @@ export class Type_getter_date {
     async deploy(params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./tests/contracts/type_getter_date.arl", {}, params)).address;
         this.address = address;
-        this.get_value_callback_address = (await deploy_get_value_callback()).address;
+        this.get_value_callback_address = (await deploy_get_value_callback(params)).address;
     }
     async get_value(i: Date, params: Partial<ex.Parameters>): Promise<Date> {
         if (this.address != undefined) {
