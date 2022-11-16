@@ -39,7 +39,7 @@ export class Type_big_map_key_option_bool {
     async get_res_value(key: att.Option<boolean>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), [])), collapsed = true;
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -52,7 +52,7 @@ export class Type_big_map_key_option_bool {
     async has_res_value(key: att.Option<boolean>): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich((x => { return att.bool_to_mich(x); })), att.option_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

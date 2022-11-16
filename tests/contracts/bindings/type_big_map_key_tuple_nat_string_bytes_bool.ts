@@ -59,10 +59,10 @@ export class Type_big_map_key_tuple_nat_string_bytes_bool {
     ]): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), att.pair_to_mich([key[0].to_mich(), att.string_to_mich(key[1]), key[2].to_mich(), att.bool_to_mich(key[3])]), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.pair_to_mich([key[0].to_mich(), att.string_to_mich(key[1]), key[2].to_mich(), att.bool_to_mich(key[3])]), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("nat", []),
                 att.prim_annot_to_mich_type("string", [])
-            ], []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            ], [])), collapsed = true;
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -80,10 +80,10 @@ export class Type_big_map_key_tuple_nat_string_bytes_bool {
     ]): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(storage), att.pair_to_mich([key[0].to_mich(), att.string_to_mich(key[1]), key[2].to_mich(), att.bool_to_mich(key[3])]), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.pair_to_mich([key[0].to_mich(), att.string_to_mich(key[1]), key[2].to_mich(), att.bool_to_mich(key[3])]), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("nat", []),
                 att.prim_annot_to_mich_type("string", [])
-            ], []), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
+            ], [])), collapsed = true;
             if (data != undefined) {
                 return true;
             }

@@ -341,6 +341,21 @@ describe('Generate binding cticket', async () => {
   });
 })
 
+describe('Generate binding template', async () => {
+  it('template_all_utils', async () => {
+    await get_binding('template_all_utils.arl');
+  });
+  it('template_metadata', async () => {
+    await get_binding('template_metadata.arl');
+  });
+  it('template_ownership', async () => {
+    await get_binding('template_ownership.arl');
+  });
+  it('template_pausable', async () => {
+    await get_binding('template_pausable.arl');
+  });
+})
+
 // describe('Generate michelson test', async () => {
 //   it('contract_eq', async () => {
 //     await get_binding_michelson('contract_eq.tz');

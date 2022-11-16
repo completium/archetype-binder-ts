@@ -1,0 +1,22 @@
+archetype template_ownership(owner : address)
+
+/* OWNERSHIP TRANSFER ------------------------------------------------------- */
+
+variable owner_candidate : option<address> = none
+
+entry declare_ownership(candidate : address) {
+  called by owner
+  effect {
+    owner_candidate := some(candidate);
+  }
+}
+
+entry claim_ownership() {
+  require {
+    ownership_r1: (owner_candidate ? the = caller : false) otherwise "INVALID_CALLER"
+  }
+  effect {
+    owner := caller;
+    owner_candidate := none
+  }
+}

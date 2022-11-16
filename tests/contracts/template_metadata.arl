@@ -1,0 +1,9 @@
+archetype template_metadata with metadata ""
+
+/* METADATA ---------------------------------------------------------------- */
+
+entry set_metadata(k: string, d : option<bytes>) {
+  effect {
+    metadata.update(k, d)
+  }
+}

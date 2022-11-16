@@ -12,9 +12,10 @@
   },
   "scripts": {
     "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.spec.ts",
-    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts ./tests/training.spec.ts ./tests/type_*.spec.ts",
+    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts ./tests/template.spec.ts ./tests/training.spec.ts ./tests/type_*.spec.ts",
     "test:test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts",
     "test:training": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/training.spec.ts",
+    "test:template": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/template.spec.ts",
     "test:type_asset_key_1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_1.spec.ts",
     "test:type_asset_key_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_2.spec.ts",
     "test:type_asset_value_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_value_2.spec.ts",
@@ -36,7 +37,6 @@
     "test:type_tuple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_tuple.spec.ts",
     "test:type_view": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_view.spec.ts",
     "test:ticket": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/ticket.spec.ts",
-    "test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.spec.ts",
     "test:coverage": "nyc npm run test",
     "test:generate:coverage": "nyc npm run test:generate",
     "test:main:coverage": "nyc npm run test:main",
@@ -67,7 +67,7 @@
   "devDependencies": {
     "@completium/archetype": "0.4.8-rc2-20221027-02",
     "@completium/archetype-ts-types": "^0.0.13",
-    "@completium/experiment-ts": "^0.0.100",
+    "@completium/experiment-ts": "^0.0.101",
     "@completium/event-listener": "^0.0.4",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^10.0.0",

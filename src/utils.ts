@@ -957,7 +957,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "asset_value": return TODO("asset_value", arg);
     case "asset_view": return TODO("asset_view", arg);
     case "asset": return TODO("asset", arg);
-    case "big_map": return TODO("big_map", arg);
+    case "big_map": return class_to_mich("mich_to_int", [arg]);
     case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
     case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
     case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
@@ -1026,7 +1026,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "signature": return class_to_mich("mich_to_signature", [arg]);
     case "state": return TODO("state", arg);
     case "string": return class_to_mich("mich_to_string", [arg]);
-    case "ticket": return TODO("ticket", arg);
+    case "ticket": return contained_type_to_field_decl("mich_to_ticket", arg, [atype.arg]);
     case "timestamp": return TODO("timestamp", arg);
     case "tuple": return mich_to_tuple(atype.args, arg);
     case "tx_rollup_l2_address": return class_to_mich("mich_to_tx_rollup_l2_address", [arg]);
@@ -1850,24 +1850,24 @@ export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression]
       undefined,
       [factory.createArrayLiteralExpression(args.map(p => p[1]))]
     )]
-  // } else if (expr.string) {
-  //   return ["NOT_HANDLED", factory.createCallExpression(
-  //     factory.createPropertyAccessExpression(
-  //       factory.createIdentifier("att"),
-  //       factory.createIdentifier("string_to_mich")
-  //     ),
-  //     undefined,
-  //     [factory.createStringLiteral(expr.string)]
-  //   )]
-  // }  else if (expr.int) {
-  //   return ["NOT_HANDLED", factory.createCallExpression(
-  //     factory.createPropertyAccessExpression(
-  //       factory.createIdentifier("att"),
-  //       factory.createIdentifier("string_to_mich")
-  //     ),
-  //     undefined,
-  //     [factory.createStringLiteral(expr.int.toString())]
-  //   )]
+    // } else if (expr.string) {
+    //   return ["NOT_HANDLED", factory.createCallExpression(
+    //     factory.createPropertyAccessExpression(
+    //       factory.createIdentifier("att"),
+    //       factory.createIdentifier("string_to_mich")
+    //     ),
+    //     undefined,
+    //     [factory.createStringLiteral(expr.string)]
+    //   )]
+    // }  else if (expr.int) {
+    //   return ["NOT_HANDLED", factory.createCallExpression(
+    //     factory.createPropertyAccessExpression(
+    //       factory.createIdentifier("att"),
+    //       factory.createIdentifier("string_to_mich")
+    //     ),
+    //     undefined,
+    //     [factory.createStringLiteral(expr.int.toString())]
+    //   )]
   } else {
     throw new Error("mich_type_to_error: invalid error")
   }

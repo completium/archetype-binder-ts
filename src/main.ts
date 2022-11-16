@@ -54,7 +54,7 @@ const make_mich_to_entity_decl = (name: string, body: ts.Statement[]) => {
     ))
 }
 
-const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>, ci : ContractInterface) => {
+const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
   return make_mich_to_entity_decl(name, [
     factory.createVariableStatement(
       undefined,
@@ -126,7 +126,7 @@ const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "
   ])
 }
 
-const mich_to_asset_value_decl = (a: Asset, ci : ContractInterface) => {
+const mich_to_asset_value_decl = (a: Asset, ci: ContractInterface) => {
   const fields_no_key = a.fields.filter(x => !x.is_key)
   const name = a.name + "_value"
   if (fields_no_key.length > 1) {
@@ -143,7 +143,7 @@ const mich_to_asset_value_decl = (a: Asset, ci : ContractInterface) => {
     ))])
   }
 }
-const mich_to_record_decl = (r: Record, ci : ContractInterface) => {
+const mich_to_record_decl = (r: Record, ci: ContractInterface) => {
   if (r.fields.length > 1) {
     return fields_to_mich_to_entity_decl(r.name, r.fields, ci)
   } else {
@@ -808,18 +808,18 @@ const storage_elt_to_getter_skeleton = (
   )
 }
 
-const get_storage_identifier = (selt: StorageElement, ci: ContractInterface) => {
-  const root = factory.createIdentifier("storage")
-  return ci.storage.length + ci.parameters.length > 1 ?
-    factory.createPropertyAccessExpression(
-      root,
-      factory.createIdentifier(selt.name)
-    ) :
-    root
-}
+// const get_storage_identifier = (selt: StorageElement, ci: ContractInterface) => {
+//   const root = factory.createIdentifier("storage")
+//   return ci.storage.length + ci.parameters.length > 1 ?
+//     factory.createPropertyAccessExpression(
+//       root,
+//       factory.createIdentifier(selt.name)
+//     ) :
+//     root
+// }
 
-const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
-  const root : ts.Expression = factory.createIdentifier("storage")
+const get_data_storage_elt = (selt: StorageElement): ts.Expression => {
+  const root: ts.Expression = factory.createIdentifier("storage")
 
   const res = selt.path.reduce((acc, n) => {
     return factory.createElementAccessExpression(
@@ -828,7 +828,8 @@ const get_data_storage_elt = (selt: StorageElement) : ts.Expression => {
         factory.createIdentifier("args")
       ),
       factory.createNumericLiteral(n)
-    ) }, root);
+    )
+  }, root);
   res;
   return res
 }
@@ -1023,8 +1024,7 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
                 [selt]
               ),
               function_param_to_mich({ name: "key", type: key_type }, ci),
-              key_mich_type,
-              value_mich_type
+              key_mich_type
             ]
           ))
         ),
@@ -1055,6 +1055,17 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
   ]
 }
 
+const mich_to_int = (arg: ts.Expression): ts.Expression => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("att"),
+      factory.createIdentifier("mich_to_int")
+    ),
+    undefined,
+    [arg]
+  )
+}
+
 const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
   switch (selt.type.node) {
     case "big_map": // special treatment
@@ -1083,7 +1094,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            get_storage_identifier(selt, ci),
+            mich_to_int(get_data_storage_elt(selt)),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type.value_type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
             ci
@@ -1110,7 +1121,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            get_storage_identifier(selt, ci),
+            mich_to_int(get_data_storage_elt(selt)),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
             ci
@@ -1147,7 +1158,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            get_storage_identifier(selt, ci),
+            mich_to_int(get_data_storage_elt(selt)),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
             ci
@@ -1173,7 +1184,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            get_storage_identifier(selt, ci),
+            mich_to_int(get_data_storage_elt(selt)),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
             ci
