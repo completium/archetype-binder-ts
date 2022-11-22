@@ -13,6 +13,7 @@
   "scripts": {
     "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.spec.ts",
     "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts ./tests/template.spec.ts ./tests/training.spec.ts ./tests/type_*.spec.ts",
+    "test:path": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/path.spec.ts",
     "test:test": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/test.spec.ts",
     "test:training": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/training.spec.ts",
     "test:template": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/template.spec.ts",

@@ -333,6 +333,9 @@ describe('Generate binding test', async () => {
   it('test_big_record', async () => {
     await get_binding('test_big_record.arl');
   });
+  it('test_path_storage', async () => {
+    await get_binding('path_storage.arl');
+  });
 })
 
 describe('Generate binding cticket', async () => {

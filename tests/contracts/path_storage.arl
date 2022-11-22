@@ -1,0 +1,5 @@
+archetype path_storage
+
+variable a : int = 0
+variable b : int * int = (1,2)
+variable c : int * int * int = (3,4,5)
