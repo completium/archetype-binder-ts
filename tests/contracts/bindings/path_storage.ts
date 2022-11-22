@@ -24,8 +24,8 @@ export class Path_storage {
     async get_a(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const value = (storage as att.Mpair).args[0]
-            return att.mich_to_int(value);
+            const storage0 = (storage as att.Mpair)
+            return att.mich_to_int(storage0.args[0]);
         }
         throw new Error("Contract not initialised");
     }
@@ -35,11 +35,11 @@ export class Path_storage {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const value = (storage as att.Mpair).args[1]
+            const storage0 = (storage as att.Mpair)
             return (p => {
                 const p0 = (p as att.Mpair);
                 return [att.mich_to_int(p0.args[0]), att.mich_to_int(p0.args[1])];
-            })(value);
+            })(storage0.args[1]);
         }
         throw new Error("Contract not initialised");
     }
@@ -50,12 +50,11 @@ export class Path_storage {
     ]> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const value = (storage as att.Mpair).args[2]
+            const storage0 = (storage as att.Mpair)
             return (p => {
                 const p0 = (p as att.Mpair);
-                const p1 = (p0.args[1] as att.Mpair);
-                return [att.mich_to_int(p0.args[0]), att.mich_to_int(p0.args[1]), att.mich_to_int(p1.args[0])];
-            })(value);
+                return [att.mich_to_int(p0.args[0]), att.mich_to_int(p0.args[1]), att.mich_to_int(p0.args[2])];
+            })(att.pair_to_mich(storage0.args.slice(2,5)));
         }
         throw new Error("Contract not initialised");
     }

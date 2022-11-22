@@ -25,8 +25,9 @@ set_mockup_now(new Date(Date.now()))
 
 /* Test data --------------------------------------------------------------- */
 
-const c_ref = [new Int(3), new Int(4), new Int(5)]
+const a_ref = new Int(0)
 const b_ref = [new Int(1), new Int(2)]
+const c_ref = [new Int(3), new Int(4), new Int(5)]
 
 /* Scenario ---------------------------------------------------------------- */
 
@@ -39,7 +40,7 @@ describe('[test_big_record] Contract deployment', async () => {
 describe('[test_big_record] Call entry', async () => {
   it("Call 'get_a'", async () => {
     const a = await path_storage.get_a()
-    assert(a.equals(new Int(0)))
+    assert(a.equals(a_ref))
   })
   it("Call 'get_b'", async () => {
     const b = await path_storage.get_b();
