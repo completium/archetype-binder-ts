@@ -338,13 +338,11 @@ describe('Generate binding test', async () => {
   });
 })
 
-describe('Generate binding cticket', async () => {
-  it('test_big_record', async () => {
-    await get_binding('cticket.arl');
-  });
-})
-
 describe('Generate binding sample', async () => {
+  it('ticket', async () => {
+    await get_binding('sample_ticket.arl');
+  });
+
   it('lambda', async () => {
     await get_binding('sample_lambda.arl');
   });

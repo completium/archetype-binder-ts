@@ -1,4 +1,4 @@
-archetype cticket with metadata ""
+archetype sample_ticket
 
 variable my_ticket : option<ticket<string>> = none<ticket<string>>
 

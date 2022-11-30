@@ -4,7 +4,7 @@ const exec_arg_to_mich = (): att.Micheline => {
     return att.unit_mich;
 }
 const set_l_arg_to_mich = (input: att.Micheline): att.Micheline => {
-    return Micheline.to_mich();
+    return (x => x)(input);
 }
 export class Sample_lambda {
     address: string | undefined;
@@ -35,7 +35,7 @@ export class Sample_lambda {
     }
     async set_l(input: att.Micheline, params: Partial<ex.Parameters>): Promise<any> {
         if (this.address != undefined) {
-            return await ex.call(this.address, "set_l", input, params);
+            return await ex.call(this.address, "set_l", set_l_arg_to_mich(input), params);
         }
         throw new Error("Contract not initialised");
     }

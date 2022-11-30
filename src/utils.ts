@@ -1156,6 +1156,29 @@ const class_to_mich = (x: ts.Expression): ts.CallExpression => {
   )
 }
 
+const id_to_mich = (x: ts.Expression): ts.CallExpression => {
+  return factory.createCallExpression(
+    factory.createParenthesizedExpression(factory.createArrowFunction(
+      undefined,
+      undefined,
+      [factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("x"),
+        undefined,
+        undefined,
+        undefined
+      )],
+      undefined,
+      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+      factory.createIdentifier("x")
+    )),
+    undefined,
+    [x]
+  );
+}
+
 const string_to_mich = (x: ts.Expression): ts.CallExpression => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
@@ -1453,7 +1476,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "iterable_big_map": return throw_error(fp.type.node);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
     case "key": return class_to_mich(factory.createIdentifier(fp.name));
-    case "lambda": return class_to_mich(factory.createIdentifier("Micheline"));
+    case "lambda": return id_to_mich(factory.createIdentifier(fp.name));
     case "list": return list_to_mich(fp.name, fp.type.arg, ci);
     case "map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "nat": return class_to_mich(factory.createIdentifier(fp.name));
