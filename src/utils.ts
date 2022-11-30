@@ -474,7 +474,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
       ),
       undefined
     );
-    case "lambda": return throw_error(at.node)
+    case "lambda": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Micheline")
+      ),
+      undefined
+    );
     case "list": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [archetype_type_to_ts_type(at.arg)]
@@ -981,7 +987,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "iterable_big_map": return TODO("iterable_big_map", arg);
     case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
     case "key": return class_to_mich("mich_to_key", [arg]);
-    case "lambda": return TODO("lambda", arg);
+    case "lambda": return arg;
     case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
     case "map": return map_mich_to_ts(atype);
     case "nat": return class_to_mich("mich_to_nat", [arg]);
@@ -1447,7 +1453,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "iterable_big_map": return throw_error(fp.type.node);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
     case "key": return class_to_mich(factory.createIdentifier(fp.name));
-    case "lambda": return throw_error(fp.type.node);
+    case "lambda": return class_to_mich(factory.createIdentifier("Micheline"));
     case "list": return list_to_mich(fp.name, fp.type.arg, ci);
     case "map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "nat": return class_to_mich(factory.createIdentifier(fp.name));

@@ -344,6 +344,12 @@ describe('Generate binding cticket', async () => {
   });
 })
 
+describe('Generate binding sample', async () => {
+  it('lambda', async () => {
+    await get_binding('sample_lambda.arl');
+  });
+})
+
 describe('Generate binding template', async () => {
   it('template_all_utils', async () => {
     await get_binding('template_all_utils.arl');
