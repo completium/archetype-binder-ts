@@ -818,10 +818,31 @@ const storage_elt_to_getter_skeleton = (
 //     root
 // }
 
-const get_data_storage_elt = (selt: StorageElement): ts.Expression => {
-  const root: ts.Expression = factory.createIdentifier("storage")
+export const get_path = (id : string, sty : MichelsonType) : Array<number> => {
+  const aux = (ty : MichelsonType, accu : Array<number>) : Array<number> | undefined => {
+    if (ty.annots && ty.annots?.length > 0 && ty.annots[0] == id) {
+      return accu
+    }
+    if (ty.prim == "pair") {
+      for (let i = 0; i < ty.args.length; ++i) {
+        const npath : Array<number> = accu.concat([i]);
+        const r = aux(ty.args[i], npath);
+        if (r) {
+          return r
+        }
+      }
+    }
+    return undefined
+  }
+  const res = aux(sty, []);
+  return res ?? [];
+}
 
-  const res = selt.path.reduce((acc, n) => {
+const get_data_storage_elt = (selt: StorageElement, ci: ContractInterface): ts.Expression => {
+  const root: ts.Expression = factory.createIdentifier("storage")
+  const path = get_path("%" + selt.name, ci.storage_type.value);
+
+  const res = path.reduce((acc, n) => {
     return factory.createElementAccessExpression(
       factory.createPropertyAccessExpression(
         acc,
@@ -835,7 +856,7 @@ const get_data_storage_elt = (selt: StorageElement): ts.Expression => {
 }
 
 const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
-  const elt = get_data_storage_elt(selt);
+  const elt = get_data_storage_elt(selt, ci);
   return storage_elt_to_getter_skeleton(
     "get_",
     selt.name,
@@ -1094,7 +1115,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            mich_to_int(get_data_storage_elt(selt)),
+            mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type.value_type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
             ci
@@ -1121,7 +1142,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            mich_to_int(get_data_storage_elt(selt)),
+            mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
             ci
@@ -1158,7 +1179,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            mich_to_int(get_data_storage_elt(selt)),
+            mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
             ci
@@ -1184,7 +1205,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            mich_to_int(get_data_storage_elt(selt)),
+            mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
             ci
@@ -1324,8 +1345,7 @@ const storage_elt_to_param = (selt: StorageElement): ContractParameter => {
     name: selt.name,
     type: selt.type,
     const: false,
-    default: null,
-    path: selt.path
+    default: null
   }
 }
 

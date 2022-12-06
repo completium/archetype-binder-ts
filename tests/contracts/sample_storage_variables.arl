@@ -1,0 +1,5 @@
+archetype sample_storage_variables
+
+variable n : nat = 0
+variable s : string = "mystr"
+variable r : rational = 0.1

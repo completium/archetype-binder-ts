@@ -136,7 +136,6 @@ type ContractParameterGen<AT> = {
   "type": AT
   "const": boolean
   "default": string | null
-  "path": Array<number>
 }
 export type ContractParameter = ContractParameterGen<ArchetypeType>
 
@@ -187,7 +186,6 @@ type StorageElementGen<AT> = {
   "name": string
   "type": AT
   "const": boolean
-  "path": Array<number>
 }
 export type StorageElement = StorageElementGen<ArchetypeType>
 

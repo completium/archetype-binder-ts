@@ -40,6 +40,7 @@
     "test:sample": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/sample.spec.ts",
     "test:lambda": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/lambda.spec.ts",
     "test:ticket": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/ticket.spec.ts",
+    "test:utils": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/utils.spec.ts",
     "test:coverage": "nyc npm run test",
     "test:generate:coverage": "nyc npm run test:generate",
     "test:main:coverage": "nyc npm run test:main",

@@ -339,6 +339,10 @@ describe('Generate binding test', async () => {
 })
 
 describe('Generate binding sample', async () => {
+  it('storage_variables', async () => {
+    await get_binding('sample_storage_variables.arl');
+  });
+
   it('tuple_tuple_rational', async () => {
     await get_binding('sample_tuple_tuple_rational.arl');
   });
