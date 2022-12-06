@@ -1,0 +1,6 @@
+archetype sample_tuple_tuple_rational
+
+variable v : (nat * (string * rational)) = (0, ("mystr", 0.1)) // [nat, [string, rational]]
+
+// Pair 0 "0" 1 10
+

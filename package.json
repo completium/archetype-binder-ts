@@ -37,6 +37,7 @@
     "test:type_simple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_simple.spec.ts",
     "test:type_tuple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_tuple.spec.ts",
     "test:type_view": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_view.spec.ts",
+    "test:sample": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/sample.spec.ts",
     "test:lambda": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/lambda.spec.ts",
     "test:ticket": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/ticket.spec.ts",
     "test:coverage": "nyc npm run test",

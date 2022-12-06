@@ -58,34 +58,22 @@
           "var_type": null
         },
         {
-          "prim": "pair",
+          "prim": "bls12_381_fr",
           "int": null,
           "bytes": null,
           "string": null,
-          "args": [
-            {
-              "prim": "bls12_381_fr",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "string",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            }
-          ],
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
           "annots": [],
           "array": [],
           "var_id": null,

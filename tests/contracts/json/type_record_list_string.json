@@ -63,51 +63,39 @@
               "var_type": null
             },
             {
-              "prim": "pair",
+              "prim": "list",
               "int": null,
               "bytes": null,
               "string": null,
               "args": [
-                {
-                  "prim": "list",
-                  "int": null,
-                  "bytes": null,
-                  "string": null,
-                  "args": [
-                    {
-                      "prim": "string",
-                      "int": null,
-                      "bytes": null,
-                      "string": null,
-                      "args": [],
-                      "annots": [],
-                      "array": [],
-                      "var_id": null,
-                      "var_type": null
-                    }
-                  ],
-                  "annots": [
-                    "%v"
-                  ],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                },
                 {
                   "prim": "string",
                   "int": null,
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [
-                    "%s"
-                  ],
+                  "annots": [],
                   "array": [],
                   "var_id": null,
                   "var_type": null
                 }
               ],
-              "annots": [],
+              "annots": [
+                "%v"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%s"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null
@@ -156,51 +144,39 @@
           "var_type": null
         },
         {
-          "prim": "pair",
+          "prim": "list",
           "int": null,
           "bytes": null,
           "string": null,
           "args": [
-            {
-              "prim": "list",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [
-                {
-                  "prim": "string",
-                  "int": null,
-                  "bytes": null,
-                  "string": null,
-                  "args": [],
-                  "annots": [],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                }
-              ],
-              "annots": [
-                "%v"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
             {
               "prim": "string",
               "int": null,
               "bytes": null,
               "string": null,
               "args": [],
-              "annots": [
-                "%s"
-              ],
+              "annots": [],
               "array": [],
               "var_id": null,
               "var_type": null
             }
           ],
-          "annots": [],
+          "annots": [
+            "%v"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%s"
+          ],
           "array": [],
           "var_id": null,
           "var_type": null

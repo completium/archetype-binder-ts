@@ -7,7 +7,7 @@ export class my_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([this.v.to_mich(), att.string_to_mich(this.s)])]);
+        return att.pair_to_mich([this.n.to_mich(), this.v.to_mich()]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && this.v == v.v && this.s == v.s);
@@ -16,10 +16,7 @@ export class my_record implements att.ArchetypeType {
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
-    att.pair_array_to_mich_type([
-        att.prim_annot_to_mich_type("nat", ["%v"]),
-        att.prim_annot_to_mich_type("string", ["%s"])
-    ], [])
+    att.prim_annot_to_mich_type("nat", ["%v"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();

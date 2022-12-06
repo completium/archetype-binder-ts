@@ -123,40 +123,13 @@
               "string": null,
               "args": [
                 {
-                  "prim": "pair",
+                  "prim": "nat",
                   "int": null,
                   "bytes": null,
                   "string": null,
-                  "args": [
-                    {
-                      "prim": "nat",
-                      "int": null,
-                      "bytes": null,
-                      "string": null,
-                      "args": [],
-                      "annots": [
-                        "%f_a"
-                      ],
-                      "array": [],
-                      "var_id": null,
-                      "var_type": null
-                    },
-                    {
-                      "prim": "string",
-                      "int": null,
-                      "bytes": null,
-                      "string": null,
-                      "args": [],
-                      "annots": [
-                        "%f_b"
-                      ],
-                      "array": [],
-                      "var_id": null,
-                      "var_type": null
-                    }
-                  ],
+                  "args": [],
                   "annots": [
-                    "%v"
+                    "%f_a"
                   ],
                   "array": [],
                   "var_id": null,
@@ -169,14 +142,29 @@
                   "string": null,
                   "args": [],
                   "annots": [
-                    "%s"
+                    "%f_b"
                   ],
                   "array": [],
                   "var_id": null,
                   "var_type": null
                 }
               ],
-              "annots": [],
+              "annots": [
+                "%v"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%s"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null
@@ -231,40 +219,13 @@
           "string": null,
           "args": [
             {
-              "prim": "pair",
+              "prim": "nat",
               "int": null,
               "bytes": null,
               "string": null,
-              "args": [
-                {
-                  "prim": "nat",
-                  "int": null,
-                  "bytes": null,
-                  "string": null,
-                  "args": [],
-                  "annots": [
-                    "%f_a"
-                  ],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                },
-                {
-                  "prim": "string",
-                  "int": null,
-                  "bytes": null,
-                  "string": null,
-                  "args": [],
-                  "annots": [
-                    "%f_b"
-                  ],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                }
-              ],
+              "args": [],
               "annots": [
-                "%v"
+                "%f_a"
               ],
               "array": [],
               "var_id": null,
@@ -277,14 +238,29 @@
               "string": null,
               "args": [],
               "annots": [
-                "%s"
+                "%f_b"
               ],
               "array": [],
               "var_id": null,
               "var_type": null
             }
           ],
-          "annots": [],
+          "annots": [
+            "%v"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%s"
+          ],
           "array": [],
           "var_id": null,
           "var_type": null

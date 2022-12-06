@@ -71,39 +71,27 @@
           "var_type": null
         },
         {
-          "prim": "pair",
+          "prim": "int",
           "int": null,
           "bytes": null,
           "string": null,
-          "args": [
-            {
-              "prim": "int",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%total"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "timestamp",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [],
-              "annots": [
-                "%lastSubDate"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            }
+          "args": [],
+          "annots": [
+            "%total"
           ],
-          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "timestamp",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%lastSubDate"
+          ],
           "array": [],
           "var_id": null,
           "var_type": null

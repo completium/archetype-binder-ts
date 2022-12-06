@@ -56,51 +56,39 @@
               "var_type": null
             },
             {
-              "prim": "pair",
+              "prim": "sapling_transaction",
               "int": null,
               "bytes": null,
               "string": null,
               "args": [
                 {
-                  "prim": "sapling_transaction",
-                  "int": null,
-                  "bytes": null,
-                  "string": null,
-                  "args": [
-                    {
-                      "prim": null,
-                      "int": "8",
-                      "bytes": null,
-                      "string": null,
-                      "args": [],
-                      "annots": [],
-                      "array": [],
-                      "var_id": null,
-                      "var_type": null
-                    }
-                  ],
-                  "annots": [
-                    "%v"
-                  ],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                },
-                {
-                  "prim": "string",
-                  "int": null,
+                  "prim": null,
+                  "int": "8",
                   "bytes": null,
                   "string": null,
                   "args": [],
-                  "annots": [
-                    "%s"
-                  ],
+                  "annots": [],
                   "array": [],
                   "var_id": null,
                   "var_type": null
                 }
               ],
-              "annots": [],
+              "annots": [
+                "%v"
+              ],
+              "array": [],
+              "var_id": null,
+              "var_type": null
+            },
+            {
+              "prim": "string",
+              "int": null,
+              "bytes": null,
+              "string": null,
+              "args": [],
+              "annots": [
+                "%s"
+              ],
               "array": [],
               "var_id": null,
               "var_type": null
@@ -149,51 +137,39 @@
           "var_type": null
         },
         {
-          "prim": "pair",
+          "prim": "sapling_transaction",
           "int": null,
           "bytes": null,
           "string": null,
           "args": [
             {
-              "prim": "sapling_transaction",
-              "int": null,
-              "bytes": null,
-              "string": null,
-              "args": [
-                {
-                  "prim": null,
-                  "int": "8",
-                  "bytes": null,
-                  "string": null,
-                  "args": [],
-                  "annots": [],
-                  "array": [],
-                  "var_id": null,
-                  "var_type": null
-                }
-              ],
-              "annots": [
-                "%v"
-              ],
-              "array": [],
-              "var_id": null,
-              "var_type": null
-            },
-            {
-              "prim": "string",
-              "int": null,
+              "prim": null,
+              "int": "8",
               "bytes": null,
               "string": null,
               "args": [],
-              "annots": [
-                "%s"
-              ],
+              "annots": [],
               "array": [],
               "var_id": null,
               "var_type": null
             }
           ],
-          "annots": [],
+          "annots": [
+            "%v"
+          ],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        },
+        {
+          "prim": "string",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [
+            "%s"
+          ],
           "array": [],
           "var_id": null,
           "var_type": null

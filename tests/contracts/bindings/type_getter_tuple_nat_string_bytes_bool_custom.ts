@@ -14,11 +14,8 @@ export const deploy_get_value_callback = async (params: Partial<ex.Parameters>):
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
         att.pair_array_to_mich_type([
-            att.pair_array_to_mich_type([
-                att.prim_annot_to_mich_type("string", []),
-                att.prim_annot_to_mich_type("bytes", [])
-            ], []),
-            att.prim_annot_to_mich_type("bool", [])
+            att.prim_annot_to_mich_type("string", []),
+            att.prim_annot_to_mich_type("bytes", [])
         ], [])
     ], []), params);
 };

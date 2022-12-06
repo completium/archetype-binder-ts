@@ -6,7 +6,7 @@ export class r_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.f_a.to_mich(), att.pair_to_mich([att.pair_to_mich([att.string_to_mich(this.f_b), this.f_c.to_mich()]), att.bool_to_mich(this.f_d)])]);
+        return att.pair_to_mich([this.f_a.to_mich(), att.pair_to_mich([att.string_to_mich(this.f_b), this.f_c.to_mich()])]);
     }
     equals(v: r_record): boolean {
         return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b && this.f_c.equals(v.f_c) && this.f_d == v.f_d);
@@ -15,11 +15,8 @@ export class r_record implements att.ArchetypeType {
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
     att.pair_array_to_mich_type([
-        att.pair_array_to_mich_type([
-            att.prim_annot_to_mich_type("string", ["%f_b"]),
-            att.prim_annot_to_mich_type("bytes", ["%f_c"])
-        ], []),
-        att.prim_annot_to_mich_type("bool", ["%f_d"])
+        att.prim_annot_to_mich_type("string", ["%f_b"]),
+        att.prim_annot_to_mich_type("bytes", ["%f_c"])
     ], [])
 ], []);
 const get_value_arg_to_mich = (i: r_record): att.Micheline => {
@@ -29,11 +26,8 @@ export const deploy_get_value_callback = async (params: Partial<ex.Parameters>):
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", ["%f_a"]),
         att.pair_array_to_mich_type([
-            att.pair_array_to_mich_type([
-                att.prim_annot_to_mich_type("string", ["%f_b"]),
-                att.prim_annot_to_mich_type("bytes", ["%f_c"])
-            ], []),
-            att.prim_annot_to_mich_type("bool", ["%f_d"])
+            att.prim_annot_to_mich_type("string", ["%f_b"]),
+            att.prim_annot_to_mich_type("bytes", ["%f_c"])
         ], [])
     ], []), params);
 };

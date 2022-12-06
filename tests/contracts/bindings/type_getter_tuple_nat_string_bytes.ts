@@ -10,10 +10,7 @@ const get_value_arg_to_mich = (i: [
 export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", []),
-        att.pair_array_to_mich_type([
-            att.prim_annot_to_mich_type("string", []),
-            att.prim_annot_to_mich_type("bytes", [])
-        ], [])
+        att.prim_annot_to_mich_type("string", [])
     ], []), params);
 };
 export class Type_getter_tuple_nat_string_bytes {

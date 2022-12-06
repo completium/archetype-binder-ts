@@ -249,7 +249,7 @@ class Ret {
   }
 }
 
-const iterate_on_comparable_types_gen = async (kind: string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean, items : Array<item>, skip ?: Array<string>) => {
+const iterate_on_comparable_types_gen = async (kind: string, g: (item: item) => Promise<void>, h: (accu: Ret, item: item) => Ret, z: (ret: Ret) => void, doit: (item: item) => boolean, items: Array<item>, skip?: Array<string>) => {
   const ret = new Ret(kind);
   for (let e of items) {
     if (doit(e)) {
@@ -300,15 +300,15 @@ const myiter = (is: iter_settings): ((accu: Ret, item: item) => Ret) => {
   return res;
 }
 
-const iterate_on_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+const iterate_on_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip?: Array<string>) => {
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true), type_default_name, skip)
 }
 
-const iterate_on_comparable_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+const iterate_on_comparable_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip?: Array<string>) => {
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => e.comparable), type_default_name, skip)
 }
 
-const iterate_on_asset_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip ?: Array<string>) => {
+const iterate_on_asset_types = async (kind: string, g: (item: item) => Promise<void>, is: iter_settings, skip?: Array<string>) => {
   iterate_on_comparable_types_gen(kind, g, myiter(is), finalize, ((e: item) => true), type_assets, skip)
 }
 
@@ -339,6 +339,10 @@ describe('Generate binding test', async () => {
 })
 
 describe('Generate binding sample', async () => {
+  it('tuple_tuple_rational', async () => {
+    await get_binding('sample_tuple_tuple_rational.arl');
+  });
+
   it('ticket', async () => {
     await get_binding('sample_ticket.arl');
   });

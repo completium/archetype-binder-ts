@@ -9,11 +9,11 @@ export class my_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), att.pair_to_mich([att.list_to_mich(this.v, x => {
-                    const x_key = x[0];
-                    const x_value = x[1];
-                    return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
-                }), att.string_to_mich(this.s)])]);
+        return att.pair_to_mich([this.n.to_mich(), att.list_to_mich(this.v, x => {
+                const x_key = x[0];
+                const x_value = x[1];
+                return att.elt_to_mich(x_key.to_mich(), att.string_to_mich(x_value));
+            })]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && JSON.stringify(this.v) == JSON.stringify(v.v) && this.s == v.s);
@@ -21,10 +21,7 @@ export class my_record implements att.ArchetypeType {
 }
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
-    att.pair_array_to_mich_type([
-        att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), ["%v"]),
-        att.prim_annot_to_mich_type("string", ["%s"])
-    ], [])
+    att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.prim_annot_to_mich_type("string", []), ["%v"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();
