@@ -955,6 +955,12 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
+  const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
+    const asset_type = get_asset_type(asset_name, ci);
+    console.log(asset_type);
+    return TODO("asset_to_mich", arg);
+  }
+
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
     case "aggregate": return TODO("aggregate", arg);
@@ -962,7 +968,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "asset_key": return TODO("asset_key", arg);
     case "asset_value": return TODO("asset_value", arg);
     case "asset_view": return TODO("asset_view", arg);
-    case "asset": return TODO("asset", arg);
+    case "asset": return asset_to_mich(atype.name, arg, ci);
     case "big_map": return class_to_mich("mich_to_int", [arg]);
     case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
     case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
