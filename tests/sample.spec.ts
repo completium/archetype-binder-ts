@@ -25,24 +25,24 @@ set_mockup_now(new Date(Date.now()))
 
 /* Scenario ---------------------------------------------------------------- */
 
-describe('[Storage_variables] Contract deployment', async () => {
-  it('Storage_variables', async () => {
-    await sample_storage_variables.deploy({ as: alice })
-    const n = await sample_storage_variables.get_n();
-    const s = await sample_storage_variables.get_s();
-    // const r = await sample_storage_variables.get_r();
-    assert(n.equals(new Nat(0)))
-    assert(s == "mystr")
-    // assert(r.equals(new Rational(0.1)))
-  });
-})
-
-// describe('[Tuple_tuple_rational] Contract deployment', async () => {
-//   it('Tuple_tuple_rational', async () => {
-//     await sample_tuple_tuple_rational.deploy({ as: alice })
-//     const v = await sample_tuple_tuple_rational.get_v();
-//     assert(v[0].equals(new Nat(0)))
-//     assert(v[0][0] == "mystr")
-//     assert(v[0][1].equals(new Rational(0.1)))
+// describe('[Storage_variables] Contract deployment', async () => {
+//   it('Storage_variables', async () => {
+//     await sample_storage_variables.deploy({ as: alice })
+//     const n = await sample_storage_variables.get_n();
+//     const s = await sample_storage_variables.get_s();
+//     const r = await sample_storage_variables.get_r();
+//     assert(n.equals(new Nat(0)))
+//     assert(s == "mystr")
+//     assert(r.equals(new Rational(0.1)))
 //   });
 // })
+
+describe('[Tuple_tuple_rational] Contract deployment', async () => {
+  it('Tuple_tuple_rational', async () => {
+    await sample_tuple_tuple_rational.deploy({ as: alice })
+    const v = await sample_tuple_tuple_rational.get_v();
+    assert(v[0].equals(new Nat(0)))
+    assert(v[1][0] == "mystr")
+    assert(v[1][1].equals(new Rational(0.1)))
+  });
+})

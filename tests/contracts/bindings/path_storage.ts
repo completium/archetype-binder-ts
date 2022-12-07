@@ -52,7 +52,7 @@ export class Path_storage {
                 const p0 = (p as att.Mpair);
                 const p1 = (p0.args[1] as att.Mpair);
                 return [att.mich_to_int(p0.args[0]), att.mich_to_int(p0.args[1]), att.mich_to_int(p1.args[0])];
-            })(storage.args[2]);
+            })(att.pair_to_mich(storage.args.slice(2, 5)));
         }
         throw new Error("Contract not initialised");
     }

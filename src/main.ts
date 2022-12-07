@@ -818,14 +818,36 @@ const storage_elt_to_getter_skeleton = (
 //     root
 // }
 
-export const get_path = (id : string, sty : MichelsonType) : Array<number> => {
-  const aux = (ty : MichelsonType, accu : Array<number>) : Array<number> | undefined => {
+export type PathItemSimple = [number]
+
+export type PathItemDouble = [number, number]
+
+export type PathItem = PathItemSimple | PathItemDouble
+
+export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
+  const get_size = (ty: MichelsonType): number => {
+    switch (ty.prim) {
+      case "ticket": return 3
+      case "pair": return (ty.args.length - 1 + get_size(ty.args[ty.args.length - 1]))
+      default: return 1
+    }
+  }
+  const aux = (ty: MichelsonType, accu: Array<PathItem>): Array<PathItem> | undefined => {
     if (ty.annots && ty.annots?.length > 0 && ty.annots[0] == id) {
       return accu
     }
     if (ty.prim == "pair") {
       for (let i = 0; i < ty.args.length; ++i) {
-        const npath : Array<number> = accu.concat([i]);
+        const is_last = i == ty.args.length - 1;
+        let ii: PathItem = [i];
+        if (is_last) {
+          const size = get_size(ty.args[i]);
+          if (size > 1) {
+            ii = [i, (i + size)]
+          }
+        }
+        const npath: Array<PathItem> = accu.concat([])
+        npath.push(ii);
         const r = aux(ty.args[i], npath);
         if (r) {
           return r
@@ -842,16 +864,44 @@ const get_data_storage_elt = (selt: StorageElement, ci: ContractInterface): ts.E
   const root: ts.Expression = factory.createIdentifier("storage")
   const path = get_path("%" + selt.name, ci.storage_type.value);
 
-  const res = path.reduce((acc, n) => {
-    return factory.createElementAccessExpression(
-      factory.createPropertyAccessExpression(
-        acc,
-        factory.createIdentifier("args")
-      ),
-      factory.createNumericLiteral(n)
-    )
+  const res = path.reduce((acc, i) => {
+    if (i.length == 1) {
+      const [n] = (i as PathItemSimple);
+      return factory.createElementAccessExpression(
+        factory.createPropertyAccessExpression(
+          acc,
+          factory.createIdentifier("args")
+        ),
+        factory.createNumericLiteral(n)
+      )
+    } else if (i.length == 2) {
+      const [start, end] = (i as PathItemDouble);
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("pair_to_mich")
+        ),
+        undefined,
+        [factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createPropertyAccessExpression(
+              // factory.createParenthesizedExpression(acc),
+              acc,
+              factory.createIdentifier("args")
+            ),
+            factory.createIdentifier("slice")
+          ),
+          undefined,
+          [
+            factory.createNumericLiteral(start.toString()),
+            factory.createNumericLiteral(end.toString())
+          ]
+        )]
+      )
+    } else {
+      throw new Error("Internal Error");
+    }
   }, root);
-  res;
   return res
 }
 

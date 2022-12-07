@@ -1,6 +1,6 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export class Sample_storage_variables {
+export class Sample_tuple_tuple_rational {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -18,30 +18,28 @@ export class Sample_storage_variables {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./tests/contracts/sample_storage_variables.arl", {}, params)).address;
+        const address = (await ex.deploy("./tests/contracts/sample_tuple_tuple_rational.arl", {}, params)).address;
         this.address = address;
     }
-    async get_n(): Promise<att.Nat> {
+    async get_v(): Promise<[
+        att.Nat,
+        [
+            string,
+            att.Rational
+        ]
+    ]> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage.args[0]);
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_s(): Promise<string> {
-        if (this.address != undefined) {
-            const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_string(storage.args[1]);
-        }
-        throw new Error("Contract not initialised");
-    }
-    async get_r(): Promise<att.Rational> {
-        if (this.address != undefined) {
-            const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_rational(att.pair_to_mich(storage.args.slice(2, 4)));
+            return (p => {
+                const p0 = (p as att.Mpair);
+                return [att.mich_to_nat(p0.args[0]), (p => {
+                        const p0 = (p as att.Mpair);
+                        return [att.mich_to_string(p0.args[0]), att.mich_to_rational(att.pair_to_mich(p0.args.slice(1, 3)))];
+                    })(att.pair_to_mich(p0.args.slice(1, 4)))];
+            })(storage);
         }
         throw new Error("Contract not initialised");
     }
     errors = {};
 }
-export const sample_storage_variables = new Sample_storage_variables();
+export const sample_tuple_tuple_rational = new Sample_tuple_tuple_rational();
