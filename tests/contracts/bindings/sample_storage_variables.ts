@@ -38,7 +38,7 @@ export class Sample_storage_variables {
     async get_r(): Promise<att.Rational> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_rational(att.pair_to_mich(storage.args.slice(2, 4)));
+            return att.mich_to_rational(att.pair_to_mich((storage as att.Mpair).args.slice(2, 4)));
         }
         throw new Error("Contract not initialised");
     }

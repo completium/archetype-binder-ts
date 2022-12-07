@@ -1,5 +1,4 @@
-import { get_path, PathItem, PathItemSimple, PathItemDouble } from '../src/main';
-import { MichelsonType } from '../src/utils'
+import { get_path, MichelsonType, PathItem, PathItemSimple, PathItemDouble } from '../src/utils'
 
 const assert = require('assert')
 

@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMicheline, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMicheline, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -818,89 +818,22 @@ const storage_elt_to_getter_skeleton = (
 //     root
 // }
 
-export type PathItemSimple = [number]
-
-export type PathItemDouble = [number, number]
-
-export type PathItem = PathItemSimple | PathItemDouble
-
-export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
-  const get_size = (ty: MichelsonType): number => {
-    switch (ty.prim) {
-      case "ticket": return 3
-      case "pair": return (ty.args.length - 1 + get_size(ty.args[ty.args.length - 1]))
-      default: return 1
-    }
-  }
-  const aux = (ty: MichelsonType, accu: Array<PathItem>): Array<PathItem> | undefined => {
-    if (ty.annots && ty.annots?.length > 0 && ty.annots[0] == id) {
-      return accu
-    }
-    if (ty.prim == "pair") {
-      for (let i = 0; i < ty.args.length; ++i) {
-        const is_last = i == ty.args.length - 1;
-        let ii: PathItem = [i];
-        if (is_last) {
-          const size = get_size(ty.args[i]);
-          if (size > 1) {
-            ii = [i, (i + size)]
-          }
-        }
-        const npath: Array<PathItem> = accu.concat([])
-        npath.push(ii);
-        const r = aux(ty.args[i], npath);
-        if (r) {
-          return r
-        }
-      }
-    }
-    return undefined
-  }
-  const res = aux(sty, []);
-  return res ?? [];
-}
-
 const get_data_storage_elt = (selt: StorageElement, ci: ContractInterface): ts.Expression => {
   const root: ts.Expression = factory.createIdentifier("storage")
   const path = get_path("%" + selt.name, ci.storage_type.value);
 
-  const res = path.reduce((acc, i) => {
-    if (i.length == 1) {
-      const [n] = (i as PathItemSimple);
-      return factory.createElementAccessExpression(
-        factory.createPropertyAccessExpression(
-          acc,
-          factory.createIdentifier("args")
-        ),
-        factory.createNumericLiteral(n)
-      )
-    } else if (i.length == 2) {
-      const [start, end] = (i as PathItemDouble);
-      return factory.createCallExpression(
-        factory.createPropertyAccessExpression(
+  const res = path.reduce((acc, pi) => {
+    const expr_arg = factory.createAsExpression(
+      acc,
+      factory.createTypeReferenceNode(
+        factory.createQualifiedName(
           factory.createIdentifier("att"),
-          factory.createIdentifier("pair_to_mich")
+          factory.createIdentifier("Mpair")
         ),
-        undefined,
-        [factory.createCallExpression(
-          factory.createPropertyAccessExpression(
-            factory.createPropertyAccessExpression(
-              // factory.createParenthesizedExpression(acc),
-              acc,
-              factory.createIdentifier("args")
-            ),
-            factory.createIdentifier("slice")
-          ),
-          undefined,
-          [
-            factory.createNumericLiteral(start.toString()),
-            factory.createNumericLiteral(end.toString())
-          ]
-        )]
+        undefined
       )
-    } else {
-      throw new Error("Internal Error");
-    }
+    );
+    return make_arg(acc, pi)
   }, root);
   return res
 }

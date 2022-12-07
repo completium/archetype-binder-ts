@@ -1,4 +1,4 @@
-import ts, { factory, KeywordTypeNode, SyntaxKind } from "typescript";
+import ts, { factory, KeywordTypeNode, Path, SyntaxKind } from "typescript";
 
 export type ATSimple = {
   node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
@@ -259,8 +259,129 @@ export const makeTaquitoEnv = (): TaquitoEnv => {
   return { in_map_key: false }
 }
 
-/* Archetype type to Michelson type ---------------------------------------- */
+/* Compute path and argument */
 
+export type PathItemSimple = [number]
+
+export type PathItemDouble = [number, number]
+
+export type PathItem = PathItemSimple | PathItemDouble
+
+export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
+  const get_size = (ty: MichelsonType): number => {
+    switch (ty.prim) {
+      case "address": return 1
+      case "big_map": return 1
+      case "bls12_381_fr": return 1
+      case "bls12_381_g1": return 1
+      case "bls12_381_g2": return 1
+      case "bool": return 1
+      case "bytes": return 1
+      case "chain_id": return 1
+      case "chest_key": return 1
+      case "chest": return 1
+      case "contract": return 1
+      case "int": return 1
+      case "key_hash": return 1
+      case "key": return 1
+      case "lambda": return 1
+      case "list": return 1
+      case "map": return 1
+      case "mutez": return 1
+      case "nat": return 1
+      case "never": return 1
+      case "operation": return 1
+      case "option": return 1
+      case "or": return 1
+      case "pair": return (ty.args.length - 1 + get_size(ty.args[ty.args.length - 1]))
+      case "sapling_state": return 1
+      case "sapling_transaction": return 1
+      case "set": return 1
+      case "signature": return 1
+      case "string": return 1
+      case "ticket": return 3
+      case "timestamp": return 1
+      case "tx_rollup_l2_address": return 1
+      case "unit": return 1
+    }
+  }
+  const aux = (ty: MichelsonType, accu: Array<PathItem>): Array<PathItem> | undefined => {
+    if (ty.annots && ty.annots?.length > 0 && ty.annots[0] == id) {
+      return accu
+    }
+    if (ty.prim == "pair") {
+      for (let i = 0; i < ty.args.length; ++i) {
+        const is_last = i == ty.args.length - 1;
+        let ii: PathItem = [i];
+        if (is_last) {
+          const size = get_size(ty.args[i]);
+          if (size > 1) {
+            ii = [i, (i + size)]
+          }
+        }
+        const npath: Array<PathItem> = accu.concat([])
+        npath.push(ii);
+        const r = aux(ty.args[i], npath);
+        if (r) {
+          return r
+        }
+      }
+    }
+    return undefined
+  }
+  const res = aux(sty, []);
+  return res ?? [];
+}
+
+export const make_arg = (expr: ts.Expression, pi: PathItem) => {
+  if (pi.length == 1) {
+    const [n] = (pi as PathItemSimple);
+    return factory.createElementAccessExpression(
+      factory.createPropertyAccessExpression(
+        expr,
+        factory.createIdentifier("args")
+      ),
+      factory.createNumericLiteral(n)
+    )
+  } else if (pi.length == 2) {
+    const [start, end] = (pi as PathItemDouble);
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("pair_to_mich")
+      ),
+      undefined,
+      [factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createPropertyAccessExpression(
+            // factory.createParenthesizedExpression(acc),
+            factory.createParenthesizedExpression(factory.createAsExpression(
+              expr,
+              factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Mpair")
+                ),
+                undefined
+              )
+            )),
+            factory.createIdentifier("args")
+          ),
+          factory.createIdentifier("slice")
+        ),
+        undefined,
+        [
+          factory.createNumericLiteral(start.toString()),
+          factory.createNumericLiteral(end.toString())
+        ]
+      )]
+    )
+  } else {
+    throw new Error("Internal Error");
+  }
+}
+
+/* Archetype type to Michelson type ---------------------------------------- */
 
 export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType => {
   switch (at.node) {
@@ -752,18 +873,6 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
 
 /* Michelson to Typescript utils ----------------------------------------------------- */
 
-const make_arg = (i: number): ts.Expression => {
-  const p_idx = Math.floor(i / 2)
-  const arg_idx = i % 2
-  return factory.createElementAccessExpression(
-    factory.createPropertyAccessExpression(
-      factory.createIdentifier("p" + p_idx.toString()),
-      factory.createIdentifier("args")
-    ),
-    factory.createNumericLiteral(arg_idx.toString())
-  )
-}
-
 const make_pair_decl = (arg: ts.Expression, i: number) => {
   const idx = Math.floor(i / 2)
   if (idx == 0) {
@@ -819,13 +928,67 @@ const make_pair_decl = (arg: ts.Expression, i: number) => {
   }
 }
 
-export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression, ci: ContractInterface, idx = 0, len = 0): ts.Expression => {
+export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression, ci: ContractInterface): ts.Expression => {
   const throw_error = (ty: string) => {
     throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
   }
 
   const TODO = (ty: string, x: ts.Expression): ts.Expression => {
     throw new Error(`TODO: ${ty}`)
+  }
+
+  const get_size = (aty: ArchetypeType): number => {
+    switch (aty.node) {
+      case "address": return 1;
+      case "aggregate": return 1;
+      case "asset_container": return 1;
+      case "asset_key": return 1;
+      case "asset_value": return 1;
+      case "asset_view": return 1;
+      case "asset": return 1;
+      case "big_map": return 1;
+      case "bls12_381_fr": return 1;
+      case "bls12_381_g1": return 1;
+      case "bls12_381_g2": return 1;
+      case "bool": return 1;
+      case "bytes": return 1;
+      case "chain_id": return 1;
+      case "chest_key": return 1;
+      case "chest": return 1;
+      case "collection": return 1;
+      case "contract": return 1;
+      case "currency": return 1;
+      case "date": return 1
+      case "duration": return 1;
+      case "enum": return 1;
+      case "event": return 1;
+      case "int": return 1;
+      case "iterable_big_map": return 1;
+      case "key_hash": return 1;
+      case "key": return 1;
+      case "lambda": return 1;
+      case "list": return 1;
+      case "map": return 1;
+      case "nat": return 1;
+      case "never": return 1;
+      case "operation": return 1;
+      case "option": return 1;
+      case "or": return 1;
+      case "partition": return 1;
+      case "rational": return 2;
+      case "record": return 1; //TODO
+      case "sapling_state": return 1;
+      case "sapling_transaction": return 1;
+      case "set": return 1;
+      case "signature": return 1;
+      case "state": return 1;
+      case "string": return 1;
+      case "ticket": return 3;
+      case "timestamp": return 1;
+      case "tuple": return (aty.args.length - 1 + get_size(aty.args[aty.args.length - 1]));
+      case "tx_rollup_l2_address": return 1;
+      case "unit": return 1;
+    }
   }
 
   const class_to_mich = (id: string, args: ts.Expression[]): ts.Expression => {
@@ -921,11 +1084,26 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     const decls: Array<ts.Statement> = []
     const args: Array<ts.Expression> = []
     for (let i = 0; i < types.length; i++) {
-      if (i % 2 == 0) {
-        // create declaration
-        decls.push(make_pair_decl(factory.createIdentifier("p"), i))
+      const aty = types[i];
+      let pi: PathItem = [i]
+      if (i == types.length - 1) {
+        const size = get_size(aty);
+        if (size > 1) {
+          pi = [i, i + size]
+        }
       }
-      args.push(mich_to_archetype_type(types[i], make_arg(i), ci))
+      const expr_arg = factory.createAsExpression(
+        factory.createIdentifier("p"),
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("att"),
+            factory.createIdentifier("Mpair")
+          ),
+          undefined
+        )
+      );
+      const narg: ts.Expression = make_arg(expr_arg, pi);
+      args.push(mich_to_archetype_type(types[i], narg, ci))
     }
     const body = [...decls, factory.createReturnStatement(factory.createArrayLiteralExpression(args))]
     return factory.createCallExpression(
@@ -1001,35 +1179,36 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
     case "partition": return TODO("partition", arg);
     case "rational": return class_to_mich("mich_to_rational", [arg]);
-    case "record": {
-      const larg = idx + 1 == len ? factory.createCallExpression(
-        factory.createIdentifier("mich_to_" + atype.name),
-        undefined,
-        [factory.createObjectLiteralExpression(
-          [
-            factory.createPropertyAssignment(
-              factory.createIdentifier("prim"),
-              factory.createStringLiteral("Pair")
-            ),
-            factory.createPropertyAssignment(
-              factory.createIdentifier("args"),
-              factory.createCallExpression(
-                factory.createPropertyAccessExpression(
-                  factory.createIdentifier("fields"),
-                  factory.createIdentifier("slice")
-                ),
-                undefined,
-                [factory.createNumericLiteral(idx)]
-              )
-            )
-          ],
-          false
-        ), factory.createIdentifier("collapsed")]) : factory.createCallExpression(
-          factory.createIdentifier("mich_to_" + atype.name),
-          undefined,
-          [arg, factory.createIdentifier("collapsed")])
-      return larg
-    }
+    // case "record": {
+    //   const larg = idx + 1 == len ? factory.createCallExpression(
+    //     factory.createIdentifier("mich_to_" + atype.name),
+    //     undefined,
+    //     [factory.createObjectLiteralExpression(
+    //       [
+    //         factory.createPropertyAssignment(
+    //           factory.createIdentifier("prim"),
+    //           factory.createStringLiteral("Pair")
+    //         ),
+    //         factory.createPropertyAssignment(
+    //           factory.createIdentifier("args"),
+    //           factory.createCallExpression(
+    //             factory.createPropertyAccessExpression(
+    //               factory.createIdentifier("fields"),
+    //               factory.createIdentifier("slice")
+    //             ),
+    //             undefined,
+    //             [factory.createNumericLiteral(idx)]
+    //           )
+    //         )
+    //       ],
+    //       false
+    //     ), factory.createIdentifier("collapsed")]) : factory.createCallExpression(
+    //       factory.createIdentifier("mich_to_" + atype.name),
+    //       undefined,
+    //       [arg, factory.createIdentifier("collapsed")])
+    //   return larg
+    // }
+    case "record": return TODO("record", arg);
     case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
     case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
     case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
