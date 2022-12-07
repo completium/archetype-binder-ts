@@ -1957,7 +1957,9 @@ const errors_to_decl = (ci: ContractInterface): ts.PropertyDeclaration => {
     undefined,
     factory.createObjectLiteralExpression(
       ci.errors.map(make_error).reduce((acc, x) => {
-        const [label, expr] = x
+        const regex = /['`]/g
+        let [label, expr] = x;
+        label = label.replace(regex, "")
         if (!acc.reduce((a, p) => {
           const [l, _] = p
           if (!a) {
