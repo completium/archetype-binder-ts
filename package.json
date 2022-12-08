@@ -34,7 +34,7 @@
     "test:type_parameter": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_parameter.spec.ts",
     "test:type_record": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_record.spec.ts",
     "test:type_set": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_set.spec.ts",
-    "test:type_simple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_simple.spec.ts",
+    "test:type_simple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_simple.spec.ts -g enum_simple",
     "test:type_tuple": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_tuple.spec.ts",
     "test:type_view": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_view.spec.ts",
     "test:sample": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/sample.spec.ts",
@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@completium/archetype": "0.4.10",
-    "@completium/archetype-ts-types": "0.0.16",
+    "@completium/archetype-ts-types": "0.0.17",
     "@completium/experiment-ts": "^0.0.102",
     "@completium/event-listener": "^0.0.4",
     "@types/expect": "^24.3.0",

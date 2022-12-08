@@ -120,7 +120,7 @@ const fields_to_mich_to_entity_decl = (name: string, fields: Array<Omit<Field, "
         return mich_to_archetype_type(x.type, factory.createElementAccessExpression(
           factory.createIdentifier("fields"),
           factory.createIdentifier(i.toString())
-        ), ci, i, fields.length)
+        ), ci)
       })
     ))
   ])
@@ -833,7 +833,7 @@ const get_data_storage_elt = (selt: StorageElement, ci: ContractInterface): ts.E
         undefined
       )
     );
-    return make_arg(acc, pi)
+    return make_arg(expr_arg, pi)
   }, root);
   return res
 }
@@ -1778,7 +1778,19 @@ const mich_to_simple_enum_decl = (e: Enum) => {
                                 factory.createIdentifier("Nat")
                               ),
                               undefined,
-                              [factory.createIdentifier("m")]
+                              [factory.createPropertyAccessExpression(
+                                factory.createParenthesizedExpression(factory.createAsExpression(
+                                  factory.createIdentifier("m"),
+                                  factory.createTypeReferenceNode(
+                                    factory.createQualifiedName(
+                                      factory.createIdentifier("att"),
+                                      factory.createIdentifier("Mint")
+                                    ),
+                                    undefined
+                                  )
+                                )),
+                                factory.createIdentifier("int")
+                              )]
                             )),
                             factory.createIdentifier("to_big_number")
                           ),
