@@ -54,8 +54,7 @@ export class Type_big_map_value_tuple_nat_string {
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return (p => {
-                    const p0 = (p as att.Mpair);
-                    return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
+                    return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
                 })(data);
             }
             else {

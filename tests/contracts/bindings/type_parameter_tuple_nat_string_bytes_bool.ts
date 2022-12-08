@@ -67,9 +67,7 @@ export class Type_parameter_tuple_nat_string_bytes_bool {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                const p0 = (p as att.Mpair);
-                const p1 = (p0.args[1] as att.Mpair);
-                return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1]), att.mich_to_bytes(p1.args[0]), att.mich_to_bool(p1.args[1])];
+                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.mich_to_bytes((p as att.Mpair).args[2]), att.mich_to_bool((p as att.Mpair).args[3])];
             })(storage);
         }
         throw new Error("Contract not initialised");

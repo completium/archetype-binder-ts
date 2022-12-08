@@ -70,12 +70,9 @@ export class Type_big_map_value_tuple_nat_string_bytes_bool_custom {
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.prim_annot_to_mich_type("nat", [])), collapsed = true;
             if (data != undefined) {
                 return (p => {
-                    const p0 = (p as att.Mpair);
-                    const p1 = (p0.args[1] as att.Mpair);
-                    return [att.mich_to_nat(p0.args[0]), (p => {
-                            const p0 = (p as att.Mpair);
-                            return [att.mich_to_string(p0.args[0]), att.mich_to_bytes(p0.args[1])];
-                        })(p0.args[1]), att.mich_to_bool(p1.args[0])];
+                    return [att.mich_to_nat((p as att.Mpair).args[0]), (p => {
+                            return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+                        })((p as att.Mpair).args[1]), att.mich_to_bool((p as att.Mpair).args[2])];
                 })(data);
             }
             else {

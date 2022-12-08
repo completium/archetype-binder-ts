@@ -37,8 +37,7 @@ export class Type_view_tuple_nat_string {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return (p => {
-                const p0 = (p as att.Mpair);
-                return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
+                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
             })(mich.value);
         }
         throw new Error("Contract not initialised");

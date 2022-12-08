@@ -24,21 +24,21 @@ export class Sample_storage_variables {
     async get_n(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage.args[0]);
+            return att.mich_to_nat((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_s(): Promise<string> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_string(storage.args[1]);
+            return att.mich_to_string((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }
     async get_r(): Promise<att.Rational> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_rational(att.pair_to_mich((storage as att.Mpair).args.slice(2, 4)));
+            return att.mich_to_rational(att.pair_to_mich((storage as att.Mpair as att.Mpair).args.slice(2, 4)));
         }
         throw new Error("Contract not initialised");
     }

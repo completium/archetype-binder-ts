@@ -42,14 +42,14 @@ export class Training_counter_two_numbers {
     async get_v1(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage.args[0]);
+            return att.mich_to_nat((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_v2(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage.args[1]);
+            return att.mich_to_nat((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }

@@ -60,9 +60,7 @@ export class Type_tuple_map_nat_string {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                const p0 = (p as att.Mpair);
-                const p1 = (p0.args[1] as att.Mpair);
-                return [att.mich_to_nat(p0.args[0]), att.mich_to_map(p0.args[1], (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]), att.mich_to_string(p1.args[0])];
+                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_map((p as att.Mpair).args[1], (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");

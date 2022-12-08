@@ -54,14 +54,14 @@ export class Sample_lambda {
     async get_l(): Promise<att.Micheline> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return storage.args[0];
+            return (storage as att.Mpair).args[0];
         }
         throw new Error("Contract not initialised");
     }
     async get_i(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage.args[1]);
+            return att.mich_to_nat((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }

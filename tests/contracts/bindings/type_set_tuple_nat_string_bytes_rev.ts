@@ -66,11 +66,9 @@ export class Type_set_tuple_nat_string_bytes_rev {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return att.mich_to_list(storage, x => { return (p => {
-                const p0 = (p as att.Mpair);
                 return [(p => {
-                        const p0 = (p as att.Mpair);
-                        return [att.mich_to_nat(p0.args[0]), att.mich_to_string(p0.args[1])];
-                    })(p0.args[0]), att.mich_to_bytes(p0.args[1])];
+                        return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                    })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
             })(x); });
         }
         throw new Error("Contract not initialised");

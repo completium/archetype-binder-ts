@@ -35,7 +35,7 @@ export class e_3 extends e_enum {
     }
 }
 export const mich_to_e_enum = (m: any): e_enum => {
-    const v = (new att.Nat(m)).to_big_number().toNumber();
+    const v = (new att.Nat((m as att.Mint).int)).to_big_number().toNumber();
     switch (v) {
         case 0: return new e_1();
         case 1: return new e_2();
