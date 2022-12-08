@@ -1131,12 +1131,22 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
+  const record_to_mich = (record_name: string, arg: ts.Expression, ci: ContractInterface) => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier(record_name),
+        factory.createIdentifier("from_mich")
+      ),
+      undefined,
+      [arg]
+    )
+  }
+
   const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
     const asset_type = get_asset_type(asset_name, ci);
     console.log(asset_type);
     return TODO("asset_to_mich", arg);
   }
-
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
     case "aggregate": return TODO("aggregate", arg);
@@ -1179,36 +1189,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
     case "partition": return TODO("partition", arg);
     case "rational": return class_to_mich("mich_to_rational", [arg]);
-    // case "record": {
-    //   const larg = idx + 1 == len ? factory.createCallExpression(
-    //     factory.createIdentifier("mich_to_" + atype.name),
-    //     undefined,
-    //     [factory.createObjectLiteralExpression(
-    //       [
-    //         factory.createPropertyAssignment(
-    //           factory.createIdentifier("prim"),
-    //           factory.createStringLiteral("Pair")
-    //         ),
-    //         factory.createPropertyAssignment(
-    //           factory.createIdentifier("args"),
-    //           factory.createCallExpression(
-    //             factory.createPropertyAccessExpression(
-    //               factory.createIdentifier("fields"),
-    //               factory.createIdentifier("slice")
-    //             ),
-    //             undefined,
-    //             [factory.createNumericLiteral(idx)]
-    //           )
-    //         )
-    //       ],
-    //       false
-    //     ), factory.createIdentifier("collapsed")]) : factory.createCallExpression(
-    //       factory.createIdentifier("mich_to_" + atype.name),
-    //       undefined,
-    //       [arg, factory.createIdentifier("collapsed")])
-    //   return larg
-    // }
-    case "record": return TODO("record", arg);
+    case "record": return record_to_mich(atype.name, arg, ci)
     case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
     case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
     case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
@@ -1216,7 +1197,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "state": return TODO("state", arg);
     case "string": return class_to_mich("mich_to_string", [arg]);
     case "ticket": return contained_type_to_field_decl("mich_to_ticket", arg, [atype.arg]);
-    case "timestamp": return TODO("timestamp", arg);
+    case "timestamp": return class_to_mich("mich_to_int", [arg]);
     case "tuple": return mich_to_tuple(atype.args, arg);
     case "tx_rollup_l2_address": return class_to_mich("mich_to_tx_rollup_l2_address", [arg]);
     case "unit": return class_to_mich("unit_to_mich", []);
@@ -1242,7 +1223,7 @@ const access_nth_field = (x: ts.Expression, i: number): ts.Expression => {
   )
 }
 
-const get_record_or_event_type = (name: string | null, ci: ContractInterface) => {
+export const get_record_or_event_type = (name: string | null, ci: ContractInterface) => {
   if (name != null) {
     for (let i = 0; i < ci.types.records.length; i++) {
       if (ci.types.records[i].name == name) {
@@ -1420,7 +1401,7 @@ const tuple_to_mich = (name: string, types: ArchetypeType[], ci: ContractInterfa
   )
 }
 
-const record_to_mich = (fp: FunctionParameter, ci: ContractInterface): ts.CallExpression => {
+const record_or_event_to_mich = (fp: FunctionParameter, ci: ContractInterface): ts.CallExpression => {
   const v = get_record_or_event_type((fp.type as ATNamed).name, ci);
   if (v.fields.length == 1) {
     const aty = v.fields[0].type;
@@ -1654,7 +1635,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "date": return date_to_mich(factory.createIdentifier(fp.name));
     case "duration": return class_to_mich(factory.createIdentifier(fp.name));
     case "enum": return class_to_mich(factory.createIdentifier(fp.name));
-    case "event": return record_to_mich(fp, ci);
+    case "event": return record_or_event_to_mich(fp, ci);
     case "int": return class_to_mich(factory.createIdentifier(fp.name));
     case "iterable_big_map": return throw_error(fp.type.node);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
@@ -1981,7 +1962,8 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
         undefined,
         [
           factory.createArrayLiteralExpression(
-            [value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])],
+            mt.args.map(value_to_mich_type),
+            // [value_to_mich_type(mt.args[0]), value_to_mich_type(mt.args[1])],
             true
           ),
           factory.createArrayLiteralExpression(

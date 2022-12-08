@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMicheline, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMicheline, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, get_record_or_event_type } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -255,6 +255,45 @@ const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
   )
 }
 
+const compute_arg = (root: ts.Expression, name : string, ty : MichelsonType): ts.Expression => {
+  const path = get_path("%" + name, ty);
+
+  const res = path.reduce((acc, pi) => {
+    const expr_arg = factory.createAsExpression(
+      acc,
+      factory.createTypeReferenceNode(
+        factory.createQualifiedName(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("Mpair")
+        ),
+        undefined
+      )
+    );
+    return make_arg(expr_arg, pi)
+  }, root);
+  return res
+}
+
+const mich_to_record_body = (record_name: string, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
+  const r = get_record_or_event_type(record_name, ci);
+  const mty = r.type_michelson;
+
+  let args : Array<ts.Expression> = [];
+  for (let i = 0; i < r.fields.length; ++i) {
+    const field = r.fields[i];
+    const a = compute_arg(arg, field.name, mty)
+    const b = mich_to_archetype_type(field.type, a, ci);
+    args.push(b)
+  }
+
+  const ret = factory.createReturnStatement(factory.createNewExpression(
+    factory.createIdentifier(record_name),
+    undefined,
+    args
+  ))
+  return [ret];
+}
+
 const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
   if (fields.length == 1) {
     const field = fields[0];
@@ -343,6 +382,37 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
                   )
                 }, field_to_cmp_body(fields[0], factory.createThis(), factory.createIdentifier("v")))
               ))] : [factory.createReturnStatement(factory.createTrue())],
+            true
+          )
+        ),
+        factory.createMethodDeclaration(
+          undefined,
+          [factory.createModifier(ts.SyntaxKind.StaticKeyword)],
+          undefined,
+          factory.createIdentifier("from_mich"),
+          undefined,
+          undefined,
+          [factory.createParameterDeclaration(
+            undefined,
+            undefined,
+            undefined,
+            factory.createIdentifier("input"),
+            undefined,
+            factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("Micheline")
+              ),
+              undefined
+            ),
+            undefined
+          )],
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(name),
+            undefined
+          ),
+          factory.createBlock(
+            mich_to_record_body(name, factory.createIdentifier("input"), ci),
             true
           )
         )
@@ -820,22 +890,9 @@ const storage_elt_to_getter_skeleton = (
 
 const get_data_storage_elt = (selt: StorageElement, ci: ContractInterface): ts.Expression => {
   const root: ts.Expression = factory.createIdentifier("storage")
-  const path = get_path("%" + selt.name, ci.storage_type.value);
-
-  const res = path.reduce((acc, pi) => {
-    const expr_arg = factory.createAsExpression(
-      acc,
-      factory.createTypeReferenceNode(
-        factory.createQualifiedName(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("Mpair")
-        ),
-        undefined
-      )
-    );
-    return make_arg(expr_arg, pi)
-  }, root);
-  return res
+  const name = selt.name;
+  const ty = ci.storage_type.value;
+  return compute_arg(root, name, ty)
 }
 
 const storage_elt_to_class = (selt: StorageElement, ci: ContractInterface) => {
