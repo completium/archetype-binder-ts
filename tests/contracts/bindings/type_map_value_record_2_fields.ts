@@ -11,6 +11,9 @@ export class r_record implements att.ArchetypeType {
     equals(v: r_record): boolean {
         return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b);
     }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]));
+    }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
@@ -58,7 +61,7 @@ export class Type_map_value_record_2_fields {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), mich_to_r_record(y, collapsed)]);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), r_record.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

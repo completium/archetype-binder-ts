@@ -456,7 +456,7 @@ describe('Type getter', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : type_getter_record_1_field.r_record = new Nat(2);
+    const v : type_getter_record_1_field.r_record = new type_getter_record_1_field.r_record(new Nat(2));
     await type_getter_record_1_field.type_getter_record_1_field.deploy({ as: alice });
     const res = await type_getter_record_1_field.type_getter_record_1_field.get_value(v, { as: alice });
     const s = await type_getter_record_1_field.type_getter_record_1_field.get_res();

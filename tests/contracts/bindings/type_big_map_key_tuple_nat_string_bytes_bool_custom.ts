@@ -72,7 +72,8 @@ export class Type_big_map_key_tuple_nat_string_bytes_bool_custom {
                 att.pair_array_to_mich_type([
                     att.prim_annot_to_mich_type("string", []),
                     att.prim_annot_to_mich_type("bytes", [])
-                ], [])
+                ], []),
+                att.prim_annot_to_mich_type("bool", [])
             ], [])), collapsed = true;
             if (data != undefined) {
                 return att.mich_to_nat(data);
@@ -98,7 +99,8 @@ export class Type_big_map_key_tuple_nat_string_bytes_bool_custom {
                 att.pair_array_to_mich_type([
                     att.prim_annot_to_mich_type("string", []),
                     att.prim_annot_to_mich_type("bytes", [])
-                ], [])
+                ], []),
+                att.prim_annot_to_mich_type("bool", [])
             ], [])), collapsed = true;
             if (data != undefined) {
                 return true;

@@ -417,7 +417,7 @@ describe('Type simple', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : type_simple_record_1_field.r_record = new Nat(2);
+    const v : type_simple_record_1_field.r_record = new type_simple_record_1_field.r_record(new Nat(2));
     await type_simple_record_1_field.type_simple_record_1_field.deploy({ as: alice });
     await type_simple_record_1_field.type_simple_record_1_field.set_value(v, { as: alice });
     const res = await type_simple_record_1_field.type_simple_record_1_field.get_res();

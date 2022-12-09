@@ -378,7 +378,7 @@ describe('Type view', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : type_view_record_1_field.r_record = new Nat(2);
+    const v : type_view_record_1_field.r_record = new type_view_record_1_field.r_record(new Nat(2));
     await type_view_record_1_field.type_view_record_1_field.deploy({ as: alice });
     const res = await type_view_record_1_field.type_view_record_1_field.view_get_value(v, { as: alice });
     assert(v.equals(res), "Invalid Value")

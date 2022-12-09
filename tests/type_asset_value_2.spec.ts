@@ -417,7 +417,7 @@ describe('Type asset_value_2', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : type_asset_value_2_record_1_field.r_record = new Nat(2);
+    const v : type_asset_value_2_record_1_field.r_record = new type_asset_value_2_record_1_field.r_record(new Nat(2));
     await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.deploy({ as: alice });
     await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.get_my_asset();

@@ -287,7 +287,7 @@ describe('Type set', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : Array<type_set_record_1_field.r_record> = [new Nat(2)];
+    const v : Array<type_set_record_1_field.r_record> = [new type_set_record_1_field.r_record(new Nat(2))];
     await type_set_record_1_field.type_set_record_1_field.deploy({ as: alice });
     await type_set_record_1_field.type_set_record_1_field.set_value(v, { as: alice });
     const res = await type_set_record_1_field.type_set_record_1_field.get_res();

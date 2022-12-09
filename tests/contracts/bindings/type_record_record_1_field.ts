@@ -1,22 +1,40 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export type r_record = att.Nat;
+export class r_record implements att.ArchetypeType {
+    constructor(public f_a: att.Nat) { }
+    toString(): string {
+        return JSON.stringify(this, null, 2);
+    }
+    to_mich(): att.Micheline {
+        return this.f_a.to_mich();
+    }
+    equals(v: r_record): boolean {
+        return this.f_a.equals(v.f_a);
+    }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat(input));
+    }
+}
 export class my_record implements att.ArchetypeType {
     constructor(public n: att.Nat, public v: r_record, public s: string) { }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), this.v.to_mich()]);
+        return att.pair_to_mich([this.n.to_mich(), this.v.to_mich(), att.string_to_mich(this.s)]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && this.v == v.v && this.s == v.s);
+    }
+    static from_mich(input: att.Micheline): my_record {
+        return new my_record(att.mich_to_nat((input as att.Mpair).args[0]), r_record.from_mich((input as att.Mpair).args[1]), att.mich_to_string((input as att.Mpair).args[2]));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
-    att.prim_annot_to_mich_type("nat", ["%v"])
+    att.prim_annot_to_mich_type("nat", ["%v"]),
+    att.prim_annot_to_mich_type("string", ["%s"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();
@@ -57,7 +75,7 @@ export class Type_record_record_1_field {
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_my_record(storage, collapsed);
+            return my_record.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

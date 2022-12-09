@@ -8,15 +8,19 @@ export class my_record implements att.ArchetypeType {
     to_mich(): att.Micheline {
         return att.pair_to_mich([this.n.to_mich(), att.list_to_mich(this.v, x => {
                 return x.to_mich();
-            })]);
+            }), att.string_to_mich(this.s)]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && JSON.stringify(this.v) == JSON.stringify(v.v) && this.s == v.s);
     }
+    static from_mich(input: att.Micheline): my_record {
+        return new my_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_list((input as att.Mpair).args[1], x => { return att.mich_to_nat(x); }), att.mich_to_string((input as att.Mpair).args[2]));
+    }
 }
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
-    att.list_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%v"])
+    att.list_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%v"]),
+    att.prim_annot_to_mich_type("string", ["%s"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();
@@ -57,7 +61,7 @@ export class Type_record_set_nat {
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_my_record(storage, collapsed);
+            return my_record.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

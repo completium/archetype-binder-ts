@@ -255,7 +255,7 @@ const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
   )
 }
 
-const compute_arg = (root: ts.Expression, name : string, ty : MichelsonType): ts.Expression => {
+const compute_arg = (root: ts.Expression, name: string, ty: MichelsonType): ts.Expression => {
   const path = get_path("%" + name, ty);
 
   const res = path.reduce((acc, pi) => {
@@ -278,7 +278,7 @@ const mich_to_record_body = (record_name: string, arg: ts.Expression, ci: Contra
   const r = get_record_or_event_type(record_name, ci);
   const mty = r.type_michelson;
 
-  let args : Array<ts.Expression> = [];
+  let args: Array<ts.Expression> = [];
   for (let i = 0; i < r.fields.length; ++i) {
     const field = r.fields[i];
     const a = compute_arg(arg, field.name, mty)
@@ -295,50 +295,102 @@ const mich_to_record_body = (record_name: string, arg: ts.Expression, ci: Contra
 }
 
 const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
-  if (fields.length == 1) {
-    const field = fields[0];
-    return factory.createTypeAliasDeclaration(
-      undefined,
-      [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(name),
-      undefined,
-      archetype_type_to_ts_type(field.type)
-    )
-  } else {
-    return factory.createClassDeclaration(
-      undefined,
-      [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      factory.createIdentifier(name),
-      undefined,
-      [factory.createHeritageClause(
-        ts.SyntaxKind.ImplementsKeyword,
-        [factory.createExpressionWithTypeArguments(
-          factory.createPropertyAccessExpression(
+  return factory.createClassDeclaration(
+    undefined,
+    [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    factory.createIdentifier(name),
+    undefined,
+    [factory.createHeritageClause(
+      ts.SyntaxKind.ImplementsKeyword,
+      [factory.createExpressionWithTypeArguments(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("ArchetypeType")
+        ),
+        undefined
+      )]
+    )],
+    [
+      factory.createConstructorDeclaration(
+        undefined,
+        undefined,
+        fields.map(x => contractParameterToParamDecl(x, true)),
+        factory.createBlock(
+          [],
+          false
+        )
+      ),
+      make_to_string_decl(),
+      factory.createMethodDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("to_mich"),
+        undefined,
+        undefined,
+        [],
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
             factory.createIdentifier("att"),
-            factory.createIdentifier("ArchetypeType")
+            factory.createIdentifier("Micheline")
           ),
           undefined
-        )]
-      )],
-      [
-        factory.createConstructorDeclaration(
-          undefined,
-          undefined,
-          fields.map(x => contractParameterToParamDecl(x, true)),
-          factory.createBlock(
-            [],
-            false
-          )
         ),
-        make_to_string_decl(),
-        factory.createMethodDeclaration(
+        factory.createBlock(
+          [factory.createReturnStatement((entity_to_mich(fields.length == 1 ? "this." + fields[0].name  : "this", mt, fields, 0, ci))[1])],
+          true
+        )
+      ),
+      factory.createMethodDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("equals"),
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
           undefined,
           undefined,
           undefined,
-          factory.createIdentifier("to_mich"),
+          factory.createIdentifier("v"),
+          undefined,
+          factory.createTypeReferenceNode(
+            factory.createIdentifier(name),
+            undefined
+          ),
+          undefined
+        )],
+        factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+        factory.createBlock(fields.length > 1 ?
+          [factory.createReturnStatement(
+            factory.createParenthesizedExpression(
+              fields.reduce((acc, f) => {
+                return factory.createBinaryExpression(
+                  acc,
+                  factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
+                  field_to_cmp_body(f, factory.createThis(), factory.createIdentifier("v"))
+                )
+              }, field_to_cmp_body(fields[0], factory.createThis(), factory.createIdentifier("v")))
+            ))] :
+          (fields.length == 1 ?
+            [factory.createReturnStatement(field_to_cmp_body(fields[0], factory.createThis(), factory.createIdentifier("v")))] :
+            [factory.createReturnStatement(factory.createTrue())]),
+          true
+        )
+      ),
+      factory.createMethodDeclaration(
+        undefined,
+        [factory.createModifier(ts.SyntaxKind.StaticKeyword)],
+        undefined,
+        factory.createIdentifier("from_mich"),
+        undefined,
+        undefined,
+        [factory.createParameterDeclaration(
           undefined,
           undefined,
-          [],
+          undefined,
+          factory.createIdentifier("input"),
+          undefined,
           factory.createTypeReferenceNode(
             factory.createQualifiedName(
               factory.createIdentifier("att"),
@@ -346,79 +398,19 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
             ),
             undefined
           ),
-          factory.createBlock(
-            [factory.createReturnStatement((entity_to_mich("this", mt, fields, 0, ci))[1])],
-            true
-          )
+          undefined
+        )],
+        factory.createTypeReferenceNode(
+          factory.createIdentifier(name),
+          undefined
         ),
-        factory.createMethodDeclaration(
-          undefined,
-          undefined,
-          undefined,
-          factory.createIdentifier("equals"),
-          undefined,
-          undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("v"),
-            undefined,
-            factory.createTypeReferenceNode(
-              factory.createIdentifier(name),
-              undefined
-            ),
-            undefined
-          )],
-          factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
-          factory.createBlock(fields.length > 0 ?
-            [factory.createReturnStatement(
-              factory.createParenthesizedExpression(
-                fields.reduce((acc, f) => {
-                  return factory.createBinaryExpression(
-                    acc,
-                    factory.createToken(ts.SyntaxKind.AmpersandAmpersandToken),
-                    field_to_cmp_body(f, factory.createThis(), factory.createIdentifier("v"))
-                  )
-                }, field_to_cmp_body(fields[0], factory.createThis(), factory.createIdentifier("v")))
-              ))] : [factory.createReturnStatement(factory.createTrue())],
-            true
-          )
-        ),
-        factory.createMethodDeclaration(
-          undefined,
-          [factory.createModifier(ts.SyntaxKind.StaticKeyword)],
-          undefined,
-          factory.createIdentifier("from_mich"),
-          undefined,
-          undefined,
-          [factory.createParameterDeclaration(
-            undefined,
-            undefined,
-            undefined,
-            factory.createIdentifier("input"),
-            undefined,
-            factory.createTypeReferenceNode(
-              factory.createQualifiedName(
-                factory.createIdentifier("att"),
-                factory.createIdentifier("Micheline")
-              ),
-              undefined
-            ),
-            undefined
-          )],
-          factory.createTypeReferenceNode(
-            factory.createIdentifier(name),
-            undefined
-          ),
-          factory.createBlock(
-            mich_to_record_body(name, factory.createIdentifier("input"), ci),
-            true
-          )
+        factory.createBlock(
+          mich_to_record_body(name, factory.createIdentifier("input"), ci),
+          true
         )
-      ]
-    )
-  }
+      )
+    ]
+  )
 }
 
 const assetKeyToInterfaceDecl = (a: Asset, ci: ContractInterface) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key), ci)

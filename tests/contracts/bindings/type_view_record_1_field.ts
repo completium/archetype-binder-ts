@@ -1,6 +1,20 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export type r_record = att.Nat;
+export class r_record implements att.ArchetypeType {
+    constructor(public f_a: att.Nat) { }
+    toString(): string {
+        return JSON.stringify(this, null, 2);
+    }
+    to_mich(): att.Micheline {
+        return this.f_a.to_mich();
+    }
+    equals(v: r_record): boolean {
+        return this.f_a.equals(v.f_a);
+    }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat(input));
+    }
+}
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 const view_get_value_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
@@ -29,7 +43,7 @@ export class Type_view_record_1_field {
     async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return mich_to_r_record(mich.value, collapsed);
+            return r_record.from_mich(mich.value);
         }
         throw new Error("Contract not initialised");
     }

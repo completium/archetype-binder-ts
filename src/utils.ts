@@ -1797,20 +1797,20 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
   } else {
     switch (mt.prim) {
       case "pair": {
-        // left
-        const [fidx0, expr0] = entity_to_mich(v, mt.args[0], fields, fidx, ci)
-        // right
-        const [fidx1, expr1] = entity_to_mich(v, mt.args[1], fields, fidx0, ci)
-        return [fidx1, factory.createCallExpression(
+        const lexpr : Array<ts.Expression> = [];
+        const [fidx00, llexpr] = mt.args.reduce(([idx, lexpr], arg) => {
+          const [fidx0, expr] = entity_to_mich(v, arg, fields, idx, ci);
+          lexpr.push(expr)
+          return [fidx0, lexpr]
+        }, ([fidx, lexpr]));
+
+        return [fidx00, factory.createCallExpression(
           factory.createPropertyAccessExpression(
             factory.createIdentifier("att"),
             factory.createIdentifier("pair_to_mich")
           ),
           undefined,
-          [factory.createArrayLiteralExpression(
-            [expr0, expr1],
-            false
-          )]
+          [factory.createArrayLiteralExpression(llexpr, false)]
         )]
       }
       case "map":

@@ -6,15 +6,20 @@ export class r_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.f_a.to_mich(), att.string_to_mich(this.f_b)]);
+        return att.pair_to_mich([this.f_a.to_mich(), att.string_to_mich(this.f_b), this.f_c.to_mich(), att.bool_to_mich(this.f_d)]);
     }
     equals(v: r_record): boolean {
         return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b && this.f_c.equals(v.f_c) && this.f_d == v.f_d);
     }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]), att.mich_to_bytes((input as att.Mpair).args[2]), att.mich_to_bool((input as att.Mpair).args[3]));
+    }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
-    att.prim_annot_to_mich_type("string", ["%f_b"])
+    att.prim_annot_to_mich_type("string", ["%f_b"]),
+    att.prim_annot_to_mich_type("bytes", ["%f_c"]),
+    att.prim_annot_to_mich_type("bool", ["%f_d"])
 ], []);
 const get_value_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
@@ -22,7 +27,9 @@ const get_value_arg_to_mich = (i: r_record): att.Micheline => {
 export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
     return await ex.deploy_callback("get_value", att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("nat", ["%f_a"]),
-        att.prim_annot_to_mich_type("string", ["%f_b"])
+        att.prim_annot_to_mich_type("string", ["%f_b"]),
+        att.prim_annot_to_mich_type("bytes", ["%f_c"]),
+        att.prim_annot_to_mich_type("bool", ["%f_d"])
     ], []), params);
 };
 export class Type_getter_record_4_fields {
@@ -53,7 +60,7 @@ export class Type_getter_record_4_fields {
             if (this.get_value_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.get_value_callback_address), "callback");
                 await ex.call(this.address, "get_value", att.getter_args_to_mich(get_value_arg_to_mich(i), entrypoint), params);
-                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return mich_to_r_record(x, collapsed); });
+                return await ex.get_callback_value<r_record>(this.get_value_callback_address, x => { return r_record.from_mich(x); });
             }
         }
         throw new Error("Contract not initialised");
@@ -61,7 +68,7 @@ export class Type_getter_record_4_fields {
     async get_res(): Promise<r_record> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_r_record(storage, collapsed);
+            return r_record.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

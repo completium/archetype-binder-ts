@@ -417,7 +417,7 @@ describe('Type record', () => {
 
   // record_1_field
   it('record_1_field', async () => {
-    const v : type_record_record_1_field.my_record = new type_record_record_1_field.my_record(new Nat(2), new Nat(2), "mystr");
+    const v : type_record_record_1_field.my_record = new type_record_record_1_field.my_record(new Nat(2), new type_record_record_1_field.r_record(new Nat(2)), "mystr");
     await type_record_record_1_field.type_record_record_1_field.deploy({ as: alice });
     await type_record_record_1_field.type_record_record_1_field.set_value(v, { as: alice });
     const res = await type_record_record_1_field.type_record_record_1_field.get_res();

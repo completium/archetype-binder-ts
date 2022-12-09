@@ -6,10 +6,13 @@ export class r_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.f_a.to_mich(), att.pair_to_mich([att.string_to_mich(this.f_b), this.f_c.to_mich()])]);
+        return att.pair_to_mich([this.f_a.to_mich(), att.pair_to_mich([att.string_to_mich(this.f_b), this.f_c.to_mich()]), att.bool_to_mich(this.f_d)]);
     }
     equals(v: r_record): boolean {
         return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b && this.f_c.equals(v.f_c) && this.f_d == v.f_d);
+    }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string(((input as att.Mpair).args[1] as att.Mpair).args[0]), att.mich_to_bytes(((input as att.Mpair).args[1] as att.Mpair).args[1]), att.mich_to_bool((input as att.Mpair).args[2]));
     }
 }
 export class my_record implements att.ArchetypeType {
@@ -18,10 +21,13 @@ export class my_record implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.n.to_mich(), this.v.to_mich()]);
+        return att.pair_to_mich([this.n.to_mich(), this.v.to_mich(), att.string_to_mich(this.s)]);
     }
     equals(v: my_record): boolean {
         return (this.n.equals(v.n) && this.n.equals(v.n) && this.v == v.v && this.s == v.s);
+    }
+    static from_mich(input: att.Micheline): my_record {
+        return new my_record(att.mich_to_nat((input as att.Mpair).args[0]), r_record.from_mich((input as att.Mpair).args[1]), att.mich_to_string((input as att.Mpair).args[2]));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -29,7 +35,8 @@ export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type
     att.pair_array_to_mich_type([
         att.prim_annot_to_mich_type("string", ["%f_b"]),
         att.prim_annot_to_mich_type("bytes", ["%f_c"])
-    ], [])
+    ], []),
+    att.prim_annot_to_mich_type("bool", ["%f_d"])
 ], []);
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
@@ -38,8 +45,10 @@ export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_typ
         att.pair_array_to_mich_type([
             att.prim_annot_to_mich_type("string", ["%f_b"]),
             att.prim_annot_to_mich_type("bytes", ["%f_c"])
-        ], [])
-    ], ["%v"])
+        ], []),
+        att.prim_annot_to_mich_type("bool", ["%f_d"])
+    ], ["%v"]),
+    att.prim_annot_to_mich_type("string", ["%s"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {
     return i.to_mich();
@@ -80,7 +89,7 @@ export class Type_record_record_4_fields_custom {
     async get_res(): Promise<my_record> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return mich_to_my_record(storage, collapsed);
+            return my_record.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

@@ -1,6 +1,20 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export type r_record = att.Nat;
+export class r_record implements att.ArchetypeType {
+    constructor(public f_a: att.Nat) { }
+    toString(): string {
+        return JSON.stringify(this, null, 2);
+    }
+    to_mich(): att.Micheline {
+        return this.f_a.to_mich();
+    }
+    equals(v: r_record): boolean {
+        return this.f_a.equals(v.f_a);
+    }
+    static from_mich(input: att.Micheline): r_record {
+        return new r_record(att.mich_to_nat(input));
+    }
+}
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 const set_value_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
@@ -46,9 +60,7 @@ export class Type_tuple_record_1_field {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                const p0 = (p as att.Mpair);
-                const p1 = (p0.args[1] as att.Mpair);
-                return [att.mich_to_nat(p0.args[0]), mich_to_r_record(p0.args[1], collapsed), att.mich_to_string(p1.args[0])];
+                return [att.mich_to_nat((p as att.Mpair).args[0]), r_record.from_mich((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");
