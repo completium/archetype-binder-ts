@@ -1160,8 +1160,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
           get_big_map_value_getter_body(
             selt.name,
             selt.type.key_type,
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type)),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type, ci)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type, ci)),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
@@ -1187,8 +1187,8 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
           get_big_map_value_getter_body(
             selt.name,
             selt.type.key_type,
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type)),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type, ci)),
+            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type, ci)),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */

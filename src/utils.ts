@@ -383,17 +383,34 @@ export const make_arg = (expr: ts.Expression, pi: PathItem) => {
 
 /* Archetype type to Michelson type ---------------------------------------- */
 
-export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType => {
+export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInterface): MichelsonType => {
   switch (at.node) {
-    /* TODO record asset tuple enum option or ... */
     case "address": return <MTPrimSimple>{ prim: at.node }
-    case "aggregate": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "asset_container": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "asset_key": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "asset_value": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "asset_view": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "asset": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "big_map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)] }
+    case "aggregate": {
+      const a = get_asset_type(at.name, ci);
+      return {prim:"set", args: [a.container_type_michelson]}
+    }
+    case "asset_container": {
+      const a = get_asset_type(at.name, ci);
+      return a.container_type_michelson
+    }
+    case "asset_key": {
+      const a = get_asset_type(at.name, ci);
+      return a.key_type_michelson
+    }
+    case "asset_value": {
+      const a = get_asset_type(at.name, ci);
+      return a.value_type_michelson
+    }
+    case "asset_view": {
+      const a = get_asset_type(at.name, ci);
+      return {prim:"set", args: [a.container_type_michelson]}
+    }
+    case "asset": {
+      const a = get_asset_type(at.name, ci);
+      return a.container_type_michelson
+    }
+    case "big_map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type, ci), archetype_type_to_mich_type(at.value_type, ci)] }
     case "bls12_381_fr": return <MTPrimSimple>{ prim: at.node }
     case "bls12_381_g1": return <MTPrimSimple>{ prim: at.node }
     case "bls12_381_g2": return <MTPrimSimple>{ prim: at.node }
@@ -403,39 +420,50 @@ export const archetype_type_to_mich_type = (at: ArchetypeType): MichelsonType =>
     case "chest_key": return <MTPrimSimple>{ prim: at.node }
     case "chest": return <MTPrimSimple>{ prim: at.node }
     case "collection": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "contract": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "contract": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
     case "currency": return <MTPrimSimple>{ prim: "mutez" }
     case "date": return <MTPrimSimple>{ prim: "timestamp" }
     case "duration": return <MTPrimSimple>{ prim: "nat" }
-    case "enum": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
-    case "event": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "enum": {
+      const a = get_enum_type(at.name, ci)
+      return a.type_michelson
+    }
+    case "event": {
+      const r = get_record_or_event_type(at.name, ci);
+      return r.type_michelson
+    }
     case "int": return <MTPrimSimple>{ prim: at.node }
     case "iterable_big_map": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
     case "key_hash": return <MTPrimSimple>{ prim: at.node }
     case "key": return <MTPrimSimple>{ prim: at.node }
-    case "lambda": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg_type), archetype_type_to_mich_type(at.ret_type)] }
-    case "list": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
-    case "map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type), archetype_type_to_mich_type(at.value_type)] }
+    case "lambda": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg_type, ci), archetype_type_to_mich_type(at.ret_type, ci)] }
+    case "list": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
+    case "map": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.key_type, ci), archetype_type_to_mich_type(at.value_type, ci)] }
     case "nat": return <MTPrimSimple>{ prim: at.node }
     case "never": return <MTPrimSimple>{ prim: at.node }
     case "operation": return <MTPrimSimple>{ prim: at.node }
-    case "option": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
-    case "or": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.left_type), archetype_type_to_mich_type(at.right_type)] }
-    case "partition": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "option": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
+    case "or": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.left_type, ci), archetype_type_to_mich_type(at.right_type, ci)] }
+    case "partition": {
+      const a = get_asset_type(at.name, ci);
+      return {prim:"set", args: [a.container_type_michelson]}
+    }
     case "rational": return <MTPrimMulti>{ prim: "pair", args: [<MTPrimSimple>{ prim: "int" }, <MTPrimSimple>{ prim: "nat" }] }
-    case "record": throw new Error(`archetype_type_to_mich_type: TODO ${at.node}`)
+    case "record": {
+      const r = get_record_or_event_type(at.name, ci);
+      return r.type_michelson
+    }
     case "sapling_state": return <MTPrimSingleInt>{ prim: at.node, args: [<MTInt>{ int: at.memo_size.toString() }] }
     case "sapling_transaction": return <MTPrimSingleInt>{ prim: at.node, args: [<MTInt>{ int: at.memo_size.toString() }] }
-    case "set": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "set": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
     case "signature": return <MTPrimSimple>{ prim: at.node }
     case "state": return <MTPrimSimple>{ prim: "int" }
     case "string": return <MTPrimSimple>{ prim: at.node }
-    case "ticket": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg)] }
+    case "ticket": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
     case "timestamp": return <MTPrimSimple>{ prim: at.node }
-    case "tuple": return <MTPrimMulti>{ prim: "pair", args: at.args.map(x => { return archetype_type_to_mich_type(x) }) }
+    case "tuple": return <MTPrimMulti>{ prim: "pair", args: at.args.map(x => { return archetype_type_to_mich_type(x, ci) }) }
     case "tx_rollup_l2_address": return <MTPrimSimple>{ prim: at.node }
     case "unit": return <MTPrimSimple>{ prim: at.node }
-    default: throw new Error("error")
   }
 }
 
@@ -1258,6 +1286,17 @@ const get_asset_type = (name: string, ci: ContractInterface) => {
     }
   }
   throw new Error("get_asset_type: '" + name + "' not found")
+}
+
+const get_enum_type = (name: string, ci: ContractInterface) : Enum => {
+  if (name != null) {
+    for (let i = 0; i < ci.types.enums.length; i++) {
+      if (ci.types.enums[i].name == name) {
+        return ci.types.enums[i]
+      }
+    }
+  }
+  throw new Error("get_enum_type: '" + name + "' not found")
 }
 
 const get_field_annot_names = (r: Record): { [key: string]: string } => {
