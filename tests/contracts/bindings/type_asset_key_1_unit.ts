@@ -12,7 +12,7 @@ export class my_asset_key implements att.ArchetypeType {
         return this.k.equals(v.k);
     }
     static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(att.unit_to_mich());
+        return new my_asset_key(new att.Unit());
     }
 }
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("unit", []);

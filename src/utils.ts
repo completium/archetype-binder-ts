@@ -267,44 +267,45 @@ export type PathItemDouble = [number, number]
 
 export type PathItem = PathItemSimple | PathItemDouble
 
-export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
-  const get_size = (ty: MichelsonType): number => {
-    switch (ty.prim) {
-      case "address": return 1
-      case "big_map": return 1
-      case "bls12_381_fr": return 1
-      case "bls12_381_g1": return 1
-      case "bls12_381_g2": return 1
-      case "bool": return 1
-      case "bytes": return 1
-      case "chain_id": return 1
-      case "chest_key": return 1
-      case "chest": return 1
-      case "contract": return 1
-      case "int": return 1
-      case "key_hash": return 1
-      case "key": return 1
-      case "lambda": return 1
-      case "list": return 1
-      case "map": return 1
-      case "mutez": return 1
-      case "nat": return 1
-      case "never": return 1
-      case "operation": return 1
-      case "option": return 1
-      case "or": return 1
-      case "pair": return (ty.args.length - 1 + get_size(ty.args[ty.args.length - 1]))
-      case "sapling_state": return 1
-      case "sapling_transaction": return 1
-      case "set": return 1
-      case "signature": return 1
-      case "string": return 1
-      case "ticket": return 3
-      case "timestamp": return 1
-      case "tx_rollup_l2_address": return 1
-      case "unit": return 1
-    }
+const get_size_michelson_type = (ty: MichelsonType): number => {
+  switch (ty.prim) {
+    case "address": return 1
+    case "big_map": return 1
+    case "bls12_381_fr": return 1
+    case "bls12_381_g1": return 1
+    case "bls12_381_g2": return 1
+    case "bool": return 1
+    case "bytes": return 1
+    case "chain_id": return 1
+    case "chest_key": return 1
+    case "chest": return 1
+    case "contract": return 1
+    case "int": return 1
+    case "key_hash": return 1
+    case "key": return 1
+    case "lambda": return 1
+    case "list": return 1
+    case "map": return 1
+    case "mutez": return 1
+    case "nat": return 1
+    case "never": return 1
+    case "operation": return 1
+    case "option": return 1
+    case "or": return 1
+    case "pair": return (ty.args.length - 1 + get_size_michelson_type(ty.args[ty.args.length - 1]))
+    case "sapling_state": return 1
+    case "sapling_transaction": return 1
+    case "set": return 1
+    case "signature": return 1
+    case "string": return 1
+    case "ticket": return 3
+    case "timestamp": return 1
+    case "tx_rollup_l2_address": return 1
+    case "unit": return 1
   }
+}
+
+export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
   const aux = (ty: MichelsonType, accu: Array<PathItem>): Array<PathItem> | undefined => {
     if (ty.annots && ty.annots?.length > 0 && ty.annots[0] == id) {
       return accu
@@ -314,7 +315,7 @@ export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
         const is_last = i == ty.args.length - 1;
         let ii: PathItem = [i];
         if (is_last) {
-          const size = get_size(ty.args[i]);
+          const size = get_size_michelson_type(ty.args[i]);
           if (size > 1) {
             ii = [i, (i + size)]
           }
@@ -388,7 +389,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
     case "address": return <MTPrimSimple>{ prim: at.node }
     case "aggregate": {
       const a = get_asset_type(at.name, ci);
-      return {prim:"set", args: [a.container_type_michelson]}
+      return { prim: "set", args: [a.container_type_michelson] }
     }
     case "asset_container": {
       const a = get_asset_type(at.name, ci);
@@ -404,7 +405,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
     }
     case "asset_view": {
       const a = get_asset_type(at.name, ci);
-      return {prim:"set", args: [a.container_type_michelson]}
+      return { prim: "set", args: [a.container_type_michelson] }
     }
     case "asset": {
       const a = get_asset_type(at.name, ci);
@@ -446,7 +447,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
     case "or": return <MTPrimPair>{ prim: at.node, args: [archetype_type_to_mich_type(at.left_type, ci), archetype_type_to_mich_type(at.right_type, ci)] }
     case "partition": {
       const a = get_asset_type(at.name, ci);
-      return {prim:"set", args: [a.container_type_michelson]}
+      return { prim: "set", args: [a.container_type_michelson] }
     }
     case "rational": return <MTPrimMulti>{ prim: "pair", args: [<MTPrimSimple>{ prim: "int" }, <MTPrimSimple>{ prim: "nat" }] }
     case "record": {
@@ -991,7 +992,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       case "enum": return 1;
       case "event": return 1;
       case "int": return 1;
-      case "iterable_big_map": return 1;
+      case "iterable_big_map": return 3;
       case "key_hash": return 1;
       case "key": return 1;
       case "lambda": return 1;
@@ -1004,7 +1005,10 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       case "or": return 1;
       case "partition": return 1;
       case "rational": return 2;
-      case "record": return 1; //TODO
+      case "record": {
+        const r = get_record_or_event_type(aty.name, ci)
+        return get_size_michelson_type(r.type_michelson)
+      }
       case "sapling_state": return 1;
       case "sapling_transaction": return 1;
       case "set": return 1;
@@ -1185,6 +1189,17 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     }
   }
 
+  function mich_unit(): ts.Expression {
+    return factory.createNewExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Unit")
+      ),
+      undefined,
+      []
+    )
+  }
+
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
     case "aggregate": return TODO("aggregate", arg);
@@ -1238,7 +1253,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "timestamp": return class_to_mich("mich_to_int", [arg]);
     case "tuple": return mich_to_tuple(atype.args, arg);
     case "tx_rollup_l2_address": return class_to_mich("mich_to_tx_rollup_l2_address", [arg]);
-    case "unit": return class_to_mich("unit_to_mich", []);
+    case "unit": return mich_unit();
   }
 }
 
@@ -1288,7 +1303,7 @@ const get_asset_type = (name: string, ci: ContractInterface) => {
   throw new Error("get_asset_type: '" + name + "' not found")
 }
 
-const get_enum_type = (name: string, ci: ContractInterface) : Enum => {
+const get_enum_type = (name: string, ci: ContractInterface): Enum => {
   if (name != null) {
     for (let i = 0; i < ci.types.enums.length; i++) {
       if (ci.types.enums[i].name == name) {

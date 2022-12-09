@@ -28,7 +28,7 @@ export class my_asset_value implements att.ArchetypeType {
         return this.v.equals(v.v);
     }
     static from_mich(input: att.Micheline): my_asset_value {
-        return new my_asset_value(att.unit_to_mich());
+        return new my_asset_value(new att.Unit());
     }
 }
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("unit", []);

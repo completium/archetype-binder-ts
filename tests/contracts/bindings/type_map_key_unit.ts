@@ -42,7 +42,7 @@ export class Type_map_key_unit {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.unit_to_mich(), att.mich_to_nat(y)]);
+            return att.mich_to_map(storage, (x, y) => [new att.Unit(), att.mich_to_nat(y)]);
         }
         throw new Error("Contract not initialised");
     }

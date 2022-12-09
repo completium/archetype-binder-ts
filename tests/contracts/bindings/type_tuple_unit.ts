@@ -44,7 +44,7 @@ export class Type_tuple_unit {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), att.unit_to_mich(), att.mich_to_string((p as att.Mpair).args[2])];
+                return [att.mich_to_nat((p as att.Mpair).args[0]), new att.Unit(), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");

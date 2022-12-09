@@ -27,7 +27,7 @@ export class Type_view_unit {
     async view_get_value(i: att.Unit, params: Partial<ex.Parameters>): Promise<att.Unit> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.unit_to_mich();
+            return new att.Unit();
         }
         throw new Error("Contract not initialised");
     }

@@ -28,7 +28,7 @@ export class my_asset_value implements att.ArchetypeType {
         return (this.s == v.s && this.s == v.s && this.v.equals(v.v));
     }
     static from_mich(input: att.Micheline): my_asset_value {
-        return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), att.unit_to_mich());
+        return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), new att.Unit());
     }
 }
 export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([
