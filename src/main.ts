@@ -274,27 +274,24 @@ const compute_arg = (root: ts.Expression, name: string, ty: MichelsonType): ts.E
   return res
 }
 
-const mich_to_record_body = (record_name: string, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
-  const r = get_record_or_event_type(record_name, ci);
-  const mty = r.type_michelson;
-
+const mich_to_record_body = (name : string, fields : Array<Omit<Field, "is_key">>, mty : MichelsonType, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
   let args: Array<ts.Expression> = [];
-  for (let i = 0; i < r.fields.length; ++i) {
-    const field = r.fields[i];
+  for (let i = 0; i < fields.length; ++i) {
+    const field = fields[i];
     const a = compute_arg(arg, field.name, mty)
     const b = mich_to_archetype_type(field.type, a, ci);
     args.push(b)
   }
 
   const ret = factory.createReturnStatement(factory.createNewExpression(
-    factory.createIdentifier(record_name),
+    factory.createIdentifier(name),
     undefined,
     args
   ))
   return [ret];
 }
 
-const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, ci: ContractInterface) => {
+const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, mich_body : ts.Statement[], ci: ContractInterface) => {
   return factory.createClassDeclaration(
     undefined,
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -405,7 +402,7 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
           undefined
         ),
         factory.createBlock(
-          mich_to_record_body(name, factory.createIdentifier("input"), ci),
+          mich_body,
           true
         )
       )
@@ -413,9 +410,30 @@ const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Om
   )
 }
 
-const assetKeyToInterfaceDecl = (a: Asset, ci: ContractInterface) => entityToInterfaceDecl(a.name + "_key", a.key_type_michelson, a.fields.filter(x => x.is_key), ci)
-const assetValueToInterfaceDecl = (a: Asset, ci: ContractInterface) => entityToInterfaceDecl(a.name + "_value", a.value_type_michelson, a.fields.filter(x => !x.is_key), ci)
-const recordToInterfaceDecl = (r: Record, ci: ContractInterface) => entityToInterfaceDecl(r.name, r.type_michelson, r.fields, ci)
+const assetKeyToInterfaceDecl = (a: Asset, ci: ContractInterface) =>  {
+  const name = a.name + "_key";
+  const mty = a.key_type_michelson;
+  const fields = a.fields.filter(x => x.is_key);
+
+  const mich_body = mich_to_record_body(name, fields, mty, factory.createIdentifier("input"), ci)
+  return entityToInterfaceDecl(name, mty, fields, mich_body, ci)
+}
+
+const assetValueToInterfaceDecl = (a: Asset, ci: ContractInterface) => {
+  const name = a.name + "_value";
+  const mty = a.value_type_michelson;
+  const fields = a.fields.filter(x => !x.is_key);
+
+  const mich_body = mich_to_record_body(name, fields, mty, factory.createIdentifier("input"), ci)
+  return entityToInterfaceDecl(name, mty, fields, mich_body, ci)
+}
+
+const recordToInterfaceDecl = (r: Record, ci: ContractInterface) => {
+  const mty = r.type_michelson;
+
+  const mich_body = mich_to_record_body(r.name, r.fields, mty, factory.createIdentifier("input"), ci)
+  return entityToInterfaceDecl(r.name, mty, r.fields, mich_body, ci)
+}
 
 const assetContainerToTypeDecl = (a: Asset) => {
   return factory.createTypeAliasDeclaration(
