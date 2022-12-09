@@ -83,7 +83,7 @@ export class Type_asset_value_2_record_2_fields {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./contracts/type_asset_value_2_record_2_fields.arl", {}, params)).address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_value_2_record_2_fields.arl", {}, params)).address;
         this.address = address;
     }
     async asset_put(i: r_record, params: Partial<ex.Parameters>): Promise<any> {

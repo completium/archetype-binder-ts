@@ -1,23 +1,24 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
 export class r_record implements att.ArchetypeType {
-    constructor(public f_a: att.Nat, public f_b: string) { }
+    constructor(public f_a: att.Nat, public f_b: string, public f_c: att.Bytes) { }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.f_a.to_mich(), att.string_to_mich(this.f_b)]);
+        return att.pair_to_mich([this.f_a.to_mich(), att.string_to_mich(this.f_b), this.f_c.to_mich()]);
     }
     equals(v: r_record): boolean {
-        return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b);
+        return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b && this.f_c.equals(v.f_c));
     }
     static from_mich(input: att.Micheline): r_record {
-        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]));
+        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]), att.mich_to_bytes((input as att.Mpair).args[2]));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
-    att.prim_annot_to_mich_type("string", ["%f_b"])
+    att.prim_annot_to_mich_type("string", ["%f_b"]),
+    att.prim_annot_to_mich_type("bytes", ["%f_c"])
 ], []);
 export class my_asset_key implements att.ArchetypeType {
     constructor(public k: att.Nat) { }
@@ -41,7 +42,7 @@ export class my_asset_value implements att.ArchetypeType {
         return JSON.stringify(this, null, 2);
     }
     to_mich(): att.Micheline {
-        return att.pair_to_mich([this.v[0].to_mich(), att.string_to_mich(this.v[1])]);
+        return att.pair_to_mich([this.v[0].to_mich(), att.string_to_mich(this.v[1]), this.v[2].to_mich()]);
     }
     equals(v: my_asset_value): boolean {
         return this.v == v.v;
@@ -52,7 +53,8 @@ export class my_asset_value implements att.ArchetypeType {
 }
 export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
-    att.prim_annot_to_mich_type("string", ["%f_b"])
+    att.prim_annot_to_mich_type("string", ["%f_b"]),
+    att.prim_annot_to_mich_type("bytes", ["%f_c"])
 ], []);
 export type my_asset_container = Array<[
     my_asset_key,
@@ -60,12 +62,13 @@ export type my_asset_container = Array<[
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
-    att.prim_annot_to_mich_type("string", ["%f_b"])
+    att.prim_annot_to_mich_type("string", ["%f_b"]),
+    att.prim_annot_to_mich_type("bytes", ["%f_c"])
 ], []), []);
 const asset_put_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
 }
-export class Type_asset_value_2_record_2_fields {
+export class Type_asset_value_2_record_3_fields {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -83,7 +86,7 @@ export class Type_asset_value_2_record_2_fields {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./contracts/type_asset_value_2_record_2_fields.arl", {}, params)).address;
+        const address = (await ex.deploy("./tests/contracts/type_asset_value_2_record_3_fields.arl", {}, params)).address;
         this.address = address;
     }
     async asset_put(i: r_record, params: Partial<ex.Parameters>): Promise<any> {
@@ -107,4 +110,4 @@ export class Type_asset_value_2_record_2_fields {
     }
     errors = {};
 }
-export const type_asset_value_2_record_2_fields = new Type_asset_value_2_record_2_fields();
+export const type_asset_value_2_record_3_fields = new Type_asset_value_2_record_3_fields();

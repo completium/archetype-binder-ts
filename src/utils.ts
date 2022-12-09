@@ -1861,21 +1861,28 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
   } else {
     switch (mt.prim) {
       case "pair": {
-        const lexpr: Array<ts.Expression> = [];
-        const [fidx00, llexpr] = mt.args.reduce(([idx, lexpr], arg) => {
-          const [fidx0, expr] = entity_to_mich(v, arg, fields, idx, ci);
-          lexpr.push(expr)
-          return [fidx0, lexpr]
-        }, ([fidx, lexpr]));
+        if (fields.length == 1 && fields[0].type?.node == "record") {
+          return [fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) }, ci)]
+          // const r = get_record_or_event_type(fields[0].type?.name, ci);
+          // const [fidx0, expr] = entity_to_mich(v, r.type_michelson, fields, fidx, ci);
+          // return [fidx0, expr]
+        } else {
+          const lexpr: Array<ts.Expression> = [];
+          const [fidx00, llexpr] = mt.args.reduce(([idx, lexpr], arg) => {
+            const [fidx0, expr] = entity_to_mich(v, arg, fields, idx, ci);
+            lexpr.push(expr)
+            return [fidx0, lexpr]
+          }, ([fidx, lexpr]));
 
-        return [fidx00, factory.createCallExpression(
-          factory.createPropertyAccessExpression(
-            factory.createIdentifier("att"),
-            factory.createIdentifier("pair_to_mich")
-          ),
-          undefined,
-          [factory.createArrayLiteralExpression(llexpr, false)]
-        )]
+          return [fidx00, factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              factory.createIdentifier("att"),
+              factory.createIdentifier("pair_to_mich")
+            ),
+            undefined,
+            [factory.createArrayLiteralExpression(llexpr, false)]
+          )]
+        }
       }
       case "map":
       case "big_map": {
