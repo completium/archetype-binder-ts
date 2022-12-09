@@ -1002,7 +1002,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
-  const map_mich_to_ts = (atype: ATMap) => {
+  const map_mich_to_ts = (key_type: ArchetypeType, value_type: ArchetypeType) => {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
@@ -1038,8 +1038,8 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
           factory.createArrayLiteralExpression(
             [
-              mich_to_archetype_type(atype.key_type, factory.createIdentifier("x"), ci),
-              mich_to_archetype_type(atype.value_type, factory.createIdentifier("y"), ci)
+              mich_to_archetype_type(key_type, factory.createIdentifier("x"), ci),
+              mich_to_archetype_type(value_type, factory.createIdentifier("y"), ci)
             ],
             false
           )
@@ -1144,15 +1144,25 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
 
   const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
     const asset_type = get_asset_type(asset_name, ci);
-    console.log(asset_type);
-    return TODO("asset_to_mich", arg);
+    switch (asset_type.container_kind) {
+      case "map": {
+        const key_type: ATNamed = { node: "asset_key", name: asset_name };
+        const value_type: ATNamed = { node: "asset_value", name: asset_name };
+        return map_mich_to_ts(key_type, value_type);
+      }
+      case "big_map":
+        return class_to_mich("mich_to_int", [arg])
+      case "iterable_big_map":
+        return TODO("asset_to_mich: iterable_big_map", arg);
+    }
   }
+
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
     case "aggregate": return TODO("aggregate", arg);
     case "asset_container": return TODO("asset_container", arg);
-    case "asset_key": return TODO("asset_key", arg);
-    case "asset_value": return TODO("asset_value", arg);
+    case "asset_key": return record_to_mich(atype.name + "_key", arg, ci)
+    case "asset_value": return record_to_mich(atype.name + "_value", arg, ci)
     case "asset_view": return TODO("asset_view", arg);
     case "asset": return asset_to_mich(atype.name, arg, ci);
     case "big_map": return class_to_mich("mich_to_int", [arg]);
@@ -1181,7 +1191,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "key": return class_to_mich("mich_to_key", [arg]);
     case "lambda": return arg;
     case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
-    case "map": return map_mich_to_ts(atype);
+    case "map": return map_mich_to_ts(atype.key_type, atype.value_type);
     case "nat": return class_to_mich("mich_to_nat", [arg]);
     case "never": return TODO("never", arg);
     case "operation": return TODO("operation", arg);
@@ -1797,7 +1807,7 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
   } else {
     switch (mt.prim) {
       case "pair": {
-        const lexpr : Array<ts.Expression> = [];
+        const lexpr: Array<ts.Expression> = [];
         const [fidx00, llexpr] = mt.args.reduce(([idx, lexpr], arg) => {
           const [fidx0, expr] = entity_to_mich(v, arg, fields, idx, ci);
           lexpr.push(expr)

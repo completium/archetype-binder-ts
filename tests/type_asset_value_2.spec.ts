@@ -70,7 +70,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_address.type_asset_value_2_address.deploy({ as: alice });
     await type_asset_value_2_address.type_asset_value_2_address.asset_put(v, { as: alice });
     const res = await type_asset_value_2_address.type_asset_value_2_address.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // bls12_381_fr
@@ -79,7 +79,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_bls12_381_fr.type_asset_value_2_bls12_381_fr.deploy({ as: alice });
     await type_asset_value_2_bls12_381_fr.type_asset_value_2_bls12_381_fr.asset_put(v, { as: alice });
     const res = await type_asset_value_2_bls12_381_fr.type_asset_value_2_bls12_381_fr.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // bls12_381_g1
@@ -88,7 +88,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_bls12_381_g1.type_asset_value_2_bls12_381_g1.deploy({ as: alice });
     await type_asset_value_2_bls12_381_g1.type_asset_value_2_bls12_381_g1.asset_put(v, { as: alice });
     const res = await type_asset_value_2_bls12_381_g1.type_asset_value_2_bls12_381_g1.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // bls12_381_g2
@@ -97,7 +97,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_bls12_381_g2.type_asset_value_2_bls12_381_g2.deploy({ as: alice });
     await type_asset_value_2_bls12_381_g2.type_asset_value_2_bls12_381_g2.asset_put(v, { as: alice });
     const res = await type_asset_value_2_bls12_381_g2.type_asset_value_2_bls12_381_g2.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // bool
@@ -106,7 +106,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_bool.type_asset_value_2_bool.deploy({ as: alice });
     await type_asset_value_2_bool.type_asset_value_2_bool.asset_put(v, { as: alice });
     const res = await type_asset_value_2_bool.type_asset_value_2_bool.get_my_asset();
-    assert(1 == res.length && ((x : boolean, y : boolean) => {return x == y})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : boolean, y : boolean) => {return x == y})(v, res[0][1].v), "Invalid Value")
   });
 
   // bytes
@@ -115,7 +115,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_bytes.type_asset_value_2_bytes.deploy({ as: alice });
     await type_asset_value_2_bytes.type_asset_value_2_bytes.asset_put(v, { as: alice });
     const res = await type_asset_value_2_bytes.type_asset_value_2_bytes.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // chain_id
@@ -124,7 +124,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_chain_id.type_asset_value_2_chain_id.deploy({ as: alice });
     await type_asset_value_2_chain_id.type_asset_value_2_chain_id.asset_put(v, { as: alice });
     const res = await type_asset_value_2_chain_id.type_asset_value_2_chain_id.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // chest
@@ -133,7 +133,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_chest.type_asset_value_2_chest.deploy({ as: alice });
     await type_asset_value_2_chest.type_asset_value_2_chest.asset_put(v, { as: alice });
     const res = await type_asset_value_2_chest.type_asset_value_2_chest.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });*/
 
   // chest_key
@@ -142,7 +142,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_chest_key.type_asset_value_2_chest_key.deploy({ as: alice });
     await type_asset_value_2_chest_key.type_asset_value_2_chest_key.asset_put(v, { as: alice });
     const res = await type_asset_value_2_chest_key.type_asset_value_2_chest_key.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });*/
 
   // date
@@ -151,7 +151,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_date.type_asset_value_2_date.deploy({ as: alice });
     await type_asset_value_2_date.type_asset_value_2_date.asset_put(v, { as: alice });
     const res = await type_asset_value_2_date.type_asset_value_2_date.get_my_asset();
-    assert(1 == res.length && ((x : Date, y : Date) => {return x.toISOString() == y.toISOString()})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Date, y : Date) => {return x.toISOString() == y.toISOString()})(v, res[0][1].v), "Invalid Value")
   });
 
   // duration
@@ -160,7 +160,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_duration.type_asset_value_2_duration.deploy({ as: alice });
     await type_asset_value_2_duration.type_asset_value_2_duration.asset_put(v, { as: alice });
     const res = await type_asset_value_2_duration.type_asset_value_2_duration.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // int
@@ -169,7 +169,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_int.type_asset_value_2_int.deploy({ as: alice });
     await type_asset_value_2_int.type_asset_value_2_int.asset_put(v, { as: alice });
     const res = await type_asset_value_2_int.type_asset_value_2_int.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // key
@@ -178,7 +178,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_key.type_asset_value_2_key.deploy({ as: alice });
     await type_asset_value_2_key.type_asset_value_2_key.asset_put(v, { as: alice });
     const res = await type_asset_value_2_key.type_asset_value_2_key.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // key_hash
@@ -187,7 +187,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_key_hash.type_asset_value_2_key_hash.deploy({ as: alice });
     await type_asset_value_2_key_hash.type_asset_value_2_key_hash.asset_put(v, { as: alice });
     const res = await type_asset_value_2_key_hash.type_asset_value_2_key_hash.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // nat
@@ -196,7 +196,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_nat.type_asset_value_2_nat.deploy({ as: alice });
     await type_asset_value_2_nat.type_asset_value_2_nat.asset_put(v, { as: alice });
     const res = await type_asset_value_2_nat.type_asset_value_2_nat.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // rational
@@ -205,7 +205,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_rational.type_asset_value_2_rational.deploy({ as: alice });
     await type_asset_value_2_rational.type_asset_value_2_rational.asset_put(v, { as: alice });
     const res = await type_asset_value_2_rational.type_asset_value_2_rational.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // sapling_transaction
@@ -214,7 +214,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_sapling_transaction.type_asset_value_2_sapling_transaction.deploy({ as: alice });
     await type_asset_value_2_sapling_transaction.type_asset_value_2_sapling_transaction.asset_put(v, { as: alice });
     const res = await type_asset_value_2_sapling_transaction.type_asset_value_2_sapling_transaction.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });*/
 
   // signature
@@ -223,7 +223,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_signature.type_asset_value_2_signature.deploy({ as: alice });
     await type_asset_value_2_signature.type_asset_value_2_signature.asset_put(v, { as: alice });
     const res = await type_asset_value_2_signature.type_asset_value_2_signature.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // string
@@ -232,7 +232,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_string.type_asset_value_2_string.deploy({ as: alice });
     await type_asset_value_2_string.type_asset_value_2_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_string.type_asset_value_2_string.get_my_asset();
-    assert(1 == res.length && ((x : string, y : string) => {return x == y})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : string, y : string) => {return x == y})(v, res[0][1].v), "Invalid Value")
   });
 
   // tez
@@ -241,7 +241,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tez.type_asset_value_2_tez.deploy({ as: alice });
     await type_asset_value_2_tez.type_asset_value_2_tez.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tez.type_asset_value_2_tez.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // unit
@@ -250,7 +250,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_unit.type_asset_value_2_unit.deploy({ as: alice });
     await type_asset_value_2_unit.type_asset_value_2_unit.asset_put(v, { as: alice });
     const res = await type_asset_value_2_unit.type_asset_value_2_unit.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // list_nat
@@ -259,7 +259,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_list_nat.type_asset_value_2_list_nat.deploy({ as: alice });
     await type_asset_value_2_list_nat.type_asset_value_2_list_nat.asset_put(v, { as: alice });
     const res = await type_asset_value_2_list_nat.type_asset_value_2_list_nat.get_my_asset();
-    assert(1 == res.length && ((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0]) && x[1].equals(y[1]) && x[2].equals(y[2])})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0]) && x[1].equals(y[1]) && x[2].equals(y[2])})(v, res[0][1].v), "Invalid Value")
   });
 
   // list_string
@@ -268,7 +268,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_list_string.type_asset_value_2_list_string.deploy({ as: alice });
     await type_asset_value_2_list_string.type_asset_value_2_list_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_list_string.type_asset_value_2_list_string.get_my_asset();
-    assert(1 == res.length && ((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})(v, res[0][1].v), "Invalid Value")
   });
 
   // list_bool
@@ -277,7 +277,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_list_bool.type_asset_value_2_list_bool.deploy({ as: alice });
     await type_asset_value_2_list_bool.type_asset_value_2_list_bool.asset_put(v, { as: alice });
     const res = await type_asset_value_2_list_bool.type_asset_value_2_list_bool.get_my_asset();
-    assert(1 == res.length && ((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})(v, res[0][1].v), "Invalid Value")
   });
 
   // map_nat_string
@@ -286,7 +286,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_map_nat_string.type_asset_value_2_map_nat_string.deploy({ as: alice });
     await type_asset_value_2_map_nat_string.type_asset_value_2_map_nat_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_map_nat_string.type_asset_value_2_map_nat_string.get_my_asset();
-    assert(1 == res.length && ((x : Array<[Nat, string]>, y : Array<[Nat, string]>) => {return x.length == y.length && x[0][0].equals(y[0][0]) && x[0][1] == y[0][1]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<[Nat, string]>, y : Array<[Nat, string]>) => {return x.length == y.length && x[0][0].equals(y[0][0]) && x[0][1] == y[0][1]})(v, res[0][1].v), "Invalid Value")
   });
 
   // option_nat
@@ -295,7 +295,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_option_nat.type_asset_value_2_option_nat.deploy({ as: alice });
     await type_asset_value_2_option_nat.type_asset_value_2_option_nat.asset_put(v, { as: alice });
     const res = await type_asset_value_2_option_nat.type_asset_value_2_option_nat.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // option_string
@@ -304,7 +304,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_option_string.type_asset_value_2_option_string.deploy({ as: alice });
     await type_asset_value_2_option_string.type_asset_value_2_option_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_option_string.type_asset_value_2_option_string.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // option_bool
@@ -313,7 +313,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_option_bool.type_asset_value_2_option_bool.deploy({ as: alice });
     await type_asset_value_2_option_bool.type_asset_value_2_option_bool.asset_put(v, { as: alice });
     const res = await type_asset_value_2_option_bool.type_asset_value_2_option_bool.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // or_nat_string
@@ -322,7 +322,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_or_nat_string.type_asset_value_2_or_nat_string.deploy({ as: alice });
     await type_asset_value_2_or_nat_string.type_asset_value_2_or_nat_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_or_nat_string.type_asset_value_2_or_nat_string.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // set_nat
@@ -331,7 +331,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_set_nat.type_asset_value_2_set_nat.deploy({ as: alice });
     await type_asset_value_2_set_nat.type_asset_value_2_set_nat.asset_put(v, { as: alice });
     const res = await type_asset_value_2_set_nat.type_asset_value_2_set_nat.get_my_asset();
-    assert(1 == res.length && ((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0])})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0])})(v, res[0][1].v), "Invalid Value")
   });
 
   // set_string
@@ -340,7 +340,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_set_string.type_asset_value_2_set_string.deploy({ as: alice });
     await type_asset_value_2_set_string.type_asset_value_2_set_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_set_string.type_asset_value_2_set_string.get_my_asset();
-    assert(1 == res.length && ((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})(v, res[0][1].v), "Invalid Value")
   });
 
   // set_bool
@@ -349,7 +349,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_set_bool.type_asset_value_2_set_bool.deploy({ as: alice });
     await type_asset_value_2_set_bool.type_asset_value_2_set_bool.asset_put(v, { as: alice });
     const res = await type_asset_value_2_set_bool.type_asset_value_2_set_bool.get_my_asset();
-    assert(1 == res.length && ((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string
@@ -358,7 +358,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string.type_asset_value_2_tuple_nat_string.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string.type_asset_value_2_tuple_nat_string.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string.type_asset_value_2_tuple_nat_string.get_my_asset();
-    assert(1 == res.length && ((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string_bytes
@@ -367,7 +367,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string_bytes.type_asset_value_2_tuple_nat_string_bytes.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string_bytes.type_asset_value_2_tuple_nat_string_bytes.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string_bytes.type_asset_value_2_tuple_nat_string_bytes.get_my_asset();
-    assert(1 == res.length && ((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool
@@ -376,7 +376,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string_bytes_bool.type_asset_value_2_tuple_nat_string_bytes_bool.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string_bytes_bool.type_asset_value_2_tuple_nat_string_bytes_bool.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string_bytes_bool.type_asset_value_2_tuple_nat_string_bytes_bool.get_my_asset();
-    assert(1 == res.length && ((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string_bytes_rev
@@ -385,7 +385,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string_bytes_rev.type_asset_value_2_tuple_nat_string_bytes_rev.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string_bytes_rev.type_asset_value_2_tuple_nat_string_bytes_rev.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string_bytes_rev.type_asset_value_2_tuple_nat_string_bytes_rev.get_my_asset();
-    assert(1 == res.length && ((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool_rev
@@ -394,7 +394,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string_bytes_bool_rev.type_asset_value_2_tuple_nat_string_bytes_bool_rev.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string_bytes_bool_rev.type_asset_value_2_tuple_nat_string_bytes_bool_rev.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string_bytes_bool_rev.type_asset_value_2_tuple_nat_string_bytes_bool_rev.get_my_asset();
-    assert(1 == res.length && ((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})(v, res[0][1].v), "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool_custom
@@ -403,7 +403,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_tuple_nat_string_bytes_bool_custom.type_asset_value_2_tuple_nat_string_bytes_bool_custom.deploy({ as: alice });
     await type_asset_value_2_tuple_nat_string_bytes_bool_custom.type_asset_value_2_tuple_nat_string_bytes_bool_custom.asset_put(v, { as: alice });
     const res = await type_asset_value_2_tuple_nat_string_bytes_bool_custom.type_asset_value_2_tuple_nat_string_bytes_bool_custom.get_my_asset();
-    assert(1 == res.length && ((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res[0][1].v), "Invalid Value")
   });
 
   // enum_simple
@@ -412,7 +412,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_enum_simple.type_asset_value_2_enum_simple.deploy({ as: alice });
     await type_asset_value_2_enum_simple.type_asset_value_2_enum_simple.asset_put(v, { as: alice });
     const res = await type_asset_value_2_enum_simple.type_asset_value_2_enum_simple.get_my_asset();
-    assert(1 == res.length && ((x : type_asset_value_2_enum_simple.e_enum, y : type_asset_value_2_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res[0][1]), "Invalid Value")
+    assert(1 == res.length && ((x : type_asset_value_2_enum_simple.e_enum, y : type_asset_value_2_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res[0][1].v), "Invalid Value")
   });
 
   // record_1_field
@@ -421,7 +421,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.deploy({ as: alice });
     await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_1_field.type_asset_value_2_record_1_field.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // record_2_fields
@@ -430,7 +430,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_record_2_fields.type_asset_value_2_record_2_fields.deploy({ as: alice });
     await type_asset_value_2_record_2_fields.type_asset_value_2_record_2_fields.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_2_fields.type_asset_value_2_record_2_fields.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // record_3_fields
@@ -439,7 +439,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_record_3_fields.type_asset_value_2_record_3_fields.deploy({ as: alice });
     await type_asset_value_2_record_3_fields.type_asset_value_2_record_3_fields.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_3_fields.type_asset_value_2_record_3_fields.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // record_4_fields
@@ -448,7 +448,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_record_4_fields.type_asset_value_2_record_4_fields.deploy({ as: alice });
     await type_asset_value_2_record_4_fields.type_asset_value_2_record_4_fields.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_4_fields.type_asset_value_2_record_4_fields.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   // record_4_fields_custom
@@ -457,7 +457,7 @@ describe('Type asset_value_2', () => {
     await type_asset_value_2_record_4_fields_custom.type_asset_value_2_record_4_fields_custom.deploy({ as: alice });
     await type_asset_value_2_record_4_fields_custom.type_asset_value_2_record_4_fields_custom.asset_put(v, { as: alice });
     const res = await type_asset_value_2_record_4_fields_custom.type_asset_value_2_record_4_fields_custom.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1]), "Invalid Value")
+    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
   

@@ -829,7 +829,7 @@ entry asset_put(i : ${item.type}) {
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset();
-    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1])` : 'v.equals(res[0][1])'}, "Invalid Value")`
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1].v)` : 'v.equals(res[0][1].v)'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_asset_value_2, new iter_settings(gen_it))
 })
