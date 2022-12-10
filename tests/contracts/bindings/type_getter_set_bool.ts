@@ -6,7 +6,7 @@ const get_value_arg_to_mich = (i: Array<boolean>): att.Micheline => {
     });
 }
 export const deploy_get_value_callback = async (params: Partial<ex.Parameters>): Promise<att.DeployResult> => {
-    return await ex.deploy_callback("get_value", att.list_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), params);
+    return await ex.deploy_callback("get_value", att.set_annot_to_mich_type(att.prim_annot_to_mich_type("bool", []), []), params);
 };
 export class Type_getter_set_bool {
     address: string | undefined;

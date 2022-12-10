@@ -33,12 +33,12 @@ export class my_asset_value implements att.ArchetypeType {
         return new my_asset_value(att.mich_to_list(input, x => { return att.mich_to_string(x); }));
     }
 }
-export const my_asset_value_mich_type: att.MichelineType = att.list_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []);
+export const my_asset_value_mich_type: att.MichelineType = att.set_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []);
 export type my_asset_container = Array<[
     my_asset_key,
     my_asset_value
 ]>;
-export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.list_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []), []);
+export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.set_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), []), []);
 const asset_put_arg_to_mich = (i: Array<string>): att.Micheline => {
     return att.list_to_mich(i, x => {
         return att.string_to_mich(x);

@@ -89,7 +89,7 @@ export const all_mich_type: att.MichelineType = att.pair_array_to_mich_type([
             att.prim_annot_to_mich_type("address", ["%f10"]),
             att.option_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%f11"]),
             att.list_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), ["%f12"]),
-            att.list_annot_to_mich_type(att.pair_array_to_mich_type([
+            att.set_annot_to_mich_type(att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("string", []),
                 att.prim_annot_to_mich_type("nat", []),
                 att.prim_annot_to_mich_type("int", [])
@@ -189,7 +189,7 @@ export type visitor_2_container = Array<[
     visitor_2_key,
     visitor_2_value
 ]>;
-export const just_a_key_container_mich_type: att.MichelineType = att.list_annot_to_mich_type(att.prim_annot_to_mich_type("address", []), []);
+export const just_a_key_container_mich_type: att.MichelineType = att.set_annot_to_mich_type(att.prim_annot_to_mich_type("address", []), []);
 export const visitor_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.prim_annot_to_mich_type("nat", []), []);
 export const visitor_2_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("address", []), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%nb_visits2"]),

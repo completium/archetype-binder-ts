@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@completium/archetype": "0.4.10",
-    "@completium/archetype-ts-types": "0.0.17",
+    "@completium/archetype-ts-types": "0.0.18",
     "@completium/experiment-ts": "0.0.106-dev-3",
     "@completium/event-listener": "^0.0.4",
     "@types/expect": "^24.3.0",

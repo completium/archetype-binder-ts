@@ -19,7 +19,7 @@ export class my_record implements att.ArchetypeType {
 }
 export const my_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%n"]),
-    att.list_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%v"]),
+    att.set_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%v"]),
     att.prim_annot_to_mich_type("string", ["%s"])
 ], []);
 const set_value_arg_to_mich = (i: my_record): att.Micheline => {

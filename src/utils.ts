@@ -1926,6 +1926,23 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
       ])
   }
 
+  const for_set_type = (arg: MichelsonType) => {
+    const annots = mt.annots ? (mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []) : []
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("set_annot_to_mich_type")
+      ),
+      undefined,
+      [
+        value_to_mich_type(arg),
+        factory.createArrayLiteralExpression(
+          annots,
+          false
+        )
+      ])
+  }
+
   const for_simple_type = (prim: string, annots: Array<string>) => {
     const exprAnnots = annots.length >= 1 ? [factory.createStringLiteral(annots[0])] : []
     return factory.createCallExpression(
@@ -2080,7 +2097,7 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     // }
     case "sapling_state": return for_simple_type(mt.prim, mt.annots ?? [])
     case "sapling_transaction": return for_simple_type(mt.prim, mt.annots ?? [])
-    case "set": return for_composite_type(mt.args[0])
+    case "set": return for_set_type(mt.args[0])
     case "signature": return for_simple_type(mt.prim, mt.annots ?? [])
     case "string": return for_simple_type(mt.prim, mt.annots ?? [])
     case "ticket": return for_simple_type(mt.prim, mt.annots ?? [])
