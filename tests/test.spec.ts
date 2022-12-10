@@ -40,7 +40,7 @@ const r_value = new all(
   new Bytes("0000"),
   "a string value",
   new Date(),
-  new Duration(""),
+  new Duration("0"),
   new Address(alice.pkh),
   new Option<Nat>(new Nat(4)),
   [ "an list element" ],

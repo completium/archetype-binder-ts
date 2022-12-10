@@ -898,7 +898,7 @@ entry asset_put(i : ${item.type}) {
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset();
-    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0])` : 'v.equals(res[0][0])'}, "Invalid Value")`
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0].k)` : 'v.equals(res[0][0].k)'}, "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
 })
