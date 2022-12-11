@@ -9,7 +9,7 @@ export class r_record implements att.ArchetypeType {
         return att.pair_to_mich([this.f_a.to_mich(), att.string_to_mich(this.f_b), this.f_c.to_mich(), att.bool_to_mich(this.f_d)]);
     }
     equals(v: r_record): boolean {
-        return (this.f_a.equals(v.f_a) && this.f_a.equals(v.f_a) && this.f_b == v.f_b && this.f_c.equals(v.f_c) && this.f_d == v.f_d);
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): r_record {
         return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]), att.mich_to_bytes((input as att.Mpair).args[2]), att.mich_to_bool((input as att.Mpair).args[3]));
@@ -46,7 +46,7 @@ export class my_asset_value implements att.ArchetypeType {
         return att.pair_to_mich([att.string_to_mich(this.s), this.v.to_mich()]);
     }
     equals(v: my_asset_value): boolean {
-        return (this.s == v.s && this.s == v.s && this.v == v.v);
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), r_record.from_mich(att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 5))));

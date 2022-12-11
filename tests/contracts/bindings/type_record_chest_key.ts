@@ -9,7 +9,7 @@ export class my_record implements att.ArchetypeType {
         return att.pair_to_mich([this.n.to_mich(), this.v.to_mich(), att.string_to_mich(this.s)]);
     }
     equals(v: my_record): boolean {
-        return (this.n.equals(v.n) && this.n.equals(v.n) && this.v.equals(v.v) && this.s == v.s);
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_record {
         return new my_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_chest_key((input as att.Mpair).args[1]), att.mich_to_string((input as att.Mpair).args[2]));

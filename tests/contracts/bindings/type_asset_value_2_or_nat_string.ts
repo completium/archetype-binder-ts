@@ -25,7 +25,7 @@ export class my_asset_value implements att.ArchetypeType {
         return this.v.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
     }
     equals(v: my_asset_value): boolean {
-        return this.v == v.v;
+        return this.v.equals(v.v);
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_or(input, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_string(x); }));

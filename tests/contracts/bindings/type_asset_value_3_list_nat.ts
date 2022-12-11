@@ -27,7 +27,7 @@ export class my_asset_value implements att.ArchetypeType {
             })]);
     }
     equals(v: my_asset_value): boolean {
-        return (this.s == v.s && this.s == v.s && JSON.stringify(this.v) == JSON.stringify(v.v));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_list((input as att.Mpair).args[1], x => { return att.mich_to_nat(x); }));

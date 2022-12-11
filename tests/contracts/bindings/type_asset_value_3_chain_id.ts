@@ -25,7 +25,7 @@ export class my_asset_value implements att.ArchetypeType {
         return att.pair_to_mich([att.string_to_mich(this.s), this.v.to_mich()]);
     }
     equals(v: my_asset_value): boolean {
-        return (this.s == v.s && this.s == v.s && this.v.equals(v.v));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_chain_id((input as att.Mpair).args[1]));

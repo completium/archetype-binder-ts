@@ -16,15 +16,7 @@ export class my_asset_key implements att.ArchetypeType {
         return att.pair_to_mich([att.pair_to_mich([this.k[0].to_mich(), att.pair_to_mich([att.string_to_mich(this.k[1][0]), this.k[1][1].to_mich()]), att.bool_to_mich(this.k[2])]), this.n.to_mich()]);
     }
     equals(v: my_asset_key): boolean {
-        return (((x, y) => {
-            return x[0].equals(y[0]) && ((x, y) => {
-                return x[0] == y[0] && x[1].equals(y[1]);
-            })(x[1], y[1]) && x[2] == y[2];
-        })(this.k, v.k) && ((x, y) => {
-            return x[0].equals(y[0]) && ((x, y) => {
-                return x[0] == y[0] && x[1].equals(y[1]);
-            })(x[1], y[1]) && x[2] == y[2];
-        })(this.k, v.k) && this.n.equals(v.n));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_key {
         return new my_asset_key((p => {

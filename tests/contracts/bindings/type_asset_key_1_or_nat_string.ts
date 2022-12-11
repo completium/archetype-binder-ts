@@ -9,7 +9,7 @@ export class my_asset_key implements att.ArchetypeType {
         return this.k.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); }));
     }
     equals(v: my_asset_key): boolean {
-        return this.k == v.k;
+        return this.k.equals(v.k);
     }
     static from_mich(input: att.Micheline): my_asset_key {
         return new my_asset_key(att.mich_to_or(input, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_string(x); }));

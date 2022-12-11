@@ -25,7 +25,7 @@ export class visitor_value implements att.ArchetypeType {
         return att.pair_to_mich([att.string_to_mich(this.name), this.nbvisits.to_mich()]);
     }
     equals(v: visitor_value): boolean {
-        return (this.name == v.name && this.name == v.name && this.nbvisits.equals(v.nbvisits));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): visitor_value {
         return new visitor_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_nat((input as att.Mpair).args[1]));

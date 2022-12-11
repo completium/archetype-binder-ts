@@ -6,6 +6,10 @@ export enum anenum_types {
     C = "C"
 }
 export abstract class anenum extends att.Enum<anenum_types> {
+    abstract to_mich(): att.Micheline;
+    equals(v: e_enum): boolean {
+        return att.micheline_equals(this.to_mich(), v.to_mich());
+    }
 }
 export class A extends anenum {
     constructor(private content: att.Int) {
@@ -59,7 +63,7 @@ export class all implements att.ArchetypeType {
                     })])])]);
     }
     equals(v: all): boolean {
-        return (this.a.equals(v.a) && this.a.equals(v.a) && this.b.equals(v.b) && this.c.equals(v.c) && this.d.equals(v.d) && this.e == v.e && this.f.equals(v.f) && this.g == v.g && (this.h.getTime() - this.h.getMilliseconds()) == (v.h.getTime() - v.h.getMilliseconds()) && this.i.equals(v.i) && this.j.equals(v.j) && this.k.equals(v.k) && JSON.stringify(this.n) == JSON.stringify(v.n) && JSON.stringify(this.p) == JSON.stringify(v.p));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): all {
         return new all(att.mich_to_nat(input), att.mich_to_int(input), att.mich_to_tez(input), att.mich_to_rational(input), att.mich_to_bool(input), att.mich_to_bytes(input), att.mich_to_string(input), att.mich_to_date(input), att.mich_to_duration(input), att.mich_to_address(input), att.mich_to_option(input, x => { return att.mich_to_nat(x); }), att.mich_to_list(input, x => { return att.mich_to_string(x); }), att.mich_to_list(input, x => { return (p => {
@@ -169,7 +173,7 @@ export class visitor_2_value implements att.ArchetypeType {
         return att.pair_to_mich([this.nb_visits2.to_mich(), att.date_to_mich(this.last)]);
     }
     equals(v: visitor_2_value): boolean {
-        return (this.nb_visits2.equals(v.nb_visits2) && this.nb_visits2.equals(v.nb_visits2) && (this.last.getTime() - this.last.getMilliseconds()) == (v.last.getTime() - v.last.getMilliseconds()));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): visitor_2_value {
         return new visitor_2_value(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_date((input as att.Mpair).args[1]));

@@ -6,6 +6,10 @@ export enum e_enum_types {
     e_3 = "e_3"
 }
 export abstract class e_enum extends att.Enum<e_enum_types> {
+    abstract to_mich(): att.Micheline;
+    equals(v: e_enum): boolean {
+        return att.micheline_equals(this.to_mich(), v.to_mich());
+    }
 }
 export class e_1 extends e_enum {
     constructor() {

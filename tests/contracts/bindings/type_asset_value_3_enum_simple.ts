@@ -6,6 +6,10 @@ export enum e_enum_types {
     e_3 = "e_3"
 }
 export abstract class e_enum extends att.Enum<e_enum_types> {
+    abstract to_mich(): att.Micheline;
+    equals(v: e_enum): boolean {
+        return att.micheline_equals(this.to_mich(), v.to_mich());
+    }
 }
 export class e_1 extends e_enum {
     constructor() {
@@ -68,7 +72,7 @@ export class my_asset_value implements att.ArchetypeType {
         return att.pair_to_mich([att.string_to_mich(this.s), this.v.to_mich()]);
     }
     equals(v: my_asset_value): boolean {
-        return (this.s == v.s && this.s == v.s && this.v == v.v);
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), mich_to_e_enum((input as att.Mpair).args[1]));

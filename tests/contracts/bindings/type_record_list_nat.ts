@@ -11,7 +11,7 @@ export class my_record implements att.ArchetypeType {
             }), att.string_to_mich(this.s)]);
     }
     equals(v: my_record): boolean {
-        return (this.n.equals(v.n) && this.n.equals(v.n) && JSON.stringify(this.v) == JSON.stringify(v.v) && this.s == v.s);
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_record {
         return new my_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_list((input as att.Mpair).args[1], x => { return att.mich_to_nat(x); }), att.mich_to_string((input as att.Mpair).args[2]));

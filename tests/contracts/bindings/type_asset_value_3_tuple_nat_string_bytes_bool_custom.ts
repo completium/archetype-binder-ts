@@ -32,11 +32,7 @@ export class my_asset_value implements att.ArchetypeType {
         return att.pair_to_mich([att.string_to_mich(this.s), att.pair_to_mich([this.v[0].to_mich(), att.pair_to_mich([att.string_to_mich(this.v[1][0]), this.v[1][1].to_mich()]), att.bool_to_mich(this.v[2])])]);
     }
     equals(v: my_asset_value): boolean {
-        return (this.s == v.s && this.s == v.s && ((x, y) => {
-            return x[0].equals(y[0]) && ((x, y) => {
-                return x[0] == y[0] && x[1].equals(y[1]);
-            })(x[1], y[1]) && x[2] == y[2];
-        })(this.v, v.v));
+        return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), (p => {

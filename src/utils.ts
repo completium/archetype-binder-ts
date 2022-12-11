@@ -882,7 +882,7 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
     case "never": return make_cmp_equals_default(a, b);
     case "operation": return make_cmp_equals_default(a, b);
     case "option": return make_cmp_equals(a, b);
-    case "or": return make_cmp_equals_default(a, b);
+    case "or": return make_cmp_equals(a, b);
     case "partition": return make_cmp_equals_default(a, b);
     case "rational": return make_cmp_equals(a, b);
     case "record": return make_cmp_equals_default(a, b);
