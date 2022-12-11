@@ -389,7 +389,7 @@ export class Test_big_record {
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[10], (x, y) => [just_a_key_key.from_mich(x), just_a_key_value.from_mich(y)]);
+            return att.mich_to_list((storage as att.Mpair).args[10], x => { return just_a_key_key.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

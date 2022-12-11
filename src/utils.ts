@@ -1176,11 +1176,18 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
 
   const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
     const asset_type = get_asset_type(asset_name, ci);
+    const is_only_keys = (a : Asset) : boolean => {
+      return a.fields.reduce((accu : boolean, x : Field) => {return accu && x.is_key }, true)
+    }
     switch (asset_type.container_kind) {
       case "map": {
         const key_type: ATNamed = { node: "asset_key", name: asset_name };
-        const value_type: ATNamed = { node: "asset_value", name: asset_name };
-        return map_mich_to_ts(key_type, value_type);
+        if (is_only_keys(asset_type)) {
+          return contained_type_to_field_decl("mich_to_list", arg, [key_type])
+        } else {
+          const value_type: ATNamed = { node: "asset_value", name: asset_name };
+          return map_mich_to_ts(key_type, value_type);
+        }
       }
       case "big_map":
         return class_to_mich("mich_to_int", [arg])
