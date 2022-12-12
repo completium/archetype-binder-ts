@@ -1,0 +1,16 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_record_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+record my_record {
+  n : nat;
+  v : e_enum;
+  s : string;
+}
+
+variable res : my_record = {0; e_1; ""}
+
+entry set_value(i : my_record) {
+  res := i
+}

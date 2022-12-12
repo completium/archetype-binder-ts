@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+variable res : option<e_enum> = none
+
+entry set_value(i : option<e_enum>) {
+  res := i
+}

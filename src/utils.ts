@@ -958,9 +958,6 @@ const make_pair_decl = (arg: ts.Expression, i: number) => {
 }
 
 export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression, ci: ContractInterface): ts.Expression => {
-  const throw_error = (ty: string) => {
-    throw new Error(`mich_to_field_decl: '${ty}' type not handled`)
-  }
 
   const TODO = (ty: string, x: ts.Expression): ts.Expression => {
     throw new Error(`TODO: ${ty}`)
@@ -1174,6 +1171,14 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
+  const enum_to_mich = (enum_name: string, arg: ts.Expression, ci: ContractInterface) => {
+    return factory.createCallExpression(
+      factory.createIdentifier("mich_to_" + enum_name),
+      undefined,
+      [arg]
+    )
+  }
+
   const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
     const asset_type = get_asset_type(asset_name, ci);
     const is_only_keys = (a : Asset) : boolean => {
@@ -1229,11 +1234,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "currency": return class_to_mich("mich_to_tez", [arg]);
     case "date": return class_to_mich("mich_to_date", [arg]);
     case "duration": return class_to_mich("mich_to_duration", [arg]);
-    case "enum": return factory.createCallExpression(
-      factory.createIdentifier("mich_to_" + atype.name),
-      undefined,
-      [arg]
-    );
+    case "enum": return enum_to_mich(atype.name, arg, ci)
     case "event": return TODO("event", arg);
     case "int": return class_to_mich("mich_to_int", [arg]);
     case "iterable_big_map": return TODO("iterable_big_map", arg);

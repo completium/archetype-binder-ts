@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_tuple_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+variable res : (nat * e_enum * string) = ((0, e_1, ""))
+
+entry set_value(i : e_enum) {
+  res := ((2, i, "mystr"))
+}

@@ -29,6 +29,7 @@ import * as type_asset_key_2_tuple_nat_string_bytes_rev from './contracts/bindin
 import * as type_asset_key_2_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_asset_key_2_tuple_nat_string_bytes_bool_rev'
 import * as type_asset_key_2_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_asset_key_2_tuple_nat_string_bytes_bool_custom'
 import * as type_asset_key_2_enum_simple from './contracts/bindings/type_asset_key_2_enum_simple'
+import * as type_asset_key_2_enum_param from './contracts/bindings/type_asset_key_2_enum_param'
 import * as type_asset_key_2_record_1_field from './contracts/bindings/type_asset_key_2_record_1_field'
 import * as type_asset_key_2_record_2_fields from './contracts/bindings/type_asset_key_2_record_2_fields'
 import * as type_asset_key_2_record_3_fields from './contracts/bindings/type_asset_key_2_record_3_fields'
@@ -283,6 +284,15 @@ describe('Type asset_key_2', () => {
     await type_asset_key_2_enum_simple.type_asset_key_2_enum_simple.asset_put(v, { as: alice });
     const res = await type_asset_key_2_enum_simple.type_asset_key_2_enum_simple.get_my_asset();
     assert(1 == res.length && ((x : type_asset_key_2_enum_simple.e_enum, y : type_asset_key_2_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res[0][0].k), "Invalid Value")
+  });
+
+  // enum_param
+  it('enum_param', async () => {
+    const v : type_asset_key_2_enum_param.e_enum = new type_asset_key_2_enum_param.e_2(new Nat(2));
+    await type_asset_key_2_enum_param.type_asset_key_2_enum_param.deploy({ as: alice });
+    await type_asset_key_2_enum_param.type_asset_key_2_enum_param.asset_put(v, { as: alice });
+    const res = await type_asset_key_2_enum_param.type_asset_key_2_enum_param.get_my_asset();
+    assert(1 == res.length && ((x : type_asset_key_2_enum_param.e_enum, y : type_asset_key_2_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res[0][0].k), "Invalid Value")
   });
 
   // record_1_field

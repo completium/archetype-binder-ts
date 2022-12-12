@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_getter_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+variable res : e_enum = e_1
+
+getter get_value(i : e_enum) : e_enum {
+  res := i;
+  return res
+}

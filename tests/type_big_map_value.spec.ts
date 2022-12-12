@@ -42,6 +42,7 @@ import * as type_big_map_value_tuple_nat_string_bytes_rev from './contracts/bind
 import * as type_big_map_value_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_big_map_value_tuple_nat_string_bytes_bool_rev'
 import * as type_big_map_value_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_big_map_value_tuple_nat_string_bytes_bool_custom'
 import * as type_big_map_value_enum_simple from './contracts/bindings/type_big_map_value_enum_simple'
+import * as type_big_map_value_enum_param from './contracts/bindings/type_big_map_value_enum_param'
 import * as type_big_map_value_record_1_field from './contracts/bindings/type_big_map_value_record_1_field'
 import * as type_big_map_value_record_2_fields from './contracts/bindings/type_big_map_value_record_2_fields'
 import * as type_big_map_value_record_3_fields from './contracts/bindings/type_big_map_value_record_3_fields'
@@ -490,6 +491,17 @@ describe('Type big_map_value', () => {
     const res = await type_big_map_value_enum_simple.type_big_map_value_enum_simple.get_res_value(new Nat(0));
     assert(res !== undefined && ((x : type_big_map_value_enum_simple.e_enum, y : type_big_map_value_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
     const c = await type_big_map_value_enum_simple.type_big_map_value_enum_simple.has_res_value(new Nat(0));
+    assert(c, "Invalid Value")
+  });
+
+  // enum_param
+  it('enum_param', async () => {
+    const v : type_big_map_value_enum_param.e_enum = new type_big_map_value_enum_param.e_2(new Nat(2));
+    await type_big_map_value_enum_param.type_big_map_value_enum_param.deploy({ as: alice });
+    await type_big_map_value_enum_param.type_big_map_value_enum_param.set_value(v, { as: alice });
+    const res = await type_big_map_value_enum_param.type_big_map_value_enum_param.get_res_value(new Nat(0));
+    assert(res !== undefined && ((x : type_big_map_value_enum_param.e_enum, y : type_big_map_value_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
+    const c = await type_big_map_value_enum_param.type_big_map_value_enum_param.has_res_value(new Nat(0));
     assert(c, "Invalid Value")
   });
 

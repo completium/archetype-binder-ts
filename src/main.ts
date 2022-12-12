@@ -1991,7 +1991,106 @@ const mich_to_simple_enum_decl = (e: Enum) => {
   )
 }
 
-const mich_to_complex_enum_decl = (e: Enum) => {
+const mich_to_complex_enum_decl = (e: Enum, ci: ContractInterface) => {
+
+  const create_body = (e: Enum): ts.Statement[] => {
+    const error = factory.createThrowStatement(factory.createNewExpression(
+      factory.createIdentifier("Error"),
+      undefined,
+      [factory.createStringLiteral("mich_to_" + e.name + " : invalid micheline")]
+    ));
+
+    if (e.constructors.length == 0) {
+      return [error]
+    } else if (e.constructors.length == 1) {
+      return []
+    } else {
+      const before_last_enum_constructor = e.constructors[e.constructors.length - 2].name;
+      const last_enum_constructor = e.constructors[e.constructors.length - 1].name;
+
+      let res: [ts.Expression, Array<ts.Statement>] = [factory.createIdentifier("m"), []];
+      const [_, stts]: [ts.Expression, Array<ts.Statement>] =
+        e.constructors.reduce(([arg, acc], x) => {
+          const before_last = before_last_enum_constructor == x.name;
+          const last = last_enum_constructor == x.name;
+          const ea = factory.createElementAccessExpression(
+            factory.createPropertyAccessExpression(
+              factory.createParenthesizedExpression(
+                factory.createAsExpression(
+                  arg,
+                  factory.createTypeReferenceNode(
+                    factory.createQualifiedName(
+                      factory.createIdentifier("att"),
+                      factory.createIdentifier("Msingle")
+                    ),
+                    undefined
+                  )
+                )),
+              factory.createIdentifier("args")
+            ),
+            factory.createNumericLiteral("0")
+          );
+          const enum_arg: Array<ts.Expression> = []
+          if (x.types.length == 1) {
+            enum_arg.push(mich_to_archetype_type(x.types[0], ea, ci))
+          } else if (x.types.length > 1) {
+            const ty : ArchetypeType = {node: "tuple", args: x.types}
+            enum_arg.push(mich_to_archetype_type(ty, ea, ci))
+          }
+
+          const stt = factory.createIfStatement(
+            factory.createBinaryExpression(
+              factory.createPropertyAccessExpression(
+                factory.createParenthesizedExpression(
+                  factory.createAsExpression(
+                    arg,
+                    factory.createTypeReferenceNode(
+                      factory.createQualifiedName(
+                        factory.createIdentifier("att"),
+                        factory.createIdentifier("Msingle")
+                      ),
+                      undefined
+                    )
+                  )),
+                factory.createIdentifier("prim")),
+              factory.createToken(ts.SyntaxKind.EqualsEqualsToken),
+              factory.createStringLiteral(last ? "Right" : "Left")
+            ),
+            factory.createBlock(
+              [factory.createReturnStatement(factory.createNewExpression(
+                factory.createIdentifier(x.name),
+                undefined,
+                enum_arg
+              ))],
+              true
+            ),
+            undefined
+          );
+          acc.push(stt)
+          const arg_next = before_last ? arg : factory.createElementAccessExpression(
+            factory.createPropertyAccessExpression(
+              factory.createParenthesizedExpression(
+                factory.createAsExpression(
+                  arg,
+                  factory.createTypeReferenceNode(
+                    factory.createQualifiedName(
+                      factory.createIdentifier("att"),
+                      factory.createIdentifier("Msingle")
+                    ),
+                    undefined
+                  )
+                )),
+              factory.createIdentifier("args")
+            ),
+            factory.createNumericLiteral("0")
+          );
+          return [arg_next, acc]
+        }, res)
+      stts.push(error)
+      return stts
+    }
+  }
+
   return factory.createVariableStatement(
     [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     factory.createVariableDeclarationList(
@@ -2008,7 +2107,13 @@ const mich_to_complex_enum_decl = (e: Enum) => {
             undefined,
             factory.createIdentifier("m"),
             undefined,
-            factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+            factory.createTypeReferenceNode(
+              factory.createQualifiedName(
+                factory.createIdentifier("att"),
+                factory.createIdentifier("Micheline")
+              ),
+              undefined
+            ),
             undefined
           )],
           factory.createTypeReferenceNode(
@@ -2016,14 +2121,7 @@ const mich_to_complex_enum_decl = (e: Enum) => {
             undefined
           ),
           factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-          factory.createBlock(
-            [factory.createThrowStatement(factory.createNewExpression(
-              factory.createIdentifier("Error"),
-              undefined,
-              [factory.createStringLiteral("mich_to" + e.name + " : complex enum not supported yet")]
-            ))],
-            true
-          )
+          factory.createBlock(create_body(e), true)
         )
       )],
       ts.NodeFlags.Const
@@ -2031,9 +2129,9 @@ const mich_to_complex_enum_decl = (e: Enum) => {
   )
 }
 
-const mich_to_enum_decl = (e: Enum) => {
+const mich_to_enum_decl = (e: Enum, ci: ContractInterface) => {
   if (e.type_michelson.prim == "or") {
-    return mich_to_complex_enum_decl(e)
+    return mich_to_complex_enum_decl(e, ci)
   } else {
     return mich_to_simple_enum_decl(e)
   }
@@ -2196,7 +2294,7 @@ const get_nodes = (contract_interface: ContractInterface, settings: BindingSetti
     ...(contract_interface.types.events.map(x => recordToInterfaceDecl(x, contract_interface))),
     // enums
     ...(contract_interface.types.enums.map(x => (enum_to_decl(x, contract_interface)))).flat(),
-    ...(contract_interface.types.enums.map(mich_to_enum_decl)),
+    ...(contract_interface.types.enums.map(x => (mich_to_enum_decl(x, contract_interface)))),
     // records
     ...(contract_interface.types.records.map(x => recordToInterfaceDecl(x, contract_interface))),
     ...(contract_interface.types.records.map(recordToMichTypeDecl)),

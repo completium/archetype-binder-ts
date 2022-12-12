@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_list_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+variable res : list<e_enum> = []
+
+entry set_value(i : list<e_enum>) {
+  res := i
+}

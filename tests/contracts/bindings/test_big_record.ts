@@ -43,8 +43,19 @@ export class C extends anenum {
         return JSON.stringify(this, null, 2);
     }
 }
-export const mich_to_anenum = (m: any): anenum => {
-    throw new Error("mich_toanenum : complex enum not supported yet");
+export const mich_to_anenum = (m: att.Micheline): anenum => {
+    if ((m as att.Msingle).prim == "Left") {
+        return new A(att.mich_to_int((m as att.Msingle).args[0]));
+    }
+    if (((m as att.Msingle).args[0] as att.Msingle).prim == "Left") {
+        return new B((p => {
+            return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+        })(((m as att.Msingle).args[0] as att.Msingle).args[0]));
+    }
+    if (((m as att.Msingle).args[0] as att.Msingle).prim == "Right") {
+        return new C();
+    }
+    throw new Error("mich_to_anenum : invalid micheline");
 };
 export class all implements att.ArchetypeType {
     constructor(public a: att.Nat, public b: att.Int, public c: att.Tez, public d: att.Rational, public e: boolean, public f: att.Bytes, public g: string, public h: Date, public i: att.Duration, public j: att.Address, public k: att.Option<att.Nat>, public n: Array<string>, public p: Array<[

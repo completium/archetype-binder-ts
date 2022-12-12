@@ -42,6 +42,7 @@ import * as type_tuple_tuple_nat_string_bytes_rev from './contracts/bindings/typ
 import * as type_tuple_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_tuple_tuple_nat_string_bytes_bool_rev'
 import * as type_tuple_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_tuple_tuple_nat_string_bytes_bool_custom'
 import * as type_tuple_enum_simple from './contracts/bindings/type_tuple_enum_simple'
+import * as type_tuple_enum_param from './contracts/bindings/type_tuple_enum_param'
 import * as type_tuple_record_1_field from './contracts/bindings/type_tuple_record_1_field'
 import * as type_tuple_record_2_fields from './contracts/bindings/type_tuple_record_2_fields'
 import * as type_tuple_record_3_fields from './contracts/bindings/type_tuple_record_3_fields'
@@ -413,6 +414,15 @@ describe('Type tuple', () => {
     await type_tuple_enum_simple.type_tuple_enum_simple.set_value(v, { as: alice });
     const res = await type_tuple_enum_simple.type_tuple_enum_simple.get_res();
     assert(((x : type_tuple_enum_simple.e_enum, y : type_tuple_enum_simple.e_enum) => {return x.toString() == y.toString()})(v, res[1]), "Invalid Value")
+  });
+
+  // enum_param
+  it('enum_param', async () => {
+    const v : type_tuple_enum_param.e_enum = new type_tuple_enum_param.e_2(new Nat(2));
+    await type_tuple_enum_param.type_tuple_enum_param.deploy({ as: alice });
+    await type_tuple_enum_param.type_tuple_enum_param.set_value(v, { as: alice });
+    const res = await type_tuple_enum_param.type_tuple_enum_param.get_res();
+    assert(((x : type_tuple_enum_param.e_enum, y : type_tuple_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res[1]), "Invalid Value")
   });
 
   // record_1_field

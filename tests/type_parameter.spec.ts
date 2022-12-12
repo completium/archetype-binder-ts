@@ -41,6 +41,7 @@ import * as type_parameter_tuple_nat_string_bytes_bool from './contracts/binding
 import * as type_parameter_tuple_nat_string_bytes_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_rev'
 import * as type_parameter_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_rev'
 import * as type_parameter_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_custom'
+import * as type_parameter_enum_param from './contracts/bindings/type_parameter_enum_param'
 
 
 import assert from 'assert'
@@ -360,6 +361,14 @@ describe('Type parameter', () => {
     await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.deploy(v, { as: alice });
     const res = await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.get_res();
     assert(((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res), "Invalid Value")
+  });
+
+  // enum_param
+  it('enum_param', async () => {
+    const v : type_parameter_enum_param.e_enum = new type_parameter_enum_param.e_2(new Nat(2));
+    await type_parameter_enum_param.type_parameter_enum_param.deploy(v, { as: alice });
+    const res = await type_parameter_enum_param.type_parameter_enum_param.get_res();
+    assert(((x : type_parameter_enum_param.e_enum, y : type_parameter_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
   });
 
   

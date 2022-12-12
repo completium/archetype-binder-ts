@@ -117,7 +117,7 @@ let type_default_name: Array<item> = [
 
   // enum
   new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2()', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_simple', decl: 'enum e_enum = | e_1 | e_2 | e_3' }),
-  // new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2(new Nat(2))', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_param', decl: 'enum e_enum = | e_1 | e_2<nat> | e_3<string>' }),
+  new item('e_enum', 'e_1', true, '${prefix}.e_enum', 'new ${prefix}.e_2(new Nat(2))', { fun_eq: '((x : ${prefix}.e_enum, y : ${prefix}.e_enum) => {return x.toString() == y.toString()})', name: 'enum_param', decl: 'enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>' }),
 
   // record
   new item('r_record', '{f_a = 0}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2))', { name: 'record_1_field', decl: 'record r_record {f_a : nat}' }),
