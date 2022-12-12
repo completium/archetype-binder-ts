@@ -1890,9 +1890,6 @@ export const entity_to_mich = (v: string, mt: MichelsonType, fields: Array<Parti
       case "pair": {
         if (fields.length == 1 && fields[0].type?.node == "record") {
           return [fidx, function_param_to_mich({ name: v, type: mich_type_to_archetype(mt) }, ci)]
-          // const r = get_record_or_event_type(fields[0].type?.name, ci);
-          // const [fidx0, expr] = entity_to_mich(v, r.type_michelson, fields, fidx, ci);
-          // return [fidx0, expr]
         } else {
           const lexpr: Array<ts.Expression> = [];
           const [fidx00, llexpr] = mt.args.reduce(([idx, lexpr], arg) => {
@@ -2104,24 +2101,6 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
           )
         ])
     }
-    // default: {
-    //   const prim = mt.prim == null ? "string" : mt.prim
-    //   const annots = mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
-    //   return factory.createCallExpression(
-    //     factory.createPropertyAccessExpression(
-    //       factory.createIdentifier("att"),
-    //       factory.createIdentifier("prim_annot_to_mich_type")
-    //     ),
-    //     undefined,
-    //     [
-    //       factory.createStringLiteral(prim),
-    //       factory.createArrayLiteralExpression(
-    //         annots,
-    //         false
-    //       )
-    //     ]
-    //   )
-    // }
     case "sapling_state": return for_simple_type(mt.prim, mt.annots ?? [])
     case "sapling_transaction": return for_simple_type(mt.prim, mt.annots ?? [])
     case "set": return for_set_type(mt.args[0])
@@ -2136,9 +2115,14 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
 
 /* Errors ------------------------------------------------------------------ */
 
+export const to_label = (input : string) => {
+  const res = input.replace(/^\d/g, "_").split(new RegExp("[ !\"#$%&'()*+,-./:;<=>?@\[\\\]^`{}~]")).join('_').toUpperCase();
+  return res
+}
+
 export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression] => {
   if ((expr as MDString) && (expr as MDString).string) {
-    return [(expr as MDString).string.split(' ').join('_').toUpperCase(), factory.createCallExpression(
+    return [to_label((expr as MDString).string), factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier("string_to_mich")
@@ -2159,24 +2143,6 @@ export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression]
       undefined,
       [factory.createArrayLiteralExpression(args.map(p => p[1]))]
     )]
-    // } else if (expr.string) {
-    //   return ["NOT_HANDLED", factory.createCallExpression(
-    //     factory.createPropertyAccessExpression(
-    //       factory.createIdentifier("att"),
-    //       factory.createIdentifier("string_to_mich")
-    //     ),
-    //     undefined,
-    //     [factory.createStringLiteral(expr.string)]
-    //   )]
-    // }  else if (expr.int) {
-    //   return ["NOT_HANDLED", factory.createCallExpression(
-    //     factory.createPropertyAccessExpression(
-    //       factory.createIdentifier("att"),
-    //       factory.createIdentifier("string_to_mich")
-    //     ),
-    //     undefined,
-    //     [factory.createStringLiteral(expr.int.toString())]
-    //   )]
   } else {
     throw new Error("mich_type_to_error: invalid error")
   }

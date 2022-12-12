@@ -328,6 +328,11 @@ describe('Generate binding fails', async () => {
   it('simple_fail_invalid_condition', async () => {
     await get_binding('simple_fail_invalid_condition.arl');
   });
+
+  it('simple_fail_bad_character', async () => {
+    await get_binding('simple_fail_bad_character.arl');
+  });
+
 })
 
 describe('Generate binding test', async () => {

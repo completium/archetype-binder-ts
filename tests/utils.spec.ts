@@ -1,4 +1,4 @@
-import { get_path, MichelsonType, PathItem, PathItemSimple, PathItemDouble, compute_path_enum, e_left_right } from '../src/utils'
+import { get_path, MichelsonType, PathItem, PathItemSimple, PathItemDouble, compute_path_enum, e_left_right, to_label } from '../src/utils'
 
 const assert = require('assert')
 
@@ -119,4 +119,18 @@ describe('Unit test get_e_left_right', () => {
     assert(cmp_e_left_right(compute_path_enum(4, 5), [e_left_right.Right, e_left_right.Right, e_left_right.Right, e_left_right.Right]), "Invalid e_left_right")
 
   });
+})
+
+describe('Unit test to_label', () => {
+  it('simple', () => {
+    assert(to_label("don't fail!") == "DON_T_FAIL_", "Invalid label value")
+  })
+
+  it('all ascii characters string', () => {
+    assert(to_label("000key") == "_00KEY", "Invalid label value")
+  })
+
+  it('all ascii characters string', () => {
+    assert(to_label(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{}~") == "________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ_____ABCDEFGHIJKLMNOPQRSTUVWXYZ___", "Invalid label value")
+  })
 })

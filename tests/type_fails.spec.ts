@@ -3,6 +3,7 @@ import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/
 
 import { simple_fail } from './contracts/bindings/simple_fail'
 import { simple_fail_invalid_condition } from './contracts/bindings/simple_fail_invalid_condition'
+import { simple_fail_bad_character } from './contracts/bindings/simple_fail_bad_character'
 
 const assert = require('assert')
 
@@ -38,6 +39,14 @@ describe('Fails', () => {
     expect_to_fail(async () => {
       simple_fail_invalid_condition.f({ as: alice })
     }, simple_fail_invalid_condition.errors.r1)
+  });
+
+  it('Simple fail', async () => {
+    await simple_fail_bad_character.deploy({ as: alice })
+
+    expect_to_fail(async () => {
+      simple_fail_bad_character.f({ as: alice })
+    }, simple_fail_bad_character.errors.DON_T_FAIL_)
   });
 
 })

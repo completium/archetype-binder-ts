@@ -1,0 +1,5 @@
+archetype simple_fail_bad_character
+
+entry f() {
+  fail("don't fail!")
+}
