@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_big_map_or_nat_string
+
+asset my_asset to big_map {
+  k : or<nat, string>;
+  v : string;
+}
+
+entry asset_put(i : or<nat, string>) {
+  my_asset.put({i; ""})
+}

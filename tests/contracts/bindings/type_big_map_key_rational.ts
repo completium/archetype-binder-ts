@@ -39,10 +39,10 @@ export class Type_big_map_key_rational {
     async get_res_value(key: att.Rational): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("int", []),
                 att.prim_annot_to_mich_type("nat", [])
-            ], [])), collapsed = true;
+            ], []));
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -55,10 +55,10 @@ export class Type_big_map_key_rational {
     async has_res_value(key: att.Rational): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("int", []),
                 att.prim_annot_to_mich_type("nat", [])
-            ], [])), collapsed = true;
+            ], []));
             if (data != undefined) {
                 return true;
             }

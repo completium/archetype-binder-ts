@@ -42,7 +42,7 @@ export class Template_metadata {
     async get_metadata_value(key: string): Promise<att.Bytes | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.string_to_mich(key), att.prim_annot_to_mich_type("string", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
                 return att.mich_to_bytes(data);
             }
@@ -55,7 +55,7 @@ export class Template_metadata {
     async has_metadata_value(key: string): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.string_to_mich(key), att.prim_annot_to_mich_type("string", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
                 return true;
             }

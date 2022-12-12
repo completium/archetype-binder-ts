@@ -39,7 +39,7 @@ export class Type_big_map_key_bool {
     async get_res_value(key: boolean): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", []));
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -52,7 +52,7 @@ export class Type_big_map_key_bool {
     async has_res_value(key: boolean): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.bool_to_mich(key), att.prim_annot_to_mich_type("bool", []));
             if (data != undefined) {
                 return true;
             }

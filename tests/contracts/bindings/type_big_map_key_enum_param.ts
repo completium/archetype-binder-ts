@@ -110,10 +110,10 @@ export class Type_big_map_key_enum_param {
     async get_res_value(key: e_enum): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("bytes", []),
                 att.prim_annot_to_mich_type("bool", [])
-            ], ["%e_4"]), []), []), [])), collapsed = true;
+            ], ["%e_4"]), []), []), []));
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -126,10 +126,10 @@ export class Type_big_map_key_enum_param {
     async has_res_value(key: e_enum): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
                 att.prim_annot_to_mich_type("bytes", []),
                 att.prim_annot_to_mich_type("bool", [])
-            ], ["%e_4"]), []), []), [])), collapsed = true;
+            ], ["%e_4"]), []), []), []));
             if (data != undefined) {
                 return true;
             }

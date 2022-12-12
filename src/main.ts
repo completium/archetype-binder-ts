@@ -1126,18 +1126,21 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
               factory.createCallExpression(
                 factory.createIdentifier("BigInt"),
                 undefined,
-                [selt]
+                [
+                  factory.createCallExpression(
+                    factory.createPropertyAccessExpression(
+                      selt,
+                      factory.createIdentifier("toString")
+                    ),
+                    undefined,
+                    []
+                  )
+                ]
               ),
               function_param_to_mich({ name: "key", type: key_type }, ci),
               key_mich_type
             ]
           ))
-        ),
-        factory.createVariableDeclaration(
-          factory.createIdentifier("collapsed"),
-          undefined,
-          undefined,
-          factory.createTrue()
         )],
         ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
       )
@@ -1165,6 +1168,17 @@ const mich_to_int = (arg: ts.Expression): ts.Expression => {
     factory.createPropertyAccessExpression(
       factory.createIdentifier("att"),
       factory.createIdentifier("mich_to_int")
+    ),
+    undefined,
+    [arg]
+  )
+}
+
+const asset_key_type = (asset_name : string, arg: ts.Expression): ts.Expression => {
+  return factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier(asset_name),
+      factory.createIdentifier("from_mich")
     ),
     undefined,
     [arg]
@@ -1264,7 +1278,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
             mich_to_int(get_data_storage_elt(selt, ci)),
-            [factory.createReturnStatement(mich_to_archetype_type(selt.type, factory.createIdentifier("data"), ci))],
+            [factory.createReturnStatement(asset_key_type(selt.name + "_value", factory.createIdentifier("data")))],
             factory.createIdentifier("undefined"),
             ci
           )),

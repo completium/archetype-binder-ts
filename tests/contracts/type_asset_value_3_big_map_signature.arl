@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_big_map_signature
+
+asset my_asset to big_map {
+  k : nat;
+  s : string;
+  v : signature;
+}
+
+entry asset_put(i : signature) {
+  my_asset.put({0; ""; i})
+}

@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_big_map_bool
+
+asset my_asset to big_map {
+  k : bool;
+  v : string;
+}
+
+entry asset_put(i : bool) {
+  my_asset.put({i; ""})
+}

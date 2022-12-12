@@ -39,7 +39,7 @@ export class Type_big_map_key_key_hash {
     async get_res_value(key: att.Key_hash): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.prim_annot_to_mich_type("key_hash", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("key_hash", []));
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -52,7 +52,7 @@ export class Type_big_map_key_key_hash {
     async has_res_value(key: att.Key_hash): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), key.to_mich(), att.prim_annot_to_mich_type("key_hash", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("key_hash", []));
             if (data != undefined) {
                 return true;
             }

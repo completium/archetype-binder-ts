@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_big_map_bls12_381_g2
+
+asset my_asset to big_map {
+  k : nat;
+  s : string;
+  v : bls12_381_g2;
+}
+
+entry asset_put(i : bls12_381_g2) {
+  my_asset.put({0; ""; i})
+}

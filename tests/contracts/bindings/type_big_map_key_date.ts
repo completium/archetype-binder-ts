@@ -39,7 +39,7 @@ export class Type_big_map_key_date {
     async get_res_value(key: Date): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.date_to_mich(key), att.prim_annot_to_mich_type("timestamp", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.date_to_mich(key), att.prim_annot_to_mich_type("timestamp", []));
             if (data != undefined) {
                 return att.mich_to_nat(data);
             }
@@ -52,7 +52,7 @@ export class Type_big_map_key_date {
     async has_res_value(key: Date): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage)), att.date_to_mich(key), att.prim_annot_to_mich_type("timestamp", [])), collapsed = true;
+            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.date_to_mich(key), att.prim_annot_to_mich_type("timestamp", []));
             if (data != undefined) {
                 return true;
             }

@@ -944,6 +944,143 @@ entry asset_put(i : ${item.type}) {
   iterate_on_comparable_types(kind, generate_type_asset_key_2, new iter_settings(gen_it))
 })
 
+describe('Generate binding type asset_value_2_big_map', async () => {
+  const kind = 'asset_value_2_big_map';
+  const generate_type_asset_value_2 = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
+asset my_asset to big_map {
+  k : nat;
+  v : ${item.type};
+}
+
+entry asset_put(i : ${item.type}) {
+  my_asset.put({0; i})
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const prefix = `type_${kind}_${name}`;
+    const ts_type = process_prefix(prefix, item.ts_type);
+    const ts_value = process_prefix(prefix, item.ts_value);
+    const fun_eq = process_prefix(prefix, item.get_fun_eq());
+
+    return `const v : ${ts_type} = ${ts_value};
+    await ${prefix}.${prefix}.deploy({ as: alice });
+    await ${prefix}.${prefix}.asset_put(v, { as: alice });
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(new Nat(0)));
+    assert(res && ${fun_eq != null ? `${fun_eq}(v, res.v)` : 'v.equals(res.v)'}, "Invalid Value")`
+  };
+  iterate_on_types(kind, generate_type_asset_value_2, new iter_settings(gen_it))
+})
+
+
+describe('Generate binding type asset_value_3_big_map', async () => {
+  const kind = 'asset_value_3_big_map';
+  const generate_type_asset_value_3 = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
+asset my_asset to big_map {
+  k : nat;
+  s : string;
+  v : ${item.type};
+}
+
+entry asset_put(i : ${item.type}) {
+  my_asset.put({0; ""; i})
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const prefix = `type_${kind}_${name}`;
+    const ts_type = process_prefix(prefix, item.ts_type);
+    const ts_value = process_prefix(prefix, item.ts_value);
+    const fun_eq = process_prefix(prefix, item.get_fun_eq());
+
+    return `const v : ${ts_type} = ${ts_value};
+    await ${prefix}.${prefix}.deploy({ as: alice });
+    await ${prefix}.${prefix}.asset_put(v, { as: alice });
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(new Nat(0)));
+    assert(res && ${fun_eq != null ? `${fun_eq}(v, res.v)` : 'v.equals(res.v)'}, "Invalid Value")`
+  };
+  iterate_on_types(kind, generate_type_asset_value_3, new iter_settings(gen_it))
+})
+
+describe('Generate binding type asset_key_1_big_map', async () => {
+  const kind = 'asset_key_1_big_map';
+  const generate_type_asset_key_1 = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
+asset my_asset to big_map {
+  k : ${item.type};
+  v : string;
+}
+
+entry asset_put(i : ${item.type}) {
+  my_asset.put({i; ""})
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const prefix = `type_${kind}_${name}`;
+    const ts_type = process_prefix(prefix, item.ts_type);
+    const ts_value = process_prefix(prefix, item.ts_value);
+
+    return `const v : ${ts_type} = ${ts_value};
+    await ${prefix}.${prefix}.deploy({ as: alice });
+    await ${prefix}.${prefix}.asset_put(v, { as: alice });
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(v));
+    assert(res?.v == "", "Invalid Value")`
+  };
+  iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
+})
+
+describe('Generate binding type asset_key_2_big_map', async () => {
+  const kind = 'asset_key_2_big_map';
+  const generate_type_asset_key_2 = async (item: item) => {
+    const content_arl: string =
+      `/* DO NOT EDIT, GENERATED FILE */
+archetype type_${kind}_${item.get_name()}
+${item.get_decl() ? '\n' + item.get_decl() + '\n' : ''}
+asset my_asset identified by k n to big_map {
+  k : ${item.type};
+  n : nat;
+  v : string;
+}
+
+entry asset_put(i : ${item.type}) {
+  my_asset.put({i; 0; ""})
+}
+`
+    await generate_type_gen(kind, content_arl, item);
+  }
+  const gen_it = (item: item): string => {
+    const name = item.get_name();
+    const prefix = `type_${kind}_${name}`;
+    const ts_type = process_prefix(prefix, item.ts_type);
+    const ts_value = process_prefix(prefix, item.ts_value);
+
+    return `const v : ${ts_type} = ${ts_value};
+    await ${prefix}.${prefix}.deploy({ as: alice });
+    await ${prefix}.${prefix}.asset_put(v, { as: alice });
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(v, new Nat(0)));
+    assert(res?.v == "", "Invalid Value")`
+  };
+  iterate_on_comparable_types(kind, generate_type_asset_key_2, new iter_settings(gen_it))
+})
+
 describe('Generate binding type parameter', async () => {
   const kind = 'parameter';
   const generate_type_parameter = async (item: item) => {

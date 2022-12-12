@@ -1,0 +1,13 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_big_map_enum_param
+
+enum e_enum = | e_1 | e_2<nat> | e_3<string> | e_4<bytes * bool>
+
+asset my_asset to big_map {
+  k : nat;
+  v : e_enum;
+}
+
+entry asset_put(i : e_enum) {
+  my_asset.put({0; i})
+}
