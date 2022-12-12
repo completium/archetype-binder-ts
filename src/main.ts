@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, RawMicheline, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, get_record_or_event_type } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -256,7 +256,8 @@ const fieldToPropertyDecl = (f: Omit<Field, "is_key">) => {
 }
 
 const compute_arg = (root: ts.Expression, name: string, ty: MichelsonType): ts.Expression => {
-  const path = get_path("%" + name, ty);
+  const a = name.charAt(0) == '%' ? name : "%" + name
+  const path = get_path(a, ty);
 
   const res = path.reduce((acc, pi) => {
     const expr_arg = factory.createAsExpression(
@@ -275,10 +276,28 @@ const compute_arg = (root: ts.Expression, name: string, ty: MichelsonType): ts.E
 }
 
 const mich_to_record_body = (name: string, fields: Array<Omit<Field, "is_key">>, mty: MichelsonType, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
+  const extract_id = (mty : MichelsonType) => {
+    let accu : Array<string> = []
+    const f = (mty : MichelsonType) => {
+      if (mty.annots?.length == 1) {
+        accu.push(mty.annots[0])
+      } else if ((mty as MTPrimMulti).prim == "pair") {
+        (mty as MTPrimMulti).args.forEach(f)
+      }
+    }
+    f(mty)
+    return accu
+  }
+
   let args: Array<ts.Expression> = [];
+  let ids = fields.map(x => x.name);
+  const new_ids = extract_id(mty);
+  if (ids.length == new_ids.length) {
+    ids = new_ids
+  }
   for (let i = 0; i < fields.length; ++i) {
     const field = fields[i];
-    const a = compute_arg(arg, field.name, mty)
+    const a = compute_arg(arg, ids[i], mty)
     const b = mich_to_archetype_type(field.type, a, ci);
     args.push(b)
   }
@@ -2034,7 +2053,7 @@ const mich_to_complex_enum_decl = (e: Enum, ci: ContractInterface) => {
           if (x.types.length == 1) {
             enum_arg.push(mich_to_archetype_type(x.types[0], ea, ci))
           } else if (x.types.length > 1) {
-            const ty : ArchetypeType = {node: "tuple", args: x.types}
+            const ty: ArchetypeType = { node: "tuple", args: x.types }
             enum_arg.push(mich_to_archetype_type(ty, ea, ci))
           }
 
