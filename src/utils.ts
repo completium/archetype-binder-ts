@@ -382,6 +382,25 @@ export const make_arg = (expr: ts.Expression, pi: PathItem) => {
   }
 }
 
+export enum e_left_right {
+  Left = "Left",
+  Right = "Right"
+}
+
+export const compute_path_enum = (idx: number, length: number): Array<e_left_right> => {
+  let res: Array<e_left_right> = []
+  if (idx == 0 && length == 1) {
+    return res
+  }
+  for (let i = 0; i < idx; ++i) {
+    if (!(i == idx - 1 && idx + 1 == length)) {
+      res.push(e_left_right.Right)
+    }
+  }
+  res.push(idx + 1 == length ? e_left_right.Right : e_left_right.Left)
+  return res
+}
+
 /* Archetype type to Michelson type ---------------------------------------- */
 
 export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInterface): MichelsonType => {
@@ -1181,8 +1200,8 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
 
   const asset_to_mich = (asset_name: string, arg: ts.Expression, ci: ContractInterface) => {
     const asset_type = get_asset_type(asset_name, ci);
-    const is_only_keys = (a : Asset) : boolean => {
-      return a.fields.reduce((accu : boolean, x : Field) => {return accu && x.is_key }, true)
+    const is_only_keys = (a: Asset): boolean => {
+      return a.fields.reduce((accu: boolean, x: Field) => { return accu && x.is_key }, true)
     }
     switch (asset_type.container_kind) {
       case "map": {

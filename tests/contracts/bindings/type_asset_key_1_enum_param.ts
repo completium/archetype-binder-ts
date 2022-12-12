@@ -35,7 +35,7 @@ export class e_3 extends e_enum {
     constructor(private content: string) {
         super(e_enum_types.e_3);
     }
-    to_mich() { return att.right_to_mich(att.right_to_mich(att.string_to_mich(this.content))); }
+    to_mich() { return att.right_to_mich(att.right_to_mich(att.left_to_mich(att.string_to_mich(this.content)))); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
@@ -48,7 +48,7 @@ export class e_4 extends e_enum {
     ]) {
         super(e_enum_types.e_4);
     }
-    to_mich() { return att.right_to_mich(att.right_to_mich(att.left_to_mich(att.pair_to_mich([this.content[0].to_mich(), att.bool_to_mich(this.content[1])])))); }
+    to_mich() { return att.right_to_mich(att.right_to_mich(att.right_to_mich(att.pair_to_mich([this.content[0].to_mich(), att.bool_to_mich(this.content[1])])))); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }

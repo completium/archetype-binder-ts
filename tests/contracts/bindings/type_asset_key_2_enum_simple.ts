@@ -15,7 +15,7 @@ export class e_1 extends e_enum {
     constructor() {
         super(e_enum_types.e_1);
     }
-    to_mich() { return new att.Nat(0).to_mich(); }
+    to_mich() { return new att.Int(0).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
@@ -24,7 +24,7 @@ export class e_2 extends e_enum {
     constructor() {
         super(e_enum_types.e_2);
     }
-    to_mich() { return new att.Nat(1).to_mich(); }
+    to_mich() { return new att.Int(1).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }
@@ -33,7 +33,7 @@ export class e_3 extends e_enum {
     constructor() {
         super(e_enum_types.e_3);
     }
-    to_mich() { return new att.Nat(2).to_mich(); }
+    to_mich() { return new att.Int(2).to_mich(); }
     toString(): string {
         return JSON.stringify(this, null, 2);
     }

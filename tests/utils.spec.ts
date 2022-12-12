@@ -1,4 +1,4 @@
-import { get_path, MichelsonType, PathItem, PathItemSimple, PathItemDouble } from '../src/utils'
+import { get_path, MichelsonType, PathItem, PathItemSimple, PathItemDouble, compute_path_enum, e_left_right } from '../src/utils'
 
 const assert = require('assert')
 
@@ -13,7 +13,19 @@ const cmp_path = (actual: Array<PathItem>, ref: Array<PathItem>): boolean => {
     if ((actual[i] as PathItemDouble) && (ref[i] as PathItemDouble) && actual[i][0] == ref[i][0] && actual[i][1] == ref[i][1]) {
       continue
     }
-    console.log(actual)
+    return false
+  }
+  return true
+}
+
+const cmp_e_left_right = (actual: Array<e_left_right>, ref: Array<e_left_right>): boolean => {
+  if (actual.length != ref.length) {
+    return false
+  }
+  for (let i = 0; i < actual.length; ++i) {
+    if (actual[i] == ref[i]) {
+      continue
+    }
     return false
   }
   return true
@@ -81,5 +93,30 @@ describe('Unit test get_path', () => {
     assert(cmp_path(get_path("%a", sty), [[0]]), "Invalid path")
     assert(cmp_path(get_path("%b", sty), [[1]]), "Invalid path")
     assert(cmp_path(get_path("%c", sty), [[2, 4]]), "Invalid path")
+  });
+})
+
+describe('Unit test get_e_left_right', () => {
+  it('simple', () => {
+    assert(cmp_e_left_right(compute_path_enum(0, 1), []), "Invalid e_left_right")
+
+    assert(cmp_e_left_right(compute_path_enum(0, 2), [e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(1, 2), [e_left_right.Right]), "Invalid e_left_right")
+
+    assert(cmp_e_left_right(compute_path_enum(0, 3), [e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(1, 3), [e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(2, 3), [e_left_right.Right, e_left_right.Right]), "Invalid e_left_right")
+
+    assert(cmp_e_left_right(compute_path_enum(0, 4), [e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(1, 4), [e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(2, 4), [e_left_right.Right, e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(3, 4), [e_left_right.Right, e_left_right.Right, e_left_right.Right]), "Invalid e_left_right")
+
+    assert(cmp_e_left_right(compute_path_enum(0, 5), [e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(1, 5), [e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(2, 5), [e_left_right.Right, e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(3, 5), [e_left_right.Right, e_left_right.Right, e_left_right.Right, e_left_right.Left]), "Invalid e_left_right")
+    assert(cmp_e_left_right(compute_path_enum(4, 5), [e_left_right.Right, e_left_right.Right, e_left_right.Right, e_left_right.Right]), "Invalid e_left_right")
+
   });
 })

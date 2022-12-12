@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti, compute_path_enum, e_left_right } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -276,9 +276,9 @@ const compute_arg = (root: ts.Expression, name: string, ty: MichelsonType): ts.E
 }
 
 const mich_to_record_body = (name: string, fields: Array<Omit<Field, "is_key">>, mty: MichelsonType, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
-  const extract_id = (mty : MichelsonType) => {
-    let accu : Array<string> = []
-    const f = (mty : MichelsonType) => {
+  const extract_id = (mty: MichelsonType) => {
+    let accu: Array<string> = []
+    const f = (mty: MichelsonType) => {
       if (mty.annots?.length == 1) {
         accu.push(mty.annots[0])
       } else if ((mty as MTPrimMulti).prim == "pair") {
@@ -1719,7 +1719,7 @@ const make_enum_class_decl = (e: Enum) => {
   )
 }
 
-const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number, ci: ContractInterface): ts.Expression => {
+const make_enum_type_to_mich_return_stt = (e: Enum, c: EnumValue, idx: number, ci: ContractInterface): ts.Expression => {
   let mich_value: ts.Expression = factory.createPropertyAccessExpression(
     factory.createIdentifier("att"),
     factory.createIdentifier("unit_mich")
@@ -1742,37 +1742,20 @@ const make_enum_type_to_mich_return_stt = (c: EnumValue, idx: number, ci: Contra
     }
     mich_value = function_param_to_mich(param, ci)
   }
-  if (idx == 0) {
+  const e_path = compute_path_enum(idx, e.constructors.length)
+
+  const res = e_path.reverse().reduce((accu, x) => {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
-        factory.createIdentifier("left_to_mich")
+        factory.createIdentifier(x == e_left_right.Left ? "left_to_mich" : "right_to_mich")
       ),
       undefined,
-      [mich_value]
+      [accu]
     )
-  } else {
-    const last = factory.createCallExpression(
-      factory.createPropertyAccessExpression(
-        factory.createIdentifier("att"),
-        factory.createIdentifier((idx % 2 == 0) ? "right_to_mich" : "left_to_mich")
-      ),
-      undefined,
-      [mich_value]
-    )
-    let res = last
-    for (let i = 0; i < Math.floor((idx + 1) / 2); i++) {
-      res = factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("att"),
-          factory.createIdentifier("right_to_mich")
-        ),
-        undefined,
-        [res]
-      )
-    }
-    return res
-  }
+  }, mich_value)
+
+  return res
 }
 
 const make_simple_enum_type_to_mich_return_stt = (idx: number): ts.Expression => {
@@ -1781,7 +1764,7 @@ const make_simple_enum_type_to_mich_return_stt = (idx: number): ts.Expression =>
       factory.createNewExpression(
         factory.createPropertyAccessExpression(
           factory.createIdentifier("att"),
-          factory.createIdentifier("Nat")
+          factory.createIdentifier("Int")
         ),
         undefined,
         [factory.createIdentifier(idx.toString())]
@@ -1793,7 +1776,7 @@ const make_simple_enum_type_to_mich_return_stt = (idx: number): ts.Expression =>
   )
 }
 
-const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, complex: boolean, ci: ContractInterface): ts.ClassDeclaration => {
+const make_enum_type_class_decl = (e: Enum, c: EnumValue, idx: number, complex: boolean, ci: ContractInterface): ts.ClassDeclaration => {
   let args: ts.ParameterDeclaration[] = []
   if (c.types.length > 0) {
     let atype = c.types[0]
@@ -1821,7 +1804,7 @@ const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, comp
     [factory.createHeritageClause(
       ts.SyntaxKind.ExtendsKeyword,
       [factory.createExpressionWithTypeArguments(
-        factory.createIdentifier(name),
+        factory.createIdentifier(e.name),
         undefined
       )]
     )], [
@@ -1835,7 +1818,7 @@ const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, comp
             factory.createSuper(),
             undefined,
             [factory.createPropertyAccessExpression(
-              factory.createIdentifier(name + "_types"),
+              factory.createIdentifier(e.name + "_types"),
               factory.createIdentifier(c.name)
             )]
           ))],
@@ -1853,7 +1836,7 @@ const make_enum_type_class_decl = (name: string, c: EnumValue, idx: number, comp
         undefined,
         factory.createBlock(
           [factory.createReturnStatement(
-            complex ? make_enum_type_to_mich_return_stt(c, idx, ci) : make_simple_enum_type_to_mich_return_stt(idx))],
+            complex ? make_enum_type_to_mich_return_stt(e, c, idx, ci) : make_simple_enum_type_to_mich_return_stt(idx))],
           false
         )
       ),
@@ -1897,7 +1880,7 @@ const enum_to_decl = (e: Enum, ci: ContractInterface): Array<ts.EnumDeclaration 
     )];
     default: return [
       ...([make_enum_type_decl(e), make_enum_class_decl(e)]),
-      ...(e.constructors.map((x, i) => make_enum_type_class_decl(e.name, x, i, e.type_michelson.prim == "or", ci)))
+      ...(e.constructors.map((x, i) => make_enum_type_class_decl(e, x, i, e.type_michelson.prim == "or", ci)))
     ]
   }
 }
