@@ -48,6 +48,7 @@ import * as type_big_map_value_record_2_fields from './contracts/bindings/type_b
 import * as type_big_map_value_record_3_fields from './contracts/bindings/type_big_map_value_record_3_fields'
 import * as type_big_map_value_record_4_fields from './contracts/bindings/type_big_map_value_record_4_fields'
 import * as type_big_map_value_record_4_fields_custom from './contracts/bindings/type_big_map_value_record_4_fields_custom'
+import * as type_big_map_value_record_complex from './contracts/bindings/type_big_map_value_record_complex'
 
 
 import assert from 'assert'
@@ -557,6 +558,17 @@ describe('Type big_map_value', () => {
     const res = await type_big_map_value_record_4_fields_custom.type_big_map_value_record_4_fields_custom.get_res_value(new Nat(0));
     assert(res !== undefined && v.equals(res), "Invalid Value")
     const c = await type_big_map_value_record_4_fields_custom.type_big_map_value_record_4_fields_custom.has_res_value(new Nat(0));
+    assert(c, "Invalid Value")
+  });
+
+  // record_complex
+  it('record_complex', async () => {
+    const v : type_big_map_value_record_complex.r_record = new type_big_map_value_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date(), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
+    await type_big_map_value_record_complex.type_big_map_value_record_complex.deploy({ as: alice });
+    await type_big_map_value_record_complex.type_big_map_value_record_complex.set_value(v, { as: alice });
+    const res = await type_big_map_value_record_complex.type_big_map_value_record_complex.get_res_value(new Nat(0));
+    assert(res !== undefined && v.equals(res), "Invalid Value")
+    const c = await type_big_map_value_record_complex.type_big_map_value_record_complex.has_res_value(new Nat(0));
     assert(c, "Invalid Value")
   });
 

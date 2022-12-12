@@ -1661,7 +1661,7 @@ const make_enum_class_decl = (e: Enum) => {
           factory.createIdentifier("v"),
           undefined,
           factory.createTypeReferenceNode(
-            factory.createIdentifier("e_enum"),
+            factory.createIdentifier(e.name),
             undefined
           ),
           undefined

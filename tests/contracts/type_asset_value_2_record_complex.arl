@@ -1,0 +1,13 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_record_complex
+
+record r_record { f_a : nat; f_b : int; f_c : tez; f_d : rational; f_e : bool; f_f : bytes; f_g : string; f_h : date; f_i : duration; f_j : address; f_k : option<nat>; f_n : list<string>; f_p : set<string * nat * int> } as (((f1, f2, f3),((f4, f5), (f6, f7, f8, f9, f10, f11, f12, f13))))
+
+asset my_asset {
+  k : nat;
+  v : r_record;
+}
+
+entry asset_put(i : r_record) {
+  my_asset.put({0; i})
+}

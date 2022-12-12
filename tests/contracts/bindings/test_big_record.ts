@@ -7,7 +7,7 @@ export enum anenum_types {
 }
 export abstract class anenum extends att.Enum<anenum_types> {
     abstract to_mich(): att.Micheline;
-    equals(v: e_enum): boolean {
+    equals(v: anenum): boolean {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
 }

@@ -42,6 +42,7 @@ import * as type_parameter_tuple_nat_string_bytes_rev from './contracts/bindings
 import * as type_parameter_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_rev'
 import * as type_parameter_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_custom'
 import * as type_parameter_enum_param from './contracts/bindings/type_parameter_enum_param'
+import * as type_parameter_record_complex from './contracts/bindings/type_parameter_record_complex'
 
 
 import assert from 'assert'
@@ -369,6 +370,14 @@ describe('Type parameter', () => {
     await type_parameter_enum_param.type_parameter_enum_param.deploy(v, { as: alice });
     const res = await type_parameter_enum_param.type_parameter_enum_param.get_res();
     assert(((x : type_parameter_enum_param.e_enum, y : type_parameter_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
+  });
+
+  // record_complex
+  it('record_complex', async () => {
+    const v : type_parameter_record_complex.r_record = new type_parameter_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date(), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
+    await type_parameter_record_complex.type_parameter_record_complex.deploy(v, { as: alice });
+    const res = await type_parameter_record_complex.type_parameter_record_complex.get_res();
+    assert(v.equals(res), "Invalid Value")
   });
 
   

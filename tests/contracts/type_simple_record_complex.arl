@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_simple_record_complex
+
+record r_record { f_a : nat; f_b : int; f_c : tez; f_d : rational; f_e : bool; f_f : bytes; f_g : string; f_h : date; f_i : duration; f_j : address; f_k : option<nat>; f_n : list<string>; f_p : set<string * nat * int> } as (((f1, f2, f3),((f4, f5), (f6, f7, f8, f9, f10, f11, f12, f13))))
+
+variable res : r_record = { f_a = 0; f_b = 0; f_c = 0tz; f_d = 0.0; f_e = false; f_f = 0x; f_g = ""; f_h = 2020-01-01; f_i = 0s; f_j = tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg; f_k = none; f_n = []; f_p = [] }
+
+entry set_value(i : r_record) {
+  res := i
+}
