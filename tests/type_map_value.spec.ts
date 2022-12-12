@@ -473,7 +473,7 @@ describe('Type map_value', () => {
 
   // record_complex
   it('record_complex', async () => {
-    const v : type_map_value_record_complex.r_record = new type_map_value_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date(), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
+    const v : type_map_value_record_complex.r_record = new type_map_value_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
     await type_map_value_record_complex.type_map_value_record_complex.deploy({ as: alice });
     await type_map_value_record_complex.type_map_value_record_complex.set_value(v, { as: alice });
     const res = await type_map_value_record_complex.type_map_value_record_complex.get_res();

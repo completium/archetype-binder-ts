@@ -473,7 +473,7 @@ describe('Type record', () => {
 
   // record_complex
   it('record_complex', async () => {
-    const v : type_record_record_complex.my_record = new type_record_record_complex.my_record(new Nat(2), new type_record_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date(), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] ), "mystr");
+    const v : type_record_record_complex.my_record = new type_record_record_complex.my_record(new Nat(2), new type_record_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] ), "mystr");
     await type_record_record_complex.type_record_record_complex.deploy({ as: alice });
     await type_record_record_complex.type_record_record_complex.set_value(v, { as: alice });
     const res = await type_record_record_complex.type_record_record_complex.get_res();
