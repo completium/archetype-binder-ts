@@ -1,0 +1,12 @@
+archetype sample_asset_container
+
+asset my_asset {
+  k : nat;
+  v : string
+}
+
+variable res : asset_container<my_asset> = []
+
+entry exec(i : asset_container<my_asset>) {
+  res := i
+}

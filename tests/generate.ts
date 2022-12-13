@@ -359,6 +359,23 @@ describe('Generate binding sample', async () => {
   // it('state', async () => {
   //   await get_binding('sample_state.arl');
   // });
+
+  // it('asset_container', async () => {
+  //   await get_binding('sample_asset_container.arl');
+  // });
+
+  // it('asset_container_big_map', async () => {
+  //   await get_binding('sample_asset_container_big_map.arl');
+  // });
+
+  // it('sample_asset_view', async () => {
+  //   await get_binding('sample_asset_view.arl');
+  // });
+
+  // it('sample_asset_aggregate_partition', async () => {
+  //   await get_binding('sample_asset_aggregate_partition.arl');
+  // });
+
 })
 
 describe('Generate binding template', async () => {

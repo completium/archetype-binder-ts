@@ -1,0 +1,28 @@
+archetype sample_asset_aggregate_partition
+
+asset p_asset {
+  pk : nat;
+  pv : string
+}
+
+asset a_asset {
+  ak : nat;
+  av : bytes
+}
+
+asset my_asset {
+  k : nat;
+  p : partition<p_asset>;
+  a : aggregate<a_asset>
+} initialized with {
+  {0; []; []}
+}
+
+entry add_aggregate(ik : nat, iv : bytes) {
+  a_asset.add({ak = ik; av = iv});
+  my_asset[0].a.add(ik)
+}
+
+entry add_partition(ik : nat, iv : string) {
+  my_asset[0].p.add({pk = ik; pv = iv})
+}
