@@ -17,7 +17,6 @@ import * as type_big_map_key_rational from './contracts/bindings/type_big_map_ke
 import * as type_big_map_key_signature from './contracts/bindings/type_big_map_key_signature'
 import * as type_big_map_key_string from './contracts/bindings/type_big_map_key_string'
 import * as type_big_map_key_tez from './contracts/bindings/type_big_map_key_tez'
-import * as type_big_map_key_tx_rollup_l2_address from './contracts/bindings/type_big_map_key_tx_rollup_l2_address'
 import * as type_big_map_key_unit from './contracts/bindings/type_big_map_key_unit'
 import * as type_big_map_key_option_nat from './contracts/bindings/type_big_map_key_option_nat'
 import * as type_big_map_key_option_string from './contracts/bindings/type_big_map_key_option_string'
@@ -204,17 +203,6 @@ describe('Type big_map_key', () => {
     const res = await type_big_map_key_tez.type_big_map_key_tez.get_res_value(v);
     assert(res?.equals(new Nat(0)), "Invalid Value")
     const c = await type_big_map_key_tez.type_big_map_key_tez.has_res_value(v);
-    assert(c, "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_big_map_key_tx_rollup_l2_address.type_big_map_key_tx_rollup_l2_address.deploy({ as: alice });
-    await type_big_map_key_tx_rollup_l2_address.type_big_map_key_tx_rollup_l2_address.set_value(v, { as: alice });
-    const res = await type_big_map_key_tx_rollup_l2_address.type_big_map_key_tx_rollup_l2_address.get_res_value(v);
-    assert(res?.equals(new Nat(0)), "Invalid Value")
-    const c = await type_big_map_key_tx_rollup_l2_address.type_big_map_key_tx_rollup_l2_address.has_res_value(v);
     assert(c, "Invalid Value")
   });
 

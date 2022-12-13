@@ -90,7 +90,7 @@ let type_default_name: Array<item> = [
   new item('signature', '"edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"', true, 'Signature', 'new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1")'),
   new item('string', '""', true, 'string', '"mystr"', { fun_eq: "((x : string, y : string) => {return x == y})" }),
   new item('tez', '0tz', true, 'Tez', 'new Tez(2)'),
-  new item('tx_rollup_l2_address', 'tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm', true, 'Tx_rollup_l2_address', 'new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm")'),
+  new item('tx_rollup_l2_address', 'tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm', false, 'Tx_rollup_l2_address', 'new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm")'),
   new item('unit', 'Unit', true, 'Unit', 'new Unit()'),
   new item('list<nat>', '[]', false, 'Array<Nat>', '[new Nat(1), new Nat(2), new Nat(3)]', { fun_eq: "((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0]) && x[1].equals(y[1]) && x[2].equals(y[2])})", name: 'list_nat' }),
   new item('list<string>', '[]', false, 'Array<string>', '["a", "b", "c", "d"]', { fun_eq: '((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})', name: 'list_string' }),

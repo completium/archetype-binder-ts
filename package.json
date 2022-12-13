@@ -21,7 +21,7 @@
     "test:template": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/template.spec.ts",
     "test:type_asset_only_key_1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_only_key_1.spec.ts",
     "test:type_asset_only_key_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_only_key_2.spec.ts",
-    "test:type_asset_only_key_1_big_map": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_only_key_1_big_map.spec.ts",
+    "test:type_asset_only_key_1_big_map": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_only_key_1_big_map.spec.ts -g tx_rollup_l2_address",
     "test:type_asset_only_key_2_big_map": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_only_key_2_big_map.spec.ts",
     "test:type_asset_key_1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_1.spec.ts",
     "test:type_asset_key_2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_asset_key_2.spec.ts",

@@ -17,7 +17,6 @@ import * as type_set_rational from './contracts/bindings/type_set_rational'
 import * as type_set_signature from './contracts/bindings/type_set_signature'
 import * as type_set_string from './contracts/bindings/type_set_string'
 import * as type_set_tez from './contracts/bindings/type_set_tez'
-import * as type_set_tx_rollup_l2_address from './contracts/bindings/type_set_tx_rollup_l2_address'
 import * as type_set_unit from './contracts/bindings/type_set_unit'
 import * as type_set_option_nat from './contracts/bindings/type_set_option_nat'
 import * as type_set_option_string from './contracts/bindings/type_set_option_string'
@@ -176,15 +175,6 @@ describe('Type set', () => {
     await type_set_tez.type_set_tez.deploy({ as: alice });
     await type_set_tez.type_set_tez.set_value(v, { as: alice });
     const res = await type_set_tez.type_set_tez.get_res();
-    assert(v.length == res.length && v[0].equals(res[0]), "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Array<Tx_rollup_l2_address> = [new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm")];
-    await type_set_tx_rollup_l2_address.type_set_tx_rollup_l2_address.deploy({ as: alice });
-    await type_set_tx_rollup_l2_address.type_set_tx_rollup_l2_address.set_value(v, { as: alice });
-    const res = await type_set_tx_rollup_l2_address.type_set_tx_rollup_l2_address.get_res();
     assert(v.length == res.length && v[0].equals(res[0]), "Invalid Value")
   });
 

@@ -17,7 +17,6 @@ import * as type_asset_only_key_1_rational from './contracts/bindings/type_asset
 import * as type_asset_only_key_1_signature from './contracts/bindings/type_asset_only_key_1_signature'
 import * as type_asset_only_key_1_string from './contracts/bindings/type_asset_only_key_1_string'
 import * as type_asset_only_key_1_tez from './contracts/bindings/type_asset_only_key_1_tez'
-import * as type_asset_only_key_1_tx_rollup_l2_address from './contracts/bindings/type_asset_only_key_1_tx_rollup_l2_address'
 import * as type_asset_only_key_1_unit from './contracts/bindings/type_asset_only_key_1_unit'
 import * as type_asset_only_key_1_option_nat from './contracts/bindings/type_asset_only_key_1_option_nat'
 import * as type_asset_only_key_1_option_string from './contracts/bindings/type_asset_only_key_1_option_string'
@@ -176,15 +175,6 @@ describe('Type asset_only_key_1', () => {
     await type_asset_only_key_1_tez.type_asset_only_key_1_tez.deploy({ as: alice });
     await type_asset_only_key_1_tez.type_asset_only_key_1_tez.asset_put(v, { as: alice });
     const res = await type_asset_only_key_1_tez.type_asset_only_key_1_tez.get_my_asset();
-    assert(v.equals(res[0]), "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_asset_only_key_1_tx_rollup_l2_address.type_asset_only_key_1_tx_rollup_l2_address.deploy({ as: alice });
-    await type_asset_only_key_1_tx_rollup_l2_address.type_asset_only_key_1_tx_rollup_l2_address.asset_put(v, { as: alice });
-    const res = await type_asset_only_key_1_tx_rollup_l2_address.type_asset_only_key_1_tx_rollup_l2_address.get_my_asset();
     assert(v.equals(res[0]), "Invalid Value")
   });
 

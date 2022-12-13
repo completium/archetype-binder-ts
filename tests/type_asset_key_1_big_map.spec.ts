@@ -17,7 +17,6 @@ import * as type_asset_key_1_big_map_rational from './contracts/bindings/type_as
 import * as type_asset_key_1_big_map_signature from './contracts/bindings/type_asset_key_1_big_map_signature'
 import * as type_asset_key_1_big_map_string from './contracts/bindings/type_asset_key_1_big_map_string'
 import * as type_asset_key_1_big_map_tez from './contracts/bindings/type_asset_key_1_big_map_tez'
-import * as type_asset_key_1_big_map_tx_rollup_l2_address from './contracts/bindings/type_asset_key_1_big_map_tx_rollup_l2_address'
 import * as type_asset_key_1_big_map_unit from './contracts/bindings/type_asset_key_1_big_map_unit'
 import * as type_asset_key_1_big_map_option_nat from './contracts/bindings/type_asset_key_1_big_map_option_nat'
 import * as type_asset_key_1_big_map_option_string from './contracts/bindings/type_asset_key_1_big_map_option_string'
@@ -176,15 +175,6 @@ describe('Type asset_key_1_big_map', () => {
     await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.deploy({ as: alice });
     await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.asset_put(v, { as: alice });
     const res = await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.get_my_asset_value(v);
-    assert(res == "", "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.deploy({ as: alice });
-    await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.get_my_asset_value(v);
     assert(res == "", "Invalid Value")
   });
 
