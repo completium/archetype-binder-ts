@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_option_bool
+
+asset my_asset {
+  k : option<bool>;
+}
+
+entry asset_put(i : option<bool>) {
+  my_asset.add({k = i})
+}

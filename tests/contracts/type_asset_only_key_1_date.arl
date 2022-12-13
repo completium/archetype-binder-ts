@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_date
+
+asset my_asset {
+  k : date;
+}
+
+entry asset_put(i : date) {
+  my_asset.add({k = i})
+}

@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_big_map_bytes
+
+asset my_asset to big_map {
+  k : bytes;
+}
+
+entry asset_put(i : bytes) {
+  my_asset.add({k = i})
+}

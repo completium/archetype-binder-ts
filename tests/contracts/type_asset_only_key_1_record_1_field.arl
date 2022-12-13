@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_record_1_field
+
+record r_record {f_a : nat}
+
+asset my_asset {
+  k : r_record;
+}
+
+entry asset_put(i : r_record) {
+  my_asset.add({k = i})
+}

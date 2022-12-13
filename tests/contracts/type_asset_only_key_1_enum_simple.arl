@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_enum_simple
+
+enum e_enum = | e_1 | e_2 | e_3
+
+asset my_asset {
+  k : e_enum;
+}
+
+entry asset_put(i : e_enum) {
+  my_asset.add({k = i})
+}

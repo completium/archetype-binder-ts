@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_2_big_map_option_bool
+
+asset my_asset identified by k n to big_map {
+  k : option<bool>;
+  n : nat;
+}
+
+entry asset_put(i : option<bool>) {
+  my_asset.add({k = i; n = 0})
+}

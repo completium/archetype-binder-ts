@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_big_map_record_3_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes}
+
+asset my_asset to big_map {
+  k : r_record;
+}
+
+entry asset_put(i : r_record) {
+  my_asset.add({k = i})
+}

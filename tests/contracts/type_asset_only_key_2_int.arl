@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_2_int
+
+asset my_asset identified by k n {
+  k : int;
+  n : nat;
+}
+
+entry asset_put(i : int) {
+  my_asset.put({i; 0})
+}

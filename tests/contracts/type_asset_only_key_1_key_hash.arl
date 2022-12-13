@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_key_hash
+
+asset my_asset {
+  k : key_hash;
+}
+
+entry asset_put(i : key_hash) {
+  my_asset.add({k = i})
+}

@@ -1,0 +1,10 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_only_key_1_big_map_tez
+
+asset my_asset to big_map {
+  k : tez;
+}
+
+entry asset_put(i : tez) {
+  my_asset.add({k = i})
+}
