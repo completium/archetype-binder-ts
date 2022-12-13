@@ -1254,7 +1254,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "date": return class_to_mich("mich_to_date", [arg]);
     case "duration": return class_to_mich("mich_to_duration", [arg]);
     case "enum": return enum_to_mich(atype.name, arg, ci)
-    case "event": return TODO("event", arg);
+    case "event": return record_to_mich(atype.name, arg, ci)
     case "int": return class_to_mich("mich_to_int", [arg]);
     case "iterable_big_map": return TODO("iterable_big_map", arg);
     case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);

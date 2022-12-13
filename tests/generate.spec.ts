@@ -351,6 +351,14 @@ describe('Generate binding sample', async () => {
   it('lambda', async () => {
     await get_binding('sample_lambda.arl');
   });
+
+  it('event', async () => {
+    await get_binding('sample_event.arl');
+  });
+
+  // it('state', async () => {
+  //   await get_binding('sample_state.arl');
+  // });
 })
 
 describe('Generate binding template', async () => {

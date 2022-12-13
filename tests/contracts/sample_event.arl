@@ -1,0 +1,10 @@
+archetype sample_event
+
+event e_event {
+  a : nat;
+  b : string
+}
+
+entry exec (e : e_event) {
+  emit<e_event>(e)
+}
