@@ -1,20 +1,5 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export class visitor_key implements att.ArchetypeType {
-    constructor(public login: string) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return att.string_to_mich(this.login);
-    }
-    equals(v: visitor_key): boolean {
-        return this.login == v.login;
-    }
-    static from_mich(input: att.Micheline): visitor_key {
-        return new visitor_key(att.mich_to_string(input));
-    }
-}
 export const visitor_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("string", []);
 export class visitor_value implements att.ArchetypeType {
     constructor(public name: string, public nbvisits: att.Nat) { }
@@ -36,7 +21,7 @@ export const visitor_value_mich_type: att.MichelineType = att.pair_array_to_mich
     att.prim_annot_to_mich_type("nat", ["%nbvisits"])
 ], []);
 export type visitor_container = Array<[
-    visitor_key,
+    string,
     visitor_value
 ]>;
 export const visitor_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("string", []), att.pair_array_to_mich_type([
@@ -100,7 +85,7 @@ export class Training_visitors {
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [visitor_key.from_mich(x), visitor_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_string(x), visitor_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

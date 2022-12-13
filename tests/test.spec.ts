@@ -7,12 +7,9 @@ import {
   test_big_record,
   all,
   visitor_2_container,
-  visitor_2_key,
   visitor_2_value,
   B,
   anenum_types,
-  visitor_value,
-  visitor_key
 } from './contracts/bindings/test_big_record'
 
 /* Accounts ---------------------------------------------------------------- */
@@ -121,7 +118,7 @@ describe('[test_big_record] Call entry', async () => {
   })
   it("Test 'visitor' one field asset value getter", async () => {
     const v = await test_big_record.get_visitor()
-    const v_value : Array<[ visitor_key, visitor_value ]> = [ [ new visitor_key(new Address(alice.pkh)), new visitor_value(new Nat(1)) ] ]
+    const v_value : Array<[ Address, Nat ]> = [ [ new Address(alice.pkh), new Nat(1) ] ]
     assert(v.length == v_value.length)
     for (let i = 0; i < v.length; i++) {
       assert(v[i][0].equals(v_value[i][0]))
@@ -130,7 +127,7 @@ describe('[test_big_record] Call entry', async () => {
   })
   it("Test 'visitor2' several fields asset value getter", async () => {
     const v = await test_big_record.get_visitor_2()
-    const v_2_key = new visitor_2_key(new Address(alice.pkh))
+    const v_2_key = new Address(alice.pkh)
     const v_2_value = new visitor_2_value(new Nat(1), dnow)
     const visitor_2_container : visitor_2_container = [ [ v_2_key , v_2_value ] ]
     assert(v.length == visitor_2_container.length)
@@ -144,7 +141,7 @@ describe('[test_big_record] Call entry', async () => {
     const just_a_key_container : Address[] = [ new Address(alice.pkh) ]
     assert(v.length == just_a_key_container.length)
     for (let i = 0; i < v.length; i++) {
-      assert(v[i].key_id.equals(just_a_key_container[i]))
+      assert(v[i].equals(just_a_key_container[i]))
     }
   })
   it("Call to entry 2 should fail with INVALID_CALLER", async () => {

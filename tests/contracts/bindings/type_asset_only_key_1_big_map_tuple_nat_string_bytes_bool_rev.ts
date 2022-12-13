@@ -1,41 +1,5 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: [
-        [
-            [
-                att.Nat,
-                string
-            ],
-            att.Bytes
-        ],
-        boolean
-    ]) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return att.pair_to_mich([att.pair_to_mich([att.pair_to_mich([this.k.to_mich(), att.string_to_mich(this.k)]), this.k.to_mich()]), att.bool_to_mich(this.k)]);
-    }
-    equals(v: my_asset_key): boolean {
-        return ((x, y) => {
-            return ((x, y) => {
-                return ((x, y) => {
-                    return x[0].equals(y[0]) && x[1] == y[1];
-                })(x[0], y[0]) && x[1].equals(y[1]);
-            })(x[0], y[0]) && x[1] == y[1];
-        })(this.k, v.k);
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key((p => {
-            return [(p => {
-                    return [(p => {
-                            return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-                        })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
-                })((p as att.Mpair).args[0]), att.mich_to_bool((p as att.Mpair).args[1])];
-        })(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.pair_array_to_mich_type([
         att.pair_array_to_mich_type([
@@ -63,7 +27,16 @@ export class my_asset_value implements att.ArchetypeType {
 }
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("unit", []);
 export type my_asset_container = Array<[
-    my_asset_key,
+    [
+        [
+            [
+                att.Nat,
+                string
+            ],
+            att.Bytes
+        ],
+        boolean
+    ],
     my_asset_value
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("big_map", att.pair_array_to_mich_type([
@@ -139,7 +112,16 @@ export class Type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev {
         }
         throw new Error("Contract not initialised");
     }
-    async get_my_asset_value(key: my_asset_key): Promise<my_asset_value | undefined> {
+    async get_my_asset_value(key: [
+        [
+            [
+                att.Nat,
+                string
+            ],
+            att.Bytes
+        ],
+        boolean
+    ]): Promise<my_asset_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.pair_to_mich([att.pair_to_mich([att.pair_to_mich([key[0][0][0].to_mich(), att.string_to_mich(key[0][0][1])]), key[0][1].to_mich()]), att.bool_to_mich(key[1])]), my_asset_key_mich_type);
@@ -152,7 +134,16 @@ export class Type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev {
         }
         throw new Error("Contract not initialised");
     }
-    async has_my_asset_value(key: my_asset_key): Promise<boolean> {
+    async has_my_asset_value(key: [
+        [
+            [
+                att.Nat,
+                string
+            ],
+            att.Bytes
+        ],
+        boolean
+    ]): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.pair_to_mich([att.pair_to_mich([att.pair_to_mich([key[0][0][0].to_mich(), att.string_to_mich(key[0][0][1])]), key[0][1].to_mich()]), att.bool_to_mich(key[1])]), my_asset_key_mich_type);

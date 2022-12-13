@@ -16,23 +16,8 @@ export class r_record implements att.ArchetypeType {
     }
 }
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: r_record) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.k.to_mich();
-    }
-    equals(v: my_asset_key): boolean {
-        return this.k == v.k;
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(r_record.from_mich(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
-export type my_asset_container = Array<my_asset_key>;
+export type my_asset_container = Array<r_record>;
 export const my_asset_container_mich_type: att.MichelineType = att.set_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), []);
 const asset_put_arg_to_mich = (i: r_record): att.Micheline => {
     return i.to_mich();
@@ -73,7 +58,7 @@ export class Type_asset_only_key_1_record_1_field {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return my_asset_key.from_mich(x); });
+            return att.mich_to_list(storage, x => { return r_record.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

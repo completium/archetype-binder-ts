@@ -57,10 +57,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('address', async () => {
     const v : Address = new Address("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb");
     await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.has_my_asset_value(new type_asset_only_key_1_big_map_address.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.has_my_asset_value(new type_asset_only_key_1_big_map_address.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_address.type_asset_only_key_1_big_map_address.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -68,10 +68,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('bool', async () => {
     const v : boolean = true;
     await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.has_my_asset_value(new type_asset_only_key_1_big_map_bool.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.has_my_asset_value(new type_asset_only_key_1_big_map_bool.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_bool.type_asset_only_key_1_big_map_bool.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -79,10 +79,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('bytes', async () => {
     const v : Bytes = new Bytes("ff");
     await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.has_my_asset_value(new type_asset_only_key_1_big_map_bytes.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.has_my_asset_value(new type_asset_only_key_1_big_map_bytes.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_bytes.type_asset_only_key_1_big_map_bytes.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -90,10 +90,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('chain_id', async () => {
     const v : Chain_id = new Chain_id("NetXdQprcVkpaWU");
     await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.has_my_asset_value(new type_asset_only_key_1_big_map_chain_id.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.has_my_asset_value(new type_asset_only_key_1_big_map_chain_id.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_chain_id.type_asset_only_key_1_big_map_chain_id.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -101,10 +101,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('date', async () => {
     const v : Date = new Date("2022-12-31");
     await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.has_my_asset_value(new type_asset_only_key_1_big_map_date.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.has_my_asset_value(new type_asset_only_key_1_big_map_date.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_date.type_asset_only_key_1_big_map_date.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -112,10 +112,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('duration', async () => {
     const v : Duration = new Duration("2m");
     await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.has_my_asset_value(new type_asset_only_key_1_big_map_duration.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.has_my_asset_value(new type_asset_only_key_1_big_map_duration.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_duration.type_asset_only_key_1_big_map_duration.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -123,10 +123,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('int', async () => {
     const v : Int = new Int(2);
     await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.has_my_asset_value(new type_asset_only_key_1_big_map_int.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.has_my_asset_value(new type_asset_only_key_1_big_map_int.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_int.type_asset_only_key_1_big_map_int.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -134,10 +134,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('key', async () => {
     const v : Key = alice.get_public_key();
     await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.has_my_asset_value(new type_asset_only_key_1_big_map_key.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.has_my_asset_value(new type_asset_only_key_1_big_map_key.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_key.type_asset_only_key_1_big_map_key.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -145,10 +145,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('key_hash', async () => {
     const v : Key_hash = new Key_hash(alice.get_address().toString());
     await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.has_my_asset_value(new type_asset_only_key_1_big_map_key_hash.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.has_my_asset_value(new type_asset_only_key_1_big_map_key_hash.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_key_hash.type_asset_only_key_1_big_map_key_hash.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -156,10 +156,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('nat', async () => {
     const v : Nat = new Nat(2);
     await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.has_my_asset_value(new type_asset_only_key_1_big_map_nat.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.has_my_asset_value(new type_asset_only_key_1_big_map_nat.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_nat.type_asset_only_key_1_big_map_nat.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -167,10 +167,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('rational', async () => {
     const v : Rational = new Rational(1.5);
     await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.has_my_asset_value(new type_asset_only_key_1_big_map_rational.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.has_my_asset_value(new type_asset_only_key_1_big_map_rational.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_rational.type_asset_only_key_1_big_map_rational.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -178,10 +178,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('signature', async () => {
     const v : Signature = new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1");
     await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.has_my_asset_value(new type_asset_only_key_1_big_map_signature.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.has_my_asset_value(new type_asset_only_key_1_big_map_signature.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_signature.type_asset_only_key_1_big_map_signature.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -189,10 +189,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('string', async () => {
     const v : string = "mystr";
     await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.has_my_asset_value(new type_asset_only_key_1_big_map_string.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.has_my_asset_value(new type_asset_only_key_1_big_map_string.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_string.type_asset_only_key_1_big_map_string.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -200,10 +200,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tez', async () => {
     const v : Tez = new Tez(2);
     await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.has_my_asset_value(new type_asset_only_key_1_big_map_tez.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.has_my_asset_value(new type_asset_only_key_1_big_map_tez.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tez.type_asset_only_key_1_big_map_tez.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -211,10 +211,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tx_rollup_l2_address', async () => {
     const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
     await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.has_my_asset_value(new type_asset_only_key_1_big_map_tx_rollup_l2_address.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.has_my_asset_value(new type_asset_only_key_1_big_map_tx_rollup_l2_address.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tx_rollup_l2_address.type_asset_only_key_1_big_map_tx_rollup_l2_address.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -222,10 +222,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('unit', async () => {
     const v : Unit = new Unit();
     await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.has_my_asset_value(new type_asset_only_key_1_big_map_unit.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.has_my_asset_value(new type_asset_only_key_1_big_map_unit.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_unit.type_asset_only_key_1_big_map_unit.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -233,10 +233,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('option_nat', async () => {
     const v : Option<Nat> = Option.Some(new Nat(2));
     await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.has_my_asset_value(new type_asset_only_key_1_big_map_option_nat.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.has_my_asset_value(new type_asset_only_key_1_big_map_option_nat.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_option_nat.type_asset_only_key_1_big_map_option_nat.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -244,10 +244,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('option_string', async () => {
     const v : Option<string> = Option.Some<string>("mystr");
     await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.has_my_asset_value(new type_asset_only_key_1_big_map_option_string.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.has_my_asset_value(new type_asset_only_key_1_big_map_option_string.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_option_string.type_asset_only_key_1_big_map_option_string.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -255,10 +255,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('option_bool', async () => {
     const v : Option<boolean> = Option.Some<boolean>(true);
     await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.has_my_asset_value(new type_asset_only_key_1_big_map_option_bool.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.has_my_asset_value(new type_asset_only_key_1_big_map_option_bool.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_option_bool.type_asset_only_key_1_big_map_option_bool.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -266,10 +266,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('or_nat_string', async () => {
     const v : Or<Nat, string> = Or.Left(new Nat(2));
     await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.has_my_asset_value(new type_asset_only_key_1_big_map_or_nat_string.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.has_my_asset_value(new type_asset_only_key_1_big_map_or_nat_string.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_or_nat_string.type_asset_only_key_1_big_map_or_nat_string.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -277,10 +277,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string', async () => {
     const v : [Nat, string] = [new Nat(2), "mystring"];
     await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string.type_asset_only_key_1_big_map_tuple_nat_string.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -288,10 +288,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string_bytes', async () => {
     const v : [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes.type_asset_only_key_1_big_map_tuple_nat_string_bytes.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -299,10 +299,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string_bytes_bool', async () => {
     const v : [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -310,10 +310,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string_bytes_rev', async () => {
     const v : [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_rev.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -321,10 +321,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string_bytes_bool_rev', async () => {
     const v : [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_rev.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -332,10 +332,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('tuple_nat_string_bytes_bool_custom', async () => {
     const v : [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.has_my_asset_value(new type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_only_key_1_big_map_tuple_nat_string_bytes_bool_custom.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -343,10 +343,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('enum_simple', async () => {
     const v : type_asset_only_key_1_big_map_enum_simple.e_enum = new type_asset_only_key_1_big_map_enum_simple.e_2();
     await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.has_my_asset_value(new type_asset_only_key_1_big_map_enum_simple.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.has_my_asset_value(new type_asset_only_key_1_big_map_enum_simple.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_enum_simple.type_asset_only_key_1_big_map_enum_simple.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -354,10 +354,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('enum_param', async () => {
     const v : type_asset_only_key_1_big_map_enum_param.e_enum = new type_asset_only_key_1_big_map_enum_param.e_2(new Nat(2));
     await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.has_my_asset_value(new type_asset_only_key_1_big_map_enum_param.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.has_my_asset_value(new type_asset_only_key_1_big_map_enum_param.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_enum_param.type_asset_only_key_1_big_map_enum_param.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -365,10 +365,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('record_1_field', async () => {
     const v : type_asset_only_key_1_big_map_record_1_field.r_record = new type_asset_only_key_1_big_map_record_1_field.r_record(new Nat(2));
     await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.has_my_asset_value(new type_asset_only_key_1_big_map_record_1_field.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.has_my_asset_value(new type_asset_only_key_1_big_map_record_1_field.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_record_1_field.type_asset_only_key_1_big_map_record_1_field.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -376,10 +376,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('record_2_fields', async () => {
     const v : type_asset_only_key_1_big_map_record_2_fields.r_record = new type_asset_only_key_1_big_map_record_2_fields.r_record(new Nat(2), "mystr");
     await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_2_fields.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_2_fields.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_record_2_fields.type_asset_only_key_1_big_map_record_2_fields.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -387,10 +387,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('record_3_fields', async () => {
     const v : type_asset_only_key_1_big_map_record_3_fields.r_record = new type_asset_only_key_1_big_map_record_3_fields.r_record(new Nat(2), "mystr", new Bytes("02"));
     await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_3_fields.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_3_fields.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_record_3_fields.type_asset_only_key_1_big_map_record_3_fields.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -398,10 +398,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('record_4_fields', async () => {
     const v : type_asset_only_key_1_big_map_record_4_fields.r_record = new type_asset_only_key_1_big_map_record_4_fields.r_record(new Nat(2), "mystr", new Bytes("02"), true);
     await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_4_fields.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.has_my_asset_value(new type_asset_only_key_1_big_map_record_4_fields.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_record_4_fields.type_asset_only_key_1_big_map_record_4_fields.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 
@@ -409,10 +409,10 @@ describe('Type asset_only_key_1_big_map', () => {
   it('record_4_fields_custom', async () => {
     const v : type_asset_only_key_1_big_map_record_4_fields_custom.r_record = new type_asset_only_key_1_big_map_record_4_fields_custom.r_record(new Nat(2), "mystr", new Bytes("02"), true);
     await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.deploy({ as: alice });
-    const res_before = await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.has_my_asset_value(new type_asset_only_key_1_big_map_record_4_fields_custom.my_asset_key(v));
+    const res_before = await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.asset_put(v, { as: alice });
-    const res_after = await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.has_my_asset_value(new type_asset_only_key_1_big_map_record_4_fields_custom.my_asset_key(v));
+    const res_after = await type_asset_only_key_1_big_map_record_4_fields_custom.type_asset_only_key_1_big_map_record_4_fields_custom.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")
   });
 

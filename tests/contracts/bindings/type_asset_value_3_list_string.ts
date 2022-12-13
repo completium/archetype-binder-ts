@@ -1,20 +1,5 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: att.Nat) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.k.to_mich();
-    }
-    equals(v: my_asset_key): boolean {
-        return this.k.equals(v.k);
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(att.mich_to_nat(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 export class my_asset_value implements att.ArchetypeType {
     constructor(public s: string, public v: Array<string>) { }
@@ -38,7 +23,7 @@ export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mic
     att.list_annot_to_mich_type(att.prim_annot_to_mich_type("string", []), ["%v"])
 ], []);
 export type my_asset_container = Array<[
-    my_asset_key,
+    att.Nat,
     my_asset_value
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
@@ -86,7 +71,7 @@ export class Type_asset_value_3_list_string {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [my_asset_key.from_mich(x), my_asset_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), my_asset_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

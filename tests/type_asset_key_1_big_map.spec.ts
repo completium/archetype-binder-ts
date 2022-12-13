@@ -58,8 +58,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Address = new Address("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb");
     await type_asset_key_1_big_map_address.type_asset_key_1_big_map_address.deploy({ as: alice });
     await type_asset_key_1_big_map_address.type_asset_key_1_big_map_address.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_address.type_asset_key_1_big_map_address.get_my_asset_value(new type_asset_key_1_big_map_address.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_address.type_asset_key_1_big_map_address.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // bool
@@ -67,8 +67,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : boolean = true;
     await type_asset_key_1_big_map_bool.type_asset_key_1_big_map_bool.deploy({ as: alice });
     await type_asset_key_1_big_map_bool.type_asset_key_1_big_map_bool.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_bool.type_asset_key_1_big_map_bool.get_my_asset_value(new type_asset_key_1_big_map_bool.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_bool.type_asset_key_1_big_map_bool.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // bytes
@@ -76,8 +76,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Bytes = new Bytes("ff");
     await type_asset_key_1_big_map_bytes.type_asset_key_1_big_map_bytes.deploy({ as: alice });
     await type_asset_key_1_big_map_bytes.type_asset_key_1_big_map_bytes.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_bytes.type_asset_key_1_big_map_bytes.get_my_asset_value(new type_asset_key_1_big_map_bytes.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_bytes.type_asset_key_1_big_map_bytes.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // chain_id
@@ -85,8 +85,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Chain_id = new Chain_id("NetXdQprcVkpaWU");
     await type_asset_key_1_big_map_chain_id.type_asset_key_1_big_map_chain_id.deploy({ as: alice });
     await type_asset_key_1_big_map_chain_id.type_asset_key_1_big_map_chain_id.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_chain_id.type_asset_key_1_big_map_chain_id.get_my_asset_value(new type_asset_key_1_big_map_chain_id.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_chain_id.type_asset_key_1_big_map_chain_id.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // date
@@ -94,8 +94,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Date = new Date("2022-12-31");
     await type_asset_key_1_big_map_date.type_asset_key_1_big_map_date.deploy({ as: alice });
     await type_asset_key_1_big_map_date.type_asset_key_1_big_map_date.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_date.type_asset_key_1_big_map_date.get_my_asset_value(new type_asset_key_1_big_map_date.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_date.type_asset_key_1_big_map_date.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // duration
@@ -103,8 +103,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Duration = new Duration("2m");
     await type_asset_key_1_big_map_duration.type_asset_key_1_big_map_duration.deploy({ as: alice });
     await type_asset_key_1_big_map_duration.type_asset_key_1_big_map_duration.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_duration.type_asset_key_1_big_map_duration.get_my_asset_value(new type_asset_key_1_big_map_duration.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_duration.type_asset_key_1_big_map_duration.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // int
@@ -112,8 +112,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Int = new Int(2);
     await type_asset_key_1_big_map_int.type_asset_key_1_big_map_int.deploy({ as: alice });
     await type_asset_key_1_big_map_int.type_asset_key_1_big_map_int.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_int.type_asset_key_1_big_map_int.get_my_asset_value(new type_asset_key_1_big_map_int.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_int.type_asset_key_1_big_map_int.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // key
@@ -121,8 +121,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Key = alice.get_public_key();
     await type_asset_key_1_big_map_key.type_asset_key_1_big_map_key.deploy({ as: alice });
     await type_asset_key_1_big_map_key.type_asset_key_1_big_map_key.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_key.type_asset_key_1_big_map_key.get_my_asset_value(new type_asset_key_1_big_map_key.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_key.type_asset_key_1_big_map_key.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // key_hash
@@ -130,8 +130,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Key_hash = new Key_hash(alice.get_address().toString());
     await type_asset_key_1_big_map_key_hash.type_asset_key_1_big_map_key_hash.deploy({ as: alice });
     await type_asset_key_1_big_map_key_hash.type_asset_key_1_big_map_key_hash.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_key_hash.type_asset_key_1_big_map_key_hash.get_my_asset_value(new type_asset_key_1_big_map_key_hash.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_key_hash.type_asset_key_1_big_map_key_hash.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // nat
@@ -139,8 +139,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Nat = new Nat(2);
     await type_asset_key_1_big_map_nat.type_asset_key_1_big_map_nat.deploy({ as: alice });
     await type_asset_key_1_big_map_nat.type_asset_key_1_big_map_nat.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_nat.type_asset_key_1_big_map_nat.get_my_asset_value(new type_asset_key_1_big_map_nat.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_nat.type_asset_key_1_big_map_nat.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // rational
@@ -148,8 +148,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Rational = new Rational(1.5);
     await type_asset_key_1_big_map_rational.type_asset_key_1_big_map_rational.deploy({ as: alice });
     await type_asset_key_1_big_map_rational.type_asset_key_1_big_map_rational.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_rational.type_asset_key_1_big_map_rational.get_my_asset_value(new type_asset_key_1_big_map_rational.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_rational.type_asset_key_1_big_map_rational.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // signature
@@ -157,8 +157,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Signature = new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1");
     await type_asset_key_1_big_map_signature.type_asset_key_1_big_map_signature.deploy({ as: alice });
     await type_asset_key_1_big_map_signature.type_asset_key_1_big_map_signature.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_signature.type_asset_key_1_big_map_signature.get_my_asset_value(new type_asset_key_1_big_map_signature.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_signature.type_asset_key_1_big_map_signature.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // string
@@ -166,8 +166,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : string = "mystr";
     await type_asset_key_1_big_map_string.type_asset_key_1_big_map_string.deploy({ as: alice });
     await type_asset_key_1_big_map_string.type_asset_key_1_big_map_string.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_string.type_asset_key_1_big_map_string.get_my_asset_value(new type_asset_key_1_big_map_string.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_string.type_asset_key_1_big_map_string.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tez
@@ -175,8 +175,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Tez = new Tez(2);
     await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.deploy({ as: alice });
     await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.get_my_asset_value(new type_asset_key_1_big_map_tez.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tez.type_asset_key_1_big_map_tez.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tx_rollup_l2_address
@@ -184,8 +184,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
     await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.deploy({ as: alice });
     await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.get_my_asset_value(new type_asset_key_1_big_map_tx_rollup_l2_address.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tx_rollup_l2_address.type_asset_key_1_big_map_tx_rollup_l2_address.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // unit
@@ -193,8 +193,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Unit = new Unit();
     await type_asset_key_1_big_map_unit.type_asset_key_1_big_map_unit.deploy({ as: alice });
     await type_asset_key_1_big_map_unit.type_asset_key_1_big_map_unit.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_unit.type_asset_key_1_big_map_unit.get_my_asset_value(new type_asset_key_1_big_map_unit.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_unit.type_asset_key_1_big_map_unit.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // option_nat
@@ -202,8 +202,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Option<Nat> = Option.Some(new Nat(2));
     await type_asset_key_1_big_map_option_nat.type_asset_key_1_big_map_option_nat.deploy({ as: alice });
     await type_asset_key_1_big_map_option_nat.type_asset_key_1_big_map_option_nat.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_option_nat.type_asset_key_1_big_map_option_nat.get_my_asset_value(new type_asset_key_1_big_map_option_nat.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_option_nat.type_asset_key_1_big_map_option_nat.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // option_string
@@ -211,8 +211,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Option<string> = Option.Some<string>("mystr");
     await type_asset_key_1_big_map_option_string.type_asset_key_1_big_map_option_string.deploy({ as: alice });
     await type_asset_key_1_big_map_option_string.type_asset_key_1_big_map_option_string.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_option_string.type_asset_key_1_big_map_option_string.get_my_asset_value(new type_asset_key_1_big_map_option_string.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_option_string.type_asset_key_1_big_map_option_string.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // option_bool
@@ -220,8 +220,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Option<boolean> = Option.Some<boolean>(true);
     await type_asset_key_1_big_map_option_bool.type_asset_key_1_big_map_option_bool.deploy({ as: alice });
     await type_asset_key_1_big_map_option_bool.type_asset_key_1_big_map_option_bool.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_option_bool.type_asset_key_1_big_map_option_bool.get_my_asset_value(new type_asset_key_1_big_map_option_bool.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_option_bool.type_asset_key_1_big_map_option_bool.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // or_nat_string
@@ -229,8 +229,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : Or<Nat, string> = Or.Left(new Nat(2));
     await type_asset_key_1_big_map_or_nat_string.type_asset_key_1_big_map_or_nat_string.deploy({ as: alice });
     await type_asset_key_1_big_map_or_nat_string.type_asset_key_1_big_map_or_nat_string.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_or_nat_string.type_asset_key_1_big_map_or_nat_string.get_my_asset_value(new type_asset_key_1_big_map_or_nat_string.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_or_nat_string.type_asset_key_1_big_map_or_nat_string.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string
@@ -238,8 +238,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [Nat, string] = [new Nat(2), "mystring"];
     await type_asset_key_1_big_map_tuple_nat_string.type_asset_key_1_big_map_tuple_nat_string.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string.type_asset_key_1_big_map_tuple_nat_string.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string.type_asset_key_1_big_map_tuple_nat_string.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string.type_asset_key_1_big_map_tuple_nat_string.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string_bytes
@@ -247,8 +247,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
     await type_asset_key_1_big_map_tuple_nat_string_bytes.type_asset_key_1_big_map_tuple_nat_string_bytes.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string_bytes.type_asset_key_1_big_map_tuple_nat_string_bytes.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes.type_asset_key_1_big_map_tuple_nat_string_bytes.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string_bytes.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes.type_asset_key_1_big_map_tuple_nat_string_bytes.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool
@@ -256,8 +256,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_key_1_big_map_tuple_nat_string_bytes_bool.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_key_1_big_map_tuple_nat_string_bytes_bool.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_key_1_big_map_tuple_nat_string_bytes_bool.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string_bytes_bool.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool.type_asset_key_1_big_map_tuple_nat_string_bytes_bool.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string_bytes_rev
@@ -265,8 +265,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
     await type_asset_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_rev.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_rev.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_rev.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string_bytes_rev.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_rev.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool_rev
@@ -274,8 +274,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_rev.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // tuple_nat_string_bytes_bool_custom
@@ -283,8 +283,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.deploy({ as: alice });
     await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.get_my_asset_value(new type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.type_asset_key_1_big_map_tuple_nat_string_bytes_bool_custom.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // enum_simple
@@ -292,8 +292,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_enum_simple.e_enum = new type_asset_key_1_big_map_enum_simple.e_2();
     await type_asset_key_1_big_map_enum_simple.type_asset_key_1_big_map_enum_simple.deploy({ as: alice });
     await type_asset_key_1_big_map_enum_simple.type_asset_key_1_big_map_enum_simple.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_enum_simple.type_asset_key_1_big_map_enum_simple.get_my_asset_value(new type_asset_key_1_big_map_enum_simple.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_enum_simple.type_asset_key_1_big_map_enum_simple.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // enum_param
@@ -301,8 +301,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_enum_param.e_enum = new type_asset_key_1_big_map_enum_param.e_2(new Nat(2));
     await type_asset_key_1_big_map_enum_param.type_asset_key_1_big_map_enum_param.deploy({ as: alice });
     await type_asset_key_1_big_map_enum_param.type_asset_key_1_big_map_enum_param.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_enum_param.type_asset_key_1_big_map_enum_param.get_my_asset_value(new type_asset_key_1_big_map_enum_param.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_enum_param.type_asset_key_1_big_map_enum_param.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // record_1_field
@@ -310,8 +310,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_record_1_field.r_record = new type_asset_key_1_big_map_record_1_field.r_record(new Nat(2));
     await type_asset_key_1_big_map_record_1_field.type_asset_key_1_big_map_record_1_field.deploy({ as: alice });
     await type_asset_key_1_big_map_record_1_field.type_asset_key_1_big_map_record_1_field.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_record_1_field.type_asset_key_1_big_map_record_1_field.get_my_asset_value(new type_asset_key_1_big_map_record_1_field.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_record_1_field.type_asset_key_1_big_map_record_1_field.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // record_2_fields
@@ -319,8 +319,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_record_2_fields.r_record = new type_asset_key_1_big_map_record_2_fields.r_record(new Nat(2), "mystr");
     await type_asset_key_1_big_map_record_2_fields.type_asset_key_1_big_map_record_2_fields.deploy({ as: alice });
     await type_asset_key_1_big_map_record_2_fields.type_asset_key_1_big_map_record_2_fields.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_record_2_fields.type_asset_key_1_big_map_record_2_fields.get_my_asset_value(new type_asset_key_1_big_map_record_2_fields.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_record_2_fields.type_asset_key_1_big_map_record_2_fields.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // record_3_fields
@@ -328,8 +328,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_record_3_fields.r_record = new type_asset_key_1_big_map_record_3_fields.r_record(new Nat(2), "mystr", new Bytes("02"));
     await type_asset_key_1_big_map_record_3_fields.type_asset_key_1_big_map_record_3_fields.deploy({ as: alice });
     await type_asset_key_1_big_map_record_3_fields.type_asset_key_1_big_map_record_3_fields.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_record_3_fields.type_asset_key_1_big_map_record_3_fields.get_my_asset_value(new type_asset_key_1_big_map_record_3_fields.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_record_3_fields.type_asset_key_1_big_map_record_3_fields.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // record_4_fields
@@ -337,8 +337,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_record_4_fields.r_record = new type_asset_key_1_big_map_record_4_fields.r_record(new Nat(2), "mystr", new Bytes("02"), true);
     await type_asset_key_1_big_map_record_4_fields.type_asset_key_1_big_map_record_4_fields.deploy({ as: alice });
     await type_asset_key_1_big_map_record_4_fields.type_asset_key_1_big_map_record_4_fields.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_record_4_fields.type_asset_key_1_big_map_record_4_fields.get_my_asset_value(new type_asset_key_1_big_map_record_4_fields.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_record_4_fields.type_asset_key_1_big_map_record_4_fields.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   // record_4_fields_custom
@@ -346,8 +346,8 @@ describe('Type asset_key_1_big_map', () => {
     const v : type_asset_key_1_big_map_record_4_fields_custom.r_record = new type_asset_key_1_big_map_record_4_fields_custom.r_record(new Nat(2), "mystr", new Bytes("02"), true);
     await type_asset_key_1_big_map_record_4_fields_custom.type_asset_key_1_big_map_record_4_fields_custom.deploy({ as: alice });
     await type_asset_key_1_big_map_record_4_fields_custom.type_asset_key_1_big_map_record_4_fields_custom.asset_put(v, { as: alice });
-    const res = await type_asset_key_1_big_map_record_4_fields_custom.type_asset_key_1_big_map_record_4_fields_custom.get_my_asset_value(new type_asset_key_1_big_map_record_4_fields_custom.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")
+    const res = await type_asset_key_1_big_map_record_4_fields_custom.type_asset_key_1_big_map_record_4_fields_custom.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")
   });
 
   

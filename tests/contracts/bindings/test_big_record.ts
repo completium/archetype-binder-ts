@@ -112,69 +112,9 @@ export const all_mich_type: att.MichelineType = att.pair_array_to_mich_type([
         ], [])
     ], [])
 ], []);
-export class just_a_key_key implements att.ArchetypeType {
-    constructor(public key_id: att.Address) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.key_id.to_mich();
-    }
-    equals(v: just_a_key_key): boolean {
-        return this.key_id.equals(v.key_id);
-    }
-    static from_mich(input: att.Micheline): just_a_key_key {
-        return new just_a_key_key(att.mich_to_address(input));
-    }
-}
-export class visitor_key implements att.ArchetypeType {
-    constructor(public id: att.Address) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.id.to_mich();
-    }
-    equals(v: visitor_key): boolean {
-        return this.id.equals(v.id);
-    }
-    static from_mich(input: att.Micheline): visitor_key {
-        return new visitor_key(att.mich_to_address(input));
-    }
-}
-export class visitor_2_key implements att.ArchetypeType {
-    constructor(public id2: att.Address) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.id2.to_mich();
-    }
-    equals(v: visitor_2_key): boolean {
-        return this.id2.equals(v.id2);
-    }
-    static from_mich(input: att.Micheline): visitor_2_key {
-        return new visitor_2_key(att.mich_to_address(input));
-    }
-}
 export const just_a_key_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("address", []);
 export const visitor_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("address", []);
 export const visitor_2_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("address", []);
-export class visitor_value implements att.ArchetypeType {
-    constructor(public nb_visits: att.Nat) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.nb_visits.to_mich();
-    }
-    equals(v: visitor_value): boolean {
-        return this.nb_visits.equals(v.nb_visits);
-    }
-    static from_mich(input: att.Micheline): visitor_value {
-        return new visitor_value(att.mich_to_nat(input));
-    }
-}
 export class visitor_2_value implements att.ArchetypeType {
     constructor(public nb_visits2: att.Nat, public last: Date) { }
     toString(): string {
@@ -195,13 +135,13 @@ export const visitor_2_value_mich_type: att.MichelineType = att.pair_array_to_mi
     att.prim_annot_to_mich_type("nat", ["%nb_visits2"]),
     att.prim_annot_to_mich_type("timestamp", ["%last"])
 ], []);
-export type just_a_key_container = Array<just_a_key_key>;
+export type just_a_key_container = Array<att.Address>;
 export type visitor_container = Array<[
-    visitor_key,
-    visitor_value
+    att.Address,
+    att.Nat
 ]>;
 export type visitor_2_container = Array<[
-    visitor_2_key,
+    att.Address,
     visitor_2_value
 ]>;
 export const just_a_key_container_mich_type: att.MichelineType = att.set_annot_to_mich_type(att.prim_annot_to_mich_type("address", []), []);
@@ -400,21 +340,21 @@ export class Test_big_record {
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[10], x => { return just_a_key_key.from_mich(x); });
+            return att.mich_to_list((storage as att.Mpair).args[10], x => { return att.mich_to_address(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[11], (x, y) => [visitor_key.from_mich(x), visitor_value.from_mich(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[11], (x, y) => [att.mich_to_address(x), att.mich_to_nat(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor_2(): Promise<visitor_2_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[12], (x, y) => [visitor_2_key.from_mich(x), visitor_2_value.from_mich(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[12], (x, y) => [att.mich_to_address(x), visitor_2_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

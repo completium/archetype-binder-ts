@@ -489,7 +489,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
 
 /* Archetype type to Typescript type --------------------------------------- */
 
-export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<any> => {
+export const archetype_type_to_ts_type = (at: ArchetypeType, ci : ContractInterface): KeywordTypeNode<any> => {
   const throw_error = (ty: string): KeywordTypeNode<any> => {
     throw new Error(`archetype_type_to_ts_type: '${ty}' type not handled`)
   }
@@ -503,19 +503,28 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     );
     case "aggregate": return throw_error(at.node)
     case "asset_container": return throw_error(at.node)
-    case "asset_key": return throw_error(at.node)
-    case "asset_value": return throw_error(at.node)
-
-    //    {
-    //   if (at.args[0].name != null) {
-    //     return factory.createTypeReferenceNode(
-    //       factory.createIdentifier(at.args[0].name + "_value"),
-    //       undefined
-    //     );
-    //   } else {
-    //     throw new Error(`Cannot get asset name (asset_value)`)
-    //   }
-    // }
+    case "asset_key": {
+      const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
+      if (is_only_key && ty != null) {
+        return archetype_type_to_ts_type(ty, ci)
+      } else {
+        return factory.createTypeReferenceNode(
+          factory.createIdentifier(at.name + "_key"),
+          undefined
+        )
+      }
+    }
+    case "asset_value": {
+      const [is_only_val, ty] = is_asset_one_field_val(at.name, ci)
+      if (is_only_val && ty != null) {
+        return archetype_type_to_ts_type(ty, ci)
+      } else {
+        return factory.createTypeReferenceNode(
+          factory.createIdentifier(at.name + "_value"),
+          undefined
+        )
+      }
+    }
     case "asset_view": return throw_error(at.node)
     case "asset": {
       if (at.name != null) {
@@ -530,8 +539,8 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     case "big_map": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [factory.createTupleTypeNode([
-        archetype_type_to_ts_type(at.key_type),
-        archetype_type_to_ts_type(at.value_type)
+        archetype_type_to_ts_type(at.key_type, ci),
+        archetype_type_to_ts_type(at.value_type, ci)
       ])]
     );
     case "bls12_381_fr": return factory.createTypeReferenceNode(
@@ -650,13 +659,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     );
     case "list": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
-      [archetype_type_to_ts_type(at.arg)]
+      [archetype_type_to_ts_type(at.arg, ci)]
     )
     case "map": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
       [factory.createTupleTypeNode([
-        archetype_type_to_ts_type(at.key_type),
-        archetype_type_to_ts_type(at.value_type)
+        archetype_type_to_ts_type(at.key_type, ci),
+        archetype_type_to_ts_type(at.value_type, ci)
       ])]
     );
     case "nat": return factory.createTypeReferenceNode(
@@ -673,7 +682,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
         factory.createIdentifier("att"),
         factory.createIdentifier("Option"),
       ),
-      [archetype_type_to_ts_type(at.arg)]
+      [archetype_type_to_ts_type(at.arg, ci)]
     );
     case "or": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -681,8 +690,8 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
         factory.createIdentifier("Or")
       ),
       [
-        archetype_type_to_ts_type(at.left_type),
-        archetype_type_to_ts_type(at.right_type)
+        archetype_type_to_ts_type(at.left_type, ci),
+        archetype_type_to_ts_type(at.right_type, ci)
       ]
     )
     case "partition": return throw_error(at.node)
@@ -708,7 +717,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     );
     case "set": return factory.createTypeReferenceNode(
       factory.createIdentifier("Array"),
-      [archetype_type_to_ts_type(at.arg)]
+      [archetype_type_to_ts_type(at.arg, ci)]
     )
     case "signature": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -724,11 +733,11 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
         factory.createIdentifier("att"),
         factory.createIdentifier("Ticket")
       ),
-      [archetype_type_to_ts_type(at.arg)]
+      [archetype_type_to_ts_type(at.arg, ci)]
     );
     case "timestamp": return throw_error(at.node)
     case "tuple": return factory.createTupleTypeNode(
-      at.args.map(t => archetype_type_to_ts_type(t))
+      at.args.map(t => archetype_type_to_ts_type(t, ci))
     );
     case "tx_rollup_l2_address": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -771,7 +780,7 @@ const rm_milliseconds_from = (x: ts.Expression): ts.BinaryExpression => {
   )
 }
 
-const make_tuple_cmp_body = (a: ts.Expression, b: ts.Expression, types: Array<ArchetypeType>): ts.Expression => {
+const make_tuple_cmp_body = (a: ts.Expression, b: ts.Expression, types: Array<ArchetypeType>, ci: ContractInterface): ts.Expression => {
   return factory.createCallExpression(
     factory.createParenthesizedExpression(factory.createArrowFunction(
       undefined,
@@ -810,7 +819,7 @@ const make_tuple_cmp_body = (a: ts.Expression, b: ts.Expression, types: Array<Ar
               ), factory.createElementAccessExpression(
                 factory.createIdentifier("y"),
                 factory.createNumericLiteral(i + 1)
-              ), t)
+              ), t, ci)
             )
           }, make_cmp_body(factory.createElementAccessExpression(
             factory.createIdentifier("x"),
@@ -818,7 +827,7 @@ const make_tuple_cmp_body = (a: ts.Expression, b: ts.Expression, types: Array<Ar
           ), factory.createElementAccessExpression(
             factory.createIdentifier("y"),
             factory.createNumericLiteral("0")
-          ), types[0])))],
+          ), types[0], ci)))],
         true
       )
     )),
@@ -827,7 +836,7 @@ const make_tuple_cmp_body = (a: ts.Expression, b: ts.Expression, types: Array<Ar
   )
 }
 
-export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: ArchetypeType) => {
+export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: ArchetypeType, ci: ContractInterface): ts.Expression => {
   const make_cmp_equals = (a: ts.Expression, b: ts.Expression) => {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -866,8 +875,22 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
     case "address": return make_cmp_equals(a, b);
     case "aggregate": return make_cmp_equals_default(a, b);
     case "asset_container": return make_cmp_equals_default(a, b);
-    case "asset_key": return make_cmp_equals_default(a, b);
-    case "asset_value": return make_cmp_equals_default(a, b);
+    case "asset_key": {
+      const [is_only_key, ty] = is_asset_one_field_key(atype.name, ci)
+      if (is_only_key && ty != null) {
+        return make_cmp_body(a, b, ty, ci)
+      } else {
+        return make_cmp_equals_default(a, b)
+      }
+    }
+    case "asset_value": {
+      const [is_only_val, ty] = is_asset_one_field_val(atype.name, ci)
+      if (is_only_val && ty != null) {
+        return make_cmp_body(a, b, ty, ci)
+      } else {
+        return make_cmp_equals_default(a, b)
+      }
+    }
     case "asset_view": return make_cmp_equals_default(a, b);
     case "asset": return make_cmp_equals_container(a, b);
     case "big_map": return make_cmp_equals_default(a, b);
@@ -913,7 +936,7 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
     case "string": return make_cmp_equals_default(a, b);
     case "ticket": return make_cmp_equals(a, b);
     case "timestamp": return make_cmp_equals_default(a, b);
-    case "tuple": return make_tuple_cmp_body(a, b, atype.args);
+    case "tuple": return make_tuple_cmp_body(a, b, atype.args, ci);
     case "tx_rollup_l2_address": return make_cmp_equals(a, b);
     case "unit": return make_cmp_equals(a, b);
   }
@@ -1205,11 +1228,19 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     }
     switch (asset_type.container_kind) {
       case "map": {
-        const key_type: ATNamed = { node: "asset_key", name: asset_name };
+        let key_type: ArchetypeType = { node: "asset_key", name: asset_name };
+        const [is_one_field_key, key_ty] = is_asset_one_field_key(asset_name, ci);
+        if (is_one_field_key && key_ty != null) {
+          key_type = key_ty
+        }
         if (is_only_keys(asset_type)) {
           return contained_type_to_field_decl("mich_to_list", arg, [key_type])
         } else {
-          const value_type: ATNamed = { node: "asset_value", name: asset_name };
+          let value_type: ArchetypeType = { node: "asset_value", name: asset_name };
+          const [is_one_field_val, val_ty] = is_asset_one_field_val(asset_name, ci);
+          if (is_one_field_val && val_ty != null) {
+            value_type = val_ty
+          }
           return map_mich_to_ts(key_type, value_type);
         }
       }
@@ -1235,8 +1266,22 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "address": return class_to_mich("mich_to_address", [arg]);
     case "aggregate": return TODO("aggregate", arg);
     case "asset_container": return TODO("asset_container", arg);
-    case "asset_key": return record_to_mich(atype.name + "_key", arg, ci)
-    case "asset_value": return record_to_mich(atype.name + "_value", arg, ci)
+    case "asset_key": {
+      const [a, ty] = is_asset_one_field_key(atype.name, ci)
+      if (a && ty != null) {
+        return mich_to_archetype_type(ty, arg, ci)
+      } else {
+        return record_to_mich(atype.name + "_key", arg, ci)
+      }
+    }
+    case "asset_value": {
+      const [a, ty] = is_asset_one_field_val(atype.name, ci)
+      if (a && ty != null) {
+        return mich_to_archetype_type(ty, arg, ci)
+      } else {
+        return record_to_mich(atype.name + "_value", arg, ci)
+      }
+    }
     case "asset_view": return TODO("asset_view", arg);
     case "asset": return asset_to_mich(atype.name, arg, ci);
     case "big_map": return class_to_mich("mich_to_int", [arg]);
@@ -1328,6 +1373,30 @@ const get_asset_type = (name: string, ci: ContractInterface) => {
     }
   }
   throw new Error("get_asset_type: '" + name + "' not found")
+}
+
+export const is_asset_one_field_key = (name: string, ci: ContractInterface): [boolean, ArchetypeType | null] => {
+  const a = get_asset_type(name, ci);
+  const [cpt, ty]: [number, ArchetypeType | null] = a.fields.reduce(([c, ty]: [number, ArchetypeType | null], x) => {
+    if (x.is_key) {
+      return [c + 1, x.type]
+    } else {
+      return [c, ty]
+    }
+  }, [0, null])
+  return [cpt == 1, ty]
+}
+
+export const is_asset_one_field_val = (name: string, ci: ContractInterface): [boolean, ArchetypeType | null] => {
+  const a = get_asset_type(name, ci);
+  const [cpt, ty]: [number, ArchetypeType | null] = a.fields.reduce(([c, ty]: [number, ArchetypeType | null], x) => {
+    if (!x.is_key) {
+      return [c + 1, x.type]
+    } else {
+      return [c, ty]
+    }
+  }, [0, null])
+  return [cpt == 1, ty]
 }
 
 const get_enum_type = (name: string, ci: ContractInterface): Enum => {
@@ -2115,7 +2184,7 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
 
 /* Errors ------------------------------------------------------------------ */
 
-export const to_label = (input : string) => {
+export const to_label = (input: string) => {
   const res = input.replace(/^\d/g, "_").split(new RegExp("[ !\"#$%&'()*+,-./:;<=>?@\[\\\]^`{}~]")).join('_').toUpperCase();
   return res
 }

@@ -23,21 +23,6 @@ export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type
     ], []),
     att.prim_annot_to_mich_type("bool", ["%f_d"])
 ], []);
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: r_record) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return att.pair_to_mich([this.k[0].to_mich(), att.pair_to_mich([att.string_to_mich(this.k[1][0]), this.k[1][1].to_mich()]), att.bool_to_mich(this.k[2])]);
-    }
-    equals(v: my_asset_key): boolean {
-        return this.k == v.k;
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(r_record.from_mich(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
     att.pair_array_to_mich_type([
@@ -46,25 +31,10 @@ export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_
     ], []),
     att.prim_annot_to_mich_type("bool", ["%f_d"])
 ], []);
-export class my_asset_value implements att.ArchetypeType {
-    constructor(public v: string) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return att.string_to_mich(this.v);
-    }
-    equals(v: my_asset_value): boolean {
-        return this.v == v.v;
-    }
-    static from_mich(input: att.Micheline): my_asset_value {
-        return new my_asset_value(att.mich_to_string(input));
-    }
-}
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("string", []);
 export type my_asset_container = Array<[
-    my_asset_key,
-    my_asset_value
+    r_record,
+    string
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("map", att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("nat", ["%f_a"]),
@@ -113,7 +83,7 @@ export class Type_asset_key_1_record_4_fields_custom {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [my_asset_key.from_mich(x), my_asset_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [r_record.from_mich(x), att.mich_to_string(y)]);
         }
         throw new Error("Contract not initialised");
     }

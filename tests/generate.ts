@@ -391,6 +391,15 @@ describe('Generate binding template', async () => {
   it('template_pausable', async () => {
     await get_binding('template_pausable.arl');
   });
+  it('template_permits', async () => {
+    await get_binding('template_permits.arl');
+  });
+  it('template_fa1_2', async () => {
+    await get_binding('template_fa1_2.arl');
+  });
+  it('template_fa2_fungible', async () => {
+    await get_binding('template_fa2_fungible.arl');
+  });
 })
 
 // describe('Generate michelson test', async () => {
@@ -851,7 +860,7 @@ entry asset_put(i : ${item.type}) {
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset();
-    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1].v)` : 'v.equals(res[0][1].v)'}, "Invalid Value")`
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][1])` : 'v.equals(res[0][1])'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_asset_value_2, new iter_settings(gen_it))
 })
@@ -920,7 +929,7 @@ entry asset_put(i : ${item.type}) {
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset();
-    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0].k)` : 'v.equals(res[0][0].k)'}, "Invalid Value")`
+    assert(1 == res.length && ${fun_eq != null ? `${fun_eq}(v, res[0][0])` : 'v.equals(res[0][0])'}, "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
 })
@@ -988,8 +997,8 @@ entry asset_put(i : ${item.type}) {
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
-    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(new Nat(0)));
-    assert(res && ${fun_eq != null ? `${fun_eq}(v, res.v)` : 'v.equals(res.v)'}, "Invalid Value")`
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new Nat(0));
+    assert(res && ${fun_eq != null ? `${fun_eq}(v, res)` : 'v.equals(res)'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_asset_value_2, new iter_settings(gen_it))
 })
@@ -1024,7 +1033,7 @@ entry asset_put(i : ${item.type}) {
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
-    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(new Nat(0)));
+    const res = await ${prefix}.${prefix}.get_my_asset_value(new Nat(0));
     assert(res && ${fun_eq != null ? `${fun_eq}(v, res.v)` : 'v.equals(res.v)'}, "Invalid Value")`
   };
   iterate_on_types(kind, generate_type_asset_value_3, new iter_settings(gen_it))
@@ -1057,8 +1066,8 @@ entry asset_put(i : ${item.type}) {
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
-    const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(v));
-    assert(res?.v == "", "Invalid Value")`
+    const res = await ${prefix}.${prefix}.get_my_asset_value(v);
+    assert(res == "", "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
 })
@@ -1092,7 +1101,7 @@ entry asset_put(i : ${item.type}) {
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset_value(new ${prefix}.my_asset_key(v, new Nat(0)));
-    assert(res?.v == "", "Invalid Value")`
+    assert(res == "", "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_2, new iter_settings(gen_it))
 })
@@ -1119,12 +1128,13 @@ entry asset_put(i : ${item.type}) {
     const prefix = `type_${kind}_${name}`;
     const ts_type = process_prefix(prefix, item.ts_type);
     const ts_value = process_prefix(prefix, item.ts_value);
+    const fun_eq = process_prefix(prefix, item.get_fun_eq());
 
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
     const res = await ${prefix}.${prefix}.get_my_asset();
-    assert(new ${prefix}.my_asset_key(v).equals(res[0]), "Invalid Value")`
+    assert(${fun_eq != null ? `${fun_eq}(v, res[0])` : 'v.equals(res[0])'}, "Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))
 })
@@ -1187,10 +1197,10 @@ entry asset_put(i : ${item.type}) {
 
     return `const v : ${ts_type} = ${ts_value};
     await ${prefix}.${prefix}.deploy({ as: alice });
-    const res_before = await ${prefix}.${prefix}.has_my_asset_value(new ${prefix}.my_asset_key(v));
+    const res_before = await ${prefix}.${prefix}.has_my_asset_value(v);
     assert(!res_before, "Before Invalid Value")
     await ${prefix}.${prefix}.asset_put(v, { as: alice });
-    const res_after = await ${prefix}.${prefix}.has_my_asset_value(new ${prefix}.my_asset_key(v));
+    const res_after = await ${prefix}.${prefix}.has_my_asset_value(v);
     assert(res_after, "After Invalid Value")`
   };
   iterate_on_comparable_types(kind, generate_type_asset_key_1, new iter_settings(gen_it))

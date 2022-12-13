@@ -19,25 +19,10 @@ export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_
     att.prim_annot_to_mich_type("tx_rollup_l2_address", ["%k"]),
     att.prim_annot_to_mich_type("nat", ["%n"])
 ], []);
-export class my_asset_value implements att.ArchetypeType {
-    constructor(public v: string) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return att.string_to_mich(this.v);
-    }
-    equals(v: my_asset_value): boolean {
-        return this.v == v.v;
-    }
-    static from_mich(input: att.Micheline): my_asset_value {
-        return new my_asset_value(att.mich_to_string(input));
-    }
-}
 export const my_asset_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("string", []);
 export type my_asset_container = Array<[
     my_asset_key,
-    my_asset_value
+    string
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("big_map", att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("tx_rollup_l2_address", ["%k"]),
@@ -79,12 +64,12 @@ export class Type_asset_key_2_big_map_tx_rollup_l2_address {
         }
         throw new Error("Contract not initialised");
     }
-    async get_my_asset_value(key: my_asset_key): Promise<my_asset_value | undefined> {
+    async get_my_asset_value(key: my_asset_key): Promise<string | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
-                return my_asset_value.from_mich(data);
+                return att.mich_to_string(data);
             }
             else {
                 return undefined;

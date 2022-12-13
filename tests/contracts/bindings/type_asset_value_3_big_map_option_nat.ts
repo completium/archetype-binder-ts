@@ -1,20 +1,5 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: att.Nat) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.k.to_mich();
-    }
-    equals(v: my_asset_key): boolean {
-        return this.k.equals(v.k);
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(att.mich_to_nat(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
 export class my_asset_value implements att.ArchetypeType {
     constructor(public s: string, public v: att.Option<att.Nat>) { }
@@ -36,7 +21,7 @@ export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mic
     att.option_annot_to_mich_type(att.prim_annot_to_mich_type("nat", []), ["%v"])
 ], []);
 export type my_asset_container = Array<[
-    my_asset_key,
+    att.Nat,
     my_asset_value
 ]>;
 export const my_asset_container_mich_type: att.MichelineType = att.pair_annot_to_mich_type("big_map", att.prim_annot_to_mich_type("nat", []), att.pair_array_to_mich_type([
@@ -79,7 +64,7 @@ export class Type_asset_value_3_big_map_option_nat {
         }
         throw new Error("Contract not initialised");
     }
-    async get_my_asset_value(key: my_asset_key): Promise<my_asset_value | undefined> {
+    async get_my_asset_value(key: att.Nat): Promise<my_asset_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
@@ -92,7 +77,7 @@ export class Type_asset_value_3_big_map_option_nat {
         }
         throw new Error("Contract not initialised");
     }
-    async has_my_asset_value(key: my_asset_key): Promise<boolean> {
+    async has_my_asset_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);

@@ -71,26 +71,11 @@ export const mich_to_e_enum = (m: att.Micheline): e_enum => {
     }
     throw new Error("mich_to_e_enum : invalid micheline");
 };
-export class my_asset_key implements att.ArchetypeType {
-    constructor(public k: e_enum) { }
-    toString(): string {
-        return JSON.stringify(this, null, 2);
-    }
-    to_mich(): att.Micheline {
-        return this.k.to_mich((x => { return att.unit_to_mich(); }), (x => { return x.to_mich((x => { return x.to_mich(); }), (x => { return x.to_mich((x => { return att.string_to_mich(x); }), (x => { return att.pair_to_mich([x[0].to_mich(), att.bool_to_mich(x[1])]); })); })); }));
-    }
-    equals(v: my_asset_key): boolean {
-        return this.k == v.k;
-    }
-    static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(mich_to_e_enum(input));
-    }
-}
 export const my_asset_key_mich_type: att.MichelineType = att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("bytes", []),
     att.prim_annot_to_mich_type("bool", [])
 ], ["%e_4"]), []), []), []);
-export type my_asset_container = Array<my_asset_key>;
+export type my_asset_container = Array<e_enum>;
 export const my_asset_container_mich_type: att.MichelineType = att.set_annot_to_mich_type(att.or_to_mich_type(att.prim_annot_to_mich_type("unit", ["%e_1"]), att.or_to_mich_type(att.prim_annot_to_mich_type("nat", ["%e_2"]), att.or_to_mich_type(att.prim_annot_to_mich_type("string", ["%e_3"]), att.pair_array_to_mich_type([
     att.prim_annot_to_mich_type("bytes", []),
     att.prim_annot_to_mich_type("bool", [])
@@ -134,7 +119,7 @@ export class Type_asset_only_key_1_enum_param {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return my_asset_key.from_mich(x); });
+            return att.mich_to_list(storage, x => { return mich_to_e_enum(x); });
         }
         throw new Error("Contract not initialised");
     }
