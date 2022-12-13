@@ -1,0 +1,82 @@
+{
+  "name": "type_list_tx_rollup_l2_address",
+  "parameters": [],
+  "types": {
+    "assets": [],
+    "enums": [],
+    "records": [],
+    "events": []
+  },
+  "storage": [
+    {
+      "name": "res",
+      "type": {
+        "node": "list",
+        "name": null,
+        "int_value": null,
+        "args": [
+          {
+            "node": "tx_rollup_l2_address",
+            "name": null,
+            "int_value": null,
+            "args": []
+          }
+        ]
+      },
+      "const": false,
+      "path": []
+    }
+  ],
+  "storage_type": {
+    "value": {
+      "prim": "list",
+      "int": null,
+      "bytes": null,
+      "string": null,
+      "args": [
+        {
+          "prim": "tx_rollup_l2_address",
+          "int": null,
+          "bytes": null,
+          "string": null,
+          "args": [],
+          "annots": [],
+          "array": [],
+          "var_id": null,
+          "var_type": null
+        }
+      ],
+      "annots": [],
+      "array": [],
+      "var_id": null,
+      "var_type": null
+    },
+    "is_storable": true
+  },
+  "entrypoints": [
+    {
+      "name": "set_value",
+      "args": [
+        {
+          "name": "i",
+          "type": {
+            "node": "list",
+            "name": null,
+            "int_value": null,
+            "args": [
+              {
+                "node": "tx_rollup_l2_address",
+                "name": null,
+                "int_value": null,
+                "args": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "getters": [],
+  "views": [],
+  "errors": []
+}

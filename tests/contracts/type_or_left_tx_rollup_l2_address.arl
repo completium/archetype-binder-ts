@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_or_left_tx_rollup_l2_address
+
+variable res : or<tx_rollup_l2_address, nat> = right<tx_rollup_l2_address>(0)
+
+entry set_value(i : tx_rollup_l2_address) {
+  res := left<nat>(i)
+}

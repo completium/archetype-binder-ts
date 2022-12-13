@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_record_address from './contracts/bindings/type_record_address'
@@ -23,6 +23,7 @@ import * as type_record_rational from './contracts/bindings/type_record_rational
 import * as type_record_signature from './contracts/bindings/type_record_signature'
 import * as type_record_string from './contracts/bindings/type_record_string'
 import * as type_record_tez from './contracts/bindings/type_record_tez'
+import * as type_record_tx_rollup_l2_address from './contracts/bindings/type_record_tx_rollup_l2_address'
 import * as type_record_unit from './contracts/bindings/type_record_unit'
 import * as type_record_list_nat from './contracts/bindings/type_record_list_nat'
 import * as type_record_list_string from './contracts/bindings/type_record_list_string'
@@ -243,6 +244,15 @@ describe('Type record', () => {
     await type_record_tez.type_record_tez.deploy({ as: alice });
     await type_record_tez.type_record_tez.set_value(v, { as: alice });
     const res = await type_record_tez.type_record_tez.get_res();
+    assert(v.equals(res), "Invalid Value")
+  });
+
+  // tx_rollup_l2_address
+  it('tx_rollup_l2_address', async () => {
+    const v : type_record_tx_rollup_l2_address.my_record = new type_record_tx_rollup_l2_address.my_record(new Nat(2), new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm"), "mystr");
+    await type_record_tx_rollup_l2_address.type_record_tx_rollup_l2_address.deploy({ as: alice });
+    await type_record_tx_rollup_l2_address.type_record_tx_rollup_l2_address.set_value(v, { as: alice });
+    const res = await type_record_tx_rollup_l2_address.type_record_tx_rollup_l2_address.get_res();
     assert(v.equals(res), "Invalid Value")
   });
 

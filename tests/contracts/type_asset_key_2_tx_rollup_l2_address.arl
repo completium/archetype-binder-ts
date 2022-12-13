@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_2_tx_rollup_l2_address
+
+asset my_asset identified by k n {
+  k : tx_rollup_l2_address;
+  n : nat;
+  v : string;
+}
+
+entry asset_put(i : tx_rollup_l2_address) {
+  my_asset.put({i; 0; ""})
+}

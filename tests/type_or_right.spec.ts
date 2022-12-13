@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_or_right_address from './contracts/bindings/type_or_right_address'
@@ -23,6 +23,7 @@ import * as type_or_right_rational from './contracts/bindings/type_or_right_rati
 import * as type_or_right_signature from './contracts/bindings/type_or_right_signature'
 import * as type_or_right_string from './contracts/bindings/type_or_right_string'
 import * as type_or_right_tez from './contracts/bindings/type_or_right_tez'
+import * as type_or_right_tx_rollup_l2_address from './contracts/bindings/type_or_right_tx_rollup_l2_address'
 import * as type_or_right_unit from './contracts/bindings/type_or_right_unit'
 import * as type_or_right_list_nat from './contracts/bindings/type_or_right_list_nat'
 import * as type_or_right_list_string from './contracts/bindings/type_or_right_list_string'
@@ -244,6 +245,15 @@ describe('Type or_right', () => {
     await type_or_right_tez.type_or_right_tez.set_value(v, { as: alice });
     const res = await type_or_right_tez.type_or_right_tez.get_res();
     assert(Or.Right<Nat, Tez>(v).equals(res), "Invalid Value")
+  });
+
+  // tx_rollup_l2_address
+  it('tx_rollup_l2_address', async () => {
+    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
+    await type_or_right_tx_rollup_l2_address.type_or_right_tx_rollup_l2_address.deploy({ as: alice });
+    await type_or_right_tx_rollup_l2_address.type_or_right_tx_rollup_l2_address.set_value(v, { as: alice });
+    const res = await type_or_right_tx_rollup_l2_address.type_or_right_tx_rollup_l2_address.get_res();
+    assert(Or.Right<Nat, Tx_rollup_l2_address>(v).equals(res), "Invalid Value")
   });
 
   // unit

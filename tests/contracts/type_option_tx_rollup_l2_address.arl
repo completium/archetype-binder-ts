@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_option_tx_rollup_l2_address
+
+variable res : option<tx_rollup_l2_address> = none
+
+entry set_value(i : option<tx_rollup_l2_address>) {
+  res := i
+}

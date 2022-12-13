@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_asset_only_key_2_big_map_address from './contracts/bindings/type_asset_only_key_2_big_map_address'
@@ -17,6 +17,7 @@ import * as type_asset_only_key_2_big_map_rational from './contracts/bindings/ty
 import * as type_asset_only_key_2_big_map_signature from './contracts/bindings/type_asset_only_key_2_big_map_signature'
 import * as type_asset_only_key_2_big_map_string from './contracts/bindings/type_asset_only_key_2_big_map_string'
 import * as type_asset_only_key_2_big_map_tez from './contracts/bindings/type_asset_only_key_2_big_map_tez'
+import * as type_asset_only_key_2_big_map_tx_rollup_l2_address from './contracts/bindings/type_asset_only_key_2_big_map_tx_rollup_l2_address'
 import * as type_asset_only_key_2_big_map_unit from './contracts/bindings/type_asset_only_key_2_big_map_unit'
 import * as type_asset_only_key_2_big_map_option_nat from './contracts/bindings/type_asset_only_key_2_big_map_option_nat'
 import * as type_asset_only_key_2_big_map_option_string from './contracts/bindings/type_asset_only_key_2_big_map_option_string'
@@ -203,6 +204,17 @@ describe('Type asset_only_key_2_big_map', () => {
     assert(!res_before, "Before Invalid Value")
     await type_asset_only_key_2_big_map_tez.type_asset_only_key_2_big_map_tez.asset_put(v, { as: alice });
     const res_after = await type_asset_only_key_2_big_map_tez.type_asset_only_key_2_big_map_tez.has_my_asset_value(new type_asset_only_key_2_big_map_tez.my_asset_key(v, new Nat(0)));
+    assert(res_after, "After Invalid Value")
+  });
+
+  // tx_rollup_l2_address
+  it('tx_rollup_l2_address', async () => {
+    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
+    await type_asset_only_key_2_big_map_tx_rollup_l2_address.type_asset_only_key_2_big_map_tx_rollup_l2_address.deploy({ as: alice });
+    const res_before = await type_asset_only_key_2_big_map_tx_rollup_l2_address.type_asset_only_key_2_big_map_tx_rollup_l2_address.has_my_asset_value(new type_asset_only_key_2_big_map_tx_rollup_l2_address.my_asset_key(v, new Nat(0)));
+    assert(!res_before, "Before Invalid Value")
+    await type_asset_only_key_2_big_map_tx_rollup_l2_address.type_asset_only_key_2_big_map_tx_rollup_l2_address.asset_put(v, { as: alice });
+    const res_after = await type_asset_only_key_2_big_map_tx_rollup_l2_address.type_asset_only_key_2_big_map_tx_rollup_l2_address.has_my_asset_value(new type_asset_only_key_2_big_map_tx_rollup_l2_address.my_asset_key(v, new Nat(0)));
     assert(res_after, "After Invalid Value")
   });
 

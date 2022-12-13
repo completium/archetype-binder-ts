@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_big_map_tx_rollup_l2_address
+
+asset my_asset to big_map {
+  k : nat;
+  s : string;
+  v : tx_rollup_l2_address;
+}
+
+entry asset_put(i : tx_rollup_l2_address) {
+  my_asset.put({0; ""; i})
+}

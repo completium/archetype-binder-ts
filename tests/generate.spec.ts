@@ -3,11 +3,7 @@ import { BindingSettings, Language, Target, generate_binding } from '../src/main
 import { RawContractInterface } from '../src/utils'
 
 const archetype = require('@completium/archetype');
-const assert = require('assert')
 const fs = require('fs')
-const tmp = require('tmp');
-
-const alice = get_account('alice')
 
 /* Verbose mode ------------------------------------------------------------ */
 
@@ -94,6 +90,7 @@ let type_default_name: Array<item> = [
   new item('signature', '"edsigte5U54Z8kxengKaSqDNY77ApFzzfq4RtahenZmHs8zWjhiLnshAhCZbSH7MGqnpFSWrrLX5sgbYHnJDmE9NUqjS212KAW8"', true, 'Signature', 'new Signature("sigPGRuva6xjBJkmb6BYpbovGb4BoobkE3GUN2njdxwkG25yRT39GaDrsBgczf5VybSRGi5eddQy6VBfUkg2YcLfMvgg8Uk1")'),
   new item('string', '""', true, 'string', '"mystr"', { fun_eq: "((x : string, y : string) => {return x == y})" }),
   new item('tez', '0tz', true, 'Tez', 'new Tez(2)'),
+  new item('tx_rollup_l2_address', 'tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm', true, 'Tx_rollup_l2_address', 'new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm")'),
   new item('unit', 'Unit', true, 'Unit', 'new Unit()'),
   new item('list<nat>', '[]', false, 'Array<Nat>', '[new Nat(1), new Nat(2), new Nat(3)]', { fun_eq: "((x : Array<Nat>, y : Array<Nat>) => {return x.length == y.length && x[0].equals(y[0]) && x[1].equals(y[1]) && x[2].equals(y[2])})", name: 'list_nat' }),
   new item('list<string>', '[]', false, 'Array<string>', '["a", "b", "c", "d"]', { fun_eq: '((x : Array<string>, y : Array<string>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1] && x[2] == y[2] && x[3] == y[3]})', name: 'list_string' }),
@@ -127,12 +124,6 @@ let type_default_name: Array<item> = [
   new item('r_record', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'record_4_fields_custom', decl: 'record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))' }),
   new item('r_record', '{ f_a = 0; f_b = 0; f_c = 0tz; f_d = 0.0; f_e = false; f_f = 0x; f_g = ""; f_h = 2020-01-01; f_i = 0s; f_j = tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg; f_k = none; f_n = []; f_p = [] }', false, '${prefix}.r_record', 'new ${prefix}.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] )', { name: 'record_complex', decl: 'record r_record { f_a : nat; f_b : int; f_c : tez; f_d : rational; f_e : bool; f_f : bytes; f_g : string; f_h : date; f_i : duration; f_j : address; f_k : option<nat>; f_n : list<string>; f_p : set<string * nat * int> } as (((f1, f2, f3),((f4, f5), (f6, f7, f8, f9, f10, f11, f12, f13))))' }),
 
-  // event
-  // new item('e_event',  '{f_a = 0}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2))', { name: 'record_1_field', decl: 'event e_event {f_a : nat}' }),
-  // new item('e_event', '{f_a = 0; f_b = ""}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr")', { name: 'event_2_fields', decl: 'event e_event {f_a : nat; f_b : string}' }),
-  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"))', { name: 'event_3_fields', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes}' }),
-  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'event_4_fields', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes; f_d : bool}' }),
-  // new item('e_event', '{f_a = 0; f_b = ""; f_c = 0x; f_d = false}', true, '${prefix}.e_event', 'new ${prefix}.e_event(new Nat(2), "mystr", new Bytes("02"), true)', { name: 'event_4_fields_custom', decl: 'event e_event {f_a : nat; f_b : string; f_c : bytes; f_d : bool} as ((%f_a, (%f_b, %f_c), %f_d))' }),
 ]
 
 const gen_asset = (): Array<item> => {
@@ -172,7 +163,7 @@ const type_assets = gen_asset()
 const spec_template = (type: string, imports: string, tests: string) => {
   return `/* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 ${imports}

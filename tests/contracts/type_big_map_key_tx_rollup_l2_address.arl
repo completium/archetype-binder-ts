@@ -1,0 +1,8 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_big_map_key_tx_rollup_l2_address
+
+variable res : big_map<tx_rollup_l2_address, nat> = []
+
+entry set_value(i : tx_rollup_l2_address) {
+  res.put(i, 0)
+}

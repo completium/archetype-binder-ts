@@ -733,7 +733,7 @@ export const archetype_type_to_ts_type = (at: ArchetypeType): KeywordTypeNode<an
     case "tx_rollup_l2_address": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
-        factory.createIdentifier("Address")
+        factory.createIdentifier("Tx_rollup_l2_address")
       ),
       undefined
     );
