@@ -525,7 +525,14 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci : ContractInterf
         )
       }
     }
-    case "asset_view": return throw_error(at.node)
+    case "asset_view": {
+      const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
+      if (is_only_key && ty != null) {
+        return archetype_type_to_ts_type({node: "list", arg: ty}, ci)
+      } else {
+        return archetype_type_to_ts_type({node: "list", arg: {node: "asset_key", name: at.name}}, ci)
+      }
+    }
     case "asset": {
       if (at.name != null) {
         return factory.createTypeReferenceNode(
@@ -1282,7 +1289,14 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
         return record_to_mich(atype.name + "_value", arg, ci)
       }
     }
-    case "asset_view": return TODO("asset_view", arg);
+    case "asset_view": {
+      const [a, ty] = is_asset_one_field_key(atype.name, ci)
+      if (a && ty != null) {
+        return mich_to_archetype_type({node: "list", arg: ty}, arg, ci)
+      } else {
+        return mich_to_archetype_type({node: "list", arg: {node: "record", name: atype.name + "_key"}}, arg, ci)
+      }
+    }
     case "asset": return asset_to_mich(atype.name, arg, ci);
     case "big_map": return class_to_mich("mich_to_int", [arg]);
     case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
@@ -1776,9 +1790,23 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "address": return class_to_mich(factory.createIdentifier(fp.name))
     case "aggregate": return throw_error(fp.type.node)
     case "asset_container": return throw_error(fp.type.node);
-    case "asset_key": return throw_error(fp.type.node);
-    case "asset_value": return class_to_mich(factory.createIdentifier(fp.name));
-    case "asset_view": return throw_error(fp.type.node);
+    case "asset_key": {
+      const [is_only_key, ty] = is_asset_one_field_key(fp.type.name, ci)
+      if (is_only_key && ty != null) {
+        return function_param_to_mich({name: fp.name, type: ty}, ci)
+      } else {
+        return class_to_mich(factory.createIdentifier(fp.name));
+      }
+    }
+    case "asset_value": {
+      const [is_only_val, ty] = is_asset_one_field_val(fp.type.name, ci)
+      if (is_only_val && ty != null) {
+        return function_param_to_mich({name: fp.name, type: ty}, ci)
+      } else {
+        return class_to_mich(factory.createIdentifier(fp.name));
+      }
+    }
+    case "asset_view": return list_to_mich(fp.name, {node: "asset_key", name:fp.type.name}, ci);
     case "asset": return throw_error(fp.type.node);
     case "big_map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "bls12_381_fr": return class_to_mich(factory.createIdentifier(fp.name));
@@ -1872,15 +1900,6 @@ export const storage_to_mich = (mt: MichelsonType, selts: Array<StorageElement>,
       }
     }
     return function_param_to_mich(selt, ci)
-  }
-}
-
-const get_archetype_type_of = (name: string, fields: Array<Omit<Field, "is_key">>) => {
-  for (let i = 0; i < fields.length; i++) {
-    const field = fields[i]
-    if (field.name == name) {
-      return field.type
-    }
   }
 }
 
