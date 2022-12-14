@@ -1,0 +1,16 @@
+archetype sample_state
+
+states =
+| First
+| Second
+| Third
+
+variable res : nat = 0
+
+transition exec() {
+  from First
+  to Second
+  with effect {
+    res := 1
+  }
+}

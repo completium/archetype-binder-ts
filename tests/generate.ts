@@ -356,9 +356,9 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_event.arl');
   });
 
-  // it('state', async () => {
-  //   await get_binding('sample_state.arl');
-  // });
+  it('state', async () => {
+    await get_binding('sample_state.arl');
+  });
 
   // it('asset_container', async () => {
   //   await get_binding('sample_asset_container.arl');

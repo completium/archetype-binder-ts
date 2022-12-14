@@ -489,7 +489,7 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
 
 /* Archetype type to Typescript type --------------------------------------- */
 
-export const archetype_type_to_ts_type = (at: ArchetypeType, ci : ContractInterface): KeywordTypeNode<any> => {
+export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterface): KeywordTypeNode<any> => {
   const throw_error = (ty: string): KeywordTypeNode<any> => {
     throw new Error(`archetype_type_to_ts_type: '${ty}' type not handled`)
   }
@@ -528,9 +528,9 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci : ContractInterf
     case "asset_view": {
       const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
       if (is_only_key && ty != null) {
-        return archetype_type_to_ts_type({node: "list", arg: ty}, ci)
+        return archetype_type_to_ts_type({ node: "list", arg: ty }, ci)
       } else {
-        return archetype_type_to_ts_type({node: "list", arg: {node: "asset_key", name: at.name}}, ci)
+        return archetype_type_to_ts_type({ node: "list", arg: { node: "asset_key", name: at.name } }, ci)
       }
     }
     case "asset": {
@@ -951,61 +951,6 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
 
 /* Michelson to Typescript utils ----------------------------------------------------- */
 
-const make_pair_decl = (arg: ts.Expression, i: number) => {
-  const idx = Math.floor(i / 2)
-  if (idx == 0) {
-    return factory.createVariableStatement(
-      undefined,
-      factory.createVariableDeclarationList(
-        [factory.createVariableDeclaration(
-          factory.createIdentifier("p0"),
-          undefined,
-          undefined,
-          factory.createParenthesizedExpression(factory.createAsExpression(
-            arg,
-            factory.createTypeReferenceNode(
-              factory.createQualifiedName(
-                factory.createIdentifier("att"),
-                factory.createIdentifier("Mpair")
-              ),
-              undefined
-            )
-          ))
-        )],
-        ts.NodeFlags.Const
-      )
-    )
-  } else {
-    return factory.createVariableStatement(
-      undefined,
-      factory.createVariableDeclarationList(
-        [factory.createVariableDeclaration(
-          factory.createIdentifier("p" + idx.toString()),
-          undefined,
-          undefined,
-          factory.createParenthesizedExpression(factory.createAsExpression(
-            factory.createElementAccessExpression(
-              factory.createPropertyAccessExpression(
-                factory.createIdentifier("p" + (idx - 1).toString()),
-                factory.createIdentifier("args")
-              ),
-              factory.createNumericLiteral("1")
-            ),
-            factory.createTypeReferenceNode(
-              factory.createQualifiedName(
-                factory.createIdentifier("att"),
-                factory.createIdentifier("Mpair")
-              ),
-              undefined
-            )
-          ))
-        )],
-        ts.NodeFlags.Const
-      )
-    )
-  }
-}
-
 export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression, ci: ContractInterface): ts.Expression => {
 
   const TODO = (ty: string, x: ts.Expression): ts.Expression => {
@@ -1292,9 +1237,9 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "asset_view": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
       if (a && ty != null) {
-        return mich_to_archetype_type({node: "list", arg: ty}, arg, ci)
+        return mich_to_archetype_type({ node: "list", arg: ty }, arg, ci)
       } else {
-        return mich_to_archetype_type({node: "list", arg: {node: "record", name: atype.name + "_key"}}, arg, ci)
+        return mich_to_archetype_type({ node: "list", arg: { node: "record", name: atype.name + "_key" } }, arg, ci)
       }
     }
     case "asset": return asset_to_mich(atype.name, arg, ci);
@@ -1344,23 +1289,6 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
 }
 
 /* storage element getter formulas ----------------------------------------- */
-
-const access_nth_field = (x: ts.Expression, i: number): ts.Expression => {
-  return factory.createElementAccessExpression(
-    x,
-    factory.createElementAccessExpression(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("Object"),
-          factory.createIdentifier("keys")
-        ),
-        undefined,
-        [x]
-      ),
-      factory.createNumericLiteral(i)
-    )
-  )
-}
 
 export const get_record_or_event_type = (name: string | null, ci: ContractInterface) => {
   if (name != null) {
@@ -1422,63 +1350,6 @@ const get_enum_type = (name: string, ci: ContractInterface): Enum => {
     }
   }
   throw new Error("get_enum_type: '" + name + "' not found")
-}
-
-const get_field_annot_names = (r: Record): { [key: string]: string } => {
-  const internal_get_fan =
-    (mt: MichelsonType, idx: number, acc: { [key: string]: string }): [number, { [key: string]: string }] => {
-      if (mt.annots && mt.annots.length > 0) {
-        const annot = mt.annots[0].slice(1)
-        acc[r.fields[idx].name] = annot
-        return [idx + 1, acc]
-      } else {
-        switch (mt.prim) {
-          case "pair": {
-            // left
-            const [idx_left, acc_left] = internal_get_fan(mt.args[0], idx, acc)
-            // right
-            const [idx_right, acc_right] = internal_get_fan(mt.args[1], idx_left, acc_left)
-            return [idx_right, acc_right]
-          }
-          case "unit": {
-            return [idx, acc]
-          }
-          //default : throw new Error(`internal_get_fan: found a node '${mt.prim}' which is not annotated nor is a pair`)
-          default: {
-            acc[r.fields[idx].name] = r.fields[idx].name
-            return [idx + 1, acc]
-          }
-        }
-      }
-    }
-  const [_, res] = internal_get_fan(r.type_michelson, 0, {})
-  return res
-}
-
-const get_lambda_form = (body: ts.Statement[], arg: ts.Expression): ts.Expression => {
-  return factory.createCallExpression(
-    factory.createParenthesizedExpression(factory.createArrowFunction(
-      undefined,
-      undefined,
-      [factory.createParameterDeclaration(
-        undefined,
-        undefined,
-        undefined,
-        factory.createIdentifier("x"),
-        undefined,
-        undefined,
-        undefined
-      )],
-      undefined,
-      factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-      factory.createBlock(
-        body,
-        false
-      )
-    )),
-    undefined,
-    [arg]
-  )
 }
 
 /* Typescript To Micheline utils ------------------------------------------------------ */
@@ -1793,7 +1664,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "asset_key": {
       const [is_only_key, ty] = is_asset_one_field_key(fp.type.name, ci)
       if (is_only_key && ty != null) {
-        return function_param_to_mich({name: fp.name, type: ty}, ci)
+        return function_param_to_mich({ name: fp.name, type: ty }, ci)
       } else {
         return class_to_mich(factory.createIdentifier(fp.name));
       }
@@ -1801,12 +1672,12 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "asset_value": {
       const [is_only_val, ty] = is_asset_one_field_val(fp.type.name, ci)
       if (is_only_val && ty != null) {
-        return function_param_to_mich({name: fp.name, type: ty}, ci)
+        return function_param_to_mich({ name: fp.name, type: ty }, ci)
       } else {
         return class_to_mich(factory.createIdentifier(fp.name));
       }
     }
-    case "asset_view": return list_to_mich(fp.name, {node: "asset_key", name:fp.type.name}, ci);
+    case "asset_view": return list_to_mich(fp.name, { node: "asset_key", name: fp.type.name }, ci);
     case "asset": return throw_error(fp.type.node);
     case "big_map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "bls12_381_fr": return class_to_mich(factory.createIdentifier(fp.name));
