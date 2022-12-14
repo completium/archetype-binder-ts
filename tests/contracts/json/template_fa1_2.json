@@ -10,8 +10,7 @@
         "args": []
       },
       "const": true,
-      "default": null,
-      "path": []
+      "default": null
     },
     {
       "name": "total_supply",
@@ -22,8 +21,7 @@
         "args": []
       },
       "const": true,
-      "default": null,
-      "path": []
+      "default": null
     },
     {
       "name": "metadata_coin",
@@ -34,8 +32,7 @@
         "args": []
       },
       "const": true,
-      "default": null,
-      "path": []
+      "default": null
     }
   ],
   "types": {
@@ -464,10 +461,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        0
-      ]
+      "const": false
     },
     {
       "name": "token_metadata",
@@ -477,10 +471,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        1
-      ]
+      "const": false
     }
   ],
   "storage_type": {

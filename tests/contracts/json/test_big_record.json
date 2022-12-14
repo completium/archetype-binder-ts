@@ -10,10 +10,7 @@
         "args": []
       },
       "const": false,
-      "default": null,
-      "path": [
-        0
-      ]
+      "default": null
     },
     {
       "name": "oa",
@@ -31,10 +28,7 @@
         ]
       },
       "const": false,
-      "default": null,
-      "path": [
-        1
-      ]
+      "default": null
     }
   ],
   "types": {
@@ -951,10 +945,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        2
-      ]
+      "const": false
     },
     {
       "name": "o",
@@ -971,10 +962,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        3
-      ]
+      "const": false
     },
     {
       "name": "l",
@@ -991,10 +979,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        4
-      ]
+      "const": false
     },
     {
       "name": "m",
@@ -1030,10 +1015,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        5
-      ]
+      "const": false
     },
     {
       "name": "s1",
@@ -1050,10 +1032,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        6
-      ]
+      "const": false
     },
     {
       "name": "l1",
@@ -1070,10 +1049,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        7
-      ]
+      "const": false
     },
     {
       "name": "l2",
@@ -1097,10 +1073,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        8
-      ]
+      "const": false
     },
     {
       "name": "r",
@@ -1110,10 +1083,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        9
-      ]
+      "const": false
     },
     {
       "name": "just_a_key",
@@ -1123,10 +1093,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        10
-      ]
+      "const": false
     },
     {
       "name": "visitor",
@@ -1136,10 +1103,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        11
-      ]
+      "const": false
     },
     {
       "name": "visitor_2",
@@ -1149,10 +1113,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        12
-      ]
+      "const": false
     },
     {
       "name": "a_value",
@@ -1162,10 +1123,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        13
-      ]
+      "const": false
     },
     {
       "name": "b_value",
@@ -1175,10 +1133,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        14
-      ]
+      "const": false
     },
     {
       "name": "c_value",
@@ -1188,10 +1143,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        15
-      ]
+      "const": false
     }
   ],
   "storage_type": {

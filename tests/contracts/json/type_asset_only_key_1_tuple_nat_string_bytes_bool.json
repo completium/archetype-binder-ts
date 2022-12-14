@@ -193,8 +193,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": []
+      "const": false
     }
   ],
   "storage_type": {

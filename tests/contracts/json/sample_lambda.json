@@ -29,10 +29,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        0
-      ]
+      "const": false
     },
     {
       "name": "i",
@@ -42,10 +39,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        1
-      ]
+      "const": false
     }
   ],
   "storage_type": {

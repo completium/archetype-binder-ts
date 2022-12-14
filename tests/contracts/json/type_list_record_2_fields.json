@@ -85,8 +85,7 @@
           }
         ]
       },
-      "const": false,
-      "path": []
+      "const": false
     }
   ],
   "storage_type": {

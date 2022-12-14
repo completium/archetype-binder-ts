@@ -16,10 +16,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        0
-      ]
+      "const": false
     },
     {
       "name": "v2",
@@ -29,10 +26,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        1
-      ]
+      "const": false
     }
   ],
   "storage_type": {

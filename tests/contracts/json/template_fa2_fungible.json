@@ -10,10 +10,7 @@
         "args": []
       },
       "const": false,
-      "default": null,
-      "path": [
-        0
-      ]
+      "default": null
     },
     {
       "name": "permits",
@@ -24,10 +21,7 @@
         "args": []
       },
       "const": false,
-      "default": null,
-      "path": [
-        1
-      ]
+      "default": null
     }
   ],
   "types": {
@@ -1371,10 +1365,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        2
-      ]
+      "const": false
     },
     {
       "name": "paused",
@@ -1384,10 +1375,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        3
-      ]
+      "const": false
     },
     {
       "name": "token_metadata",
@@ -1397,10 +1385,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        4
-      ]
+      "const": false
     },
     {
       "name": "ledger",
@@ -1410,10 +1395,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        5
-      ]
+      "const": false
     },
     {
       "name": "operator",
@@ -1423,10 +1405,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        6
-      ]
+      "const": false
     },
     {
       "name": "metadata",
@@ -1449,10 +1428,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        7
-      ]
+      "const": false
     }
   ],
   "storage_type": {

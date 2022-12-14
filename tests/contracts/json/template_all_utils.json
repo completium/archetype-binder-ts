@@ -10,10 +10,7 @@
         "args": []
       },
       "const": false,
-      "default": null,
-      "path": [
-        0
-      ]
+      "default": null
     }
   ],
   "types": {
@@ -38,10 +35,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        1
-      ]
+      "const": false
     },
     {
       "name": "paused",
@@ -51,10 +45,7 @@
         "int_value": null,
         "args": []
       },
-      "const": false,
-      "path": [
-        2
-      ]
+      "const": false
     },
     {
       "name": "metadata",
@@ -77,10 +68,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        3
-      ]
+      "const": false
     }
   ],
   "storage_type": {

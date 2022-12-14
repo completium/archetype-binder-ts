@@ -10,10 +10,7 @@
         "args": []
       },
       "const": false,
-      "default": null,
-      "path": [
-        0
-      ]
+      "default": null
     }
   ],
   "types": {
@@ -38,10 +35,7 @@
           }
         ]
       },
-      "const": false,
-      "path": [
-        1
-      ]
+      "const": false
     }
   ],
   "storage_type": {

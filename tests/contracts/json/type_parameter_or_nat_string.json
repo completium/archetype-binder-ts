@@ -23,8 +23,7 @@
         ]
       },
       "const": false,
-      "default": null,
-      "path": []
+      "default": null
     }
   ],
   "types": {
