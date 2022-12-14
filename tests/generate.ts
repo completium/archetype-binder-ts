@@ -360,9 +360,9 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_state.arl');
   });
 
-  it('asset_container', async () => {
-    await get_binding('sample_asset_container.arl');
-  });
+  // it('asset_container', async () => {
+  //   await get_binding('sample_asset_container.arl');
+  // });
 
   it('sample_asset_view', async () => {
     await get_binding('sample_asset_view.arl');

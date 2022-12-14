@@ -501,7 +501,14 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
       ),
       undefined
     );
-    case "aggregate": return throw_error(at.node)
+    case "aggregate": {
+      const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
+      if (is_only_key && ty != null) {
+        return archetype_type_to_ts_type({ node: "set", arg: ty }, ci)
+      } else {
+        return archetype_type_to_ts_type({ node: "set", arg: { node: "asset_key", name: at.name } }, ci)
+      }
+    }
     case "asset_container": return throw_error(at.node)
     case "asset_key": {
       const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
@@ -701,7 +708,14 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
         archetype_type_to_ts_type(at.right_type, ci)
       ]
     )
-    case "partition": return throw_error(at.node)
+    case "partition": {
+      const [is_only_key, ty] = is_asset_one_field_key(at.name, ci)
+      if (is_only_key && ty != null) {
+        return archetype_type_to_ts_type({ node: "set", arg: ty }, ci)
+      } else {
+        return archetype_type_to_ts_type({ node: "set", arg: { node: "asset_key", name: at.name } }, ci)
+      }
+    }
     case "rational": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -1216,7 +1230,14 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
 
   switch (atype.node) {
     case "address": return class_to_mich("mich_to_address", [arg]);
-    case "aggregate": return TODO("aggregate", arg);
+    case "aggregate": {
+      const [a, ty] = is_asset_one_field_key(atype.name, ci)
+      if (a && ty != null) {
+        return mich_to_archetype_type({node: 'set', arg: ty}, arg, ci)
+      } else {
+        return mich_to_archetype_type({node: 'set', arg: { node: "record", name: atype.name + "_key" }}, arg, ci)
+      }
+    }
     case "asset_container": return TODO("asset_container", arg);
     case "asset_key": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
@@ -1271,7 +1292,14 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "operation": return TODO("operation", arg);
     case "option": return contained_type_to_field_decl("mich_to_option", arg, [atype.arg]);
     case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
-    case "partition": return TODO("partition", arg);
+    case "partition": {
+      const [a, ty] = is_asset_one_field_key(atype.name, ci)
+      if (a && ty != null) {
+        return mich_to_archetype_type({node: 'set', arg: ty}, arg, ci)
+      } else {
+        return mich_to_archetype_type({node: 'set', arg: { node: "record", name: atype.name + "_key" }}, arg, ci)
+      }
+    }
     case "rational": return class_to_mich("mich_to_rational", [arg]);
     case "record": return record_to_mich(atype.name, arg, ci)
     case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
@@ -1659,7 +1687,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
 
   switch (fp.type.node) {
     case "address": return class_to_mich(factory.createIdentifier(fp.name))
-    case "aggregate": return throw_error(fp.type.node)
+    case "aggregate": return list_to_mich(fp.name, { node: "asset_key", name: fp.type.name }, ci)
     case "asset_container": return throw_error(fp.type.node);
     case "asset_key": {
       const [is_only_key, ty] = is_asset_one_field_key(fp.type.name, ci)
@@ -1707,7 +1735,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "operation": return throw_error(fp.type.node);
     case "option": return option_to_mich(fp.type.arg, factory.createIdentifier(fp.name));
     case "or": return or_to_mich(fp.type.left_type, fp.type.right_type, factory.createIdentifier(fp.name));
-    case "partition": return throw_error(fp.type.node);
+    case "partition": return list_to_mich(fp.name, { node: "asset_key", name: fp.type.name }, ci);
     case "rational": return class_to_mich(factory.createIdentifier(fp.name));
     case "record": return class_to_mich(factory.createIdentifier(fp.name));
     case "sapling_state": return class_to_mich(factory.createIdentifier(fp.name));

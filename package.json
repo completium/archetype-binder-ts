@@ -49,6 +49,7 @@
     "test:type_view": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/type_view.spec.ts",
     "test:sample": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/sample.spec.ts",
     "test:asset_view": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/asset_view.spec.ts",
+    "test:asset_aggregate_partition": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/asset_aggregate_partition.spec.ts",
     "test:lambda": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/lambda.spec.ts",
     "test:ticket": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/ticket.spec.ts",
     "test:event": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/event.spec.ts",
