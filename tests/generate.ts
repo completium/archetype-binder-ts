@@ -398,20 +398,20 @@ describe('Generate binding template', async () => {
   });
 })
 
-// describe('Generate michelson test', async () => {
-//   it('contract_eq', async () => {
-//     await get_binding_michelson('contract_eq.tz');
-//   });
-//   it('contract_le', async () => {
-//     await get_binding_michelson('contract_le.tz');
-//   });
-//   it('contract_p', async () => {
-//     await get_binding_michelson('contract_p.tz');
-//   });
-//   it('contract_tz', async () => {
-//     await get_binding_michelson('contract_tz.tz');
-//   });
-// })
+describe('Generate michelson test', async () => {
+  it('contract_eq', async () => {
+    await get_binding_michelson('michelson_contract_eq.tz');
+  });
+  it('contract_le', async () => {
+    await get_binding_michelson('michelson_contract_le.tz');
+  });
+  it('contract_p', async () => {
+    await get_binding_michelson('michelson_contract_p.tz');
+  });
+  it('contract_tz', async () => {
+    await get_binding_michelson('michelson_contract_tz.tz');
+  });
+})
 
 describe('Generate binding training', async () => {
   it('training_account', async () => {

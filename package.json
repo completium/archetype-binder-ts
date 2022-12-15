@@ -54,6 +54,7 @@
     "test:ticket": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/ticket.spec.ts",
     "test:event": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/event.spec.ts",
     "test:state": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/state.spec.ts",
+    "test:michelson": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/michelson.spec.ts",
     "test:utils": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/utils.spec.ts",
     "test:generate:coverage": "nyc npm run test:generate",
     "test:run:coverage": "nyc npm run test:run",
@@ -82,7 +83,7 @@
     "typescript": "^4.7.4"
   },
   "devDependencies": {
-    "@completium/archetype": "0.4.10-20221214-2",
+    "@completium/archetype": "0.4.10-20221215-1",
     "@completium/archetype-ts-types": "0.0.18",
     "@completium/experiment-ts": "0.0.106-dev-3",
     "@completium/event-listener": "^0.0.4",
