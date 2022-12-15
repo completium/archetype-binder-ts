@@ -6,7 +6,7 @@ describe('Test', async () => {
 
   it('unit', async () => {
     // const input = fs.readFileSync("./examples/" + name + ".json");
-    const input = fs.readFileSync("./tests/contracts/json/sample_asset_aggregate_partition.json");
+    const input = fs.readFileSync("./tests/contracts/json/template_multisig.json");
     const ci = JSON.parse(input);
     const a = generate_binding(ci, { target: Target.Experiment, language: Language.Archetype, path: "./contracts/" });
     //console.log(a)

@@ -396,6 +396,12 @@ describe('Generate binding template', async () => {
   it('template_fa2_fungible', async () => {
     await get_binding('template_fa2_fungible.arl');
   });
+  it('template_multisig', async () => {
+    await get_binding('template_multisig.arl');
+  });
+  it('template_multisig_dummy', async () => {
+    await get_binding('template_multisig_dummy.arl');
+  });
 })
 
 describe('Generate michelson test', async () => {

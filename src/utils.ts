@@ -1233,9 +1233,9 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "aggregate": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
       if (a && ty != null) {
-        return mich_to_archetype_type({node: 'set', arg: ty}, arg, ci)
+        return mich_to_archetype_type({ node: 'set', arg: ty }, arg, ci)
       } else {
-        return mich_to_archetype_type({node: 'set', arg: { node: "record", name: atype.name + "_key" }}, arg, ci)
+        return mich_to_archetype_type({ node: 'set', arg: { node: "record", name: atype.name + "_key" } }, arg, ci)
       }
     }
     case "asset_container": return TODO("asset_container", arg);
@@ -1295,9 +1295,9 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "partition": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
       if (a && ty != null) {
-        return mich_to_archetype_type({node: 'set', arg: ty}, arg, ci)
+        return mich_to_archetype_type({ node: 'set', arg: ty }, arg, ci)
       } else {
-        return mich_to_archetype_type({node: 'set', arg: { node: "record", name: atype.name + "_key" }}, arg, ci)
+        return mich_to_archetype_type({ node: 'set', arg: { node: "record", name: atype.name + "_key" } }, arg, ci)
       }
     }
     case "rational": return class_to_mich("mich_to_rational", [arg]);
@@ -1972,6 +1972,26 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     )
   }
 
+  const for_lambda = (annots: Array<string>, arg_left : MichelsonType, arg_right : MichelsonType) => {
+    const exprAnnots = annots.length >= 1 ? [factory.createStringLiteral(annots[0])] : []
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("pair_annot_to_mich_type")
+      ),
+      undefined,
+      [
+        factory.createStringLiteral("lambda"),
+        value_to_mich_type(arg_left),
+        value_to_mich_type(arg_right),
+        factory.createArrayLiteralExpression(
+          exprAnnots,
+          false
+        )
+      ]
+    )
+  }
+
   switch (mt.prim) {
     case "address": return for_simple_type(mt.prim, mt.annots ?? [])
     case "big_map": {
@@ -2000,7 +2020,7 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     case "int": return for_simple_type(mt.prim, mt.annots ?? [])
     case "key_hash": return for_simple_type(mt.prim, mt.annots ?? [])
     case "key": return for_simple_type(mt.prim, mt.annots ?? [])
-    case "lambda": throw new Error(`value_to_mich_type: TODO: ${mt.prim}`)
+    case "lambda": return for_lambda(mt.annots ?? [], mt.args[0], mt.args[1])
     case "list": return for_composite_type(mt.args[0])
     case "map": {
       const annots = mt.annots && mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []
@@ -2045,7 +2065,6 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
       [
         value_to_mich_type(mt.args[0]),
         value_to_mich_type(mt.args[1]),
-
         factory.createArrayLiteralExpression(
           mt.annots ? mt.annots.map(a => factory.createStringLiteral(a, false)) : []
         )
