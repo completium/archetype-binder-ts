@@ -728,7 +728,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
         factory.createIdentifier(at.name),
         undefined)
     }
-    case "sapling_state": return throw_error(at.node)
+    case "sapling_state": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Sapling_state")
+      ),
+      undefined
+    );
     case "sapling_transaction": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -1972,7 +1978,7 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     )
   }
 
-  const for_lambda = (annots: Array<string>, arg_left : MichelsonType, arg_right : MichelsonType) => {
+  const for_lambda = (annots: Array<string>, arg_left: MichelsonType, arg_right: MichelsonType) => {
     const exprAnnots = annots.length >= 1 ? [factory.createStringLiteral(annots[0])] : []
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
