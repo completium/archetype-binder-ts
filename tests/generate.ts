@@ -372,6 +372,14 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_asset_aggregate_partition.arl');
   });
 
+  it('sample_big_map', async () => {
+    await get_binding('sample_big_map.arl');
+  });
+
+  it('sample_iterable_big_map', async () => {
+    await get_binding('sample_iterable_big_map.arl');
+  });
+
 })
 
 describe('Generate binding template', async () => {

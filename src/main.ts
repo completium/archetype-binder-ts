@@ -989,7 +989,51 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
   )
 }
 
-const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, ci: ContractInterface): ts.Statement[] => {
+const get_n = (expr: ts.Expression, n: number): ts.Expression => {
+  return factory.createElementAccessExpression(
+    factory.createPropertyAccessExpression(
+      factory.createAsExpression(
+        expr,
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("att"),
+            factory.createIdentifier("Mpair")
+          ),
+          undefined
+        )
+      ),
+      factory.createIdentifier("args")
+    ),
+    factory.createNumericLiteral(n)
+  )
+}
+
+const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, is_iterable_big_map: boolean, ci: ContractInterface): ts.Statement[] => {
+  const aa = factory.createAwaitExpression(factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+      factory.createIdentifier("ex"),
+      factory.createIdentifier("get_big_map_value")
+    ),
+    undefined,
+    [
+      factory.createCallExpression(
+        factory.createIdentifier("BigInt"),
+        undefined,
+        [
+          factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+              selt,
+              factory.createIdentifier("toString")
+            ),
+            undefined,
+            []
+          )
+        ]
+      ),
+      function_param_to_mich({ name: "key", type: key_type }, ci),
+      key_mich_type
+    ]
+  ));
   return [
     factory.createVariableStatement(
       undefined,
@@ -998,31 +1042,7 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
           factory.createIdentifier("data"),
           undefined,
           undefined,
-          factory.createAwaitExpression(factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("ex"),
-              factory.createIdentifier("get_big_map_value")
-            ),
-            undefined,
-            [
-              factory.createCallExpression(
-                factory.createIdentifier("BigInt"),
-                undefined,
-                [
-                  factory.createCallExpression(
-                    factory.createPropertyAccessExpression(
-                      selt,
-                      factory.createIdentifier("toString")
-                    ),
-                    undefined,
-                    []
-                  )
-                ]
-              ),
-              function_param_to_mich({ name: "key", type: key_type }, ci),
-              key_mich_type
-            ]
-          ))
+          is_iterable_big_map ? get_n(aa, 1) : aa
         )],
         ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
       )
@@ -1058,7 +1078,12 @@ const mich_to_int = (arg: ts.Expression): ts.Expression => {
 
 const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
   switch (selt.type.node) {
-    case "big_map": // special treatment
+    // special treatment
+    case "big_map":
+    case "iterable_big_map": {
+      const is_iterable_big_map = selt.type.node == "iterable_big_map"
+      const v_data = get_data_storage_elt(selt, ci)
+      const values_map: ts.Expression = is_iterable_big_map ? get_n(v_data, 0) : v_data
       return [
         storage_elt_to_getter_skeleton(
           "get_",
@@ -1084,9 +1109,10 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            mich_to_int(get_data_storage_elt(selt, ci)),
+            mich_to_int(values_map),
             [factory.createReturnStatement(mich_to_archetype_type(selt.type.value_type, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
+            is_iterable_big_map,
             ci
           )
         ),
@@ -1111,14 +1137,17 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
-            mich_to_int(get_data_storage_elt(selt, ci)),
+            mich_to_int(values_map),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
+            false,
             ci
           )
         )
       ]
+    }
     case "asset": { // Special treatment for big map assets
+      const is_iterable_big_map = false
       const assetType = ci.types.assets.find(x => x.name == selt.name)
       if (assetType != undefined && assetType.container_kind == "big_map") {
         return [storage_elt_to_getter_skeleton(
@@ -1145,6 +1174,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(mich_to_archetype_type({ node: "asset_value", name: selt.name }, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
+            is_iterable_big_map,
             ci
           )),
         storage_elt_to_getter_skeleton(
@@ -1168,6 +1198,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             mich_to_int(get_data_storage_elt(selt, ci)),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
+            is_iterable_big_map,
             ci
           )
         )

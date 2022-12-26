@@ -4,3 +4,5 @@ build.history
 build
 coverage
 .nyc_output/
+tests/passed/
+

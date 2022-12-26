@@ -649,7 +649,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
       ),
       undefined
     );
-    case "iterable_big_map": return throw_error(at.node)
+    case "iterable_big_map": return factory.createTypeReferenceNode(
+      factory.createIdentifier("Array"),
+      [factory.createTupleTypeNode([
+        archetype_type_to_ts_type(at.key_type, ci),
+        archetype_type_to_ts_type(at.value_type, ci)
+      ])]
+    );
     case "key_hash": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -1287,7 +1293,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "enum": return enum_to_mich(atype.name, arg, ci)
     case "event": return record_to_mich(atype.name, arg, ci)
     case "int": return class_to_mich("mich_to_int", [arg]);
-    case "iterable_big_map": return TODO("iterable_big_map", arg);
+    case "iterable_big_map": return class_to_mich("mich_to_int", [arg]);
     case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
     case "key": return class_to_mich("mich_to_key", [arg]);
     case "lambda": return arg;
@@ -1730,7 +1736,7 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "enum": return class_to_mich(factory.createIdentifier(fp.name));
     case "event": return record_or_event_to_mich(fp, ci);
     case "int": return class_to_mich(factory.createIdentifier(fp.name));
-    case "iterable_big_map": return throw_error(fp.type.node);
+    case "iterable_big_map": return map_to_mich(fp.name, fp.type.key_type, fp.type.value_type, ci);
     case "key_hash": return class_to_mich(factory.createIdentifier(fp.name));
     case "key": return class_to_mich(factory.createIdentifier(fp.name));
     case "lambda": return id_to_mich(factory.createIdentifier(fp.name));

@@ -5,6 +5,8 @@ const assert = require('assert')
 
 import { sample_storage_variables } from './contracts/bindings/sample_storage_variables'
 import { sample_tuple_tuple_rational } from './contracts/bindings/sample_tuple_tuple_rational'
+import { sample_big_map } from './contracts/bindings/sample_big_map'
+import { sample_iterable_big_map } from './contracts/bindings/sample_iterable_big_map'
 
 /* Accounts ---------------------------------------------------------------- */
 
@@ -42,5 +44,37 @@ describe('Sample', async () => {
     assert(v[0].equals(new Nat(0)))
     assert(v[1][0] == "mystr")
     assert(v[1][1].equals(new Rational(0.1)))
+  });
+
+  it('Big_map', async () => {
+    const k: Int = new Int(2)
+    const v: Bytes = new Bytes("06")
+
+    await sample_big_map.deploy({ as: alice })
+    const before_has_v_value = await sample_big_map.has_v_value(k);
+    assert(!before_has_v_value)
+
+    await sample_big_map.exec(k, v, { as: alice })
+
+    const after_has_v_value = await sample_big_map.has_v_value(k);
+    const actual_value = await sample_big_map.get_v_value(k)
+    assert(after_has_v_value)
+    assert(actual_value?.equals(v))
+  });
+
+  it('Iterable_big_map', async () => {
+    const k: Int = new Int(2)
+    const v: Bytes = new Bytes("06")
+
+    await sample_iterable_big_map.deploy({ as: alice })
+    const before_has_v_value = await sample_iterable_big_map.has_v_value(k);
+    assert(!before_has_v_value)
+
+    await sample_iterable_big_map.exec(k, v, { as: alice })
+
+    const after_has_v_value = await sample_iterable_big_map.has_v_value(k);
+    const actual_value = await sample_iterable_big_map.get_v_value(k)
+    assert(after_has_v_value)
+    assert(actual_value?.equals(v))
   });
 })

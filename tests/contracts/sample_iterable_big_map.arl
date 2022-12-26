@@ -1,0 +1,7 @@
+archetype sample_iterable_big_map
+
+variable v : iterable_big_map<int, bytes> = []
+
+entry exec(ik : int, iv : bytes) {
+  v.put(ik, iv)
+}
