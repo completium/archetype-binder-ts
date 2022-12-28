@@ -24,7 +24,7 @@ export class Training_addnumber {
         const address = (await ex.deploy("./tests/contracts/training_addnumber.arl", {}, params)).address;
         this.address = address;
     }
-    async increment(quantity: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async increment(quantity: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "increment", increment_arg_to_mich(quantity), params);
         }

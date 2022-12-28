@@ -26,7 +26,7 @@ export class Type_set_key {
         const address = (await ex.deploy("./tests/contracts/type_set_key.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: Array<att.Key>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: Array<att.Key>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

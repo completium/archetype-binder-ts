@@ -27,7 +27,7 @@ export class Training_counter_two_numbers {
         const address = (await ex.deploy("./tests/contracts/training_counter_two_numbers.arl", {}, params)).address;
         this.address = address;
     }
-    async incrementBoth(inc1: att.Nat, inc2: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async incrementBoth(inc1: att.Nat, inc2: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "incrementBoth", incrementBoth_arg_to_mich(inc1, inc2), params);
         }

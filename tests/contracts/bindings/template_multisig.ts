@@ -217,103 +217,103 @@ export class Template_multisig {
         this.get_manager_counter_callback_address = (await deploy_get_manager_counter_callback(params)).address;
         this.get_approvals_callback_address = (await deploy_get_approvals_callback(params)).address;
     }
-    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "declare_ownership", declare_ownership_arg_to_mich(candidate), params);
         }
         throw new Error("Contract not initialised");
     }
-    async claim_ownership(params: Partial<ex.Parameters>): Promise<any> {
+    async claim_ownership(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "claim_ownership", claim_ownership_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_metadata_uri(idata: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async set_metadata_uri(idata: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_metadata_uri", set_metadata_uri_arg_to_mich(idata), params);
         }
         throw new Error("Contract not initialised");
     }
-    async pause(params: Partial<ex.Parameters>): Promise<any> {
+    async pause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "pause", pause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async approve_unpause(params: Partial<ex.Parameters>): Promise<any> {
+    async approve_unpause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "approve_unpause", approve_unpause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async unpause(params: Partial<ex.Parameters>): Promise<any> {
+    async unpause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "unpause", unpause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async control(maddr: att.Address, allowed: boolean, params: Partial<ex.Parameters>): Promise<any> {
+    async control(maddr: att.Address, allowed: boolean, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "control", control_arg_to_mich(maddr, allowed), params);
         }
         throw new Error("Contract not initialised");
     }
-    async run(params: Partial<ex.Parameters>): Promise<any> {
+    async run(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "run", run_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async require(new_required: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async require(new_required: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "require", require_arg_to_mich(new_required), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_duration(min: att.Duration, max: att.Duration, params: Partial<ex.Parameters>): Promise<any> {
+    async set_duration(min: att.Duration, max: att.Duration, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_duration", set_duration_arg_to_mich(min, max), params);
         }
         throw new Error("Contract not initialised");
     }
-    async do_propose(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, sender: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async do_propose(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, sender: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "do_propose", do_propose_arg_to_mich(actions_to_exec, validity, approved_by_caller, sender), params);
         }
         throw new Error("Contract not initialised");
     }
-    async do_approve(proposal_id: att.Nat, sender: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async do_approve(proposal_id: att.Nat, sender: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "do_approve", do_approve_arg_to_mich(proposal_id, sender), params);
         }
         throw new Error("Contract not initialised");
     }
-    async propose(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, params: Partial<ex.Parameters>): Promise<any> {
+    async propose(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "propose", propose_arg_to_mich(actions_to_exec, validity, approved_by_caller), params);
         }
         throw new Error("Contract not initialised");
     }
-    async approve(proposal_id: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async approve(proposal_id: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "approve", approve_arg_to_mich(proposal_id), params);
         }
         throw new Error("Contract not initialised");
     }
-    async execute(proposal_id: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async execute(proposal_id: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "execute", execute_arg_to_mich(proposal_id), params);
         }
         throw new Error("Contract not initialised");
     }
-    async propose_feeless(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, manager_key: att.Key, sig: att.Signature, params: Partial<ex.Parameters>): Promise<any> {
+    async propose_feeless(actions_to_exec: att.Micheline, validity: att.Duration, approved_by_caller: boolean, manager_key: att.Key, sig: att.Signature, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "propose_feeless", propose_feeless_arg_to_mich(actions_to_exec, validity, approved_by_caller, manager_key, sig), params);
         }
         throw new Error("Contract not initialised");
     }
-    async approve_feeless(proposal_id: att.Nat, manager_key: att.Key, sig: att.Signature, params: Partial<ex.Parameters>): Promise<any> {
+    async approve_feeless(proposal_id: att.Nat, manager_key: att.Key, sig: att.Signature, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "approve_feeless", approve_feeless_arg_to_mich(proposal_id, manager_key, sig), params);
         }

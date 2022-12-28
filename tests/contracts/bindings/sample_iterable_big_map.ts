@@ -27,7 +27,7 @@ export class Sample_iterable_big_map {
         const address = (await ex.deploy("./tests/contracts/sample_iterable_big_map.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(ik: att.Int, iv: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async exec(ik: att.Int, iv: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "exec", exec_arg_to_mich(ik, iv), params);
         }

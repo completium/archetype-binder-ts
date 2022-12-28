@@ -151,19 +151,19 @@ export class Template_fa1_2 {
     async set_token_metadata(tid: att.Nat, tdata: Array<[
         string,
         att.Bytes
-    ]>, params: Partial<ex.Parameters>): Promise<any> {
+    ]>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_token_metadata", set_token_metadata_arg_to_mich(tid, tdata), params);
         }
         throw new Error("Contract not initialised");
     }
-    async transfer(from: att.Address, to: att.Address, value: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async transfer(from: att.Address, to: att.Address, value: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "transfer", transfer_arg_to_mich(from, to, value), params);
         }
         throw new Error("Contract not initialised");
     }
-    async approve(spender: att.Address, value: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async approve(spender: att.Address, value: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "approve", approve_arg_to_mich(spender, value), params);
         }

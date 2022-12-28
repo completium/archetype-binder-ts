@@ -46,7 +46,7 @@ export class Type_asset_key_1_big_map_tuple_nat_string {
     async asset_put(i: [
         att.Nat,
         string
-    ], params: Partial<ex.Parameters>): Promise<any> {
+    ], params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

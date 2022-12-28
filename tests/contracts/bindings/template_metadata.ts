@@ -27,7 +27,7 @@ export class Template_metadata {
         const address = (await ex.deploy("./tests/contracts/template_metadata.arl", {}, params)).address;
         this.address = address;
     }
-    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_metadata", set_metadata_arg_to_mich(k, d), params);
         }

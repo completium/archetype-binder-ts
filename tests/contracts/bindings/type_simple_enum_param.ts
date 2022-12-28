@@ -95,7 +95,7 @@ export class Type_simple_enum_param {
         const address = (await ex.deploy("./tests/contracts/type_simple_enum_param.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: e_enum, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: e_enum, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

@@ -29,13 +29,13 @@ export class Training_charity {
         }, params)).address;
         this.address = address;
     }
-    async collect(requestedAmount: att.Tez, params: Partial<ex.Parameters>): Promise<any> {
+    async collect(requestedAmount: att.Tez, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "collect", collect_arg_to_mich(requestedAmount), params);
         }
         throw new Error("Contract not initialised");
     }
-    async donate(params: Partial<ex.Parameters>): Promise<any> {
+    async donate(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "donate", donate_arg_to_mich(), params);
         }

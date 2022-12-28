@@ -34,7 +34,7 @@ export class Type_or_right_map_nat_string {
     async set_value(i: Array<[
         att.Nat,
         string
-    ]>, params: Partial<ex.Parameters>): Promise<any> {
+    ]>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

@@ -36,7 +36,7 @@ export class Type_or_left_tuple_nat_string_bytes_rev {
             string
         ],
         att.Bytes
-    ], params: Partial<ex.Parameters>): Promise<any> {
+    ], params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

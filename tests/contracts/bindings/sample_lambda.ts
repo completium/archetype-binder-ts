@@ -27,13 +27,13 @@ export class Sample_lambda {
         const address = (await ex.deploy("./tests/contracts/sample_lambda.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(params: Partial<ex.Parameters>): Promise<any> {
+    async exec(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "exec", exec_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_l(input: att.Micheline, params: Partial<ex.Parameters>): Promise<any> {
+    async set_l(input: att.Micheline, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_l", set_l_arg_to_mich(input), params);
         }

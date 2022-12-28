@@ -58,13 +58,13 @@ export class Training_visitors {
         const address = (await ex.deploy("./tests/contracts/training_visitors.arl", {}, params)).address;
         this.address = address;
     }
-    async register(l: string, n: string, params: Partial<ex.Parameters>): Promise<any> {
+    async register(l: string, n: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "register", register_arg_to_mich(l, n), params);
         }
         throw new Error("Contract not initialised");
     }
-    async visit(l: string, params: Partial<ex.Parameters>): Promise<any> {
+    async visit(l: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "visit", visit_arg_to_mich(l), params);
         }

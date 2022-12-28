@@ -26,7 +26,7 @@ export class Type_list_bls12_381_g1 {
         const address = (await ex.deploy("./tests/contracts/type_list_bls12_381_g1.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: Array<att.Bls12_381_g1>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: Array<att.Bls12_381_g1>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

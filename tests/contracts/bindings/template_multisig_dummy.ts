@@ -29,13 +29,13 @@ export class Template_multisig_dummy {
         }, params)).address;
         this.address = address;
     }
-    async process(v: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async process(v: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "process", process_arg_to_mich(v), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_owner(v: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async set_owner(v: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_owner", set_owner_arg_to_mich(v), params);
         }

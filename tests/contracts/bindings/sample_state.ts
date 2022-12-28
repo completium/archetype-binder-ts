@@ -38,7 +38,7 @@ export class Sample_state {
         const address = (await ex.deploy("./tests/contracts/sample_state.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(params: Partial<ex.Parameters>): Promise<any> {
+    async exec(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "exec", exec_arg_to_mich(), params);
         }

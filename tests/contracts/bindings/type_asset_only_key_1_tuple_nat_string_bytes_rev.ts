@@ -57,7 +57,7 @@ export class Type_asset_only_key_1_tuple_nat_string_bytes_rev {
             string
         ],
         att.Bytes
-    ], params: Partial<ex.Parameters>): Promise<any> {
+    ], params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

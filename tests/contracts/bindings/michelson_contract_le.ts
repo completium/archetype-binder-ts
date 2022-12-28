@@ -52,25 +52,25 @@ export class Michelson_contract_le {
         const address = (await ex.originate("./tests/contracts/michelson_contract_le.tz", storage_arg_to_mich(a, b, c, d), params)).address;
         this.address = address;
     }
-    async set_a(_: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async set_a(_: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_a", set_a_arg_to_mich(_), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_b(_: string, params: Partial<ex.Parameters>): Promise<any> {
+    async set_b(_: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_b", set_b_arg_to_mich(_), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_c(_: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async set_c(_: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_c", set_c_arg_to_mich(_), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_d(_: boolean, params: Partial<ex.Parameters>): Promise<any> {
+    async set_d(_: boolean, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_d", set_d_arg_to_mich(_), params);
         }

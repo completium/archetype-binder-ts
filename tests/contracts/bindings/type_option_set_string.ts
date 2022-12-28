@@ -26,7 +26,7 @@ export class Type_option_set_string {
         const address = (await ex.deploy("./tests/contracts/type_option_set_string.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: att.Option<Array<string>>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: att.Option<Array<string>>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

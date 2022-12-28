@@ -24,7 +24,7 @@ export class Type_or_left_bls12_381_g2 {
         const address = (await ex.deploy("./tests/contracts/type_or_left_bls12_381_g2.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: att.Bls12_381_g2, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: att.Bls12_381_g2, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

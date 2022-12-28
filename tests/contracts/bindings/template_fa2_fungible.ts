@@ -384,31 +384,31 @@ export class Template_fa2_fungible {
         this.address = address;
         this.balance_of_callback_address = (await deploy_balance_of_callback(params)).address;
     }
-    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "declare_ownership", declare_ownership_arg_to_mich(candidate), params);
         }
         throw new Error("Contract not initialised");
     }
-    async claim_ownership(params: Partial<ex.Parameters>): Promise<any> {
+    async claim_ownership(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "claim_ownership", claim_ownership_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async pause(params: Partial<ex.Parameters>): Promise<any> {
+    async pause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "pause", pause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async unpause(params: Partial<ex.Parameters>): Promise<any> {
+    async unpause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "unpause", unpause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_metadata", set_metadata_arg_to_mich(k, d), params);
         }
@@ -417,49 +417,49 @@ export class Template_fa2_fungible {
     async set_token_metadata(tdata: Array<[
         string,
         att.Bytes
-    ]>, params: Partial<ex.Parameters>): Promise<any> {
+    ]>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_token_metadata", set_token_metadata_arg_to_mich(tdata), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_permits(p: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async set_permits(p: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_permits", set_permits_arg_to_mich(p), params);
         }
         throw new Error("Contract not initialised");
     }
-    async update_operators(upl: Array<update_op>, params: Partial<ex.Parameters>): Promise<any> {
+    async update_operators(upl: Array<update_op>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "update_operators", update_operators_arg_to_mich(upl), params);
         }
         throw new Error("Contract not initialised");
     }
-    async do_transfer(txs: Array<transfer_param>, params: Partial<ex.Parameters>): Promise<any> {
+    async do_transfer(txs: Array<transfer_param>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "do_transfer", do_transfer_arg_to_mich(txs), params);
         }
         throw new Error("Contract not initialised");
     }
-    async transfer_gasless(batch: Array<gasless_param>, params: Partial<ex.Parameters>): Promise<any> {
+    async transfer_gasless(batch: Array<gasless_param>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "transfer_gasless", transfer_gasless_arg_to_mich(batch), params);
         }
         throw new Error("Contract not initialised");
     }
-    async transfer(txs: Array<transfer_param>, params: Partial<ex.Parameters>): Promise<any> {
+    async transfer(txs: Array<transfer_param>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "transfer", transfer_arg_to_mich(txs), params);
         }
         throw new Error("Contract not initialised");
     }
-    async mint(tow: att.Address, nbt: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async mint(tow: att.Address, nbt: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "mint", mint_arg_to_mich(tow, nbt), params);
         }
         throw new Error("Contract not initialised");
     }
-    async burn(nbt: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async burn(nbt: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "burn", burn_arg_to_mich(nbt), params);
         }
@@ -468,7 +468,7 @@ export class Template_fa2_fungible {
     async permit_transfer(txs: Array<transfer_param>, permit: att.Option<[
         att.Key,
         att.Signature
-    ]>, params: Partial<ex.Parameters>): Promise<any> {
+    ]>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "permit_transfer", permit_transfer_arg_to_mich(txs, permit), params);
         }

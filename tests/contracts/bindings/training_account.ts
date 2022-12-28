@@ -29,13 +29,13 @@ export class Training_account {
         }, params)).address;
         this.address = address;
     }
-    async add(value: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async add(value: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "add", add_arg_to_mich(value), params);
         }
         throw new Error("Contract not initialised");
     }
-    async sub(params: Partial<ex.Parameters>): Promise<any> {
+    async sub(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "sub", sub_arg_to_mich(), params);
         }

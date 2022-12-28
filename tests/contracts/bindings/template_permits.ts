@@ -185,73 +185,73 @@ export class Template_permits {
         }, params)).address;
         this.address = address;
     }
-    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<any> {
+    async declare_ownership(candidate: att.Address, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "declare_ownership", declare_ownership_arg_to_mich(candidate), params);
         }
         throw new Error("Contract not initialised");
     }
-    async claim_ownership(params: Partial<ex.Parameters>): Promise<any> {
+    async claim_ownership(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "claim_ownership", claim_ownership_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async pause(params: Partial<ex.Parameters>): Promise<any> {
+    async pause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "pause", pause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async unpause(params: Partial<ex.Parameters>): Promise<any> {
+    async unpause(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "unpause", unpause_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_metadata(k: string, d: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_metadata", set_metadata_arg_to_mich(k, d), params);
         }
         throw new Error("Contract not initialised");
     }
-    async manage_consumer(op: consumer_op, params: Partial<ex.Parameters>): Promise<any> {
+    async manage_consumer(op: consumer_op, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "manage_consumer", manage_consumer_arg_to_mich(op), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_expiry(iv: att.Option<att.Nat>, ip: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_expiry(iv: att.Option<att.Nat>, ip: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_expiry", set_expiry_arg_to_mich(iv, ip), params);
         }
         throw new Error("Contract not initialised");
     }
-    async setExpiry(u: att.Address, sec: att.Nat, data: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<any> {
+    async setExpiry(u: att.Address, sec: att.Nat, data: att.Option<att.Bytes>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "setExpiry", setExpiry_arg_to_mich(u, sec, data), params);
         }
         throw new Error("Contract not initialised");
     }
-    async set_default_expiry(v: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async set_default_expiry(v: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_default_expiry", set_default_expiry_arg_to_mich(v), params);
         }
         throw new Error("Contract not initialised");
     }
-    async permit(signer: att.Key, sig: att.Signature, permit_key: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async permit(signer: att.Key, sig: att.Signature, permit_key: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "permit", permit_arg_to_mich(signer, sig, permit_key), params);
         }
         throw new Error("Contract not initialised");
     }
-    async consume(user: att.Address, permit_key: att.Bytes, err: string, params: Partial<ex.Parameters>): Promise<any> {
+    async consume(user: att.Address, permit_key: att.Bytes, err: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "consume", consume_arg_to_mich(user, permit_key, err), params);
         }
         throw new Error("Contract not initialised");
     }
-    async check(signer: att.Key, sig: att.Signature, data: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async check(signer: att.Key, sig: att.Signature, data: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "check", check_arg_to_mich(signer, sig, data), params);
         }

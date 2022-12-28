@@ -200,7 +200,7 @@ export class Test_big_record {
         this.address = address;
         this.mygetter_callback_address = (await deploy_mygetter_callback(params)).address;
     }
-    async myentry(arg: all, params: Partial<ex.Parameters>): Promise<any> {
+    async myentry(arg: all, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "myentry", myentry_arg_to_mich(arg), params);
         }
@@ -209,13 +209,13 @@ export class Test_big_record {
     async myentry2(arg: [
         att.Nat,
         string
-    ], params: Partial<ex.Parameters>): Promise<any> {
+    ], params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "myentry2", myentry2_arg_to_mich(arg), params);
         }
         throw new Error("Contract not initialised");
     }
-    async myentry3(ev: anenum, params: Partial<ex.Parameters>): Promise<any> {
+    async myentry3(ev: anenum, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "myentry3", myentry3_arg_to_mich(ev), params);
         }

@@ -31,7 +31,7 @@ export class Type_asset_key_1_unit {
         const address = (await ex.deploy("./tests/contracts/type_asset_key_1_unit.arl", {}, params)).address;
         this.address = address;
     }
-    async asset_put(i: att.Unit, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: att.Unit, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

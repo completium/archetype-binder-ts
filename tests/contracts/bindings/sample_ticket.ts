@@ -24,7 +24,7 @@ export class Sample_ticket {
         const address = (await ex.deploy("./tests/contracts/sample_ticket.arl", {}, params)).address;
         this.address = address;
     }
-    async create(params: Partial<ex.Parameters>): Promise<any> {
+    async create(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "create", create_arg_to_mich(), params);
         }

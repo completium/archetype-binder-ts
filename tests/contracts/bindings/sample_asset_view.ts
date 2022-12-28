@@ -44,7 +44,7 @@ export class Sample_asset_view {
         this.address = address;
         this.my_getter_callback_address = (await deploy_my_getter_callback(params)).address;
     }
-    async exec(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<any> {
+    async exec(i: Array<att.Nat>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "exec", exec_arg_to_mich(i), params);
         }

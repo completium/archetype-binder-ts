@@ -79,13 +79,13 @@ export class Sample_asset_aggregate_partition {
         const address = (await ex.deploy("./tests/contracts/sample_asset_aggregate_partition.arl", {}, params)).address;
         this.address = address;
     }
-    async add_aggregate(ik: att.Nat, iv: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async add_aggregate(ik: att.Nat, iv: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "add_aggregate", add_aggregate_arg_to_mich(ik, iv), params);
         }
         throw new Error("Contract not initialised");
     }
-    async add_partition(ik: att.Nat, iv: string, params: Partial<ex.Parameters>): Promise<any> {
+    async add_partition(ik: att.Nat, iv: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "add_partition", add_partition_arg_to_mich(ik, iv), params);
         }

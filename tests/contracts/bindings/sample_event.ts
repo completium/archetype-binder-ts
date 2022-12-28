@@ -40,7 +40,7 @@ export class Sample_event {
         const address = (await ex.deploy("./tests/contracts/sample_event.arl", {}, params)).address;
         this.address = address;
     }
-    async exec(e: e_event, params: Partial<ex.Parameters>): Promise<any> {
+    async exec(e: e_event, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "exec", exec_arg_to_mich(e), params);
         }

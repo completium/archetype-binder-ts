@@ -31,7 +31,7 @@ export class Type_asset_value_2_bls12_381_fr {
         const address = (await ex.deploy("./tests/contracts/type_asset_value_2_bls12_381_fr.arl", {}, params)).address;
         this.address = address;
     }
-    async asset_put(i: att.Bls12_381_fr, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: att.Bls12_381_fr, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

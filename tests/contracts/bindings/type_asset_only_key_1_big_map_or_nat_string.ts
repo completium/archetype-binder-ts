@@ -46,7 +46,7 @@ export class Type_asset_only_key_1_big_map_or_nat_string {
         const address = (await ex.deploy("./tests/contracts/type_asset_only_key_1_big_map_or_nat_string.arl", {}, params)).address;
         this.address = address;
     }
-    async asset_put(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

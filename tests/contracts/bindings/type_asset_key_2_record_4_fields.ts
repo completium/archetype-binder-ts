@@ -83,7 +83,7 @@ export class Type_asset_key_2_record_4_fields {
         const address = (await ex.deploy("./tests/contracts/type_asset_key_2_record_4_fields.arl", {}, params)).address;
         this.address = address;
     }
-    async asset_put(i: r_record, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: r_record, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

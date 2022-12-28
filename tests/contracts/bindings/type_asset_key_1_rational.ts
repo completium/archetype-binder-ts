@@ -37,7 +37,7 @@ export class Type_asset_key_1_rational {
         const address = (await ex.deploy("./tests/contracts/type_asset_key_1_rational.arl", {}, params)).address;
         this.address = address;
     }
-    async asset_put(i: att.Rational, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_put(i: att.Rational, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_put", asset_put_arg_to_mich(i), params);
         }

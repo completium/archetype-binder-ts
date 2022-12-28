@@ -512,7 +512,13 @@ const entry_to_method = (name: string, args: FunctionParameter[], ret: ts.TypeNo
 }
 
 const entryToMethod = (e: Entrypoint, ci: ContractInterface) => {
-  return entry_to_method(e.name, e.args, factory.createKeywordTypeNode(SyntaxKind.AnyKeyword), [
+  return entry_to_method(e.name, e.args, factory.createTypeReferenceNode(
+    factory.createQualifiedName(
+      factory.createIdentifier("att"),
+      factory.createIdentifier("CallResult")
+    ),
+    undefined
+  ), [
     factory.createReturnStatement(factory.createAwaitExpression(factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),

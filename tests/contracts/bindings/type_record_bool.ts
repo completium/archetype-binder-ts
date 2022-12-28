@@ -44,7 +44,7 @@ export class Type_record_bool {
         const address = (await ex.deploy("./tests/contracts/type_record_bool.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: my_record, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: my_record, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

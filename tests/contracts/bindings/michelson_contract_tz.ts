@@ -46,19 +46,19 @@ export class Michelson_contract_tz {
         const address = (await ex.originate("./tests/contracts/michelson_contract_tz.tz", storage_arg_to_mich(a, b, c), params)).address;
         this.address = address;
     }
-    async e1(_: att.Nat, params: Partial<ex.Parameters>): Promise<any> {
+    async e1(_: att.Nat, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "e1", e1_arg_to_mich(_), params);
         }
         throw new Error("Contract not initialised");
     }
-    async e2(_: string, params: Partial<ex.Parameters>): Promise<any> {
+    async e2(_: string, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "e2", e2_arg_to_mich(_), params);
         }
         throw new Error("Contract not initialised");
     }
-    async e3(_: att.Bytes, params: Partial<ex.Parameters>): Promise<any> {
+    async e3(_: att.Bytes, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "e3", e3_arg_to_mich(_), params);
         }

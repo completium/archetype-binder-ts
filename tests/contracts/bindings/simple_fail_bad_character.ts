@@ -24,7 +24,7 @@ export class Simple_fail_bad_character {
         const address = (await ex.deploy("./tests/contracts/simple_fail_bad_character.arl", {}, params)).address;
         this.address = address;
     }
-    async f(params: Partial<ex.Parameters>): Promise<any> {
+    async f(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "f", f_arg_to_mich(), params);
         }

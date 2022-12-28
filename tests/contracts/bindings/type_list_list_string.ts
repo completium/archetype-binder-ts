@@ -28,7 +28,7 @@ export class Type_list_list_string {
         const address = (await ex.deploy("./tests/contracts/type_list_list_string.arl", {}, params)).address;
         this.address = address;
     }
-    async set_value(i: Array<Array<string>>, params: Partial<ex.Parameters>): Promise<any> {
+    async set_value(i: Array<Array<string>>, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "set_value", set_value_arg_to_mich(i), params);
         }

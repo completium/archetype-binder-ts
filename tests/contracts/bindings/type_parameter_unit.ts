@@ -26,7 +26,7 @@ export class Type_parameter_unit {
         }, params)).address;
         this.address = address;
     }
-    async asset_add(i: att.Unit, params: Partial<ex.Parameters>): Promise<any> {
+    async asset_add(i: att.Unit, params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
             return await ex.call(this.address, "asset_add", asset_add_arg_to_mich(i), params);
         }
