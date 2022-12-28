@@ -42,7 +42,7 @@ export class Type_map_key_bytes {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_bytes(x), att.mich_to_nat(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Bytes.from_mich(x), att.Nat.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

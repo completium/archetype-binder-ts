@@ -42,7 +42,7 @@ export class Type_map_key_signature {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_signature(x), att.mich_to_nat(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Signature.from_mich(x), att.Nat.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

@@ -104,14 +104,14 @@ export class Template_all_utils {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address((storage as att.Mpair).args[0]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_owner_candidate(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option((storage as att.Mpair).args[1], x => { return att.mich_to_address(x); });
+            return att.Option.from_mich((storage as att.Mpair).args[1], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -125,9 +125,9 @@ export class Template_all_utils {
     async get_metadata_value(key: string): Promise<att.Bytes | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[3]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[3]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
-                return att.mich_to_bytes(data);
+                return att.Bytes.from_mich(data);
             }
             else {
                 return undefined;
@@ -138,7 +138,7 @@ export class Template_all_utils {
     async has_metadata_value(key: string): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[3]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[3]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
                 return true;
             }

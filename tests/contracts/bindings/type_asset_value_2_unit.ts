@@ -46,7 +46,7 @@ export class Type_asset_value_2_unit {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), new att.Unit()]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), new att.Unit()]);
         }
         throw new Error("Contract not initialised");
     }

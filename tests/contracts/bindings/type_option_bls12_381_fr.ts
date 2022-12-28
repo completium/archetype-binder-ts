@@ -39,7 +39,7 @@ export class Type_option_bls12_381_fr {
     async get_res(): Promise<att.Option<att.Bls12_381_fr>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_bls12_381_fr(x); });
+            return att.Option.from_mich(storage, x => { return att.Bls12_381_fr.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

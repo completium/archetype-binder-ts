@@ -42,7 +42,7 @@ export class Type_map_value_duration {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_duration(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), att.Duration.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

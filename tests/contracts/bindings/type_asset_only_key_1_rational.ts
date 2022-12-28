@@ -48,7 +48,7 @@ export class Type_asset_only_key_1_rational {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_rational(x); });
+            return att.mich_to_list(storage, x => { return att.Rational.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

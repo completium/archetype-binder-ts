@@ -20,7 +20,7 @@ export class my_asset_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_value {
-        return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]));
+        return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.Nat.from_mich(x), att.mich_to_string(y)]));
     }
 }
 export const my_asset_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -87,7 +87,7 @@ export class Type_asset_value_3_map_nat_string {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), my_asset_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), my_asset_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

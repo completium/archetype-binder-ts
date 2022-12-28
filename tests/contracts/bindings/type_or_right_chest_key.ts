@@ -39,7 +39,7 @@ export class Type_or_right_chest_key {
     async get_res(): Promise<att.Or<att.Nat, att.Chest_key>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_chest_key(x); });
+            return att.Or.from_mich(storage, x => { return att.Nat.from_mich(x); }, x => { return att.Chest_key.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

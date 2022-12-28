@@ -16,8 +16,8 @@ export class my_asset_key implements att.ArchetypeType {
     }
     static from_mich(input: att.Micheline): my_asset_key {
         return new my_asset_key((p => {
-            return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-        })((input as att.Mpair).args[0]), att.mich_to_nat((input as att.Mpair).args[1]));
+            return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+        })((input as att.Mpair).args[0]), att.Nat.from_mich((input as att.Mpair).args[1]));
     }
 }
 export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -102,7 +102,7 @@ export class Type_asset_only_key_2_big_map_tuple_nat_string {
     async get_my_asset_value(key: my_asset_key): Promise<my_asset_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return my_asset_value.from_mich(data);
             }
@@ -115,7 +115,7 @@ export class Type_asset_only_key_2_big_map_tuple_nat_string {
     async has_my_asset_value(key: my_asset_key): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return true;
             }

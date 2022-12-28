@@ -41,7 +41,7 @@ export class Type_set_signature {
     async get_res(): Promise<Array<att.Signature>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_signature(x); });
+            return att.mich_to_list(storage, x => { return att.Signature.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

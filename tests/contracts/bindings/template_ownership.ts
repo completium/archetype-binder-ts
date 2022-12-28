@@ -56,14 +56,14 @@ export class Template_ownership {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address((storage as att.Mpair).args[0]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_owner_candidate(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option((storage as att.Mpair).args[1], x => { return att.mich_to_address(x); });
+            return att.Option.from_mich((storage as att.Mpair).args[1], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

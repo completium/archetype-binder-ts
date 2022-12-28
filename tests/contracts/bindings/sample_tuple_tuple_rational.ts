@@ -31,8 +31,8 @@ export class Sample_tuple_tuple_rational {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), (p => {
-                        return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_rational(att.pair_to_mich((p as att.Mpair as att.Mpair).args.slice(1, 3)))];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), (p => {
+                        return [att.mich_to_string((p as att.Mpair).args[0]), att.Rational.from_mich(att.pair_to_mich((p as att.Mpair as att.Mpair).args.slice(1, 3)))];
                     })(att.pair_to_mich((p as att.Mpair as att.Mpair).args.slice(1, 4)))];
             })(storage);
         }

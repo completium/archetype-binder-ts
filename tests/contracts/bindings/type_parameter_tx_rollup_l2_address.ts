@@ -41,7 +41,7 @@ export class Type_parameter_tx_rollup_l2_address {
     async get_res(): Promise<att.Tx_rollup_l2_address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_tx_rollup_l2_address(storage);
+            return att.Tx_rollup_l2_address.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

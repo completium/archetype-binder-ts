@@ -80,8 +80,8 @@ export class Type_list_tuple_nat_string_bytes_bool_rev {
             return att.mich_to_list(storage, x => { return (p => {
                 return [(p => {
                         return [(p => {
-                                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-                            })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+                                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                            })((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
                     })((p as att.Mpair).args[0]), att.mich_to_bool((p as att.Mpair).args[1])];
             })(x); });
         }

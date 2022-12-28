@@ -12,7 +12,7 @@ export class r_record implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): r_record {
-        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]), att.mich_to_bytes((input as att.Mpair).args[2]));
+        return new r_record(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]), att.Bytes.from_mich((input as att.Mpair).args[2]));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -59,7 +59,7 @@ export class Type_option_record_3_fields {
     async get_res(): Promise<att.Option<r_record>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return r_record.from_mich(x); });
+            return att.Option.from_mich(storage, x => { return r_record.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

@@ -39,7 +39,7 @@ export class Type_or_right_bytes {
     async get_res(): Promise<att.Or<att.Nat, att.Bytes>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_bytes(x); });
+            return att.Or.from_mich(storage, x => { return att.Nat.from_mich(x); }, x => { return att.Bytes.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

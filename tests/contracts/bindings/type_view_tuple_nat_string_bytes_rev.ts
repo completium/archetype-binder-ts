@@ -47,8 +47,8 @@ export class Type_view_tuple_nat_string_bytes_rev {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
             return mich.value ? (p => {
                 return [(p => {
-                        return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-                    })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+                        return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                    })((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
             })(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");

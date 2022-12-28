@@ -44,7 +44,7 @@ export class Type_map_value_set_bool {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_list(y, x => { return att.mich_to_bool(x); })]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), att.mich_to_list(y, x => { return att.mich_to_bool(x); })]);
         }
         throw new Error("Contract not initialised");
     }

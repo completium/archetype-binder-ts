@@ -44,7 +44,7 @@ export class Type_tuple_option_bool {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_option((p as att.Mpair).args[1], x => { return att.mich_to_bool(x); }), att.mich_to_string((p as att.Mpair).args[2])];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.Option.from_mich((p as att.Mpair).args[1], x => { return att.mich_to_bool(x); }), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");

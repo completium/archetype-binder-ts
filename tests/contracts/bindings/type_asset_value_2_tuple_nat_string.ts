@@ -64,8 +64,8 @@ export class Type_asset_value_2_tuple_nat_string {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), (p => {
-                    return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), (p => {
+                    return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
                 })(y)]);
         }
         throw new Error("Contract not initialised");

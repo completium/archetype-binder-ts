@@ -27,7 +27,7 @@ export class Type_view_tx_rollup_l2_address {
     async view_get_value(i: att.Tx_rollup_l2_address, params: Partial<ex.Parameters>): Promise<att.Tx_rollup_l2_address | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return mich.value ? att.mich_to_tx_rollup_l2_address(mich.value) : undefined;
+            return mich.value ? att.Tx_rollup_l2_address.from_mich(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

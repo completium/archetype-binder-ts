@@ -41,7 +41,7 @@ export class Type_parameter_bytes {
     async get_res(): Promise<att.Bytes> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_bytes(storage);
+            return att.Bytes.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

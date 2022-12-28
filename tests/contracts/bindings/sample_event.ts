@@ -13,7 +13,7 @@ export class e_event implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): e_event {
-        return new e_event(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]));
+        return new e_event(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_string((input as att.Mpair).args[1]));
     }
 }
 const exec_arg_to_mich = (e: e_event): att.Micheline => {

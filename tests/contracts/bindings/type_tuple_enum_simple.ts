@@ -91,7 +91,7 @@ export class Type_tuple_enum_simple {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), mich_to_e_enum((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), mich_to_e_enum((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");

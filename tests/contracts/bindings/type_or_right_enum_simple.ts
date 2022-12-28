@@ -86,7 +86,7 @@ export class Type_or_right_enum_simple {
     async get_res(): Promise<att.Or<att.Nat, e_enum>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return mich_to_e_enum(x); });
+            return att.Or.from_mich(storage, x => { return att.Nat.from_mich(x); }, x => { return mich_to_e_enum(x); });
         }
         throw new Error("Contract not initialised");
     }

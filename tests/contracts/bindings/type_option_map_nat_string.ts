@@ -55,7 +55,7 @@ export class Type_option_map_nat_string {
     ]>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_map(x, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]); });
+            return att.Option.from_mich(storage, x => { return att.mich_to_map(x, (x, y) => [att.Nat.from_mich(x), att.mich_to_string(y)]); });
         }
         throw new Error("Contract not initialised");
     }

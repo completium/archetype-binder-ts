@@ -1083,8 +1083,11 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
 const mich_to_int = (arg: ts.Expression): ts.Expression => {
   return factory.createCallExpression(
     factory.createPropertyAccessExpression(
-      factory.createIdentifier("att"),
-      factory.createIdentifier("mich_to_int")
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Int")
+      ),
+      factory.createIdentifier("from_mich")
     ),
     undefined,
     [arg]
@@ -2120,14 +2123,7 @@ const getStateDecl = (e: Enum, ci: ContractInterface): ts.MethodDeclaration => {
               factory.createSwitchStatement(
                 factory.createCallExpression(
                   factory.createPropertyAccessExpression(
-                    factory.createCallExpression(
-                      factory.createPropertyAccessExpression(
-                        factory.createIdentifier("att"),
-                        factory.createIdentifier("mich_to_int")
-                      ),
-                      undefined,
-                      [factory.createIdentifier("state")]
-                    ),
+                    mich_to_int(factory.createIdentifier("state")),
                     factory.createIdentifier("to_number")
                   ),
                   undefined,

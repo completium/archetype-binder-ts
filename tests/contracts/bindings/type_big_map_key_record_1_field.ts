@@ -12,7 +12,7 @@ export class r_record implements att.ArchetypeType {
         return this.f_a.equals(v.f_a);
     }
     static from_mich(input: att.Micheline): r_record {
-        return new r_record(att.mich_to_nat(input));
+        return new r_record(att.Nat.from_mich(input));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
@@ -55,9 +55,9 @@ export class Type_big_map_key_record_1_field {
     async get_res_value(key: r_record): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("nat", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("nat", []));
             if (data != undefined) {
-                return att.mich_to_nat(data);
+                return att.Nat.from_mich(data);
             }
             else {
                 return undefined;
@@ -68,7 +68,7 @@ export class Type_big_map_key_record_1_field {
     async has_res_value(key: r_record): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("nat", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), att.prim_annot_to_mich_type("nat", []));
             if (data != undefined) {
                 return true;
             }

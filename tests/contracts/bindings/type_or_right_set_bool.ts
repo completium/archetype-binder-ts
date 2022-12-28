@@ -41,7 +41,7 @@ export class Type_or_right_set_bool {
     async get_res(): Promise<att.Or<att.Nat, Array<boolean>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_list(x, x => { return att.mich_to_bool(x); }); });
+            return att.Or.from_mich(storage, x => { return att.Nat.from_mich(x); }, x => { return att.mich_to_list(x, x => { return att.mich_to_bool(x); }); });
         }
         throw new Error("Contract not initialised");
     }

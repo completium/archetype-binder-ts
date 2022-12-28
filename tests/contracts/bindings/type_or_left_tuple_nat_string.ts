@@ -51,9 +51,9 @@ export class Type_or_left_tuple_nat_string {
     ], att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-            })(x); }, x => { return att.mich_to_nat(x); });
+            return att.Or.from_mich(storage, x => { return (p => {
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+            })(x); }, x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

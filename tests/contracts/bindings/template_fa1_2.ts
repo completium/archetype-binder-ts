@@ -21,7 +21,7 @@ export class ledger_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): ledger_value {
-        return new ledger_value(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.mich_to_address(x), att.mich_to_nat(y)]));
+        return new ledger_value(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.Address.from_mich(x), att.Nat.from_mich(y)]));
     }
 }
 export class token_metadata_value implements att.ArchetypeType {
@@ -43,7 +43,7 @@ export class token_metadata_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): token_metadata_value {
-        return new token_metadata_value(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.mich_to_string(x), att.mich_to_bytes(y)]));
+        return new token_metadata_value(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_map((input as att.Mpair).args[1], (x, y) => [att.mich_to_string(x), att.Bytes.from_mich(y)]));
     }
 }
 export const ledger_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -195,7 +195,7 @@ export class Template_fa1_2 {
             if (this.getAllowance_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.getAllowance_callback_address), "callback");
                 await ex.call(this.address, "getAllowance", att.getter_args_to_mich(getAllowance_arg_to_mich(owner, spender), entrypoint), params);
-                return await ex.get_callback_value<att.Nat>(this.getAllowance_callback_address, x => { return att.mich_to_nat(x); });
+                return await ex.get_callback_value<att.Nat>(this.getAllowance_callback_address, x => { return att.Nat.from_mich(x); });
             }
         }
         throw new Error("Contract not initialised");
@@ -205,7 +205,7 @@ export class Template_fa1_2 {
             if (this.getBalance_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.getBalance_callback_address), "callback");
                 await ex.call(this.address, "getBalance", att.getter_args_to_mich(getBalance_arg_to_mich(owner), entrypoint), params);
-                return await ex.get_callback_value<att.Nat>(this.getBalance_callback_address, x => { return att.mich_to_nat(x); });
+                return await ex.get_callback_value<att.Nat>(this.getBalance_callback_address, x => { return att.Nat.from_mich(x); });
             }
         }
         throw new Error("Contract not initialised");
@@ -215,7 +215,7 @@ export class Template_fa1_2 {
             if (this.getTotalSupply_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.getTotalSupply_callback_address), "callback");
                 await ex.call(this.address, "getTotalSupply", att.getter_args_to_mich(getTotalSupply_arg_to_mich(), entrypoint), params);
-                return await ex.get_callback_value<att.Nat>(this.getTotalSupply_callback_address, x => { return att.mich_to_nat(x); });
+                return await ex.get_callback_value<att.Nat>(this.getTotalSupply_callback_address, x => { return att.Nat.from_mich(x); });
             }
         }
         throw new Error("Contract not initialised");
@@ -223,7 +223,7 @@ export class Template_fa1_2 {
     async get_ledger_value(key: att.Address): Promise<ledger_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[0]).toString()), key.to_mich(), ledger_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[0]).toString()), key.to_mich(), ledger_key_mich_type);
             if (data != undefined) {
                 return ledger_value.from_mich(data);
             }
@@ -236,7 +236,7 @@ export class Template_fa1_2 {
     async has_ledger_value(key: att.Address): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[0]).toString()), key.to_mich(), ledger_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[0]).toString()), key.to_mich(), ledger_key_mich_type);
             if (data != undefined) {
                 return true;
             }
@@ -249,7 +249,7 @@ export class Template_fa1_2 {
     async get_token_metadata_value(key: att.Nat): Promise<token_metadata_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[1]).toString()), key.to_mich(), token_metadata_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[1]).toString()), key.to_mich(), token_metadata_key_mich_type);
             if (data != undefined) {
                 return token_metadata_value.from_mich(data);
             }
@@ -262,7 +262,7 @@ export class Template_fa1_2 {
     async has_token_metadata_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[1]).toString()), key.to_mich(), token_metadata_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[1]).toString()), key.to_mich(), token_metadata_key_mich_type);
             if (data != undefined) {
                 return true;
             }

@@ -13,7 +13,7 @@ export class visitor_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): visitor_value {
-        return new visitor_value(att.mich_to_string((input as att.Mpair).args[0]), att.mich_to_nat((input as att.Mpair).args[1]));
+        return new visitor_value(att.mich_to_string((input as att.Mpair).args[0]), att.Nat.from_mich((input as att.Mpair).args[1]));
     }
 }
 export const visitor_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([

@@ -88,12 +88,12 @@ export class Type_asset_value_2_big_map_tuple_nat_string_bytes_rev {
     ] | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return (p => {
                     return [(p => {
-                            return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-                        })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+                            return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                        })((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
                 })(data);
             }
             else {
@@ -105,7 +105,7 @@ export class Type_asset_value_2_big_map_tuple_nat_string_bytes_rev {
     async has_my_asset_value(key: att.Nat): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return true;
             }

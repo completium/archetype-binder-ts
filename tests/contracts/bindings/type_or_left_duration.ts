@@ -39,7 +39,7 @@ export class Type_or_left_duration {
     async get_res(): Promise<att.Or<att.Duration, att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_duration(x); }, x => { return att.mich_to_nat(x); });
+            return att.Or.from_mich(storage, x => { return att.Duration.from_mich(x); }, x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

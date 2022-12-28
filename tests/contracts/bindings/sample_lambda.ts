@@ -61,7 +61,7 @@ export class Sample_lambda {
     async get_i(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat((storage as att.Mpair).args[1]);
+            return att.Nat.from_mich((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }

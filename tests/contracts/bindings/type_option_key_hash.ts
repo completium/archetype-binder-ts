@@ -39,7 +39,7 @@ export class Type_option_key_hash {
     async get_res(): Promise<att.Option<att.Key_hash>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_key_hash(x); });
+            return att.Option.from_mich(storage, x => { return att.Key_hash.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

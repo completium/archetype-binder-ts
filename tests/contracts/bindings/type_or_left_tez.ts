@@ -39,7 +39,7 @@ export class Type_or_left_tez {
     async get_res(): Promise<att.Or<att.Tez, att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_tez(x); }, x => { return att.mich_to_nat(x); });
+            return att.Or.from_mich(storage, x => { return att.Tez.from_mich(x); }, x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

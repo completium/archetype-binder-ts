@@ -41,7 +41,7 @@ export class Type_set_option_string {
     async get_res(): Promise<Array<att.Option<string>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_option(x, x => { return att.mich_to_string(x); }); });
+            return att.mich_to_list(storage, x => { return att.Option.from_mich(x, x => { return att.mich_to_string(x); }); });
         }
         throw new Error("Contract not initialised");
     }

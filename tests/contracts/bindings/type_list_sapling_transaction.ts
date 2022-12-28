@@ -41,7 +41,7 @@ export class Type_list_sapling_transaction {
     async get_res(): Promise<Array<att.Sapling_transaction>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_sapling_transaction(x); });
+            return att.mich_to_list(storage, x => { return att.Sapling_transaction.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

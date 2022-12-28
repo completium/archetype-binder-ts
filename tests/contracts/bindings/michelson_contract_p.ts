@@ -181,7 +181,7 @@ export class Michelson_contract_p {
     async view_v_a(params: Partial<ex.Parameters>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "v_a", view_v_a_arg_to_mich(), params);
-            return mich.value ? att.mich_to_nat(mich.value) : undefined;
+            return mich.value ? att.Nat.from_mich(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }
@@ -207,8 +207,8 @@ export class Michelson_contract_p {
             return (p => {
                 return [(p => {
                         return [(p => {
-                                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
-                            })((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+                                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                            })((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
                     })((p as att.Mpair).args[0]), att.mich_to_bool((p as att.Mpair).args[1])];
             })((storage as att.Mpair).args[0]);
         }
@@ -217,7 +217,7 @@ export class Michelson_contract_p {
     async get_n(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat((storage as att.Mpair).args[1]);
+            return att.Nat.from_mich((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }

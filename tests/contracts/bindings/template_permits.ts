@@ -32,10 +32,10 @@ export class remove extends consumer_op {
 }
 export const mich_to_consumer_op = (m: att.Micheline): consumer_op => {
     if ((m as att.Msingle).prim == "Left") {
-        return new add(att.mich_to_address((m as att.Msingle).args[0]));
+        return new add(att.Address.from_mich((m as att.Msingle).args[0]));
     }
     if ((m as att.Msingle).prim == "Right") {
-        return new remove(att.mich_to_address((m as att.Msingle).args[0]));
+        return new remove(att.Address.from_mich((m as att.Msingle).args[0]));
     }
     throw new Error("mich_to_consumer_op : invalid micheline");
 };
@@ -51,7 +51,7 @@ export class user_permit implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): user_permit {
-        return new user_permit(att.mich_to_option((input as att.Mpair).args[0], x => { return att.mich_to_nat(x); }), att.mich_to_date((input as att.Mpair).args[1]));
+        return new user_permit(att.Option.from_mich((input as att.Mpair).args[0], x => { return att.Nat.from_mich(x); }), att.mich_to_date((input as att.Mpair).args[1]));
     }
 }
 export const user_permit_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -79,7 +79,7 @@ export class permits_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): permits_value {
-        return new permits_value(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_option((input as att.Mpair).args[1], x => { return att.mich_to_nat(x); }), att.mich_to_map((input as att.Mpair).args[2], (x, y) => [att.mich_to_bytes(x), user_permit.from_mich(y)]));
+        return new permits_value(att.Nat.from_mich((input as att.Mpair).args[0]), att.Option.from_mich((input as att.Mpair).args[1], x => { return att.Nat.from_mich(x); }), att.mich_to_map((input as att.Mpair).args[2], (x, y) => [att.Bytes.from_mich(x), user_permit.from_mich(y)]));
     }
 }
 export const permits_value_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -332,14 +332,14 @@ export class Template_permits {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address((storage as att.Mpair).args[0]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_owner_candidate(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option((storage as att.Mpair).args[1], x => { return att.mich_to_address(x); });
+            return att.Option.from_mich((storage as att.Mpair).args[1], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -353,14 +353,14 @@ export class Template_permits {
     async get_consumer(): Promise<consumer_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[3], x => { return att.mich_to_address(x); });
+            return att.mich_to_list((storage as att.Mpair).args[3], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_permits_value(key: att.Address): Promise<permits_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[4]).toString()), key.to_mich(), permits_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[4]).toString()), key.to_mich(), permits_key_mich_type);
             if (data != undefined) {
                 return permits_value.from_mich(data);
             }
@@ -373,7 +373,7 @@ export class Template_permits {
     async has_permits_value(key: att.Address): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[4]).toString()), key.to_mich(), permits_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[4]).toString()), key.to_mich(), permits_key_mich_type);
             if (data != undefined) {
                 return true;
             }
@@ -386,16 +386,16 @@ export class Template_permits {
     async get_default_expiry(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat((storage as att.Mpair).args[5]);
+            return att.Nat.from_mich((storage as att.Mpair).args[5]);
         }
         throw new Error("Contract not initialised");
     }
     async get_metadata_value(key: string): Promise<att.Bytes | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[6]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[6]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
-                return att.mich_to_bytes(data);
+                return att.Bytes.from_mich(data);
             }
             else {
                 return undefined;
@@ -406,7 +406,7 @@ export class Template_permits {
     async has_metadata_value(key: string): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int((storage as att.Mpair).args[6]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich((storage as att.Mpair).args[6]).toString()), att.string_to_mich(key), att.prim_annot_to_mich_type("string", []));
             if (data != undefined) {
                 return true;
             }

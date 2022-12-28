@@ -39,7 +39,7 @@ export class Type_option_chest_key {
     async get_res(): Promise<att.Option<att.Chest_key>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_chest_key(x); });
+            return att.Option.from_mich(storage, x => { return att.Chest_key.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

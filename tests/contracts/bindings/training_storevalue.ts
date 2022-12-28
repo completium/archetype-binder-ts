@@ -56,7 +56,7 @@ export class Training_storevalue {
     async get_counter(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat(storage);
+            return att.Nat.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

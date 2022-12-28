@@ -39,7 +39,7 @@ export class Type_simple_int {
     async get_res(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int(storage);
+            return att.Int.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

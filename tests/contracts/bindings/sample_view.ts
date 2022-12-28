@@ -27,7 +27,7 @@ export class Sample_view {
     async view_my_view(n: att.Nat, params: Partial<ex.Parameters>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "my_view", view_my_view_arg_to_mich(n), params);
-            return mich.value ? att.mich_to_nat(mich.value) : undefined;
+            return mich.value ? att.Nat.from_mich(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

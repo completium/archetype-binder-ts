@@ -41,7 +41,7 @@ export class Type_list_bytes {
     async get_res(): Promise<Array<att.Bytes>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_bytes(x); });
+            return att.mich_to_list(storage, x => { return att.Bytes.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

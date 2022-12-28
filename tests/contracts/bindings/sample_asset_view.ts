@@ -61,7 +61,7 @@ export class Sample_asset_view {
             if (this.my_getter_callback_address != undefined) {
                 const entrypoint = new att.Entrypoint(new att.Address(this.my_getter_callback_address), "callback");
                 await ex.call(this.address, "my_getter", att.getter_args_to_mich(my_getter_arg_to_mich(), entrypoint), params);
-                return await ex.get_callback_value<Array<att.Nat>>(this.my_getter_callback_address, x => { return att.mich_to_list(x, x => { return att.mich_to_nat(x); }); });
+                return await ex.get_callback_value<Array<att.Nat>>(this.my_getter_callback_address, x => { return att.mich_to_list(x, x => { return att.Nat.from_mich(x); }); });
             }
         }
         throw new Error("Contract not initialised");
@@ -69,21 +69,21 @@ export class Sample_asset_view {
     async view_my_view(params: Partial<ex.Parameters>): Promise<Array<att.Nat> | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "my_view", view_my_view_arg_to_mich(), params);
-            return mich.value ? att.mich_to_list(mich.value, x => { return att.mich_to_nat(x); }) : undefined;
+            return mich.value ? att.mich_to_list(mich.value, x => { return att.Nat.from_mich(x); }) : undefined;
         }
         throw new Error("Contract not initialised");
     }
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[0], (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[0], (x, y) => [att.Nat.from_mich(x), att.mich_to_string(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_res(): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[1], x => { return att.mich_to_nat(x); });
+            return att.mich_to_list((storage as att.Mpair).args[1], x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

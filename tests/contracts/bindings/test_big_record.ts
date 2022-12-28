@@ -45,11 +45,11 @@ export class C extends anenum {
 }
 export const mich_to_anenum = (m: att.Micheline): anenum => {
     if ((m as att.Msingle).prim == "Left") {
-        return new A(att.mich_to_int((m as att.Msingle).args[0]));
+        return new A(att.Int.from_mich((m as att.Msingle).args[0]));
     }
     if (((m as att.Msingle).args[0] as att.Msingle).prim == "Left") {
         return new B((p => {
-            return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+            return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
         })(((m as att.Msingle).args[0] as att.Msingle).args[0]));
     }
     if (((m as att.Msingle).args[0] as att.Msingle).prim == "Right") {
@@ -77,8 +77,8 @@ export class all implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): all {
-        return new all(att.mich_to_nat(((input as att.Mpair).args[0] as att.Mpair).args[0]), att.mich_to_int(((input as att.Mpair).args[0] as att.Mpair).args[1]), att.mich_to_tez(((input as att.Mpair).args[0] as att.Mpair).args[2]), att.mich_to_rational(((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair).args[0] as att.Mpair).args[0]), att.mich_to_bool(((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair).args[0] as att.Mpair).args[1]), att.mich_to_bytes((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[0]), att.mich_to_string((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[1]), att.mich_to_date((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[2]), att.mich_to_duration((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[3]), att.mich_to_address((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[4]), att.mich_to_option((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[5], x => { return att.mich_to_nat(x); }), att.mich_to_list((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[6], x => { return att.mich_to_string(x); }), att.mich_to_list((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[7], x => { return (p => {
-            return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_nat((p as att.Mpair).args[1]), att.mich_to_int((p as att.Mpair).args[2])];
+        return new all(att.Nat.from_mich(((input as att.Mpair).args[0] as att.Mpair).args[0]), att.Int.from_mich(((input as att.Mpair).args[0] as att.Mpair).args[1]), att.Tez.from_mich(((input as att.Mpair).args[0] as att.Mpair).args[2]), att.Rational.from_mich(((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair).args[0] as att.Mpair).args[0]), att.mich_to_bool(((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair).args[0] as att.Mpair).args[1]), att.Bytes.from_mich((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[0]), att.mich_to_string((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[1]), att.mich_to_date((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[2]), att.Duration.from_mich((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[3]), att.Address.from_mich((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[4]), att.Option.from_mich((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[5], x => { return att.Nat.from_mich(x); }), att.mich_to_list((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[6], x => { return att.mich_to_string(x); }), att.mich_to_list((att.pair_to_mich((att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 10)) as att.Mpair as att.Mpair).args.slice(1, 9)) as att.Mpair).args[7], x => { return (p => {
+            return [att.mich_to_string((p as att.Mpair).args[0]), att.Nat.from_mich((p as att.Mpair).args[1]), att.Int.from_mich((p as att.Mpair).args[2])];
         })(x); }));
     }
 }
@@ -127,7 +127,7 @@ export class visitor_2_value implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): visitor_2_value {
-        return new visitor_2_value(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_date((input as att.Mpair).args[1]));
+        return new visitor_2_value(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_date((input as att.Mpair).args[1]));
     }
 }
 export const visitor_value_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
@@ -262,35 +262,35 @@ export class Test_big_record {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address((storage as att.Mpair).args[0]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_oa(): Promise<att.Option<att.Address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option((storage as att.Mpair).args[1], x => { return att.mich_to_address(x); });
+            return att.Option.from_mich((storage as att.Mpair).args[1], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_s(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int((storage as att.Mpair).args[2]);
+            return att.Int.from_mich((storage as att.Mpair).args[2]);
         }
         throw new Error("Contract not initialised");
     }
     async get_o(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option((storage as att.Mpair).args[3], x => { return att.mich_to_nat(x); });
+            return att.Option.from_mich((storage as att.Mpair).args[3], x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_l(): Promise<Array<att.Int>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[4], x => { return att.mich_to_int(x); });
+            return att.mich_to_list((storage as att.Mpair).args[4], x => { return att.Int.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -303,8 +303,8 @@ export class Test_big_record {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[5], (x, y) => [att.mich_to_nat(x), (p => {
-                    return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_int((p as att.Mpair).args[1])];
+            return att.mich_to_map((storage as att.Mpair).args[5], (x, y) => [att.Nat.from_mich(x), (p => {
+                    return [att.mich_to_string((p as att.Mpair).args[0]), att.Int.from_mich((p as att.Mpair).args[1])];
                 })(y)]);
         }
         throw new Error("Contract not initialised");
@@ -312,7 +312,7 @@ export class Test_big_record {
     async get_s1(): Promise<Array<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[6], x => { return att.mich_to_nat(x); });
+            return att.mich_to_list((storage as att.Mpair).args[6], x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
@@ -340,21 +340,21 @@ export class Test_big_record {
     async get_just_a_key(): Promise<just_a_key_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list((storage as att.Mpair).args[10], x => { return att.mich_to_address(x); });
+            return att.mich_to_list((storage as att.Mpair).args[10], x => { return att.Address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor(): Promise<visitor_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[11], (x, y) => [att.mich_to_address(x), att.mich_to_nat(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[11], (x, y) => [att.Address.from_mich(x), att.Nat.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_visitor_2(): Promise<visitor_2_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[12], (x, y) => [att.mich_to_address(x), visitor_2_value.from_mich(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[12], (x, y) => [att.Address.from_mich(x), visitor_2_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

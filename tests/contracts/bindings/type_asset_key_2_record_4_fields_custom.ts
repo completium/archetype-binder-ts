@@ -12,7 +12,7 @@ export class r_record implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): r_record {
-        return new r_record(att.mich_to_nat((input as att.Mpair).args[0]), att.mich_to_string(((input as att.Mpair).args[1] as att.Mpair).args[0]), att.mich_to_bytes(((input as att.Mpair).args[1] as att.Mpair).args[1]), att.mich_to_bool((input as att.Mpair).args[2]));
+        return new r_record(att.Nat.from_mich((input as att.Mpair).args[0]), att.mich_to_string(((input as att.Mpair).args[1] as att.Mpair).args[0]), att.Bytes.from_mich(((input as att.Mpair).args[1] as att.Mpair).args[1]), att.mich_to_bool((input as att.Mpair).args[2]));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.pair_array_to_mich_type([
@@ -35,7 +35,7 @@ export class my_asset_key implements att.ArchetypeType {
         return att.micheline_equals(this.to_mich(), v.to_mich());
     }
     static from_mich(input: att.Micheline): my_asset_key {
-        return new my_asset_key(r_record.from_mich((input as att.Mpair).args[0]), att.mich_to_nat((input as att.Mpair).args[1]));
+        return new my_asset_key(r_record.from_mich((input as att.Mpair).args[0]), att.Nat.from_mich((input as att.Mpair).args[1]));
     }
 }
 export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_type([

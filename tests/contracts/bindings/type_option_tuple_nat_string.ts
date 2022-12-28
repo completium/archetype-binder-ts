@@ -51,8 +51,8 @@ export class Type_option_tuple_nat_string {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+            return att.Option.from_mich(storage, x => { return (p => {
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
             })(x); });
         }
         throw new Error("Contract not initialised");

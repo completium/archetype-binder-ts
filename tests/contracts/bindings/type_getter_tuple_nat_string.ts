@@ -50,7 +50,7 @@ export class Type_getter_tuple_nat_string {
                     att.Nat,
                     string
                 ]>(this.get_value_callback_address, x => { return (p => {
-                    return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                    return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
                 })(x); });
             }
         }
@@ -63,7 +63,7 @@ export class Type_getter_tuple_nat_string {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1])];
             })(storage);
         }
         throw new Error("Contract not initialised");

@@ -63,8 +63,8 @@ export class Type_map_key_tuple_nat_string_bytes_bool {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return att.mich_to_map(storage, (x, y) => [(p => {
-                    return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.mich_to_bytes((p as att.Mpair).args[2]), att.mich_to_bool((p as att.Mpair).args[3])];
-                })(x), att.mich_to_nat(y)]);
+                    return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.Bytes.from_mich((p as att.Mpair).args[2]), att.mich_to_bool((p as att.Mpair).args[3])];
+                })(x), att.Nat.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

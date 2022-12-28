@@ -46,7 +46,7 @@ export class Type_asset_key_1_big_map_date {
     async get_my_asset_value(key: Date): Promise<string | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.date_to_mich(key), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), att.date_to_mich(key), my_asset_key_mich_type);
             if (data != undefined) {
                 return att.mich_to_string(data);
             }
@@ -59,7 +59,7 @@ export class Type_asset_key_1_big_map_date {
     async has_my_asset_value(key: Date): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), att.date_to_mich(key), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), att.date_to_mich(key), my_asset_key_mich_type);
             if (data != undefined) {
                 return true;
             }

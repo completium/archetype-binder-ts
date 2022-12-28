@@ -64,8 +64,8 @@ export class Type_tuple_tuple_nat_string_bytes_bool {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), (p => {
-                        return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.mich_to_bytes((p as att.Mpair).args[2]), att.mich_to_bool((p as att.Mpair).args[3])];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), (p => {
+                        return [att.Nat.from_mich((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.Bytes.from_mich((p as att.Mpair).args[2]), att.mich_to_bool((p as att.Mpair).args[3])];
                     })((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }

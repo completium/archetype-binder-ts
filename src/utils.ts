@@ -1051,6 +1051,20 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
+  const class_from_mich = (name: string, args: ts.Expression[]): ts.Expression => {
+    return factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier(name)
+        ),
+        factory.createIdentifier("from_mich")
+      ),
+      undefined,
+      args
+    )
+  }
+
   const map_mich_to_ts = (key_type: ArchetypeType, value_type: ArchetypeType) => {
     return factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -1097,9 +1111,15 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     )
   }
 
-  const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atypes: ArchetypeType[]) => {
+  const contained_type_to_field_decl = (fname: string, arg: ts.Expression, atypes: ArchetypeType[], from_mich: boolean) => {
     return factory.createCallExpression(
-      factory.createPropertyAccessExpression(
+      from_mich ? factory.createPropertyAccessExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier(fname)
+        ),
+        factory.createIdentifier("from_mich")
+      ) : factory.createPropertyAccessExpression(
         factory.createIdentifier("att"),
         factory.createIdentifier(fname)
       ),
@@ -1212,7 +1232,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
           key_type = key_ty
         }
         if (is_only_keys(asset_type)) {
-          return contained_type_to_field_decl("mich_to_list", arg, [key_type])
+          return contained_type_to_field_decl("mich_to_list", arg, [key_type], false)
         } else {
           let value_type: ArchetypeType = { node: "asset_value", name: asset_name };
           const [is_one_field_val, val_ty] = is_asset_one_field_val(asset_name, ci);
@@ -1223,7 +1243,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
         }
       }
       case "big_map":
-        return class_to_mich("mich_to_int", [arg])
+        return class_from_mich("Int", [arg])
       case "iterable_big_map":
         return TODO("asset_to_mich: iterable_big_map", arg);
     }
@@ -1241,7 +1261,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
   }
 
   switch (atype.node) {
-    case "address": return class_to_mich("mich_to_address", [arg]);
+    case "address": return class_from_mich("Address", [arg]);
     case "aggregate": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
       if (a && ty != null) {
@@ -1276,34 +1296,34 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       }
     }
     case "asset": return asset_to_mich(atype.name, arg, ci);
-    case "big_map": return class_to_mich("mich_to_int", [arg]);
-    case "bls12_381_fr": return class_to_mich("mich_to_bls12_381_fr", [arg]);
-    case "bls12_381_g1": return class_to_mich("mich_to_bls12_381_g1", [arg]);
-    case "bls12_381_g2": return class_to_mich("mich_to_bls12_381_g2", [arg]);
+    case "big_map": return class_from_mich("Int", [arg]);
+    case "bls12_381_fr": return class_from_mich("Bls12_381_fr", [arg]);
+    case "bls12_381_g1": return class_from_mich("Bls12_381_g1", [arg]);
+    case "bls12_381_g2": return class_from_mich("Bls12_381_g2", [arg]);
     case "bool": return class_to_mich("mich_to_bool", [arg]);
-    case "bytes": return class_to_mich("mich_to_bytes", [arg]);
-    case "chain_id": return class_to_mich("mich_to_chain_id", [arg]);
-    case "chest_key": return class_to_mich("mich_to_chest_key", [arg]);
-    case "chest": return class_to_mich("mich_to_chest", [arg]);
+    case "bytes": return class_from_mich("Bytes", [arg]);
+    case "chain_id": return class_from_mich("Chain_id", [arg]);
+    case "chest_key": return class_from_mich("Chest_key", [arg]);
+    case "chest": return class_from_mich("Chest", [arg]);
     case "collection": return TODO("collection", arg);
     case "contract": return TODO("contract", arg);
-    case "currency": return class_to_mich("mich_to_tez", [arg]);
+    case "currency": return class_from_mich("Tez", [arg]);
     case "date": return class_to_mich("mich_to_date", [arg]);
-    case "duration": return class_to_mich("mich_to_duration", [arg]);
+    case "duration": return class_from_mich("Duration", [arg]);
     case "enum": return enum_to_mich(atype.name, arg, ci)
     case "event": return record_to_mich(atype.name, arg, ci)
-    case "int": return class_to_mich("mich_to_int", [arg]);
-    case "iterable_big_map": return class_to_mich("mich_to_int", [arg]);
-    case "key_hash": return class_to_mich("mich_to_key_hash", [arg]);
-    case "key": return class_to_mich("mich_to_key", [arg]);
+    case "int": return class_from_mich("Int", [arg]);
+    case "iterable_big_map": return class_from_mich("Int", [arg]);
+    case "key_hash": return class_from_mich("Key_hash", [arg]);
+    case "key": return class_from_mich("Key", [arg]);
     case "lambda": return arg;
-    case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
+    case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg], false)
     case "map": return map_mich_to_ts(atype.key_type, atype.value_type);
-    case "nat": return class_to_mich("mich_to_nat", [arg]);
+    case "nat": return class_from_mich("Nat", [arg]);
     case "never": return TODO("never", arg);
     case "operation": return TODO("operation", arg);
-    case "option": return contained_type_to_field_decl("mich_to_option", arg, [atype.arg]);
-    case "or": return contained_type_to_field_decl("mich_to_or", arg, [atype.left_type, atype.right_type]);
+    case "option": return contained_type_to_field_decl("Option", arg, [atype.arg], true);
+    case "or": return contained_type_to_field_decl("Or", arg, [atype.left_type, atype.right_type], true);
     case "partition": {
       const [a, ty] = is_asset_one_field_key(atype.name, ci)
       if (a && ty != null) {
@@ -1312,18 +1332,18 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
         return mich_to_archetype_type({ node: 'set', arg: { node: "record", name: atype.name + "_key" } }, arg, ci)
       }
     }
-    case "rational": return class_to_mich("mich_to_rational", [arg]);
+    case "rational": return class_from_mich("Rational", [arg]);
     case "record": return record_to_mich(atype.name, arg, ci)
-    case "sapling_state": return class_to_mich("mich_to_sapling_state", [arg]);
-    case "sapling_transaction": return class_to_mich("mich_to_sapling_transaction", [arg]);
-    case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg])
-    case "signature": return class_to_mich("mich_to_signature", [arg]);
+    case "sapling_state": return class_from_mich("Sapling_state", [arg]);
+    case "sapling_transaction": return class_from_mich("Sapling_transaction", [arg]);
+    case "set": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg], false)
+    case "signature": return class_from_mich("Signature", [arg]);
     case "state": return TODO("state", arg);
     case "string": return class_to_mich("mich_to_string", [arg]);
-    case "ticket": return contained_type_to_field_decl("mich_to_ticket", arg, [atype.arg]);
-    case "timestamp": return class_to_mich("mich_to_int", [arg]);
+    case "ticket": return contained_type_to_field_decl("Ticket", arg, [atype.arg], true);
+    case "timestamp": return class_from_mich("Int", [arg]);
     case "tuple": return mich_to_tuple(atype.args, arg);
-    case "tx_rollup_l2_address": return class_to_mich("mich_to_tx_rollup_l2_address", [arg]);
+    case "tx_rollup_l2_address": return class_from_mich("Tx_rollup_l2_address", [arg]);
     case "unit": return mich_unit();
   }
 }

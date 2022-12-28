@@ -71,7 +71,7 @@ export class Type_asset_value_3_list_bool {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), my_asset_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), my_asset_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

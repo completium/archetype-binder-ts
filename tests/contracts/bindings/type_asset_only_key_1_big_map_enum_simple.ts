@@ -108,7 +108,7 @@ export class Type_asset_only_key_1_big_map_enum_simple {
     async get_my_asset_value(key: e_enum): Promise<my_asset_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return my_asset_value.from_mich(data);
             }
@@ -121,7 +121,7 @@ export class Type_asset_only_key_1_big_map_enum_simple {
     async has_my_asset_value(key: e_enum): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich(), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich(), my_asset_key_mich_type);
             if (data != undefined) {
                 return true;
             }

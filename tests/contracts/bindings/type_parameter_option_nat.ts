@@ -41,7 +41,7 @@ export class Type_parameter_option_nat {
     async get_res(): Promise<att.Option<att.Nat>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_nat(x); });
+            return att.Option.from_mich(storage, x => { return att.Nat.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

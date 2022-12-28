@@ -53,7 +53,7 @@ export class Sample_state {
     async get_res(): Promise<att.Nat> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_nat((storage as att.Mpair).args[1]);
+            return att.Nat.from_mich((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }
@@ -61,7 +61,7 @@ export class Sample_state {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             const state = (storage as att.Mpair).args[0];
-            switch (att.mich_to_int(state).to_number()) {
+            switch (att.Int.from_mich(state).to_number()) {
                 case 0: return states.First;
                 case 1: return states.Second;
                 case 2: return states.Third;

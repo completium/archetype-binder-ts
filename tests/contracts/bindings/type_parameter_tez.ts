@@ -41,7 +41,7 @@ export class Type_parameter_tez {
     async get_res(): Promise<att.Tez> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_tez(storage);
+            return att.Tez.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

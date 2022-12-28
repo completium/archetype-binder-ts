@@ -48,7 +48,7 @@ export class Type_asset_value_2_list_string {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_list(y, x => { return att.mich_to_string(x); })]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), att.mich_to_list(y, x => { return att.mich_to_string(x); })]);
         }
         throw new Error("Contract not initialised");
     }

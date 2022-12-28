@@ -12,7 +12,7 @@ export class r_record implements att.ArchetypeType {
         return this.f_a.equals(v.f_a);
     }
     static from_mich(input: att.Micheline): r_record {
-        return new r_record(att.mich_to_nat(input));
+        return new r_record(att.Nat.from_mich(input));
     }
 }
 export const r_record_mich_type: att.MichelineType = att.prim_annot_to_mich_type("nat", []);
@@ -55,7 +55,7 @@ export class Type_option_record_1_field {
     async get_res(): Promise<att.Option<r_record>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return r_record.from_mich(x); });
+            return att.Option.from_mich(storage, x => { return r_record.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

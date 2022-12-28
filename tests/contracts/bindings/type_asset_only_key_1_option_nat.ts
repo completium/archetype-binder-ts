@@ -42,7 +42,7 @@ export class Type_asset_only_key_1_option_nat {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_option(x, x => { return att.mich_to_nat(x); }); });
+            return att.mich_to_list(storage, x => { return att.Option.from_mich(x, x => { return att.Nat.from_mich(x); }); });
         }
         throw new Error("Contract not initialised");
     }

@@ -41,7 +41,7 @@ export class Type_list_key_hash {
     async get_res(): Promise<Array<att.Key_hash>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_key_hash(x); });
+            return att.mich_to_list(storage, x => { return att.Key_hash.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

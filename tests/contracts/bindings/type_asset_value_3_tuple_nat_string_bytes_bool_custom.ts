@@ -21,8 +21,8 @@ export class my_asset_value implements att.ArchetypeType {
     }
     static from_mich(input: att.Micheline): my_asset_value {
         return new my_asset_value(att.mich_to_string((input as att.Mpair).args[0]), (p => {
-            return [att.mich_to_nat((p as att.Mpair).args[0]), (p => {
-                    return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+            return [att.Nat.from_mich((p as att.Mpair).args[0]), (p => {
+                    return [att.mich_to_string((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
                 })((p as att.Mpair).args[1]), att.mich_to_bool((p as att.Mpair).args[2])];
         })(att.pair_to_mich((input as att.Mpair as att.Mpair).args.slice(1, 4))));
     }
@@ -113,7 +113,7 @@ export class Type_asset_value_3_tuple_nat_string_bytes_bool_custom {
     async get_my_asset(): Promise<my_asset_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), my_asset_value.from_mich(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), my_asset_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }

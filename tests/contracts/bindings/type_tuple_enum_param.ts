@@ -59,14 +59,14 @@ export const mich_to_e_enum = (m: att.Micheline): e_enum => {
         return new e_1();
     }
     if (((m as att.Msingle).args[0] as att.Msingle).prim == "Left") {
-        return new e_2(att.mich_to_nat(((m as att.Msingle).args[0] as att.Msingle).args[0]));
+        return new e_2(att.Nat.from_mich(((m as att.Msingle).args[0] as att.Msingle).args[0]));
     }
     if ((((m as att.Msingle).args[0] as att.Msingle).args[0] as att.Msingle).prim == "Left") {
         return new e_3(att.mich_to_string((((m as att.Msingle).args[0] as att.Msingle).args[0] as att.Msingle).args[0]));
     }
     if ((((m as att.Msingle).args[0] as att.Msingle).args[0] as att.Msingle).prim == "Right") {
         return new e_4((p => {
-            return [att.mich_to_bytes((p as att.Mpair).args[0]), att.mich_to_bool((p as att.Mpair).args[1])];
+            return [att.Bytes.from_mich((p as att.Mpair).args[0]), att.mich_to_bool((p as att.Mpair).args[1])];
         })((((m as att.Msingle).args[0] as att.Msingle).args[0] as att.Msingle).args[0]));
     }
     throw new Error("mich_to_e_enum : invalid micheline");
@@ -115,7 +115,7 @@ export class Type_tuple_enum_param {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
             return (p => {
-                return [att.mich_to_nat((p as att.Mpair).args[0]), mich_to_e_enum((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
+                return [att.Nat.from_mich((p as att.Mpair).args[0]), mich_to_e_enum((p as att.Mpair).args[1]), att.mich_to_string((p as att.Mpair).args[2])];
             })(storage);
         }
         throw new Error("Contract not initialised");

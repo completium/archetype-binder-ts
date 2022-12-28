@@ -41,7 +41,7 @@ export class Type_parameter_rational {
     async get_res(): Promise<att.Rational> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_rational(storage);
+            return att.Rational.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

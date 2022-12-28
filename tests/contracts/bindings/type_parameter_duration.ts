@@ -41,7 +41,7 @@ export class Type_parameter_duration {
     async get_res(): Promise<att.Duration> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_duration(storage);
+            return att.Duration.from_mich(storage);
         }
         throw new Error("Contract not initialised");
     }

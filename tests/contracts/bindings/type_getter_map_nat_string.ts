@@ -50,7 +50,7 @@ export class Type_getter_map_nat_string {
                 return await ex.get_callback_value<Array<[
                     att.Nat,
                     string
-                ]>>(this.get_value_callback_address, x => { return att.mich_to_map(x, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]); });
+                ]>>(this.get_value_callback_address, x => { return att.mich_to_map(x, (x, y) => [att.Nat.from_mich(x), att.mich_to_string(y)]); });
             }
         }
         throw new Error("Contract not initialised");
@@ -61,7 +61,7 @@ export class Type_getter_map_nat_string {
     ]>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map(storage, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]);
+            return att.mich_to_map(storage, (x, y) => [att.Nat.from_mich(x), att.mich_to_string(y)]);
         }
         throw new Error("Contract not initialised");
     }

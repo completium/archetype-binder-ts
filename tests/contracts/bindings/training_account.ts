@@ -56,14 +56,14 @@ export class Training_account {
     async get_owner(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_address((storage as att.Mpair).args[0]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_total(): Promise<att.Int> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_int((storage as att.Mpair).args[1]);
+            return att.Int.from_mich((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }

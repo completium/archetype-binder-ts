@@ -39,7 +39,7 @@ export class Type_option_date {
     async get_res(): Promise<att.Option<Date>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_date(x); });
+            return att.Option.from_mich(storage, x => { return att.mich_to_date(x); });
         }
         throw new Error("Contract not initialised");
     }

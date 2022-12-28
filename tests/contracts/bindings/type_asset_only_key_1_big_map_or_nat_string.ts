@@ -61,7 +61,7 @@ export class Type_asset_only_key_1_big_map_or_nat_string {
     async get_my_asset_value(key: att.Or<att.Nat, string>): Promise<my_asset_value | undefined> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), my_asset_key_mich_type);
             if (data != undefined) {
                 return my_asset_value.from_mich(data);
             }
@@ -74,7 +74,7 @@ export class Type_asset_only_key_1_big_map_or_nat_string {
     async has_my_asset_value(key: att.Or<att.Nat, string>): Promise<boolean> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const data = await ex.get_big_map_value(BigInt(att.mich_to_int(storage).toString()), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), my_asset_key_mich_type);
+            const data = await ex.get_big_map_value(BigInt(att.Int.from_mich(storage).toString()), key.to_mich((x => { return x.to_mich(); }), (x => { return att.string_to_mich(x); })), my_asset_key_mich_type);
             if (data != undefined) {
                 return true;
             }

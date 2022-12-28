@@ -20,10 +20,10 @@ export class my_asset_key implements att.ArchetypeType {
     }
     static from_mich(input: att.Micheline): my_asset_key {
         return new my_asset_key((p => {
-            return [att.mich_to_nat((p as att.Mpair).args[0]), (p => {
-                    return [att.mich_to_string((p as att.Mpair).args[0]), att.mich_to_bytes((p as att.Mpair).args[1])];
+            return [att.Nat.from_mich((p as att.Mpair).args[0]), (p => {
+                    return [att.mich_to_string((p as att.Mpair).args[0]), att.Bytes.from_mich((p as att.Mpair).args[1])];
                 })((p as att.Mpair).args[1]), att.mich_to_bool((p as att.Mpair).args[2])];
-        })((input as att.Mpair).args[0]), att.mich_to_nat((input as att.Mpair).args[1]));
+        })((input as att.Mpair).args[0]), att.Nat.from_mich((input as att.Mpair).args[1]));
     }
 }
 export const my_asset_key_mich_type: att.MichelineType = att.pair_array_to_mich_type([

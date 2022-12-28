@@ -39,7 +39,7 @@ export class Type_option_option_bool {
     async get_res(): Promise<att.Option<att.Option<boolean>>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_option(storage, x => { return att.mich_to_option(x, x => { return att.mich_to_bool(x); }); });
+            return att.Option.from_mich(storage, x => { return att.Option.from_mich(x, x => { return att.mich_to_bool(x); }); });
         }
         throw new Error("Contract not initialised");
     }

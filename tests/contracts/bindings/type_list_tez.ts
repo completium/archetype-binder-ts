@@ -41,7 +41,7 @@ export class Type_list_tez {
     async get_res(): Promise<Array<att.Tez>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_tez(x); });
+            return att.mich_to_list(storage, x => { return att.Tez.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

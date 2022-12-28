@@ -39,7 +39,7 @@ export class Type_or_right_tx_rollup_l2_address {
     async get_res(): Promise<att.Or<att.Nat, att.Tx_rollup_l2_address>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_or(storage, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_tx_rollup_l2_address(x); });
+            return att.Or.from_mich(storage, x => { return att.Nat.from_mich(x); }, x => { return att.Tx_rollup_l2_address.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }

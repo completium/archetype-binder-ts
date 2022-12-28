@@ -41,7 +41,7 @@ export class Type_list_chain_id {
     async get_res(): Promise<Array<att.Chain_id>> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_list(storage, x => { return att.mich_to_chain_id(x); });
+            return att.mich_to_list(storage, x => { return att.Chain_id.from_mich(x); });
         }
         throw new Error("Contract not initialised");
     }
