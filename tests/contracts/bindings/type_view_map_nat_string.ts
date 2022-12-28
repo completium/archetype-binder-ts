@@ -37,10 +37,10 @@ export class Type_view_map_nat_string {
     ]>, params: Partial<ex.Parameters>): Promise<Array<[
         att.Nat,
         string
-    ]>> {
+    ]> | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_map(mich.value, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]);
+            return mich.value ? att.mich_to_map(mich.value, (x, y) => [att.mich_to_nat(x), att.mich_to_string(y)]) : undefined;
         }
         throw new Error("Contract not initialised");
     }

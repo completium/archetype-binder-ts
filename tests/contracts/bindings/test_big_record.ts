@@ -252,10 +252,10 @@ export class Test_big_record {
         }
         throw new Error("Contract not initialised");
     }
-    async view_myview(params: Partial<ex.Parameters>): Promise<anenum> {
+    async view_myview(params: Partial<ex.Parameters>): Promise<anenum | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "myview", view_myview_arg_to_mich(), params);
-            return mich_to_anenum(mich.value);
+            return mich.value ? mich_to_anenum(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

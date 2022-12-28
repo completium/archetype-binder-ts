@@ -1,0 +1,7 @@
+archetype sample_view
+
+view my_view(n : nat) : nat {
+  if (n % 2 <> 0)
+  then fail("odd");
+  return n
+}

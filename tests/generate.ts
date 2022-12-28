@@ -380,6 +380,14 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_iterable_big_map.arl');
   });
 
+  it('sample_view', async () => {
+    await get_binding('sample_view.arl');
+  });
+
+  // it('sample_asset_iterable_big_map', async () => {
+  //   await get_binding('sample_asset_iterable_big_map.arl');
+  // });
+
 })
 
 describe('Generate binding template', async () => {

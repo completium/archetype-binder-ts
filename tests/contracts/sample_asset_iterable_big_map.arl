@@ -1,0 +1,10 @@
+archetype sample_asset_iterable_big_map
+
+asset my_assset to iterable_big_map {
+  k : int;
+  v : bytes;
+}
+
+entry exec(ik : int, iv : bytes) {
+  my_assset.add({k = ik; v = iv})
+}

@@ -7,6 +7,7 @@ import { sample_storage_variables } from './contracts/bindings/sample_storage_va
 import { sample_tuple_tuple_rational } from './contracts/bindings/sample_tuple_tuple_rational'
 import { sample_big_map } from './contracts/bindings/sample_big_map'
 import { sample_iterable_big_map } from './contracts/bindings/sample_iterable_big_map'
+import { sample_view } from './contracts/bindings/sample_view'
 
 /* Accounts ---------------------------------------------------------------- */
 
@@ -61,6 +62,19 @@ describe('Sample', async () => {
     assert(after_has_v_value)
     assert(actual_value?.equals(v))
   });
+
+  it('View', async () => {
+    const even: Nat = new Nat(2)
+    const odd: Nat = new Nat(3)
+
+    await sample_view.deploy({as: alice})
+
+    const res_even = await sample_view.view_my_view(even, {as: alice});
+    assert(res_even?.equals(even))
+
+    const res_odd = await sample_view.view_my_view(odd, {as: alice});
+    assert(res_odd == undefined)
+  })
 
   it('Iterable_big_map', async () => {
     const k: Int = new Int(2)

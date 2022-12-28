@@ -71,10 +71,10 @@ export class Type_view_enum_simple {
         const address = (await ex.deploy("./tests/contracts/type_view_enum_simple.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum> {
+    async view_get_value(i: e_enum, params: Partial<ex.Parameters>): Promise<e_enum | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return mich_to_e_enum(mich.value);
+            return mich.value ? mich_to_e_enum(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

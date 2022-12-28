@@ -24,10 +24,10 @@ export class Type_view_tx_rollup_l2_address {
         const address = (await ex.deploy("./tests/contracts/type_view_tx_rollup_l2_address.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Tx_rollup_l2_address, params: Partial<ex.Parameters>): Promise<att.Tx_rollup_l2_address> {
+    async view_get_value(i: att.Tx_rollup_l2_address, params: Partial<ex.Parameters>): Promise<att.Tx_rollup_l2_address | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_tx_rollup_l2_address(mich.value);
+            return mich.value ? att.mich_to_tx_rollup_l2_address(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

@@ -24,10 +24,10 @@ export class Type_view_tez {
         const address = (await ex.deploy("./tests/contracts/type_view_tez.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Tez, params: Partial<ex.Parameters>): Promise<att.Tez> {
+    async view_get_value(i: att.Tez, params: Partial<ex.Parameters>): Promise<att.Tez | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_tez(mich.value);
+            return mich.value ? att.mich_to_tez(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

@@ -36,12 +36,12 @@ export class Type_view_tuple_nat_string_bytes {
         att.Nat,
         string,
         att.Bytes
-    ]> {
+    ] | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return (p => {
+            return mich.value ? (p => {
                 return [att.mich_to_nat((p as att.Mpair).args[0]), att.mich_to_string((p as att.Mpair).args[1]), att.mich_to_bytes((p as att.Mpair).args[2])];
-            })(mich.value);
+            })(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

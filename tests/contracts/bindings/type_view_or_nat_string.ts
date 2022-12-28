@@ -24,10 +24,10 @@ export class Type_view_or_nat_string {
         const address = (await ex.deploy("./tests/contracts/type_view_or_nat_string.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.Or<att.Nat, string>> {
+    async view_get_value(i: att.Or<att.Nat, string>, params: Partial<ex.Parameters>): Promise<att.Or<att.Nat, string> | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_or(mich.value, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_string(x); });
+            return mich.value ? att.mich_to_or(mich.value, x => { return att.mich_to_nat(x); }, x => { return att.mich_to_string(x); }) : undefined;
         }
         throw new Error("Contract not initialised");
     }

@@ -100,17 +100,17 @@ export class Michelson_contract_le {
         }
         throw new Error("Contract not initialised");
     }
-    async view_v_a(params: Partial<ex.Parameters>): Promise<att.Nat> {
+    async view_v_a(params: Partial<ex.Parameters>): Promise<att.Nat | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "v_a", view_v_a_arg_to_mich(), params);
-            return att.mich_to_nat(mich.value);
+            return mich.value ? att.mich_to_nat(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }
-    async view_v_b(_: string, params: Partial<ex.Parameters>): Promise<string> {
+    async view_v_b(_: string, params: Partial<ex.Parameters>): Promise<string | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "v_b", view_v_b_arg_to_mich(_), params);
-            return att.mich_to_string(mich.value);
+            return mich.value ? att.mich_to_string(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

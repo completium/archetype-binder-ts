@@ -66,10 +66,10 @@ export class Sample_asset_view {
         }
         throw new Error("Contract not initialised");
     }
-    async view_my_view(params: Partial<ex.Parameters>): Promise<Array<att.Nat>> {
+    async view_my_view(params: Partial<ex.Parameters>): Promise<Array<att.Nat> | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "my_view", view_my_view_arg_to_mich(), params);
-            return att.mich_to_list(mich.value, x => { return att.mich_to_nat(x); });
+            return mich.value ? att.mich_to_list(mich.value, x => { return att.mich_to_nat(x); }) : undefined;
         }
         throw new Error("Contract not initialised");
     }

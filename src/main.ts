@@ -453,7 +453,7 @@ const contractParameterToParamDecl = (fp: FunctionParameter, ci: ContractInterfa
   )
 }
 
-const entry_to_method = (name: string, args: FunctionParameter[], ret: ts.TypeNode, body: ts.Statement[], ci: ContractInterface) => {
+const entry_to_method = (name: string, args: FunctionParameter[], ret: ts.TypeNode, body: ts.Statement[], ret_undefined: boolean, ci: ContractInterface) => {
   return factory.createMethodDeclaration(
     undefined,
     [factory.createModifier(SyntaxKind.AsyncKeyword)],
@@ -483,7 +483,7 @@ const entry_to_method = (name: string, args: FunctionParameter[], ret: ts.TypeNo
     ]),
     factory.createTypeReferenceNode(
       factory.createIdentifier("Promise"),
-      [ret]
+      [ret_undefined ? factory.createUnionTypeNode([ret, factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword)]) : ret]
     ),
     factory.createBlock(
       [factory.createIfStatement(
@@ -532,7 +532,7 @@ const entryToMethod = (e: Entrypoint, ci: ContractInterface) => {
         ),
         factory.createIdentifier("params")
       ]
-    )))], ci)
+    )))], false, ci)
 }
 
 const entryToGetParam = (e: Entrypoint, ci: ContractInterface) => {
@@ -563,7 +563,7 @@ const entryToGetParam = (e: Entrypoint, ci: ContractInterface) => {
         ),
         factory.createIdentifier("params")
       ]
-    )))], ci)
+    )))], false, ci)
 }
 
 const getter_to_method = (g: Getter, ci: ContractInterface) => {
@@ -676,7 +676,7 @@ const getter_to_method = (g: Getter, ci: ContractInterface) => {
         ),
         undefined
       )
-    ], ci
+    ], false, ci
   )
 }
 
@@ -718,11 +718,20 @@ const view_to_method = (v: View, ci: ContractInterface) => {
       )
     )],
     ...(
-      [factory.createReturnStatement(mich_to_archetype_type(v.return, factory.createPropertyAccessExpression(
-        factory.createIdentifier("mich"),
-        factory.createIdentifier("value")
-      ), ci))])
-    ], ci)
+      [factory.createReturnStatement(factory.createConditionalExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("mich"),
+          factory.createIdentifier("value")
+        ),
+        factory.createToken(ts.SyntaxKind.QuestionToken),
+        mich_to_archetype_type(v.return, factory.createPropertyAccessExpression(
+          factory.createIdentifier("mich"),
+          factory.createIdentifier("value")
+        ), ci),
+        factory.createToken(ts.SyntaxKind.ColonToken),
+        factory.createIdentifier("undefined")
+      ))])
+    ], true, ci)
 }
 
 const make_method_skeleton = (

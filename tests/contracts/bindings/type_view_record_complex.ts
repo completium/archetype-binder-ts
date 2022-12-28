@@ -79,10 +79,10 @@ export class Type_view_record_complex {
         const address = (await ex.deploy("./tests/contracts/type_view_record_complex.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record> {
+    async view_get_value(i: r_record, params: Partial<ex.Parameters>): Promise<r_record | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return r_record.from_mich(mich.value);
+            return mich.value ? r_record.from_mich(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

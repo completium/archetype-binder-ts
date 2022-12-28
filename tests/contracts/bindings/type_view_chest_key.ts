@@ -24,10 +24,10 @@ export class Type_view_chest_key {
         const address = (await ex.deploy("./tests/contracts/type_view_chest_key.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Chest_key, params: Partial<ex.Parameters>): Promise<att.Chest_key> {
+    async view_get_value(i: att.Chest_key, params: Partial<ex.Parameters>): Promise<att.Chest_key | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_chest_key(mich.value);
+            return mich.value ? att.mich_to_chest_key(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

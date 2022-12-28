@@ -24,10 +24,10 @@ export class Type_view_chain_id {
         const address = (await ex.deploy("./tests/contracts/type_view_chain_id.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<att.Chain_id> {
+    async view_get_value(i: att.Chain_id, params: Partial<ex.Parameters>): Promise<att.Chain_id | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_chain_id(mich.value);
+            return mich.value ? att.mich_to_chain_id(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

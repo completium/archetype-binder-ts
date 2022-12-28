@@ -24,10 +24,10 @@ export class Type_view_bool {
         const address = (await ex.deploy("./tests/contracts/type_view_bool.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: boolean, params: Partial<ex.Parameters>): Promise<boolean> {
+    async view_get_value(i: boolean, params: Partial<ex.Parameters>): Promise<boolean | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_bool(mich.value);
+            return mich.value ? att.mich_to_bool(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }

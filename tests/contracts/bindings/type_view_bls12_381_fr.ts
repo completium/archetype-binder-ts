@@ -24,10 +24,10 @@ export class Type_view_bls12_381_fr {
         const address = (await ex.deploy("./tests/contracts/type_view_bls12_381_fr.arl", {}, params)).address;
         this.address = address;
     }
-    async view_get_value(i: att.Bls12_381_fr, params: Partial<ex.Parameters>): Promise<att.Bls12_381_fr> {
+    async view_get_value(i: att.Bls12_381_fr, params: Partial<ex.Parameters>): Promise<att.Bls12_381_fr | undefined> {
         if (this.address != undefined) {
             const mich = await ex.exec_view(this.get_address(), "get_value", view_get_value_arg_to_mich(i), params);
-            return att.mich_to_bls12_381_fr(mich.value);
+            return mich.value ? att.mich_to_bls12_381_fr(mich.value) : undefined;
         }
         throw new Error("Contract not initialised");
     }
