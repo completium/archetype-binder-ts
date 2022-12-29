@@ -33,7 +33,11 @@ describe('[Event] Contract deployment', async () => {
 describe('[Event] Call entry `exec`', async () => {
   it("Call 'exec'", async () => {
     const event = new e_event(new Nat(2), "mystr")
-    await sample_event.exec(event, {as : alice});
+    const res = await sample_event.exec(event, {as : alice});
+    assert(res.events.length == 1)
+    const payload = res.events[0].payload;
+    const res_event = e_event.from_mich(payload);
+    assert(res_event.equals(event))
   })
 
 })
