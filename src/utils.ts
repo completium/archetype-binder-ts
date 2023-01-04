@@ -2377,6 +2377,12 @@ export const get_get_balance_decl = () => {
 
 
 export const raw_to_contract_interface = (rci: RawContractInterface): ContractInterface => {
+  const replace_keyword = (input : string) : string => {
+    if (input == "default") {
+      return "$" + input
+    }
+    return input
+  }
   const to_archetype_type = (rty: RawArchetypeType): ArchetypeType => {
     const force_name = (i: string | null): string => {
       if (i == null) {
@@ -2561,7 +2567,7 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       }),
     },
     storage: rci.storage.map((i: StorageElementGen<RawArchetypeType>): StorageElement => {
-      return { ...i, "type": to_archetype_type(i.type) }
+      return { ...i, "name": replace_keyword(i.name), "type": to_archetype_type(i.type) }
     }),
     storage_type: to_michelson_type_is_storable(rci.storage_type),
     entrypoints: rci.entrypoints.map((i: EntrypointGen<RawArchetypeType>): Entrypoint => {

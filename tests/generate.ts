@@ -433,6 +433,9 @@ describe('Generate michelson test', async () => {
   it('contract_tz', async () => {
     await get_binding_michelson('michelson_contract_tz.tz');
   });
+  it('simple_view', async () => {
+    await get_binding_michelson('michelson_simple_view.tz');
+  });
 })
 
 describe('Generate binding training', async () => {
