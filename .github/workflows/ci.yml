@@ -33,17 +33,13 @@ jobs:
         cache: 'npm'
 
     - name: install
-      working-directory: ./check
       run: npm ci
 
     - name: init
-      working-directory: ./check
       run: npm run init
 
     - name: mockup_init
-      working-directory: ./check
       run: npm run mockup_init
 
     - name: test
-      working-directory: ./check
       run: npm test:run
