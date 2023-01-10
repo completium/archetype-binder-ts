@@ -26,6 +26,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: add serokell ppa
+      run: sudo add-apt-repository ppa:serokell/tezos && sudo apt-get update
+
+    - name: install tezos-client
+      run: sudo apt-get install -y apt-transport-https tezos-client
+
+    - name: alias octez-client
+      run: alias octez-client=tezos-client
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
