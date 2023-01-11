@@ -1006,7 +1006,7 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
 
 const get_n = (expr: ts.Expression, n: number): ts.Expression => {
   return factory.createElementAccessExpression(
-    factory.createPropertyAccessExpression(
+    factory.createPropertyAccessChain(
       factory.createAsExpression(
         expr,
         factory.createTypeReferenceNode(
@@ -1017,6 +1017,7 @@ const get_n = (expr: ts.Expression, n: number): ts.Expression => {
           undefined
         )
       ),
+      factory.createToken(ts.SyntaxKind.QuestionDotToken),
       factory.createIdentifier("args")
     ),
     factory.createNumericLiteral(n)
@@ -1024,31 +1025,32 @@ const get_n = (expr: ts.Expression, n: number): ts.Expression => {
 }
 
 const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, is_iterable_big_map: boolean, ci: ContractInterface): ts.Statement[] => {
-  const aa = factory.createAwaitExpression(factory.createCallExpression(
-    factory.createPropertyAccessExpression(
-      factory.createIdentifier("ex"),
-      factory.createIdentifier("get_big_map_value")
-    ),
-    undefined,
-    [
-      factory.createCallExpression(
-        factory.createIdentifier("BigInt"),
-        undefined,
-        [
-          factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              selt,
-              factory.createIdentifier("toString")
-            ),
-            undefined,
-            []
-          )
-        ]
+  const aa = factory.createAwaitExpression(
+    factory.createCallExpression(
+      factory.createPropertyAccessExpression(
+        factory.createIdentifier("ex"),
+        factory.createIdentifier("get_big_map_value")
       ),
-      function_param_to_mich({ name: "key", type: key_type }, ci),
-      key_mich_type
-    ]
-  ));
+      undefined,
+      [
+        factory.createCallExpression(
+          factory.createIdentifier("BigInt"),
+          undefined,
+          [
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                selt,
+                factory.createIdentifier("toString")
+              ),
+              undefined,
+              []
+            )
+          ]
+        ),
+        function_param_to_mich({ name: "key", type: key_type }, ci),
+        key_mich_type
+      ]
+    ));
   return [
     factory.createVariableStatement(
       undefined,
@@ -1165,9 +1167,11 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
       ]
     }
     case "asset": { // Special treatment for big map assets
-      const is_iterable_big_map = false
       const assetType = ci.types.assets.find(x => x.name == selt.name)
-      if (assetType != undefined && assetType.container_kind == "big_map") {
+      if (assetType != undefined && (assetType.container_kind == "big_map" || assetType.container_kind == "iterable_big_map")) {
+        const is_iterable_big_map = assetType.container_kind == "iterable_big_map"
+        const v_data = get_data_storage_elt(selt, ci)
+        const values_map: ts.Expression = is_iterable_big_map ? get_n(v_data, 0) : v_data
         return [storage_elt_to_getter_skeleton(
           "get_",
           selt.name + "_value",
@@ -1189,7 +1193,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            mich_to_int(get_data_storage_elt(selt, ci)),
+            mich_to_int(values_map),
             [factory.createReturnStatement(mich_to_archetype_type({ node: "asset_value", name: selt.name }, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
             is_iterable_big_map,
@@ -1213,7 +1217,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
             factory.createIdentifier(selt.name + "_value_mich_type"),
-            mich_to_int(get_data_storage_elt(selt, ci)),
+            mich_to_int(values_map),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),
             is_iterable_big_map,

@@ -1244,8 +1244,14 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       }
       case "big_map":
         return class_from_mich("Int", [arg])
-      case "iterable_big_map":
-        return TODO("asset_to_mich: iterable_big_map", arg);
+      case "iterable_big_map": {
+        const key_type: ArchetypeType = { node: "asset_key", name: asset_name };
+        const val_type: ArchetypeType = { node: "asset_value", name: asset_name };
+        const values: ArchetypeType = { node: 'big_map', key_type: key_type, value_type: { node: 'tuple', args: [{ node: 'nat' }, val_type] } }
+        const keys: ArchetypeType = { node: 'big_map', key_type: { node: 'nat' }, value_type: key_type }
+        const size: ArchetypeType = { node: 'nat' }
+        return mich_to_tuple([values, keys, size], arg)
+      }
     }
   }
 
@@ -2377,7 +2383,7 @@ export const get_get_balance_decl = () => {
 
 
 export const raw_to_contract_interface = (rci: RawContractInterface): ContractInterface => {
-  const replace_keyword = (input : string) : string => {
+  const replace_keyword = (input: string): string => {
     if (input == "default") {
       return "$" + input
     }

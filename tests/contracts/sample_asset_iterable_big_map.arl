@@ -1,10 +1,10 @@
 archetype sample_asset_iterable_big_map
 
 asset my_assset to iterable_big_map {
-  k : int;
+  k : string;
   v : bytes;
 }
 
-entry exec(ik : int, iv : bytes) {
+entry exec(ik : string, iv : bytes) {
   my_assset.add({k = ik; v = iv})
 }
