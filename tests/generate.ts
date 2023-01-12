@@ -388,6 +388,10 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_view.arl');
   });
 
+  it('sample_never', async () => {
+    await get_binding('sample_never.arl');
+  });
+
   // it('sample_asset_iterable_big_map', async () => {
   //   await get_binding('sample_asset_iterable_big_map.arl');
   // });

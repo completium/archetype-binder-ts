@@ -695,7 +695,13 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
       ),
       undefined
     );
-    case "never": return throw_error(at.node)
+    case "never": return factory.createTypeReferenceNode(
+      factory.createQualifiedName(
+        factory.createIdentifier("att"),
+        factory.createIdentifier("Micheline")
+      ),
+      undefined
+    );
     case "operation": return throw_error(at.node)
     case "option": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
@@ -1326,7 +1332,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "list": return contained_type_to_field_decl("mich_to_list", arg, [atype.arg], false)
     case "map": return map_mich_to_ts(atype.key_type, atype.value_type);
     case "nat": return class_from_mich("Nat", [arg]);
-    case "never": return TODO("never", arg);
+    case "never": return arg;
     case "operation": return TODO("operation", arg);
     case "option": return contained_type_to_field_decl("Option", arg, [atype.arg], true);
     case "or": return contained_type_to_field_decl("Or", arg, [atype.left_type, atype.right_type], true);

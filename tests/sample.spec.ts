@@ -1,12 +1,13 @@
 import { expect_to_fail, get_account, set_mockup, set_mockup_now, set_quiet } from '@completium/experiment-ts'
-import { Address, Bytes, Duration, Int, Nat, Option, Rational, Tez, Ticket } from '@completium/archetype-ts-types'
+import { Address, Bytes, Duration, Int, Micheline, Nat, Option, Or, Rational, Tez, Ticket } from '@completium/archetype-ts-types'
 
 const assert = require('assert')
 
-import { sample_storage_variables } from './contracts/bindings/sample_storage_variables'
-import { sample_tuple_tuple_rational } from './contracts/bindings/sample_tuple_tuple_rational'
 import { sample_big_map } from './contracts/bindings/sample_big_map'
 import { sample_iterable_big_map } from './contracts/bindings/sample_iterable_big_map'
+import { sample_never } from './contracts/bindings/sample_never'
+import { sample_storage_variables } from './contracts/bindings/sample_storage_variables'
+import { sample_tuple_tuple_rational } from './contracts/bindings/sample_tuple_tuple_rational'
 import { sample_view } from './contracts/bindings/sample_view'
 
 /* Accounts ---------------------------------------------------------------- */
@@ -45,6 +46,12 @@ describe('Sample', async () => {
     assert(v[0].equals(new Nat(0)))
     assert(v[1][0] == "mystr")
     assert(v[1][1].equals(new Rational(0.1)))
+  });
+
+  it('Never', async () => {
+    await sample_never.deploy({ as: alice })
+    const v = await sample_never.get_res()
+    assert(v.equals(Or.Right<Micheline, Nat>(new Nat(1))))
   });
 
   it('Big_map', async () => {
