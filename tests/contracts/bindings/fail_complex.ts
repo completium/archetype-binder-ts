@@ -1,9 +1,9 @@
 import * as ex from "@completium/experiment-ts";
 import * as att from "@completium/archetype-ts-types";
-const f_arg_to_mich = (): att.Micheline => {
+const exec_arg_to_mich = (): att.Micheline => {
     return att.unit_mich;
 }
-export class Simple_fail {
+export class Fail_complex {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,23 +21,23 @@ export class Simple_fail {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./tests/contracts/simple_fail.arl", {}, params)).address;
+        const address = (await ex.deploy("./tests/contracts/fail_complex.arl", {}, params)).address;
         this.address = address;
     }
-    async f(params: Partial<ex.Parameters>): Promise<att.CallResult> {
+    async exec(params: Partial<ex.Parameters>): Promise<att.CallResult> {
         if (this.address != undefined) {
-            return await ex.call(this.address, "f", f_arg_to_mich(), params);
+            return await ex.call(this.address, "exec", exec_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
-    async get_f_param(params: Partial<ex.Parameters>): Promise<att.CallParameter> {
+    async get_exec_param(params: Partial<ex.Parameters>): Promise<att.CallParameter> {
         if (this.address != undefined) {
-            return await ex.get_call_param(this.address, "f", f_arg_to_mich(), params);
+            return await ex.get_call_param(this.address, "exec", exec_arg_to_mich(), params);
         }
         throw new Error("Contract not initialised");
     }
     errors = {
-        MYERROR: att.string_to_mich("\"myerror\"")
+        ERROR: att.pair_to_mich([att.string_to_mich("\"error\"")])
     };
 }
-export const simple_fail = new Simple_fail();
+export const fail_complex = new Fail_complex();

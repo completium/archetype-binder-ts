@@ -1,4 +1,4 @@
-archetype simple_fail_invalid_condition
+archetype fail_invalid_condition
 
 entry f() {
   require {

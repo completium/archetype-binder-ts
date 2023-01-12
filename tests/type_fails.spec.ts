@@ -1,9 +1,10 @@
 import { Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Tez, Unit } from '@completium/archetype-ts-types';
 import { expect_to_fail, get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
-import { simple_fail } from './contracts/bindings/simple_fail'
-import { simple_fail_invalid_condition } from './contracts/bindings/simple_fail_invalid_condition'
-import { simple_fail_bad_character } from './contracts/bindings/simple_fail_bad_character'
+import { fail_simple } from './contracts/bindings/fail_simple'
+import { fail_invalid_condition } from './contracts/bindings/fail_invalid_condition'
+import { fail_bad_character } from './contracts/bindings/fail_bad_character'
+import { fail_complex } from './contracts/bindings/fail_complex'
 
 const assert = require('assert')
 
@@ -25,28 +26,36 @@ const path_contracts = './tests/contracts/';
 
 
 describe('Fails', () => {
-  it('Simple fail', async () => {
-    await simple_fail.deploy({ as: alice })
+  it('Fail simple', async () => {
+    await fail_simple.deploy({ as: alice })
 
     expect_to_fail(async () => {
-      simple_fail.f({ as: alice })
-    }, simple_fail.errors.MYERROR)
+      fail_simple.f({ as: alice })
+    }, fail_simple.errors.MYERROR)
   });
 
-  it('Simple fail invalid condition', async () => {
-    await simple_fail_invalid_condition.deploy({ as: alice })
+  it('Fail invalid condition', async () => {
+    await fail_invalid_condition.deploy({ as: alice })
 
     expect_to_fail(async () => {
-      simple_fail_invalid_condition.f({ as: alice })
-    }, simple_fail_invalid_condition.errors.r1)
+      fail_invalid_condition.f({ as: alice })
+    }, fail_invalid_condition.errors.r1)
   });
 
-  it('Simple fail', async () => {
-    await simple_fail_bad_character.deploy({ as: alice })
+  it('Fail bad character', async () => {
+    await fail_bad_character.deploy({ as: alice })
 
     expect_to_fail(async () => {
-      simple_fail_bad_character.f({ as: alice })
-    }, simple_fail_bad_character.errors.DON_T_FAIL_)
+      fail_bad_character.f({ as: alice })
+    }, fail_bad_character.errors.DON_T_FAIL_)
+  });
+
+  it('Fail complex', async () => {
+    await fail_complex.deploy({ as: alice })
+
+    expect_to_fail(async () => {
+      fail_complex.exec({ as: alice })
+    }, { prim: "Pair", args: [{ string: "error" }, { int: "0" }] })
   });
 
 })

@@ -2164,7 +2164,7 @@ export const to_label = (input: string) => {
   return res
 }
 
-export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression] => {
+export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression] | null => {
   if ((expr as MDString) && (expr as MDString).string) {
     return [to_label((expr as MDString).string), factory.createCallExpression(
       factory.createPropertyAccessExpression(
@@ -2175,7 +2175,16 @@ export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression]
       [factory.createStringLiteral("\"" + (expr as MDString).string + "\"")]
     )]
   } else if ((expr as MDPrimMulti) && (expr as MDPrimMulti).prim == "Pair") {
-    const args = (expr as MDPrimMulti).args.map(mich_type_to_error)
+    const args: Array<[string, ts.Expression]> =
+      (expr as MDPrimMulti).args.reduce((acc, x) => {
+        const res = mich_type_to_error(x);
+        if (res != null) {
+          acc.push(res);
+          return acc
+        } else {
+          return acc
+        }
+      }, ([] as Array<[string, ts.Expression]>));
     const label = args.reduce((acc, n) => {
       return (acc == "" ? "" : acc + "_") + n[0].toUpperCase()
     }, "")
@@ -2188,14 +2197,15 @@ export const mich_type_to_error = (expr: MichelsonData): [string, ts.Expression]
       [factory.createArrayLiteralExpression(args.map(p => p[1]))]
     )]
   } else {
-    throw new Error("mich_type_to_error: invalid error")
+    return null
   }
 }
 
-export const make_error = (error: Error): [string, ts.Expression] => {
+export const make_error = (error: Error): [string, ts.Expression] | null => {
   switch (error.kind) {
     case "InvalidCondition":
-      return [error.args[0], mich_type_to_error(error.expr)[1]]
+      const res = mich_type_to_error(error.expr);
+      return res ? [error.args[0], res[1]] : null
     default:
       return mich_type_to_error(error.expr)
   }

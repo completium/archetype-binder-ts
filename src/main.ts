@@ -2167,7 +2167,15 @@ const errors_to_decl = (ci: ContractInterface): ts.PropertyDeclaration => {
     undefined,
     undefined,
     factory.createObjectLiteralExpression(
-      ci.errors.map(make_error).reduce((acc, x) => {
+      ci.errors.reduce((acc, x) => {
+        const res = make_error(x);
+        if (res != null) {
+          acc.push(res);
+          return acc
+        } else {
+          return acc
+        }
+      }, ([] as Array<[string, ts.Expression]>)).reduce((acc, x) => {
         const [label, expr] = x
         if (!acc.reduce((a, p) => {
           const [l, _] = p

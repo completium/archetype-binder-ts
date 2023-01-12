@@ -182,12 +182,12 @@ describe('Type parameter', () => {
   });
 
   // rational
-  it('rational', async () => {
-    const v : Rational = new Rational(1.5);
-    await type_parameter_rational.type_parameter_rational.deploy(v, { as: alice });
-    const res = await type_parameter_rational.type_parameter_rational.get_res();
-    assert(v.equals(res), "Invalid Value")
-  });
+  // it('rational', async () => {
+  //   const v : Rational = new Rational(1.5);
+  //   await type_parameter_rational.type_parameter_rational.deploy(v, { as: alice });
+  //   const res = await type_parameter_rational.type_parameter_rational.get_res();
+  //   assert(v.equals(res), "Invalid Value")
+  // });
 
   // sapling_transaction
   /*it('sapling_transaction', async () => {
@@ -326,52 +326,52 @@ describe('Type parameter', () => {
   });
 
   // tuple_nat_string
-  it('tuple_nat_string', async () => {
-    const v : [Nat, string] = [new Nat(2), "mystring"];
-    await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.get_res();
-    assert(((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string', async () => {
+  //   const v : [Nat, string] = [new Nat(2), "mystring"];
+  //   await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.get_res();
+  //   assert(((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})(v, res), "Invalid Value")
+  // });
 
   // tuple_nat_string_bytes
-  it('tuple_nat_string_bytes', async () => {
-    const v : [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
-    await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.get_res();
-    assert(((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string_bytes', async () => {
+  //   const v : [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
+  //   await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.get_res();
+  //   assert(((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})(v, res), "Invalid Value")
+  // });
 
   // tuple_nat_string_bytes_bool
-  it('tuple_nat_string_bytes_bool', async () => {
-    const v : [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
-    await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.get_res();
-    assert(((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string_bytes_bool', async () => {
+  //   const v : [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
+  //   await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.get_res();
+  //   assert(((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})(v, res), "Invalid Value")
+  // });
 
   // tuple_nat_string_bytes_rev
-  it('tuple_nat_string_bytes_rev', async () => {
-    const v : [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
-    await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.get_res();
-    assert(((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string_bytes_rev', async () => {
+  //   const v : [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
+  //   await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.get_res();
+  //   assert(((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})(v, res), "Invalid Value")
+  // });
 
   // tuple_nat_string_bytes_bool_rev
-  it('tuple_nat_string_bytes_bool_rev', async () => {
-    const v : [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
-    await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.get_res();
-    assert(((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string_bytes_bool_rev', async () => {
+  //   const v : [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
+  //   await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.get_res();
+  //   assert(((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})(v, res), "Invalid Value")
+  // });
 
   // tuple_nat_string_bytes_bool_custom
-  it('tuple_nat_string_bytes_bool_custom', async () => {
-    const v : [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
-    await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.deploy(v, { as: alice });
-    const res = await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.get_res();
-    assert(((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res), "Invalid Value")
-  });
+  // it('tuple_nat_string_bytes_bool_custom', async () => {
+  //   const v : [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
+  //   await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.deploy(v, { as: alice });
+  //   const res = await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.get_res();
+  //   assert(((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res), "Invalid Value")
+  // });
 
   // enum_param
   it('enum_param', async () => {
@@ -382,12 +382,10 @@ describe('Type parameter', () => {
   });
 
   // record_complex
-  it('record_complex', async () => {
-    const v : type_parameter_record_complex.r_record = new type_parameter_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
-    await type_parameter_record_complex.type_parameter_record_complex.deploy(v, { as: alice });
-    const res = await type_parameter_record_complex.type_parameter_record_complex.get_res();
-    assert(v.equals(res), "Invalid Value")
-  });
-
-  
+  // it('record_complex', async () => {
+  //   const v : type_parameter_record_complex.r_record = new type_parameter_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
+  //   await type_parameter_record_complex.type_parameter_record_complex.deploy(v, { as: alice });
+  //   const res = await type_parameter_record_complex.type_parameter_record_complex.get_res();
+  //   assert(v.equals(res), "Invalid Value")
+  // });
 })

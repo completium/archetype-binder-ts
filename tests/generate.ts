@@ -312,16 +312,20 @@ const process_prefix = (prefix: string, str: string | null): string | null => {
 }
 
 describe('Generate binding fails', async () => {
-  it('simple_fail', async () => {
-    await get_binding('simple_fail.arl');
+  it('fail_simple', async () => {
+    await get_binding('fail_simple.arl');
   });
 
-  it('simple_fail_invalid_condition', async () => {
-    await get_binding('simple_fail_invalid_condition.arl');
+  it('fail_invalid_condition', async () => {
+    await get_binding('fail_invalid_condition.arl');
   });
 
-  it('simple_fail_bad_character', async () => {
-    await get_binding('simple_fail_bad_character.arl');
+  it('fail_bad_character', async () => {
+    await get_binding('fail_bad_character.arl');
+  });
+
+  it('fail_complex', async () => {
+    await get_binding('fail_complex.arl');
   });
 
 })

@@ -3,7 +3,7 @@ import * as att from "@completium/archetype-ts-types";
 const f_arg_to_mich = (): att.Micheline => {
     return att.unit_mich;
 }
-export class Simple_fail_bad_character {
+export class Fail_invalid_condition {
     address: string | undefined;
     constructor(address: string | undefined = undefined) {
         this.address = address;
@@ -21,7 +21,7 @@ export class Simple_fail_bad_character {
         throw new Error("Contract not initialised");
     }
     async deploy(params: Partial<ex.Parameters>) {
-        const address = (await ex.deploy("./tests/contracts/simple_fail_bad_character.arl", {}, params)).address;
+        const address = (await ex.deploy("./tests/contracts/fail_invalid_condition.arl", {}, params)).address;
         this.address = address;
     }
     async f(params: Partial<ex.Parameters>): Promise<att.CallResult> {
@@ -37,7 +37,7 @@ export class Simple_fail_bad_character {
         throw new Error("Contract not initialised");
     }
     errors = {
-        DON_T_FAIL_: att.string_to_mich("\"don't fail!\"")
+        r1: att.pair_to_mich([att.string_to_mich("\"INVALID_CONDITION\""), att.string_to_mich("\"r1\"")])
     };
 }
-export const simple_fail_bad_character = new Simple_fail_bad_character();
+export const fail_invalid_condition = new Fail_invalid_condition();
