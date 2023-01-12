@@ -265,8 +265,6 @@ describe('[FA2 fungible] Add permit', async () => {
 
     const added_permit = await template_permits.get_permits_value(alice.get_address())
     const a = get_ref_user_permits(new Nat(1), packed_transfer_params, expiry, now);
-    console.log(JSON.stringify(added_permit, null, 2))
-    console.log(JSON.stringify(a, null, 2))
     assert(added_permit?.equals(a))
   });
 
