@@ -10,7 +10,7 @@ import { add, template_permits, permits_value, user_permit } from './contracts/b
 
 /* Utils -- */
 
-export const get_packed_transfer_params = (tps : transfer_param[]) : Bytes => {
+export const get_packed_transfer_params = (tps: transfer_param[]): Bytes => {
   const mich = list_to_mich(tps, x => {
     return x.to_mich();
   })
@@ -23,20 +23,20 @@ const permit_data_type = pair_array_to_mich_type([
     prim_annot_to_mich_type("chain_id", [])
   ]),
   pair_array_to_mich_type([
-      prim_annot_to_mich_type("nat", []),
-      prim_annot_to_mich_type("bytes", [])
+    prim_annot_to_mich_type("nat", []),
+    prim_annot_to_mich_type("bytes", [])
   ])
 ])
 
-export const get_transfer_permit_data = (ptps : Bytes, contract : Address, permit_counter : Nat | undefined) : Bytes => {
+export const get_transfer_permit_data = (ptps: Bytes, contract: Address, permit_counter: Nat | undefined): Bytes => {
   let counter = new Nat(0)
   if (permit_counter != undefined) {
     counter = permit_counter
   }
   const chain_id = 'NetXynUjJNZm7wi';
   const permit_data = mich_array_to_mich([
-    mich_array_to_mich([ contract.to_mich(), string_to_mich(chain_id) ]),
-    mich_array_to_mich([ counter.to_mich(), blake2b(ptps).to_mich() ])
+    mich_array_to_mich([contract.to_mich(), string_to_mich(chain_id)]),
+    mich_array_to_mich([counter.to_mich(), blake2b(ptps).to_mich()])
   ])
   return pack(permit_data, permit_data_type);
 }
@@ -44,7 +44,7 @@ export const get_transfer_permit_data = (ptps : Bytes, contract : Address, permi
 export const wrong_sig = new Signature("edsigu3QDtEZeSCX146136yQdJnyJDfuMRsDxiCgea3x7ty2RTwDdPpgioHWJUe86tgTCkeD2u16Az5wtNFDdjGyDpb7MiyU3fn");
 export const wrong_packed_transfer_params = new Bytes('9aabe91d035d02ffb550bb9ea6fe19970f6fb41b5e69459a60b1ae401192a2dc');
 
-export const get_missigned_error = (permit_data : Bytes) => {
+export const get_missigned_error = (permit_data: Bytes) => {
   return pair_to_mich([string_to_mich("\"MISSIGNED\""), permit_data.to_mich()])
 }
 
@@ -71,7 +71,6 @@ set_quiet(true);
 /* Now --------------------------------------------------------------------- */
 
 const now = new Date("2022-01-01")
-set_mockup_now(now)
 
 /* Constants & Utils ------------------------------------------------------- */
 
@@ -87,6 +86,12 @@ const get_ref_user_permits = (counter: Nat, data: Bytes, expiry: Nat, now: Date)
 }
 
 /* Scenarios --------------------------------------------------------------- */
+
+describe("[FA2 fungible] Init", async () => {
+  it("Init", async () => {
+    set_mockup_now(now)
+  });
+})
 
 describe('[FA2 fungible] Contracts deployment', async () => {
   it('Permits contract deployment should succeed', async () => {
@@ -260,6 +265,8 @@ describe('[FA2 fungible] Add permit', async () => {
 
     const added_permit = await template_permits.get_permits_value(alice.get_address())
     const a = get_ref_user_permits(new Nat(1), packed_transfer_params, expiry, now);
+    console.log(JSON.stringify(added_permit, null, 2))
+    console.log(JSON.stringify(a, null, 2))
     assert(added_permit?.equals(a))
   });
 

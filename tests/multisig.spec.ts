@@ -29,8 +29,6 @@ const MAX_DURATION = new Duration("180d") // 180 days
 const MIN_DURATION = new Duration("1h")   // 1 hour
 const now = new Date("2022-06-01")
 
-set_mockup_now(now)
-
 let proposal_id = new Nat(0)
 
 const getCode = (dest: Address, entrypoint: string, typ: string, value: string): Micheline => {
@@ -50,6 +48,12 @@ const getCode = (dest: Address, entrypoint: string, typ: string, value: string):
     }`;
   return expr_micheline_to_json(input)
 }
+
+describe("[Multisig] Init", async () => {
+  it("Init", async () => {
+    set_mockup_now(now)
+  });
+})
 
 describe("[Multisig] Deploy", async () => {
   it("Dummy", async () => {
@@ -289,7 +293,7 @@ describe("[Multisig] Feeless process (propose, approve)", async () => {
     const code = getCode(template_multisig_dummy.get_address(), "process", "nat", "4");
 
     const tosign = pack(new rec_to_sign_propose_feeless(pkh, counter, entryname, code, validity_duration).to_mich(), rec_to_sign_propose_feeless_mich_type);
-    const signature : Signature = await manager1.sign(tosign);
+    const signature: Signature = await manager1.sign(tosign);
 
     await template_multisig.propose_feeless(code, validity_duration, true, manager1.get_public_key(), signature, {
       as: owner
@@ -307,7 +311,7 @@ describe("[Multisig] Feeless process (propose, approve)", async () => {
     const data = expr_micheline_to_json(`(Pair "${pkh}" (Pair ${counter} (Pair "${entryname}" ${proposal_id})))`);
 
     const tosign = pack(data, dataType);
-    const signature : Signature = await manager1.sign(tosign); // signed by manager1 instead of manager2
+    const signature: Signature = await manager1.sign(tosign); // signed by manager1 instead of manager2
 
     await expect_to_fail(async () => {
       await template_multisig.approve_feeless(proposal_id, manager2.get_public_key(), signature, {
@@ -324,7 +328,7 @@ describe("[Multisig] Feeless process (propose, approve)", async () => {
     await approve_feeless(manager3)
   });
 
-  const approve_feeless = async (manager : Account) => {
+  const approve_feeless = async (manager: Account) => {
     const counter = new Nat(0)
     const entryname = "approve"
 

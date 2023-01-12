@@ -1,6 +1,6 @@
 {
   "name": "@completium/archetype-binder-ts",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Binds Archetype contract interface to Typescript",
   "main": "build/src/main.js",
   "types": "build/src/main.d.ts",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.ts",
-    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.spec.ts",
+    "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.a.spec.ts",
     "test:fa1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/fa1.spec.ts",
     "test:fa2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/fa2_fungible.spec.ts",
     "test:multisig": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/multisig.spec.ts",
