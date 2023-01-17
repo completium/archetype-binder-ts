@@ -1,10 +1,14 @@
 archetype sample_asset_iterable_big_map
 
-asset my_assset to iterable_big_map {
-  k : string;
-  v : bytes;
+asset my_asset to iterable_big_map {
+  id : string;
+  value : nat = 0;
+} initialized by {
+  { "id0"; 0 };
+  { "id1"; 1 };
+  { "id2"; 2 }
 }
 
-entry exec(ik : string, iv : bytes) {
-  my_assset.add({k = ik; v = iv})
+entry exec () {
+  my_asset.add({"id3"; 3});
 }

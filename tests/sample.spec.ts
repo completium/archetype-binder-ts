@@ -3,6 +3,7 @@ import { Address, Bytes, Duration, Int, Micheline, Nat, Option, Or, Rational, Te
 
 const assert = require('assert')
 
+import { sample_asset_iterable_big_map } from './contracts/bindings/sample_asset_iterable_big_map'
 import { sample_big_map } from './contracts/bindings/sample_big_map'
 import { sample_iterable_big_map } from './contracts/bindings/sample_iterable_big_map'
 import { sample_never } from './contracts/bindings/sample_never'
@@ -98,4 +99,25 @@ describe('Sample', async () => {
     assert(after_has_v_value)
     assert(actual_value?.equals(v))
   });
+
+  it('Asset iterable_big_map', async () => {
+    await sample_asset_iterable_big_map.deploy({ as: alice })
+    const id0_my_asset_before = await sample_asset_iterable_big_map.get_my_asset_value("id0")
+    assert(id0_my_asset_before?.equals(new Nat(0)))
+    const id1_my_asset_before = await sample_asset_iterable_big_map.get_my_asset_value("id1")
+    assert(id1_my_asset_before?.equals(new Nat(1)))
+    const id2_my_asset_before = await sample_asset_iterable_big_map.get_my_asset_value("id2")
+    assert(id2_my_asset_before?.equals(new Nat(2)))
+    const id3_my_asset_before = await sample_asset_iterable_big_map.get_my_asset_value("id3")
+    assert(id3_my_asset_before === undefined)
+    await sample_asset_iterable_big_map.exec({ as: alice })
+    const id0_my_asset_after = await sample_asset_iterable_big_map.get_my_asset_value("id0")
+    assert(id0_my_asset_after?.equals(new Nat(0)))
+    const id1_my_asset_after = await sample_asset_iterable_big_map.get_my_asset_value("id1")
+    assert(id1_my_asset_after?.equals(new Nat(1)))
+    const id2_my_asset_after = await sample_asset_iterable_big_map.get_my_asset_value("id2")
+    assert(id2_my_asset_after?.equals(new Nat(2)))
+    const id3_my_asset_after = await sample_asset_iterable_big_map.get_my_asset_value("id3")
+    assert(id3_my_asset_after?.equals(new Nat(3)))
+  })
 })
