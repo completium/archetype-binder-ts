@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_iterable_big_map_chain_id
+
+asset my_asset to iterable_big_map {
+  k : nat;
+  v : chain_id;
+}
+
+entry asset_put(i : chain_id) {
+  my_asset.put({0; i})
+}

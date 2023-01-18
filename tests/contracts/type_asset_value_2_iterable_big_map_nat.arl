@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_2_iterable_big_map_nat
+
+asset my_asset to iterable_big_map {
+  k : nat;
+  v : nat;
+}
+
+entry asset_put(i : nat) {
+  my_asset.put({0; i})
+}

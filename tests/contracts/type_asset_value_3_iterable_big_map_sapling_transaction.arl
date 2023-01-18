@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_iterable_big_map_sapling_transaction
+
+asset my_asset to iterable_big_map {
+  k : nat;
+  s : string;
+  v : sapling_transaction(8);
+}
+
+entry asset_put(i : sapling_transaction(8)) {
+  my_asset.put({0; ""; i})
+}

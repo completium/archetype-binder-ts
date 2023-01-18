@@ -1,0 +1,14 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_value_3_iterable_big_map_record_4_fields
+
+record r_record {f_a : nat; f_b : string; f_c : bytes; f_d : bool}
+
+asset my_asset to iterable_big_map {
+  k : nat;
+  s : string;
+  v : r_record;
+}
+
+entry asset_put(i : r_record) {
+  my_asset.put({0; ""; i})
+}

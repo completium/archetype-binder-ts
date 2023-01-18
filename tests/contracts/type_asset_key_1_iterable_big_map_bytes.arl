@@ -1,0 +1,11 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_1_iterable_big_map_bytes
+
+asset my_asset to iterable_big_map {
+  k : bytes;
+  v : string;
+}
+
+entry asset_put(i : bytes) {
+  my_asset.put({i; ""})
+}

@@ -1,0 +1,12 @@
+/* DO NOT EDIT, GENERATED FILE */
+archetype type_asset_key_2_iterable_big_map_bool
+
+asset my_asset identified by k n to iterable_big_map {
+  k : bool;
+  n : nat;
+  v : string;
+}
+
+entry asset_put(i : bool) {
+  my_asset.put({i; 0; ""})
+}

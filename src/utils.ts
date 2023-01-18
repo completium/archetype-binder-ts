@@ -267,7 +267,7 @@ export type PathItemDouble = [number, number]
 
 export type PathItem = PathItemSimple | PathItemDouble
 
-const get_size_michelson_type = (ty: MichelsonType): number => {
+export const get_size_michelson_type = (ty: MichelsonType): number => {
   switch (ty.prim) {
     case "address": return 1
     case "big_map": return 1
@@ -334,14 +334,20 @@ export const get_path = (id: string, sty: MichelsonType): Array<PathItem> => {
   return res ?? [];
 }
 
-export const make_arg = (expr: ts.Expression, pi: PathItem) => {
+export const make_arg = (expr: ts.Expression, pi: PathItem, q?: boolean) => {
   if (pi.length == 1) {
     const [n] = (pi as PathItemSimple);
     return factory.createElementAccessExpression(
-      factory.createPropertyAccessExpression(
-        expr,
-        factory.createIdentifier("args")
-      ),
+      q != undefined && q ?
+        factory.createPropertyAccessChain(
+          expr,
+          factory.createToken(ts.SyntaxKind.QuestionDotToken),
+          factory.createIdentifier("args")
+        ) :
+        factory.createPropertyAccessExpression(
+          expr,
+          factory.createIdentifier("args")
+        ),
       factory.createNumericLiteral(n)
     )
   } else if (pi.length == 2) {

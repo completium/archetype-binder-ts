@@ -1,6 +1,6 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti, compute_path_enum, e_left_right, is_asset_one_field_key, is_asset_one_field_val } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti, compute_path_enum, e_left_right, get_size_michelson_type, PathItem } from "./utils";
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -1024,8 +1024,8 @@ const get_n = (expr: ts.Expression, n: number): ts.Expression => {
   )
 }
 
-const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: ts.Expression, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, is_iterable_big_map: boolean, ci: ContractInterface): ts.Statement[] => {
-  const aa = factory.createAwaitExpression(
+const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, key_mich_type: ts.Expression, value_mich_type: MichelsonType, selt: ts.Expression, return_statement_found: ts.Statement[], ret_value_not_found: ts.Expression, is_iterable_big_map: boolean, ci: ContractInterface): ts.Statement[] => {
+  const aa: ts.Expression = factory.createAwaitExpression(
     factory.createCallExpression(
       factory.createPropertyAccessExpression(
         factory.createIdentifier("ex"),
@@ -1051,19 +1051,59 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
         key_mich_type
       ]
     ));
-  return [
-    factory.createVariableStatement(
+  let aaa: ts.Statement[] = []
+  if (is_iterable_big_map) {
+    const size = get_size_michelson_type(value_mich_type);
+    const pi: PathItem = size == 1 ? [1] : [1, size + 1];
+    const aaaa = make_arg(factory.createIdentifier("raw_data"), pi, true)
+
+    aaa = [
+      factory.createVariableStatement(
+        undefined,
+        factory.createVariableDeclarationList(
+          [factory.createVariableDeclaration(
+            factory.createIdentifier("raw_data"),
+            undefined,
+            undefined,
+            aa
+          )],
+          ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
+        )
+      ),
+      factory.createVariableStatement(
+        undefined,
+        factory.createVariableDeclarationList(
+          [factory.createVariableDeclaration(
+            factory.createIdentifier("data"),
+            undefined,
+            undefined,
+            factory.createConditionalExpression(
+              factory.createIdentifier("raw_data"),
+              factory.createToken(ts.SyntaxKind.QuestionToken),
+              aaaa,
+              factory.createToken(ts.SyntaxKind.ColonToken),
+              factory.createIdentifier("undefined")
+            )
+          )],
+          ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
+        )
+      )
+    ]
+  } else {
+    aaa = [factory.createVariableStatement(
       undefined,
       factory.createVariableDeclarationList(
         [factory.createVariableDeclaration(
           factory.createIdentifier("data"),
           undefined,
           undefined,
-          is_iterable_big_map ? get_n(aa, 1) : aa
+          aa
         )],
         ts.NodeFlags.Const | ts.NodeFlags.AwaitContext | ts.NodeFlags.ContextFlags | ts.NodeFlags.TypeExcludesFlags
       )
-    ),
+    )]
+  }
+  return (aaa.concat([
     factory.createIfStatement(
       factory.createBinaryExpression(
         factory.createIdentifier("data"),
@@ -1079,7 +1119,7 @@ const get_big_map_value_getter_body = (name: string, key_type: ArchetypeType, ke
         true
       )
     )
-  ]
+  ]))
 }
 
 const mich_to_int = (arg: ts.Expression): ts.Expression => {
@@ -1125,7 +1165,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             selt.name,
             selt.type.key_type,
             value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type, ci)),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type, ci)),
+            archetype_type_to_mich_type(selt.type.value_type, ci),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
@@ -1153,7 +1193,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             selt.name,
             selt.type.key_type,
             value_to_mich_type(archetype_type_to_mich_type(selt.type.key_type, ci)),
-            value_to_mich_type(archetype_type_to_mich_type(selt.type.value_type, ci)),
+            archetype_type_to_mich_type(selt.type.value_type, ci),
             /* TODO: handle above when record, asset_value, enum, ...
               these types already have a michelson_type variable created for that purpose
             */
@@ -1192,7 +1232,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             selt.name,
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
-            factory.createIdentifier(selt.name + "_value_mich_type"),
+            archetype_type_to_mich_type({ node: "asset_value", name: selt.name }, ci),
             mich_to_int(values_map),
             [factory.createReturnStatement(mich_to_archetype_type({ node: "asset_value", name: selt.name }, factory.createIdentifier("data"), ci))],
             factory.createIdentifier("undefined"),
@@ -1216,7 +1256,7 @@ const storageToGetters = (selt: StorageElement, ci: ContractInterface) => {
             selt.name,
             get_asset_key_archetype_type(selt.type, ci),
             factory.createIdentifier(selt.name + "_key_mich_type"),
-            factory.createIdentifier(selt.name + "_value_mich_type"),
+            archetype_type_to_mich_type({ node: "asset_value", name: selt.name }, ci),
             mich_to_int(values_map),
             [factory.createReturnStatement(factory.createTrue())],
             factory.createFalse(),

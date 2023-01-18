@@ -18,7 +18,6 @@ import * as type_parameter_int from './contracts/bindings/type_parameter_int'
 import * as type_parameter_key from './contracts/bindings/type_parameter_key'
 import * as type_parameter_key_hash from './contracts/bindings/type_parameter_key_hash'
 import * as type_parameter_nat from './contracts/bindings/type_parameter_nat'
-import * as type_parameter_rational from './contracts/bindings/type_parameter_rational'
 //import * as type_parameter_sapling_transaction from './contracts/bindings/type_parameter_sapling_transaction'
 import * as type_parameter_signature from './contracts/bindings/type_parameter_signature'
 import * as type_parameter_string from './contracts/bindings/type_parameter_string'
@@ -36,14 +35,7 @@ import * as type_parameter_or_nat_string from './contracts/bindings/type_paramet
 import * as type_parameter_set_nat from './contracts/bindings/type_parameter_set_nat'
 import * as type_parameter_set_string from './contracts/bindings/type_parameter_set_string'
 import * as type_parameter_set_bool from './contracts/bindings/type_parameter_set_bool'
-import * as type_parameter_tuple_nat_string from './contracts/bindings/type_parameter_tuple_nat_string'
-import * as type_parameter_tuple_nat_string_bytes from './contracts/bindings/type_parameter_tuple_nat_string_bytes'
-import * as type_parameter_tuple_nat_string_bytes_bool from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool'
-import * as type_parameter_tuple_nat_string_bytes_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_rev'
-import * as type_parameter_tuple_nat_string_bytes_bool_rev from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_rev'
-import * as type_parameter_tuple_nat_string_bytes_bool_custom from './contracts/bindings/type_parameter_tuple_nat_string_bytes_bool_custom'
 import * as type_parameter_enum_param from './contracts/bindings/type_parameter_enum_param'
-import * as type_parameter_record_complex from './contracts/bindings/type_parameter_record_complex'
 
 
 import assert from 'assert'
@@ -181,14 +173,6 @@ describe('Type parameter', () => {
     assert(v.equals(res), "Invalid Value")
   });
 
-  // rational
-  // it('rational', async () => {
-  //   const v : Rational = new Rational(1.5);
-  //   await type_parameter_rational.type_parameter_rational.deploy(v, { as: alice });
-  //   const res = await type_parameter_rational.type_parameter_rational.get_res();
-  //   assert(v.equals(res), "Invalid Value")
-  // });
-
   // sapling_transaction
   /*it('sapling_transaction', async () => {
     const v : Sapling_transaction = new Sapling_transaction("00000000000001f3849b5eba6e22354dbbccf076d39d63ab59d091f44bed6deb71a319cc10afed24a34ffaa403d7e58766dc6c5e0364a3d1a47e7286d87855544b8a9a4f04d6e1a6f80dba30932a82bb68fce3299aeed3ee9422d1330cffefed109dd0b753263470bea78799ee3f3cbb26a08c5dd8310ae8af66feb33950c45c67b7439e8c41e7941457b941e9ea3157105b860f9424eb210b4de663cd1239f692315049f789d367552c929f6b2aa4f0d01f2384ad1cc2daa5c4cd0731245506b614f67e7bd102ee0b639501c39b7028766fb469a99d3cd3754207098a1daec24645419514e76cbc29173e49d5d16e7aa43cd96acb77054aa333078b407987c4afdd42160bc5f585ba60296a8c1a1e48b7070c1d7106afdf6bf32c688d153b3871a784c354a779560000004f544b45fe787256593b593dcf8e54e9d57c15f86ad6ebc17c3ff65d5e7e6f216283ab4af840848b9a6928f3d65156fd10bef74b06366de141f906f94b48c9f0d0af5da81ee00177b8760cb6b99f74db3951eede8ad2be0b2f7aee18486431a9a1a439c639cacb0f6ebf7834e7c772d8cfa98ec7c844298f59107b5933c8876eeca7368bb9b0efb82b35e3acf6c0f6a1a7db98f3cd1c4e93f865dd654b393425d04a78e0a72529511e961025ba5e41d83a56825ab4db8809c7e9589959453608b4db6e1ce0ffa0077237bd3477007cc972642977b926d3d0d4f690550fbb543193ab31bf2c2ddf7c2a946fae1c62253dafaf25b87cbc18107469630b9f2cd0657cfdf4a6fff5d9f04bc1a50e43613900ffffffffff676980fbc2f4300c01f0b7820d00e3347c8da4ee614674376cbc45359daa54f9b5493e00000000");
@@ -325,54 +309,6 @@ describe('Type parameter', () => {
     assert(((x : Array<boolean>, y : Array<boolean>) => {return x.length == y.length && x[0] == y[0] && x[1] == y[1]})(v, res), "Invalid Value")
   });
 
-  // tuple_nat_string
-  // it('tuple_nat_string', async () => {
-  //   const v : [Nat, string] = [new Nat(2), "mystring"];
-  //   await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string.type_parameter_tuple_nat_string.get_res();
-  //   assert(((x : [Nat, string], y : [Nat, string]) => {return x[0].equals(y[0]) && x[1] == y[1]})(v, res), "Invalid Value")
-  // });
-
-  // tuple_nat_string_bytes
-  // it('tuple_nat_string_bytes', async () => {
-  //   const v : [Nat, string, Bytes] = [new Nat(2), "toto", new Bytes("ff")];
-  //   await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string_bytes.type_parameter_tuple_nat_string_bytes.get_res();
-  //   assert(((x : [Nat, string, Bytes], y : [Nat, string, Bytes]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2])})(v, res), "Invalid Value")
-  // });
-
-  // tuple_nat_string_bytes_bool
-  // it('tuple_nat_string_bytes_bool', async () => {
-  //   const v : [Nat, string, Bytes, boolean] = [new Nat(2), "toto", new Bytes("ff"), true];
-  //   await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string_bytes_bool.type_parameter_tuple_nat_string_bytes_bool.get_res();
-  //   assert(((x : [Nat, string, Bytes, boolean], y : [Nat, string, Bytes, boolean]) => {return x[0].equals(y[0]) && x[1] == y[1] && x[2].equals(y[2]) && x[3] == y[3]})(v, res), "Invalid Value")
-  // });
-
-  // tuple_nat_string_bytes_rev
-  // it('tuple_nat_string_bytes_rev', async () => {
-  //   const v : [[Nat, string], Bytes] = [[new Nat(2), "toto"], new Bytes("ff")];
-  //   await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string_bytes_rev.type_parameter_tuple_nat_string_bytes_rev.get_res();
-  //   assert(((x : [[Nat, string], Bytes], y : [[Nat, string], Bytes]) => {return x[0][0].equals(y[0][0]) && x[0][1] == y[0][1] && x[1].equals(y[1])})(v, res), "Invalid Value")
-  // });
-
-  // tuple_nat_string_bytes_bool_rev
-  // it('tuple_nat_string_bytes_bool_rev', async () => {
-  //   const v : [[[Nat, string], Bytes], boolean] = [[[new Nat(2), "toto"], new Bytes("ff")], true];
-  //   await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string_bytes_bool_rev.type_parameter_tuple_nat_string_bytes_bool_rev.get_res();
-  //   assert(((x : [[[Nat, string], Bytes], boolean], y : [[[Nat, string], Bytes], boolean]) => {return x[0][0][0].equals(y[0][0][0]) && x[0][0][1] == y[0][0][1] && x[0][1].equals(y[0][1]) && x[1] == y[1]})(v, res), "Invalid Value")
-  // });
-
-  // tuple_nat_string_bytes_bool_custom
-  // it('tuple_nat_string_bytes_bool_custom', async () => {
-  //   const v : [Nat, [string, Bytes], boolean] = [new Nat(2), ["toto", new Bytes("ff")], true];
-  //   await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.deploy(v, { as: alice });
-  //   const res = await type_parameter_tuple_nat_string_bytes_bool_custom.type_parameter_tuple_nat_string_bytes_bool_custom.get_res();
-  //   assert(((x : [Nat, [string, Bytes], boolean], y : [Nat, [string, Bytes], boolean]) => {return x[0].equals(y[0]) && x[1][0] == y[1][0] && x[1][1].equals(y[1][1]) && x[2] == y[2]})(v, res), "Invalid Value")
-  // });
-
   // enum_param
   it('enum_param', async () => {
     const v : type_parameter_enum_param.e_enum = new type_parameter_enum_param.e_2(new Nat(2));
@@ -381,11 +317,5 @@ describe('Type parameter', () => {
     assert(((x : type_parameter_enum_param.e_enum, y : type_parameter_enum_param.e_enum) => {return x.toString() == y.toString()})(v, res), "Invalid Value")
   });
 
-  // record_complex
-  // it('record_complex', async () => {
-  //   const v : type_parameter_record_complex.r_record = new type_parameter_record_complex.r_record(new Nat(2), new Int(3), new Tez(1), new Rational(0.1), true, new Bytes("02"), "mystr", new Date("2022-12-31T23:59:59Z"), new Duration("1m"), alice.get_address(), Option.Some(new Nat(4)), ["a", "b", "c"], [["astring", new Nat(5), new Int(6)]] );
-  //   await type_parameter_record_complex.type_parameter_record_complex.deploy(v, { as: alice });
-  //   const res = await type_parameter_record_complex.type_parameter_record_complex.get_res();
-  //   assert(v.equals(res), "Invalid Value")
-  // });
+  
 })
