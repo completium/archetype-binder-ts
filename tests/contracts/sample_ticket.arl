@@ -3,5 +3,5 @@ archetype sample_ticket
 variable my_ticket : option<ticket<string>> = none<ticket<string>>
 
 entry create () {
-  my_ticket := some(create_ticket("info", 1))
+  my_ticket := create_ticket("info", 1)
 }
