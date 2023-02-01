@@ -396,6 +396,10 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_asset_iterable_big_map.arl');
   });
 
+  it('sample_ticket_detach_big_map_record', async () => {
+    await get_binding('sample_ticket_detach_big_map_record.arl');
+  });
+
 })
 
 describe('Generate binding template', async () => {
