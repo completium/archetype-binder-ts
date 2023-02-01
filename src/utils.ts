@@ -1044,7 +1044,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       case "signature": return 1;
       case "state": return 1;
       case "string": return 1;
-      case "ticket": return 3;
+      case "ticket": return 1;
       case "timestamp": return 1;
       case "tuple": return (aty.args.length - 1 + get_size(aty.args[aty.args.length - 1]));
       case "tx_rollup_l2_address": return 1;
