@@ -1,0 +1,15 @@
+archetype sample_ticket_detach_map_tuple
+
+variable input : map<nat, (string * ticket<string>)> = []
+
+variable output : option<ticket<string>> = none<ticket<string>>
+
+entry init() {
+  const nt ?= create_ticket("info", 1) : "ERROR";
+  input.put(0, ("mystr", nt));
+}
+
+entry exec() {
+  detach t from input[0] : "ERROR";
+  output := some(t[1])
+}

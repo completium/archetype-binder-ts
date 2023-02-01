@@ -400,6 +400,10 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_ticket_detach_big_map_record.arl');
   });
 
+  it('sample_ticket_detach_map_tuple', async () => {
+    await get_binding('sample_ticket_detach_map_tuple.arl');
+  });
+
 })
 
 describe('Generate binding template', async () => {
