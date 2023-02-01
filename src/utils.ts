@@ -298,7 +298,7 @@ export const get_size_michelson_type = (ty: MichelsonType): number => {
     case "set": return 1
     case "signature": return 1
     case "string": return 1
-    case "ticket": return 3
+    case "ticket": return 1
     case "timestamp": return 1
     case "tx_rollup_l2_address": return 1
     case "unit": return 1
