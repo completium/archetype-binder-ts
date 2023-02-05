@@ -1,6 +1,8 @@
 import ts, { createPrinter, createSourceFile, factory, ListFormat, NewLineKind, NodeFlags, ScriptKind, ScriptTarget, SyntaxKind } from 'typescript';
 
-import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti, compute_path_enum, e_left_right, get_size_michelson_type, PathItem } from "./utils";
+import { archetype_type_to_mich_type, archetype_type_to_ts_type, ArchetypeType, Asset, ContractInterface, ContractParameter, entity_to_mich, Entrypoint, Enum, EnumValue, Event, Field, function_param_to_mich, function_params_to_mich, FunctionParameter, get_constructor, get_get_address_decl, get_get_balance_decl, Getter, make_cmp_body, make_error, make_to_string_decl, Record, storage_to_mich, StorageElement, value_to_mich_type, View, ATNamed, RawContractInterface, raw_to_contract_interface, mich_to_archetype_type, MichelsonType, get_path, make_arg, MTPrimMulti, compute_path_enum, e_left_right, get_size_michelson_type, PathItem, RawMicheline, to_literal, UnsafeMicheline } from "./utils";
+
+import { Micheline } from '@completium/archetype-ts-types'
 
 const file = createSourceFile("source.ts", "", ScriptTarget.ESNext, false, ScriptKind.TS);
 const printer = createPrinter({ newLine: NewLineKind.LineFeed });
@@ -1417,6 +1419,125 @@ const language_to_storage_literal = (ci: ContractInterface, l: Language) => {
   }
 }
 
+const gen_deploy = (ci: ContractInterface, settings: BindingSettings): ts.MethodDeclaration[] => {
+  switch (settings.target) {
+    case (Target.Experiment): {
+      const res = get_deploy(ci, settings);
+      return [res]
+    }
+    case (Target.Dapp): {
+      if (settings.with_dapp_originate) {
+        const res = get_dapp_originate(ci, settings)
+        return [res]
+      } else {
+        return []
+      }
+    }
+  }
+}
+
+const get_dapp_originate = (ci: ContractInterface, settings: BindingSettings) => {
+  const mich_code = settings.mich_code;
+  const mich_storage = settings.mich_storage;
+  if (!mich_code) {
+    throw ('Error: mich_code is required')
+  }
+  if (!mich_storage) {
+    throw ('Error: mich_storage is required')
+  }
+  const params = settings.language == Language.Archetype ? ci.parameters : ci.storage.map(storage_elt_to_param)
+  return factory.createMethodDeclaration(
+    undefined,
+    [factory.createModifier(SyntaxKind.AsyncKeyword)],
+    undefined,
+    factory.createIdentifier("originate"),
+    undefined,
+    undefined,
+    params.map(x => contractParameterToParamDecl(x, ci)).concat([
+      factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        undefined,
+        factory.createIdentifier("params"),
+        undefined,
+        factory.createTypeReferenceNode(
+          factory.createIdentifier("Partial"),
+          [factory.createTypeReferenceNode(
+            factory.createQualifiedName(
+              factory.createIdentifier("ex"),
+              factory.createIdentifier("Parameters")
+            ),
+            undefined
+          )]
+        ),
+        undefined
+      )
+    ]),
+    factory.createTypeReferenceNode(
+      factory.createIdentifier("Promise"),
+      [factory.createTypeReferenceNode(
+        factory.createQualifiedName(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("DeployResult")
+        ),
+        undefined
+      )]),
+    factory.createBlock(
+      [
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("raw_code"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Micheline")
+                ),
+                undefined
+              ),
+              to_literal(mich_code)
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("raw_storage"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Micheline")
+                ),
+                undefined
+              ),
+              to_literal(mich_storage)
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createReturnStatement(factory.createParenthesizedExpression(factory.createAwaitExpression(factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("ex"),
+            factory.createIdentifier("originate")
+          ),
+          undefined,
+          [
+            factory.createIdentifier("raw_code"),
+            factory.createIdentifier("raw_storage"),
+            factory.createIdentifier("params")
+          ]
+        ))))
+      ],
+      true
+    )
+  )
+}
+
 const get_deploy = (ci: ContractInterface, settings: BindingSettings) => {
   const name = language_to_deploy_name(settings.language)
   const params = settings.language == Language.Archetype ? ci.parameters : ci.storage.map(storage_elt_to_param)
@@ -1504,10 +1625,10 @@ const get_contract_class_node = (ci: ContractInterface, settings: BindingSetting
       ...(ci.getters.map(x => get_addr_decl(x.name + "_callback_address"))),
       ...([
         get_get_address_decl(),
-        get_get_balance_decl(),
-        get_deploy(ci, settings)
+        get_get_balance_decl()
       ]
       ),
+      ...(gen_deploy(ci, settings)),
       ...(ci.entrypoints.map(x => entryToMethod(x, ci))),
       ...(ci.entrypoints.map(x => entryToGetParam(x, ci))),
       ...(ci.getters.map(x => getter_to_method(x, ci))),
@@ -2304,9 +2425,12 @@ export enum Language {
 }
 
 export type BindingSettings = {
-  target: Target
-  language: Language
-  path: string
+  target: Target,
+  language: Language,
+  path: string,
+  with_dapp_originate: boolean | undefined,
+  mich_code: UnsafeMicheline | undefined,
+  mich_storage: UnsafeMicheline | undefined,
 }
 
 export const generate_binding = (raw_contract_interface: RawContractInterface, settings: BindingSettings): string => {

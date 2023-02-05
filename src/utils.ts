@@ -259,6 +259,62 @@ export const makeTaquitoEnv = (): TaquitoEnv => {
   return { in_map_key: false }
 }
 
+export type UnsafeMicheline =
+  | { prim: string, annots?: Array<string>, args?: Array<UnsafeMicheline> }
+  | { string: string }
+  | { int: string }
+  | { bytes: string }
+  | Array<UnsafeMicheline>
+
+export const to_literal = (mich: UnsafeMicheline): ts.PrimaryExpression => {
+  const f = (tag: string, value: any) => {
+    return factory.createPropertyAssignment(
+      factory.createStringLiteral(tag),
+      value
+    )
+  }
+  const to_literal_basic = (tag: string, value: string) => {
+    return factory.createObjectLiteralExpression(
+      [f(tag, factory.createStringLiteral(value))],
+      false
+    )
+  };
+  const to_prim = (prim: string, args?: Array<UnsafeMicheline>, annots?: Array<string>) => {
+    const lannots = annots ? annots.map(x => factory.createStringLiteral(x)) : [];
+    const largs = args ? args.map(x => to_literal(x)) : [];
+    let elts: ts.ObjectLiteralElementLike[] = [f("prim", factory.createStringLiteral(prim))];
+    if (lannots.length > 0) {
+      const item = factory.createArrayLiteralExpression(lannots, false);
+      elts.push(f("annots", item));
+    }
+    if (largs.length > 0) {
+      const item = factory.createArrayLiteralExpression(largs, false);
+      elts.push(f("args", item));
+    }
+    return factory.createObjectLiteralExpression(
+      elts,
+      false
+    )
+  }
+  if ((mich as { string: string }).string) {
+    return to_literal_basic("string", (mich as { string: string }).string)
+  } else if ((mich as { bytes: string }).bytes) {
+    return to_literal_basic("bytes", (mich as { bytes: string }).bytes)
+  } else if ((mich as { int: string }).int) {
+    return to_literal_basic("int", (mich as { int: string }).int)
+  } else if ((mich as { prim: string, args: (Array<UnsafeMicheline> | undefined), annots: (Array<string> | undefined) }).prim) {
+    const m = (mich as { prim: string, args: (Array<UnsafeMicheline> | undefined), annots: (Array<string> | undefined) });
+    return to_prim(m.prim, m.args ?? [], m.annots ?? [])
+  } else if ((mich as Array<UnsafeMicheline>)) {
+    return factory.createArrayLiteralExpression(
+      (mich as Array<UnsafeMicheline>).map(x => to_literal(x)),
+      false
+    )
+  } else {
+    throw ("Cannot convert michelone in primary expression")
+  }
+}
+
 /* Compute path and argument */
 
 export type PathItemSimple = [number]
@@ -2655,4 +2711,3 @@ export const to_michelson_type = (rmt: RawMicheline): MichelsonType => {
     default: throw new Error(`to_michelson_type: Invalid type ${rmt.prim ?? "null"}`)
   }
 }
-
