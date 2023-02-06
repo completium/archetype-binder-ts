@@ -1493,7 +1493,7 @@ const get_dapp_originate = (ci: ContractInterface, settings: BindingSettings) =>
               factory.createTypeReferenceNode(
                 factory.createQualifiedName(
                   factory.createIdentifier("att"),
-                  factory.createIdentifier("Micheline")
+                  factory.createIdentifier("UnsafeMicheline")
                 ),
                 undefined
               ),
@@ -1511,11 +1511,109 @@ const get_dapp_originate = (ci: ContractInterface, settings: BindingSettings) =>
               factory.createTypeReferenceNode(
                 factory.createQualifiedName(
                   factory.createIdentifier("att"),
-                  factory.createIdentifier("Micheline")
+                  factory.createIdentifier("UnsafeMicheline")
                 ),
                 undefined
               ),
               to_literal(mich_storage)
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("dico"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createIdentifier("Array"),
+                [factory.createTupleTypeNode([
+                  factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+                  factory.createTypeReferenceNode(
+                    factory.createQualifiedName(
+                      factory.createIdentifier("att"),
+                      factory.createIdentifier("Micheline")
+                    ),
+                    undefined
+                  )
+                ])]
+              ),
+              factory.createArrayLiteralExpression(
+                ci.parameters.map(x => {
+                  return factory.createArrayLiteralExpression(
+                    [
+                      factory.createStringLiteral(x.name),
+                      factory.createCallExpression(
+                        factory.createPropertyAccessExpression(
+                          factory.createIdentifier(x.name),
+                          factory.createIdentifier("to_mich")
+                        ),
+                        undefined,
+                        []
+                      )
+                    ],
+                    false
+                  )
+                }),
+                false
+              )
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("code"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Micheline")
+                ),
+                undefined
+              ),
+              factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("replace_var")
+                ),
+                undefined,
+                [
+                  factory.createIdentifier("raw_code"),
+                  factory.createIdentifier("dico")
+                ]
+              )
+            )],
+            ts.NodeFlags.Const
+          )
+        ),
+        factory.createVariableStatement(
+          undefined,
+          factory.createVariableDeclarationList(
+            [factory.createVariableDeclaration(
+              factory.createIdentifier("storage"),
+              undefined,
+              factory.createTypeReferenceNode(
+                factory.createQualifiedName(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("Micheline")
+                ),
+                undefined
+              ),
+              factory.createCallExpression(
+                factory.createPropertyAccessExpression(
+                  factory.createIdentifier("att"),
+                  factory.createIdentifier("replace_var")
+                ),
+                undefined,
+                [
+                  factory.createIdentifier("raw_storage"),
+                  factory.createIdentifier("dico")
+                ]
+              )
             )],
             ts.NodeFlags.Const
           )
@@ -1527,8 +1625,8 @@ const get_dapp_originate = (ci: ContractInterface, settings: BindingSettings) =>
           ),
           undefined,
           [
-            factory.createIdentifier("raw_code"),
-            factory.createIdentifier("raw_storage"),
+            factory.createIdentifier("code"),
+            factory.createIdentifier("storage"),
             factory.createIdentifier("params")
           ]
         ))))

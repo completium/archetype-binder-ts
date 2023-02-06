@@ -264,6 +264,7 @@ export type UnsafeMicheline =
   | { string: string }
   | { int: string }
   | { bytes: string }
+  | { var: string } // need for param
   | Array<UnsafeMicheline>
 
 export const to_literal = (mich: UnsafeMicheline): ts.PrimaryExpression => {
@@ -296,22 +297,24 @@ export const to_literal = (mich: UnsafeMicheline): ts.PrimaryExpression => {
       false
     )
   }
-  if ((mich as { string: string }).string) {
+  if ((mich as { string: string }).string != null) {
     return to_literal_basic("string", (mich as { string: string }).string)
-  } else if ((mich as { bytes: string }).bytes) {
+  } else if ((mich as { bytes: string }).bytes != null) {
     return to_literal_basic("bytes", (mich as { bytes: string }).bytes)
-  } else if ((mich as { int: string }).int) {
+  } else if ((mich as { int: string }).int != null) {
     return to_literal_basic("int", (mich as { int: string }).int)
-  } else if ((mich as { prim: string, args: (Array<UnsafeMicheline> | undefined), annots: (Array<string> | undefined) }).prim) {
-    const m = (mich as { prim: string, args: (Array<UnsafeMicheline> | undefined), annots: (Array<string> | undefined) });
+  } else if ((mich as { var: string }).var) {
+    return to_literal_basic("var", (mich as { var: string }).var)
+  } else if ((mich as { prim: string, args?: Array<UnsafeMicheline>, annots?: Array<string> }).prim) {
+    const m = (mich as { prim: string, args?: Array<UnsafeMicheline>, annots?: Array<string> });
     return to_prim(m.prim, m.args ?? [], m.annots ?? [])
-  } else if ((mich as Array<UnsafeMicheline>)) {
+  } else if ((mich as Array<UnsafeMicheline>) && (mich as Array<UnsafeMicheline>).length >= 0) {
     return factory.createArrayLiteralExpression(
       (mich as Array<UnsafeMicheline>).map(x => to_literal(x)),
       false
     )
   } else {
-    throw ("Cannot convert michelone in primary expression")
+    throw (`Cannot convert micheline in primary expression: ${JSON.stringify(mich)}`)
   }
 }
 
