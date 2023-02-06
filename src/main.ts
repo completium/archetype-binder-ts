@@ -1541,17 +1541,11 @@ const get_dapp_originate = (ci: ContractInterface, settings: BindingSettings) =>
               ),
               factory.createArrayLiteralExpression(
                 ci.parameters.map(x => {
+                  const mich_value = function_param_to_mich({ name: x.name, type: x.type }, ci);
                   return factory.createArrayLiteralExpression(
                     [
                       factory.createStringLiteral(x.name),
-                      factory.createCallExpression(
-                        factory.createPropertyAccessExpression(
-                          factory.createIdentifier(x.name),
-                          factory.createIdentifier("to_mich")
-                        ),
-                        undefined,
-                        []
-                      )
+                      mich_value
                     ],
                     false
                   )
