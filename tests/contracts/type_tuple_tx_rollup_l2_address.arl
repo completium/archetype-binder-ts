@@ -1,8 +1,0 @@
-/* DO NOT EDIT, GENERATED FILE */
-archetype type_tuple_tx_rollup_l2_address
-
-variable res : (nat * tx_rollup_l2_address * string) = ((0, tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm, ""))
-
-entry set_value(i : tx_rollup_l2_address) {
-  res := ((2, i, "mystr"))
-}

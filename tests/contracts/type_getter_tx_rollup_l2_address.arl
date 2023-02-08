@@ -1,9 +1,0 @@
-/* DO NOT EDIT, GENERATED FILE */
-archetype type_getter_tx_rollup_l2_address
-
-variable res : tx_rollup_l2_address = tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm
-
-getter get_value(i : tx_rollup_l2_address) : tx_rollup_l2_address {
-  res := i;
-  return res
-}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_view_address from './contracts/bindings/type_view_address'
@@ -23,7 +23,6 @@ import * as type_view_rational from './contracts/bindings/type_view_rational'
 import * as type_view_signature from './contracts/bindings/type_view_signature'
 import * as type_view_string from './contracts/bindings/type_view_string'
 import * as type_view_tez from './contracts/bindings/type_view_tez'
-import * as type_view_tx_rollup_l2_address from './contracts/bindings/type_view_tx_rollup_l2_address'
 import * as type_view_unit from './contracts/bindings/type_view_unit'
 import * as type_view_list_nat from './contracts/bindings/type_view_list_nat'
 import * as type_view_list_string from './contracts/bindings/type_view_list_string'
@@ -224,14 +223,6 @@ describe('Type view', () => {
     const v : Tez = new Tez(2);
     await type_view_tez.type_view_tez.deploy({ as: alice });
     const res = await type_view_tez.type_view_tez.view_get_value(v, { as: alice });
-    assert(v.equals(res), "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_view_tx_rollup_l2_address.type_view_tx_rollup_l2_address.deploy({ as: alice });
-    const res = await type_view_tx_rollup_l2_address.type_view_tx_rollup_l2_address.view_get_value(v, { as: alice });
     assert(v.equals(res), "Invalid Value")
   });
 

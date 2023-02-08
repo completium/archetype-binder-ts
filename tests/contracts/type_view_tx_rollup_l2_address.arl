@@ -1,6 +1,0 @@
-/* DO NOT EDIT, GENERATED FILE */
-archetype type_view_tx_rollup_l2_address
-
-view get_value(i : tx_rollup_l2_address) : tx_rollup_l2_address {
-  return i
-}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_parameter_address from './contracts/bindings/type_parameter_address'
@@ -22,7 +22,6 @@ import * as type_parameter_nat from './contracts/bindings/type_parameter_nat'
 import * as type_parameter_signature from './contracts/bindings/type_parameter_signature'
 import * as type_parameter_string from './contracts/bindings/type_parameter_string'
 import * as type_parameter_tez from './contracts/bindings/type_parameter_tez'
-import * as type_parameter_tx_rollup_l2_address from './contracts/bindings/type_parameter_tx_rollup_l2_address'
 import * as type_parameter_unit from './contracts/bindings/type_parameter_unit'
 import * as type_parameter_list_nat from './contracts/bindings/type_parameter_list_nat'
 import * as type_parameter_list_string from './contracts/bindings/type_parameter_list_string'
@@ -202,14 +201,6 @@ describe('Type parameter', () => {
     const v : Tez = new Tez(2);
     await type_parameter_tez.type_parameter_tez.deploy(v, { as: alice });
     const res = await type_parameter_tez.type_parameter_tez.get_res();
-    assert(v.equals(res), "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_parameter_tx_rollup_l2_address.type_parameter_tx_rollup_l2_address.deploy(v, { as: alice });
-    const res = await type_parameter_tx_rollup_l2_address.type_parameter_tx_rollup_l2_address.get_res();
     assert(v.equals(res), "Invalid Value")
   });
 

@@ -1,8 +1,0 @@
-/* DO NOT EDIT, GENERATED FILE */
-archetype type_list_tx_rollup_l2_address
-
-variable res : list<tx_rollup_l2_address> = []
-
-entry set_value(i : list<tx_rollup_l2_address>) {
-  res := i
-}

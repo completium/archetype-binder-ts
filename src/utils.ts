@@ -1,7 +1,7 @@
 import ts, { factory, KeywordTypeNode, Path, SyntaxKind } from "typescript";
 
 export type ATSimple = {
-  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
+  node: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "currency" | "date" | "duration" | "int" | "key_hash" | "key" | "nat" | "never" | "operation" | "rational" | "signature" | "state" | "string" | "timestamp" | "unit"
 }
 
 export type ATSapling = {
@@ -45,14 +45,14 @@ export type ATTuple = {
 export type ArchetypeType = ATSimple | ATSapling | ATNamed | ATSingle | ATMap | ATOr | ATLambda | ATTuple
 
 export type RawArchetypeType = {
-  node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "tx_rollup_l2_address" | "unit"
+  node: "address" | "aggregate" | "asset_container" | "asset_key" | "asset_value" | "asset_view" | "asset" | "big_map" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "collection" | "contract" | "currency" | "date" | "duration" | "enum" | "event" | "int" | "iterable_big_map" | "key_hash" | "key" | "lambda" | "list" | "map" | "nat" | "never" | "operation" | "option" | "or" | "partition" | "rational" | "record" | "sapling_state" | "sapling_transaction" | "set" | "signature" | "state" | "string" | "ticket" | "timestamp" | "tuple" | "unit"
   name: string | null
   int_value: number | null
   args: Array<RawArchetypeType>
 }
 
 export type MTPrimSimple = {
-  prim: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "int" | "key_hash" | "key" | "mutez" | "nat" | "never" | "operation" | "signature" | "string" | "timestamp" | "tx_rollup_l2_address" | "unit"
+  prim: "address" | "bls12_381_fr" | "bls12_381_g1" | "bls12_381_g2" | "bool" | "bytes" | "chain_id" | "chest_key" | "chest" | "int" | "key_hash" | "key" | "mutez" | "nat" | "never" | "operation" | "signature" | "string" | "timestamp" | "unit"
   annots?: Array<string>
 }
 
@@ -359,7 +359,6 @@ export const get_size_michelson_type = (ty: MichelsonType): number => {
     case "string": return 1
     case "ticket": return 1
     case "timestamp": return 1
-    case "tx_rollup_l2_address": return 1
     case "unit": return 1
   }
 }
@@ -547,7 +546,6 @@ export const archetype_type_to_mich_type = (at: ArchetypeType, ci: ContractInter
     case "ticket": return <MTPrimSingle>{ prim: at.node, args: [archetype_type_to_mich_type(at.arg, ci)] }
     case "timestamp": return <MTPrimSimple>{ prim: at.node }
     case "tuple": return <MTPrimMulti>{ prim: "pair", args: at.args.map(x => { return archetype_type_to_mich_type(x, ci) }) }
-    case "tx_rollup_l2_address": return <MTPrimSimple>{ prim: at.node }
     case "unit": return <MTPrimSimple>{ prim: at.node }
   }
 }
@@ -843,13 +841,6 @@ export const archetype_type_to_ts_type = (at: ArchetypeType, ci: ContractInterfa
     case "tuple": return factory.createTupleTypeNode(
       at.args.map(t => archetype_type_to_ts_type(t, ci))
     );
-    case "tx_rollup_l2_address": return factory.createTypeReferenceNode(
-      factory.createQualifiedName(
-        factory.createIdentifier("att"),
-        factory.createIdentifier("Tx_rollup_l2_address")
-      ),
-      undefined
-    );
     case "unit": return factory.createTypeReferenceNode(
       factory.createQualifiedName(
         factory.createIdentifier("att"),
@@ -1041,7 +1032,6 @@ export const make_cmp_body = (a: ts.Expression, b: ts.Expression, atype: Archety
     case "ticket": return make_cmp_equals(a, b);
     case "timestamp": return make_cmp_equals_default(a, b);
     case "tuple": return make_tuple_cmp_body(a, b, atype.args, ci);
-    case "tx_rollup_l2_address": return make_cmp_equals(a, b);
     case "unit": return make_cmp_equals(a, b);
   }
 }
@@ -1106,7 +1096,6 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
       case "ticket": return 1;
       case "timestamp": return 1;
       case "tuple": return (aty.args.length - 1 + get_size(aty.args[aty.args.length - 1]));
-      case "tx_rollup_l2_address": return 1;
       case "unit": return 1;
     }
   }
@@ -1420,7 +1409,6 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "ticket": return contained_type_to_field_decl("Ticket", arg, [atype.arg], true);
     case "timestamp": return class_from_mich("Int", [arg]);
     case "tuple": return mich_to_tuple(atype.args, arg);
-    case "tx_rollup_l2_address": return class_from_mich("Tx_rollup_l2_address", [arg]);
     case "unit": return mich_unit();
   }
 }
@@ -1856,7 +1844,6 @@ export const function_param_to_mich = (fp: FunctionParameter, ci: ContractInterf
     case "ticket": return ticket_to_mich(fp.type.arg, factory.createIdentifier(fp.name));
     case "timestamp": return throw_error(fp.type.node);
     case "tuple": return tuple_to_mich(fp.name, fp.type.args, ci);
-    case "tx_rollup_l2_address": return class_to_mich(factory.createIdentifier(fp.name))
     case "unit": return unit_to_mich()
   }
 }
@@ -1952,7 +1939,6 @@ const mich_type_to_archetype = (mt: MichelsonType): ArchetypeType => {
     case "string": return { node: mt.prim }
     case "ticket": return { node: mt.prim, arg: mich_type_to_archetype(mt.args[0]) }
     case "timestamp": return { node: "date" }
-    case "tx_rollup_l2_address": return { node: mt.prim }
     case "unit": return { node: mt.prim }
     // default: throw new Error("mich_type_to_archetype: cannot convert prim '" + (mt.prim ?? "null") + "'")
   }
@@ -2223,7 +2209,6 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     case "string": return for_simple_type(mt.prim, mt.annots ?? [])
     case "ticket": return for_simple_type(mt.prim, mt.annots ?? [])
     case "timestamp": return for_simple_type(mt.prim, mt.annots ?? [])
-    case "tx_rollup_l2_address": return for_simple_type(mt.prim, mt.annots ?? [])
     case "unit": return for_simple_type(mt.prim, mt.annots ?? [])
   }
 }
@@ -2533,7 +2518,6 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       case "ticket": return { node: rty.node, arg: to_archetype_type(rty.args[0]) }
       case "timestamp": return { node: rty.node }
       case "tuple": return { node: rty.node, args: rty.args.map(to_archetype_type) }
-      case "tx_rollup_l2_address": return { node: rty.node }
       case "unit": return { node: rty.node }
     }
   }
@@ -2571,7 +2555,6 @@ export const raw_to_contract_interface = (rci: RawContractInterface): ContractIn
       case "string": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
       case "ticket": return <MTPrimSingle>{ prim: rty.prim, annots: rty.annots, args: [to_michelson_type(rty.args[0])] }
       case "timestamp": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
-      case "tx_rollup_l2_address": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
       case "unit": return <MTPrimSimple>{ prim: rty.prim, annots: rty.annots }
       default: throw new Error(`to_michelson_type: Invalid type ${rty.prim ?? "null"}`)
     }
@@ -2709,7 +2692,6 @@ export const to_michelson_type = (rmt: RawMicheline): MichelsonType => {
     case "string": return { prim: rmt.prim, annots: rmt.annots }
     case "ticket": return { prim: rmt.prim, annots: rmt.annots, args: [to_michelson_type(rmt.args[0])] }
     case "timestamp": return { prim: rmt.prim, annots: rmt.annots }
-    case "tx_rollup_l2_address": return { prim: rmt.prim, annots: rmt.annots }
     case "unit": return { prim: rmt.prim, annots: rmt.annots }
     default: throw new Error(`to_michelson_type: Invalid type ${rmt.prim ?? "null"}`)
   }

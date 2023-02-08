@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
   /* DO NOT EDIT, GENERATED FILE */
-import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Tx_rollup_l2_address, Unit } from '@completium/archetype-ts-types';
+import { Address, Bls12_381_fr, Bls12_381_g1, Bls12_381_g2, Bytes, Chain_id, Chest, Chest_key, Duration, Int, Key, Key_hash, Nat, Rational, Option, Or, Sapling_transaction, Signature, Tez, Unit } from '@completium/archetype-ts-types';
 import { get_account, set_mockup, set_quiet } from '@completium/experiment-ts';
 
 import * as type_asset_value_3_address from './contracts/bindings/type_asset_value_3_address'
@@ -23,7 +23,6 @@ import * as type_asset_value_3_rational from './contracts/bindings/type_asset_va
 import * as type_asset_value_3_signature from './contracts/bindings/type_asset_value_3_signature'
 import * as type_asset_value_3_string from './contracts/bindings/type_asset_value_3_string'
 import * as type_asset_value_3_tez from './contracts/bindings/type_asset_value_3_tez'
-import * as type_asset_value_3_tx_rollup_l2_address from './contracts/bindings/type_asset_value_3_tx_rollup_l2_address'
 import * as type_asset_value_3_unit from './contracts/bindings/type_asset_value_3_unit'
 import * as type_asset_value_3_list_nat from './contracts/bindings/type_asset_value_3_list_nat'
 import * as type_asset_value_3_list_string from './contracts/bindings/type_asset_value_3_list_string'
@@ -244,15 +243,6 @@ describe('Type asset_value_3', () => {
     await type_asset_value_3_tez.type_asset_value_3_tez.deploy({ as: alice });
     await type_asset_value_3_tez.type_asset_value_3_tez.asset_put(v, { as: alice });
     const res = await type_asset_value_3_tez.type_asset_value_3_tez.get_my_asset();
-    assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
-  });
-
-  // tx_rollup_l2_address
-  it('tx_rollup_l2_address', async () => {
-    const v : Tx_rollup_l2_address = new Tx_rollup_l2_address("tz4HVR6aty9KwsQFHh81C1G7gBdhxT8kuytm");
-    await type_asset_value_3_tx_rollup_l2_address.type_asset_value_3_tx_rollup_l2_address.deploy({ as: alice });
-    await type_asset_value_3_tx_rollup_l2_address.type_asset_value_3_tx_rollup_l2_address.asset_put(v, { as: alice });
-    const res = await type_asset_value_3_tx_rollup_l2_address.type_asset_value_3_tx_rollup_l2_address.get_my_asset();
     assert(1 == res.length && v.equals(res[0][1].v), "Invalid Value")
   });
 
