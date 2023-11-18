@@ -1,6 +1,6 @@
 {
   "name": "@completium/archetype-binder-ts",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Binds Archetype contract interface to Typescript",
   "main": "build/src/main.js",
   "types": "build/src/main.d.ts",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "test:generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.ts",
+    "generate": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/generate.ts",
     "test:run": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/*.spec.ts",
     "test:fa1": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/fa1.spec.ts",
     "test:fa2": "ts-mocha --timeout 0 --slow 99999999999999999 ./tests/fa2_fungible.spec.ts",
@@ -92,7 +92,7 @@
   },
   "devDependencies": {
     "@completium/archetype": "0.4.12",
-    "@completium/archetype-ts-types": "0.1.3",
+    "@completium/archetype-ts-types": "0.1.10",
     "@completium/completium-cli": "0.4.66",
     "@completium/event-listener": "^0.0.4",
     "@completium/experiment-ts": "0.1.8",

@@ -975,7 +975,23 @@ const eventToRegister = (e: Event, ci: ContractInterface) => {
                             undefined,
                             factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                             factory.createBlock(
-                              [factory.createReturnStatement(mich_to_archetype_type({ node: "event", name: e.name }, factory.createIdentifier("x"), ci))],
+                              [factory.createReturnStatement(mich_to_archetype_type({ node: "event", name: e.name }, factory.createParenthesizedExpression(factory.createAsExpression(
+                                factory.createCallExpression(
+                                  factory.createPropertyAccessExpression(
+                                    factory.createIdentifier("att"),
+                                    factory.createIdentifier("normalize")
+                                  ),
+                                  undefined,
+                                  [factory.createIdentifier("x")]
+                                ),
+                                factory.createTypeReferenceNode(
+                                  factory.createQualifiedName(
+                                    factory.createIdentifier("att"),
+                                    factory.createIdentifier("Micheline")
+                                  ),
+                                  undefined
+                                )
+                              )), ci))],
                               true
                             )
                           )),

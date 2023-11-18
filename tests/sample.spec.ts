@@ -5,6 +5,7 @@ const assert = require('assert')
 
 import { sample_asset_iterable_big_map } from './contracts/bindings/sample_asset_iterable_big_map'
 import { sample_big_map } from './contracts/bindings/sample_big_map'
+import { sample_custom_args_with_record, my_arg } from './contracts/bindings/sample_custom_args_with_record'
 import { sample_iterable_big_map } from './contracts/bindings/sample_iterable_big_map'
 import { sample_never } from './contracts/bindings/sample_never'
 import { sample_storage_variables } from './contracts/bindings/sample_storage_variables'
@@ -120,4 +121,15 @@ describe('Sample', async () => {
     const id3_my_asset_after = await sample_asset_iterable_big_map.get_my_asset_value("id3")
     assert(id3_my_asset_after?.equals(new Nat(3)))
   })
+
+
+  // it('Sample_custom_args_with_record', async () => {
+  //   await sample_custom_args_with_record.deploy({ as: alice })
+
+  //   const res_before = await sample_custom_args_with_record.get_res();
+  //   assert(res_before.equals(new Nat(0)))
+  //   await sample_custom_args_with_record.exec(new my_arg(new Int(1), new Nat(2), alice.get_address()), {as : alice})
+  //   const res_after = await sample_custom_args_with_record.get_res();
+  //   assert(res_after.equals(new Nat(2)))
+  // });
 })

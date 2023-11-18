@@ -56,7 +56,7 @@ export class Sample_event {
         if (this.address != undefined) {
             el.registerEvent({ source: this.address, filter: tag => { return tag == "e_event"; }, process: (raw: any, data: el.EventData | undefined) => {
                     const event = (x => {
-                        return e_event.from_mich(x);
+                        return e_event.from_mich((att.normalize(x) as att.Micheline));
                     })(raw);
                     ep(event, data);
                 } });

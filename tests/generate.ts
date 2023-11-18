@@ -403,6 +403,10 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_ticket_detach_map_tuple.arl');
   });
 
+  it('sample_custom_args_with_record', async () => {
+    await get_binding('sample_custom_args_with_record.arl');
+  });
+
 })
 
 describe('Generate binding template', async () => {
