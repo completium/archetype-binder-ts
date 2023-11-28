@@ -32,7 +32,7 @@ describe('[Lambda] Contract deployment', async () => {
 
 describe('[Lambda] Check storage value', async () => {
   it("Get `lambda`", async () => {
-    const ref : Micheline = [[{prim: "DUP"}, {prim: "SIZE"}, {prim:"DIP", args:[[{prim:"DROP"}]]}]];
+    const ref : Micheline = [{prim: "DUP"}, {prim: "SIZE"}, {prim:"DIP", args:[{int: "1"}, [{prim:"DROP", args:[{int: "1"}]}]]}];
     const l = await sample_lambda.get_l()
     assert(JSON.stringify(ref, null, 2) == JSON.stringify(l, null, 2), "Invalid value");
   })
