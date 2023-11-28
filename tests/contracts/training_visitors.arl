@@ -11,6 +11,6 @@ entry register(l : string, n : string) {
  visitor.add_update(l, { name = n });
 }
 
-entry visit(l :string) {
+entry visit(l : string) {
  visitor[l].nbvisits += 1;
 }

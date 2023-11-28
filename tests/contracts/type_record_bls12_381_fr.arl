@@ -7,7 +7,7 @@ record my_record {
   s : string;
 }
 
-variable res : my_record = {0; 0x12; ""}
+variable res : my_record = {0; 0x06fr; ""}
 
 entry set_value(i : my_record) {
   res := i

@@ -62,7 +62,7 @@ describe('Type parameter', () => {
 
   // bls12_381_fr
   it('bls12_381_fr', async () => {
-    const v : Bls12_381_fr = new Bls12_381_fr("0200000000000000000000000000000000000000000000000000000000000000");
+    const v : Bls12_381_fr = new Bls12_381_fr("0600000000000000000000000000000000000000000000000000000000000000");
     await type_parameter_bls12_381_fr.type_parameter_bls12_381_fr.deploy(v, { as: alice });
     const res = await type_parameter_bls12_381_fr.type_parameter_bls12_381_fr.get_res();
     assert(v.equals(res), "Invalid Value")

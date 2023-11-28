@@ -78,7 +78,7 @@ describe('Type getter', () => {
 
   // bls12_381_fr
   it('bls12_381_fr', async () => {
-    const v : Bls12_381_fr = new Bls12_381_fr("0200000000000000000000000000000000000000000000000000000000000000");
+    const v : Bls12_381_fr = new Bls12_381_fr("0600000000000000000000000000000000000000000000000000000000000000");
     await type_getter_bls12_381_fr.type_getter_bls12_381_fr.deploy({ as: alice });
     const res = await type_getter_bls12_381_fr.type_getter_bls12_381_fr.get_value(v, { as: alice });
     const s = await type_getter_bls12_381_fr.type_getter_bls12_381_fr.get_res();

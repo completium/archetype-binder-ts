@@ -91,11 +91,11 @@
     "typescript": "^4.7.4"
   },
   "devDependencies": {
-    "@completium/archetype": "0.4.12",
+    "@completium/archetype": "1.0.0",
     "@completium/archetype-ts-types": "0.1.10",
-    "@completium/completium-cli": "0.4.66",
-    "@completium/event-listener": "^0.0.4",
-    "@completium/experiment-ts": "0.1.8",
+    "@completium/completium-cli": "1.0.0",
+    "@completium/event-listener": "^0.0.5",
+    "@completium/experiment-ts": "0.1.13",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.41.0",

@@ -77,7 +77,7 @@ describe('Type record', () => {
 
   // bls12_381_fr
   it('bls12_381_fr', async () => {
-    const v : type_record_bls12_381_fr.my_record = new type_record_bls12_381_fr.my_record(new Nat(2), new Bls12_381_fr("0200000000000000000000000000000000000000000000000000000000000000"), "mystr");
+    const v : type_record_bls12_381_fr.my_record = new type_record_bls12_381_fr.my_record(new Nat(2), new Bls12_381_fr("0600000000000000000000000000000000000000000000000000000000000000"), "mystr");
     await type_record_bls12_381_fr.type_record_bls12_381_fr.deploy({ as: alice });
     await type_record_bls12_381_fr.type_record_bls12_381_fr.set_value(v, { as: alice });
     const res = await type_record_bls12_381_fr.type_record_bls12_381_fr.get_res();

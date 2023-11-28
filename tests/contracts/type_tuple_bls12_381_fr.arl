@@ -1,7 +1,7 @@
 /* DO NOT EDIT, GENERATED FILE */
 archetype type_tuple_bls12_381_fr
 
-variable res : (nat * bls12_381_fr * string) = ((0, 0x12, ""))
+variable res : (nat * bls12_381_fr * string) = ((0, 0x06fr, ""))
 
 entry set_value(i : bls12_381_fr) {
   res := ((2, i, "mystr"))
