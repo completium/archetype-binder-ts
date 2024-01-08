@@ -1372,7 +1372,7 @@ export const mich_to_archetype_type = (atype: ArchetypeType, arg: ts.Expression,
     case "chest_key": return class_from_mich("Chest_key", [arg]);
     case "chest": return class_from_mich("Chest", [arg]);
     case "collection": return TODO("collection", arg);
-    case "contract": return TODO("contract", arg);
+    case "contract": return class_from_mich("Entrypoint", [arg]);
     case "currency": return class_from_mich("Tez", [arg]);
     case "date": return class_to_mich("mich_to_date", [arg]);
     case "duration": return class_from_mich("Duration", [arg]);
@@ -2111,7 +2111,22 @@ export const value_to_mich_type = (mt: MichelsonType): ts.CallExpression => {
     case "chain_id": return for_simple_type(mt.prim, mt.annots ?? [])
     case "chest_key": return for_simple_type(mt.prim, mt.annots ?? [])
     case "chest": return for_simple_type(mt.prim, mt.annots ?? [])
-    case "contract": throw new Error(`value_to_mich_type: TODO: ${mt.prim}`)
+    case "contract": {
+      const annots = mt.annots ? (mt.annots.length >= 1 ? [factory.createStringLiteral(mt.annots[0])] : []) : []
+      return factory.createCallExpression(
+        factory.createPropertyAccessExpression(
+          factory.createIdentifier("att"),
+          factory.createIdentifier("contract_annot_to_mich_type")
+        ),
+        undefined,
+        [
+          value_to_mich_type(mt.args[0]),
+          factory.createArrayLiteralExpression(
+            annots,
+            false
+          )
+        ])
+    }
     case "int": return for_simple_type(mt.prim, mt.annots ?? [])
     case "key_hash": return for_simple_type(mt.prim, mt.annots ?? [])
     case "key": return for_simple_type(mt.prim, mt.annots ?? [])
