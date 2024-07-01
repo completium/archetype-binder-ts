@@ -11,6 +11,7 @@ import { sample_never } from './contracts/bindings/sample_never'
 import { sample_storage_variables } from './contracts/bindings/sample_storage_variables'
 import { sample_tuple_tuple_rational } from './contracts/bindings/sample_tuple_tuple_rational'
 import { sample_view } from './contracts/bindings/sample_view'
+import * as sample_event_multi from './contracts/bindings/sample_event_multi'
 
 /* Accounts ---------------------------------------------------------------- */
 
@@ -132,4 +133,44 @@ describe('Sample', async () => {
   //   const res_after = await sample_custom_args_with_record.get_res();
   //   assert(res_after.equals(new Nat(2)))
   // });
+
+  it('Event_multi', async () => {
+    await sample_event_multi.sample_event_multi.deploy({ as: alice })
+
+    const e1 = new sample_event_multi.e1(new Nat(1) );
+    const op1 = await sample_event_multi.sample_event_multi.entry_1(e1, {as : alice})
+    assert (op1.events.length == 1)
+    const actual1 = sample_event_multi.e1.from_mich(op1.events[0].payload);
+    assert (e1.equals(actual1), "ERROR e1")
+
+    const e2 = new sample_event_multi.e2(new Nat(1), "mystr" );
+    const op2 = await sample_event_multi.sample_event_multi.entry_2(e2, {as : alice})
+    assert (op2.events.length == 1)
+    const actual2 = sample_event_multi.e2.from_mich(op2.events[0].payload);
+    assert (e2.equals(actual2), "ERROR e2")
+
+    const e3 = new sample_event_multi.e3(new Nat(1), "mystr", new Bytes ("02") );
+    const op3 = await sample_event_multi.sample_event_multi.entry_3(e3, {as : alice})
+    assert (op3.events.length == 1)
+    const actual3 = sample_event_multi.e3.from_mich(op3.events[0].payload);
+    assert (e3.equals(actual3), "ERROR e3")
+
+    const e4 = new sample_event_multi.e4(new Nat(1), "mystr", new Bytes ("02"), new Int(3) );
+    const op4 = await sample_event_multi.sample_event_multi.entry_4(e4, {as : alice})
+    assert (op4.events.length == 1)
+    const actual4 = sample_event_multi.e4.from_mich(op4.events[0].payload);
+    assert (e4.equals(actual4), "ERROR e4")
+
+    const e5 = new sample_event_multi.e5(new Nat(1), "mystr", new Bytes ("02"), new Int(3), alice.get_address() );
+    const op5 = await sample_event_multi.sample_event_multi.entry_5(e5, {as : alice})
+    assert (op5.events.length == 1)
+    const actual5 = sample_event_multi.e5.from_mich(op5.events[0].payload);
+    assert (e5.equals(actual5), "ERROR e5")
+
+    const e6 = new sample_event_multi.e6(new Nat(1), "mystr", new Bytes ("02"), new Int(3), alice.get_address(), alice.get_public_key() );
+    const op6 = await sample_event_multi.sample_event_multi.entry_6(e6, {as : alice})
+    assert (op6.events.length == 1)
+    const actual6 = sample_event_multi.e6.from_mich(op6.events[0].payload);
+    assert (e6.equals(actual6), "ERROR e6")
+  })
 })

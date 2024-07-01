@@ -359,6 +359,10 @@ describe('Generate binding sample', async () => {
     await get_binding('sample_event.arl');
   });
 
+  it('event_multi', async () => {
+    await get_binding('sample_event_multi.arl');
+  });
+
   it('state', async () => {
     await get_binding('sample_state.arl');
   });

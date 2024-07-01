@@ -1,0 +1,64 @@
+archetype sample_event_multi
+
+event e1 {
+  a1 : nat;
+}
+
+event e2 {
+  a1 : nat;
+  b2 : string;
+}
+
+event e3 {
+  a3 : nat;
+  b3 : string;
+  c3 : bytes;
+}
+
+event e4 {
+  a4 : nat;
+  b4 : string;
+  c4 : bytes;
+  d4 : int
+}
+
+event e5 {
+  a5 : nat;
+  b5 : string;
+  c5 : bytes;
+  d5 : int;
+  f5 : address
+}
+
+event e6 {
+  a6 : nat;
+  b6 : string;
+  c6 : bytes;
+  d6 : int;
+  f6 : address;
+  g6 : key;
+}
+
+entry entry_1 (e : e1) {
+  emit<e1>(e)
+}
+
+entry entry_2 (e : e2) {
+  emit<e2>(e)
+}
+
+entry entry_3 (e : e3) {
+  emit<e3>(e)
+}
+
+entry entry_4 (e : e4) {
+  emit<e4>(e)
+}
+
+entry entry_5 (e : e5) {
+  emit<e5>(e)
+}
+
+entry entry_6 (e : e6) {
+  emit<e6>(e)
+}

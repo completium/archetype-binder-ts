@@ -263,6 +263,68 @@ const mich_to_record_body = (name: string, fields: Array<Omit<Field, "is_key">>,
   return [ret];
 }
 
+const mich_to_event_body = (name: string, fields: Array<Omit<Field, "is_key">>, mty: MichelsonType, arg: ts.Expression, ci: ContractInterface): ts.Statement[] => {
+  const is_list = fields.length > 3;
+  const is_three = fields.length == 3;
+  const extract_id = (mty: MichelsonType) => {
+    let accu: Array<string> = []
+    const f = (mty: MichelsonType) => {
+      if (mty.annots?.length == 1) {
+        accu.push(mty.annots[0])
+      } else if ((mty as MTPrimMulti).prim == "pair") {
+        (mty as MTPrimMulti).args.forEach(f)
+      }
+    }
+    f(mty)
+    return accu
+  }
+
+  const h = (a: ts.Expression, n: number) => { return factory.createElementAccessExpression(a, factory.createNumericLiteral(n)) }
+  const g = (a: ts.Expression) => {
+    return factory.createPropertyAccessExpression(
+      factory.createAsExpression(
+        a,
+        factory.createTypeReferenceNode(
+          factory.createQualifiedName(
+            factory.createIdentifier("att"),
+            factory.createIdentifier("Mpair")
+          ),
+          undefined
+        )
+      ),
+      factory.createIdentifier("args")
+    )
+  }
+
+
+  let args: Array<ts.Expression> = [];
+  let ids = fields.map(x => x.name);
+  const new_ids = extract_id(mty);
+  if (ids.length == new_ids.length) {
+    ids = new_ids
+  }
+
+  if (is_three) {
+    args.push(mich_to_archetype_type(fields[0].type, h(g(arg), 0), ci))
+    args.push(mich_to_archetype_type(fields[1].type, h(g(h(g(arg), 1)), 0), ci))
+    args.push(mich_to_archetype_type(fields[2].type, h(g(h(g(arg), 1)), 1), ci))
+  } else {
+    for (let i = 0; i < fields.length; ++i) {
+      const field = fields[i];
+      const a = is_list ? h(arg, i) : compute_arg(arg, ids[i], mty)
+      const b = mich_to_archetype_type(field.type, a, ci);
+      args.push(b)
+    }
+  }
+
+  const ret = factory.createReturnStatement(factory.createNewExpression(
+    factory.createIdentifier(name),
+    undefined,
+    args
+  ))
+  return [ret];
+}
+
 const entityToInterfaceDecl = (name: string, mt: MichelsonType, fields: Array<Omit<Field, "is_key">>, mich_body: ts.Statement[], ci: ContractInterface) => {
   return factory.createClassDeclaration(
     undefined,
@@ -419,6 +481,13 @@ const recordToInterfaceDecl = (r: Record, ci: ContractInterface): ts.ClassDeclar
   const mty = r.type_michelson;
 
   const mich_body = mich_to_record_body(r.name, r.fields, mty, factory.createIdentifier("input"), ci)
+  return [entityToInterfaceDecl(r.name, mty, r.fields, mich_body, ci)]
+}
+
+const eventToInterfaceDecl = (r: Record, ci: ContractInterface): ts.ClassDeclaration[] => {
+  const mty = r.type_michelson;
+
+  const mich_body = mich_to_event_body(r.name, r.fields, mty, factory.createIdentifier("input"), ci)
   return [entityToInterfaceDecl(r.name, mty, r.fields, mich_body, ci)]
 }
 
@@ -2489,7 +2558,7 @@ const get_nodes = (contract_interface: ContractInterface, settings: BindingSetti
     // storage
     ...(settings.language == Language.Michelson ? generate_storage_utils(contract_interface) : []),
     // events
-    ...(contract_interface.types.events.map(x => recordToInterfaceDecl(x, contract_interface))).flat(),
+    ...(contract_interface.types.events.map(x => eventToInterfaceDecl(x, contract_interface))).flat(),
     // enums
     ...(contract_interface.types.enums.map(x => (enum_to_decl(x, contract_interface)))).flat(),
     ...(contract_interface.types.enums.map(x => (mich_to_enum_decl(x, contract_interface)))),
