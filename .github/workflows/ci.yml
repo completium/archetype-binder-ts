@@ -44,6 +44,9 @@ jobs:
     - name: install
       run: npm ci
 
+    - name: version
+      run: npm run version
+
     - name: init
       run: npm run init
 
@@ -51,4 +54,4 @@ jobs:
       run: npm run mockup_init
 
     - name: test
-      run: npm run test:run
+      run: npm run test:sample
