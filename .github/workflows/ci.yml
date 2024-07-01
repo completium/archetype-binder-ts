@@ -54,4 +54,4 @@ jobs:
       run: npm run mockup_init
 
     - name: test
-      run: npm run test:sample
+      run: npm run test:run
